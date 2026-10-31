@@ -2783,7 +2783,7 @@ window.loadDashboard = loadDashboard;
       c.auth_user_id=user.id;
     }
     authProfile={id:user.id,role:'trainee',full_name:c.full_name||user.phone||'شاگرد',trainee_id:c.id};
-    clients=[{id:c.id,name:c.full_name,phone:c.phone,gender:c.gender,birth_date:c.birth_date,age:c.age??calcAge(c.birth_date),weight:c.current_weight,height:c.height,goal:c.goal,level:c.training_level,history:c.training_history,limitations:c.limitations,training_type:c.training_type||'gym',home_equipment:c.home_equipment||'',training_days:c.training_days||'',training_time:c.training_time||'',weekly_sessions:c.weekly_sessions||null,club_registration_date:c.club_registration_date||null,createdAt:c.created_at||null,active:true,plans:0}];currentClient=clients[0];
+    clients=[{id:c.id,name:c.full_name,phone:c.phone,gender:c.gender,birth_date:c.birth_date,age:c.age??calcAge(c.birth_date),weight:c.current_weight,height:c.height,goal:c.goal,level:c.training_level,history:c.training_history,limitations:c.limitations,training_type:c.training_type||'gym',home_equipment:c.home_equipment||'',training_days:c.training_days||'',training_time:c.training_time||'',weekly_sessions:c.weekly_sessions||null,club_registration_date:c.club_registration_date||null,profile_image:c.profile_image||null,createdAt:c.created_at||null,active:true,plans:0}];currentClient=clients[0];
     qsAll('.nav button').forEach(b=>b.style.display='none');$id('navDash').style.display='block';
     ['client','meal','workout','progress'].forEach(sec=>{const b=qsAll('.nav button').find(x=>String(x.getAttribute('onclick')||'').includes("'"+sec+"'"));if(b)b.style.display='block';});
     document.body.classList.remove('locked');$id('authScreen').style.display='none';$id('authUserBar').style.display='block';$id('authUserText').textContent=`${c.full_name||user.phone} | شاگرد`;
@@ -12868,6 +12868,123 @@ window.sehResetTurnstile=function(){};
   try{var state=Object.assign({},history.state||{});if(!state.sehTraineeNav)state.sehTraineeNav={section:activeId()};history.replaceState(state,'');}catch(e){}
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});else initialize();
+})();
+</script>
+
+<script id="seh-trainee-profile-header-v2-20261031">
+(function(){
+ 'use strict';
+ if(window.__sehTraineeProfileHeaderV2)return;
+ window.__sehTraineeProfileHeaderV2=true;
+ const $=id=>document.getElementById(id);
+ const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function jalaliDate(value){
+  if(!value)return 'تاریخ تولد ثبت نشده';
+  const d=new Date(String(value).slice(0,10)+'T12:00:00');
+  if(Number.isNaN(d.getTime()))return 'تاریخ تولد ثبت نشده';
+  try{return new Intl.DateTimeFormat('fa-IR-u-ca-persian',{year:'numeric',month:'long',day:'numeric'}).format(d);}
+  catch(e){return String(value);}
+ }
+ function isTrainee(){
+  try{return (typeof authProfile!=='undefined'&&authProfile&&authProfile.role==='trainee')||(window.authProfile&&window.authProfile.role==='trainee');}catch(e){return false;}
+ }
+ function style(){
+  if($('sehTraineeProfileHeaderStyle'))return;
+  const st=document.createElement('style');st.id='sehTraineeProfileHeaderStyle';
+  st.textContent=`
+   #sehTraineeProfileHeader{display:flex;align-items:center;gap:14px;padding:16px;margin:10px 0 14px;border:1px solid #d5b66a;border-radius:18px;background:linear-gradient(120deg,#fff8e8,#f1dfb5);color:#302719;box-shadow:0 5px 18px rgba(70,48,12,.10);direction:rtl}
+   #sehTraineeProfileHeader .seh-ph-avatar-wrap{position:relative;flex:0 0 88px;width:88px;height:88px}
+   #sehTraineeProfileHeader .seh-ph-avatar{width:88px;height:88px;border-radius:50%;border:3px solid #c5a04e;background:#f7edda;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:38px;color:#765b25;box-shadow:0 2px 8px #8a6c3030}
+   #sehTraineeProfileHeader .seh-ph-avatar img{width:100%;height:100%;object-fit:cover}
+   #sehTraineeProfileHeader .seh-ph-add{position:absolute;left:-2px;bottom:0;width:30px;height:30px;min-width:30px;padding:0;margin:0;border-radius:50%;border:2px solid #fff8e8;background:#b58b36;color:white;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center}
+   #sehTraineeProfileHeader .seh-ph-info{min-width:0;flex:1}
+   #sehTraineeProfileHeader .seh-ph-kicker{font-size:11px;color:#876c35;margin-bottom:4px}
+   #sehTraineeProfileHeader .seh-ph-name{font-size:17px;font-weight:800;line-height:1.6;overflow-wrap:anywhere;color:#342916}
+   #sehTraineeProfileHeader .seh-ph-birth{font-size:12px;color:#715d38;margin-top:3px}
+   #sehTraineeProfileHeader .seh-ph-note{font-size:10px;color:#8a744e;margin-top:5px}
+   @media(max-width:420px){#sehTraineeProfileHeader{gap:11px;padding:13px}#sehTraineeProfileHeader .seh-ph-avatar-wrap,#sehTraineeProfileHeader .seh-ph-avatar{width:78px;height:78px;flex-basis:78px}#sehTraineeProfileHeader .seh-ph-name{font-size:15px}}
+  `;
+  document.head.appendChild(st);
+ }
+ function avatarMarkup(c){
+  const image=String(c?.profile_image||'');
+  if(image.startsWith('data:image/')||/^https:\/\//i.test(image))return '<img src="'+esc(image)+'" alt="عکس پروفایل">';
+  const female=/زن|female/i.test(String(c?.gender||'')),male=/مرد|male/i.test(String(c?.gender||''));
+  return '<span aria-hidden="true">'+(female?'👩🏻':male?'👨🏻':'👤')+'</span>';
+ }
+ function ensureCard(){
+  if(!isTrainee())return null;
+  const dash=$('traineeDashboard');if(!dash)return null;
+  style();
+  let card=$('sehTraineeProfileHeader');
+  if(!card){
+   card=document.createElement('div');card.id='sehTraineeProfileHeader';card.setAttribute('aria-label','پروفایل شاگرد');
+   card.innerHTML='<div class="seh-ph-avatar-wrap"><div class="seh-ph-avatar" id="sehTraineeProfileAvatar"></div><button type="button" class="seh-ph-add" id="sehTraineeProfileChoose" aria-label="انتخاب عکس پروفایل" title="انتخاب عکس">＋</button><input type="file" id="sehTraineeProfileFile" accept="image/*" hidden></div><div class="seh-ph-info"><div class="seh-ph-kicker">پروفایل شخصی من</div><div class="seh-ph-name" id="sehTraineeProfileName">شاگرد</div><div class="seh-ph-birth" id="sehTraineeProfileBirth">تاریخ تولد ثبت نشده</div><div class="seh-ph-note" id="sehTraineeProfileNote">برای افزودن تصویر، علامت + را بزنید.</div></div>';
+   const titleCard=dash.querySelector('.card');
+   if(titleCard&&titleCard.parentElement===dash)titleCard.insertAdjacentElement('afterend',card);else dash.insertBefore(card,dash.firstChild);
+   const choose=$('sehTraineeProfileChoose'),file=$('sehTraineeProfileFile');
+   choose.addEventListener('click',()=>file.click());
+   file.addEventListener('change',()=>saveSelectedImage(file));
+  }
+  const c=(typeof currentClient!=='undefined'&&currentClient)||window.currentClient||{};
+  $('sehTraineeProfileAvatar').innerHTML=avatarMarkup(c);
+  $('sehTraineeProfileName').textContent=c.full_name||c.name||((typeof authProfile!=='undefined'&&authProfile?.full_name)||'شاگرد');
+  $('sehTraineeProfileBirth').textContent='🎂 '+jalaliDate(c.birth_date);
+  return card;
+ }
+ async function refreshProfileData(){
+  if(!isTrainee()||typeof currentClient==='undefined'||!currentClient?.id)return;
+  try{
+   const rows=await sbGet('/trainees?id=eq.'+encodeURIComponent(currentClient.id)+'&select=id,full_name,gender,birth_date,profile_image&limit=1');
+   if(!Array.isArray(rows)||!rows[0])return;
+   if(!currentClient||String(currentClient.id)!==String(rows[0].id))return;
+   Object.assign(currentClient,{full_name:rows[0].full_name,name:rows[0].full_name,gender:rows[0].gender,birth_date:rows[0].birth_date,profile_image:rows[0].profile_image});
+   ensureCard();
+  }catch(e){console.warn('خواندن اطلاعات کارت پروفایل انجام نشد:',e);}
+ }
+ async function imageData(file){
+  if(!file||!file.type||!file.type.startsWith('image/'))throw new Error('لطفاً یک فایل تصویری انتخاب کنید.');
+  if(file.size>8*1024*1024)throw new Error('حجم عکس باید کمتر از ۸ مگابایت باشد.');
+  const url=URL.createObjectURL(file);
+  try{
+   const img=await new Promise((resolve,reject)=>{const x=new Image();x.onload=()=>resolve(x);x.onerror=()=>reject(new Error('باز کردن تصویر ممکن نشد.'));x.src=url;});
+   const side=420,scale=Math.min(1,side/Math.max(img.naturalWidth,img.naturalHeight));
+   const w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));
+   const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+   const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);
+   let data=canvas.toDataURL('image/jpeg',0.78);
+   if(data.length>190000)data=canvas.toDataURL('image/jpeg',0.62);
+   if(data.length>260000)throw new Error('حجم عکس پس از فشرده‌سازی هنوز زیاد است؛ لطفاً عکس دیگری انتخاب کنید.');
+   return data;
+  }finally{URL.revokeObjectURL(url);}
+ }
+ async function saveSelectedImage(input){
+  const file=input.files&&input.files[0];if(!file)return;
+  const c=(typeof currentClient!=='undefined'&&currentClient)||window.currentClient;
+  const id=c&&c.id;if(!id){alert('پرونده شاگرد پیدا نشد؛ لطفاً دوباره وارد شوید.');input.value='';return;}
+  const note=$('sehTraineeProfileNote'),button=$('sehTraineeProfileChoose');
+  try{
+   button.disabled=true;note.textContent='در حال آماده‌سازی و ذخیره عکس…';
+   const data=await imageData(file);
+   if(!isTrainee()||!currentClient||String(currentClient.id)!==String(id))throw new Error('حساب شاگرد تغییر کرده است؛ ذخیره عکس لغو شد.');
+   const saved=await sbWrite('/trainees?id=eq.'+encodeURIComponent(id),'PATCH',{profile_image:data});
+   if(!Array.isArray(saved)||!saved.some(x=>String(x.id)===String(id)&&String(x.profile_image||'')===data))throw new Error('ذخیره عکس در پایگاه داده تأیید نشد.');
+   currentClient.profile_image=data;ensureCard();note.textContent='عکس پروفایل با موفقیت ذخیره شد.';
+  }catch(e){console.error('profile image save failed',e);note.textContent='ذخیره عکس انجام نشد.';alert('ذخیره عکس پروفایل انجام نشد. '+(e?.message||String(e)));}
+  finally{button.disabled=false;input.value='';}
+ }
+ function install(){
+  if(!window.loadDashboard||window.loadDashboard.__sehProfileHeaderWrapped)return;
+  const old=window.loadDashboard;
+  const wrapped=async function(){
+   const result=await old.apply(this,arguments);
+   if(isTrainee()){ensureCard();await refreshProfileData();}
+   return result;
+  };
+  wrapped.__sehProfileHeaderWrapped=true;window.loadDashboard=wrapped;
+ }
+ install();
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
 })();
 </script>
 </body></html>
