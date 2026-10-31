@@ -12892,7 +12892,12 @@ window.sehResetTurnstile=function(){};
   if($('sehTraineeProfileHeaderStyle'))return;
   const st=document.createElement('style');st.id='sehTraineeProfileHeaderStyle';
   st.textContent=`
-   #sehTraineeProfileHeader{display:flex;align-items:center;gap:14px;padding:16px;margin:10px 0 14px;border:1px solid #d5b66a;border-radius:18px;background:linear-gradient(120deg,#fff8e8,#f1dfb5);color:#302719;box-shadow:0 5px 18px rgba(70,48,12,.10);direction:rtl}
+   #sehTraineeProfileHeader{display:flex;align-items:center;gap:14px;padding:16px;margin:0 0 8px;border:1px solid #d5b66a;border-radius:18px;background:linear-gradient(120deg,#fff8e8,#f1dfb5);color:#302719;box-shadow:0 5px 18px rgba(70,48,12,.10);direction:rtl}
+   #sehTraineeProfileExitRow{display:flex;justify-content:flex-start;margin:0 0 12px}
+   #sehTraineeProfileExitBtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:36px;padding:6px 14px;border:1px solid #c5a04e;border-radius:11px;background:#fff8e8;color:#60491d;font-size:13px;font-weight:700;box-shadow:0 2px 7px rgba(70,48,12,.08)}
+   #sehTraineeProfileExitBtn span{font-size:21px;line-height:1}
+   #sehTraineeProfileExitBtn:disabled{opacity:.55}
+   #authUserBar{display:none!important}
    #sehTraineeProfileHeader .seh-ph-avatar-wrap{position:relative;flex:0 0 88px;width:88px;height:88px}
    #sehTraineeProfileHeader .seh-ph-avatar{width:88px;height:88px;border-radius:50%;border:3px solid #c5a04e;background:#f7edda;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:38px;color:#765b25;box-shadow:0 2px 8px #8a6c3030}
    #sehTraineeProfileHeader .seh-ph-avatar img{width:100%;height:100%;object-fit:cover}
@@ -12920,8 +12925,19 @@ window.sehResetTurnstile=function(){};
   if(!card){
    card=document.createElement('div');card.id='sehTraineeProfileHeader';card.setAttribute('aria-label','پروفایل شاگرد');
    card.innerHTML='<div class="seh-ph-avatar-wrap"><div class="seh-ph-avatar" id="sehTraineeProfileAvatar"></div><button type="button" class="seh-ph-add" id="sehTraineeProfileChoose" aria-label="انتخاب عکس پروفایل" title="انتخاب عکس">＋</button><input type="file" id="sehTraineeProfileFile" accept="image/*" hidden></div><div class="seh-ph-info"><div class="seh-ph-kicker">پروفایل شخصی من</div><div class="seh-ph-name" id="sehTraineeProfileName">شاگرد</div><div class="seh-ph-birth" id="sehTraineeProfileBirth">تاریخ تولد ثبت نشده</div><div class="seh-ph-note" id="sehTraineeProfileNote">برای افزودن تصویر، علامت + را بزنید.</div></div>';
-   const titleCard=dash.querySelector('.card');
-   if(titleCard&&titleCard.parentElement===dash)titleCard.insertAdjacentElement('afterend',card);else dash.insertBefore(card,dash.firstChild);
+   const page=document.querySelector('.page')||dash.parentElement;
+   if(page)page.insertBefore(card,page.firstChild);else dash.insertBefore(card,dash.firstChild);
+   const exitRow=document.createElement('div');exitRow.id='sehTraineeProfileExitRow';
+   exitRow.innerHTML='<button type="button" id="sehTraineeProfileExitBtn" aria-label="خروج از حساب کاربری"><span aria-hidden="true">↪</span> خروج از حساب کاربری</button>';
+   card.insertAdjacentElement('afterend',exitRow);
+   const exitBtn=$('sehTraineeProfileExitBtn');
+   exitBtn.addEventListener('click',async function(){
+    if(exitBtn.disabled)return;
+    if(!window.confirm('آیا می‌خواهید از حساب کاربری خارج شوید؟'))return;
+    exitBtn.disabled=true;
+    try{if(typeof window.logoutApp==='function')await window.logoutApp();else throw new Error('امکان خروج از حساب در حال حاضر فراهم نیست.');}
+    catch(e){exitBtn.disabled=false;window.alert('خروج از حساب انجام نشد. دوباره تلاش کنید.');console.error(e);}
+   });
    const choose=$('sehTraineeProfileChoose'),file=$('sehTraineeProfileFile');
    choose.addEventListener('click',()=>file.click());
    file.addEventListener('change',()=>saveSelectedImage(file));
