@@ -14705,7 +14705,7 @@ window.sehResetTurnstile=function(){};
     var label=document.getElementById('authUserText');
     if(!bar||!row||!label)return;
     var old=row.querySelector('.logout-btn');
-    if(old){old.style.setProperty('display','none','important');old.setAttribute('aria-hidden','true');old.tabIndex=-1;}
+    /* The preceding trainee-only patch already hides this legacy button. Avoid rewriting its style here. */
     var btn=row.querySelector('#sehTraineeAccountExitBtn');
     if(!isTrainee()){
       if(btn)btn.style.display='none';
