@@ -14681,3 +14681,85 @@ window.sehResetTurnstile=function(){};
   setTimeout(sync,1200);
 })();
 </script>
+
+
+<script id="seh-trainee-account-exit-v1-20261031">
+/* Trainee-only compact account sign-out and app-back confirmation.
+   Keeps the existing sign-out implementation and internal section history intact. */
+(function(){
+  'use strict';
+  var busy=false;
+  function isTrainee(){
+    try{if(typeof authProfile!=='undefined'&&authProfile&&authProfile.role)return String(authProfile.role).toLowerCase()==='trainee';}catch(e){}
+    try{if(window.authProfile&&window.authProfile.role)return String(window.authProfile.role).toLowerCase()==='trainee';}catch(e){}
+    var t=document.getElementById('authUserText');
+    return !!(t&&/شاگرد/.test(t.textContent||''));
+  }
+  function activeDashboard(){
+    var d=document.getElementById('traineeDashboard');
+    return !!(d&&d.classList.contains('active'));
+  }
+  function ensureButton(){
+    var bar=document.getElementById('authUserBar');
+    var row=bar&&bar.querySelector('.row');
+    var label=document.getElementById('authUserText');
+    if(!bar||!row||!label)return;
+    var old=row.querySelector('.logout-btn');
+    if(old){old.style.setProperty('display','none','important');old.setAttribute('aria-hidden','true');old.tabIndex=-1;}
+    var btn=row.querySelector('#sehTraineeAccountExitBtn');
+    if(!isTrainee()){
+      if(btn)btn.style.display='none';
+      return;
+    }
+    if(!btn){
+      btn=document.createElement('button');
+      btn.type='button';
+      btn.id='sehTraineeAccountExitBtn';
+      btn.className='seh-trainee-account-exit';
+      btn.textContent='↪';
+      btn.title='خروج از حساب کاربری';
+      btn.setAttribute('aria-label','خروج از حساب کاربری');
+      btn.addEventListener('click',async function(){
+        if(busy)return;
+        if(!window.confirm('آیا می‌خواهید از حساب کاربری خارج شوید؟'))return;
+        busy=true;btn.disabled=true;
+        try{
+          if(typeof window.logoutApp==='function')await window.logoutApp();
+          else if(window.AUTH_SUPABASE&&window.AUTH_SUPABASE.auth){await window.AUTH_SUPABASE.auth.signOut();location.reload();}
+          else throw new Error('امکان خروج از حساب در حال حاضر فراهم نیست.');
+        }catch(e){busy=false;btn.disabled=false;window.alert('خروج از حساب انجام نشد. دوباره تلاش کنید.');console.error(e);}
+      });
+      row.insertBefore(btn,old||null);
+    }
+    btn.style.display='inline-flex';
+  }
+  function installStyle(){
+    if(document.getElementById('seh-trainee-account-exit-style'))return;
+    var s=document.createElement('style');s.id='seh-trainee-account-exit-style';
+    s.textContent=
+      '#authUserBar .row{align-items:center;gap:8px!important}'+
+      '#authUserBar #authUserText{flex:1 1 auto;min-width:0;margin:0!important;text-align:right}'+
+      '#authUserBar .seh-trainee-account-exit{display:inline-flex;align-items:center;justify-content:center;flex:0 0 30px;width:30px;height:30px;min-width:30px;padding:0!important;margin:0!important;border:1px solid #526477!important;border-radius:9px!important;background:#172536!important;color:#f2d18b!important;font-size:20px!important;line-height:1!important;box-shadow:none!important}'+
+      '#authUserBar .seh-trainee-account-exit:disabled{opacity:.55}'+
+      '@media(max-width:520px){#authUserBar .row{flex-wrap:nowrap!important}}';
+    document.head.appendChild(s);
+  }
+  function sync(){installStyle();ensureButton();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});else sync();
+  var bar=document.getElementById('authUserBar');
+  if(bar)new MutationObserver(sync).observe(bar,{subtree:true,childList:true,characterData:true});
+  setTimeout(sync,300);setTimeout(sync,1200);
+  window.addEventListener('pageshow',sync);
+  window.addEventListener('popstate',function(e){
+    if(!isTrainee()||!activeDashboard())return;
+    var route=e.state&&e.state.sehTraineeNav&&e.state.sehTraineeNav.section;
+    if(route)return; // Internal trainee navigation is handled by the existing Back controller.
+    if(window.confirm('آیا می‌خواهید از برنامه خارج شوید؟'))return;
+    try{
+      var state=Object.assign({},history.state||{});
+      state.sehTraineeExitGuard=true;
+      history.pushState(state,'',location.href);
+    }catch(err){console.warn('بازگردانی صفحه پس از انصراف از خروج ناموفق بود:',err);}
+  },false);
+})();
+</script>
