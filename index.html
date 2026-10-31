@@ -14674,7 +14674,7 @@ window.sehResetTurnstile=function(){};
   var bar=document.getElementById('authUserBar');
   if(bar){
     var observer=new MutationObserver(sync);
-    observer.observe(bar,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['style','class']});
+    observer.observe(bar,{subtree:true,childList:true,characterData:true});
   }
   window.addEventListener('pageshow',sync);
   setTimeout(sync,300);
