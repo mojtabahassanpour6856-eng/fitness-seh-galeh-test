@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin>
 <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
-<link rel="preconnect" href="https://udptdznbvewkublvzmtm.supabase.co" crossorigin>
-<link rel="dns-prefetch" href="//udptdznbvewkublvzmtm.supabase.co">
+<link rel="preconnect" href="https://qfakyudgidsumeuoqoot.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="//qfakyudgidsumeuoqoot.supabase.co">
 <title>فیتنس سه‌قلعه</title>
 <meta name="theme-color" content="#ffbd16">
 <meta name="description" content="اپلیکیشن فیتنس سه‌قلعه؛ سامانه برنامه‌های تمرینی، غذایی و پیگیری شاگردان">
@@ -53,6 +53,23 @@ table{width:100%;border-collapse:collapse;margin-top:13px;font-size:12px}th,td{p
 .footer{text-align:center;color:#8998a6;padding:18px;font-size:11px}
 @media(max-width:600px){.grid,.grid2{grid-template-columns:1fr}.stats,.badges{grid-template-columns:1fr 1fr}.nav{grid-template-columns:1fr 1fr}.row{display:grid;grid-template-columns:1fr}}
 
+/* Trainee dashboard profile header */
+/* Birth date is edited directly in the profile card. */
+.seh-profile-birth-input{display:block;width:100%;max-width:190px;margin-top:7px;padding:7px 9px;border:1px solid #cdb777;border-radius:9px;background:#fff;color:#342b18;font-size:12px;direction:ltr;text-align:center}
+.seh-profile-birth-status{display:block;margin-top:3px;font-size:10px;color:#715a2a}
+
+body.seh-trainee-mode #authUserBar{display:none!important}
+.seh-profile-wrap{margin:0 0 12px}
+.seh-profile-summary{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid #c7a34b;border-radius:17px;background:linear-gradient(135deg,#fff8e7,#f4e7c5);color:#2c2618;cursor:pointer;direction:rtl}
+.seh-profile-avatar{position:relative;flex:0 0 76px;width:76px;height:76px;border-radius:50%;overflow:hidden;border:3px solid #c7a34b;background:#ead9ae;display:flex;align-items:center;justify-content:center;font-size:32px}
+.seh-profile-avatar img{width:100%;height:100%;object-fit:cover;display:none}
+.seh-profile-photo-add{position:absolute;bottom:0;left:0;width:27px;height:27px;margin:0;padding:0;border:2px solid #fff8e7;border-radius:50%;background:#b78b27;color:#fff;font-size:19px;line-height:1}
+.seh-profile-info{min-width:0;flex:1}
+.seh-profile-name{font-size:16px;font-weight:800;overflow-wrap:anywhere}
+.seh-profile-birth{display:inline-block;margin-top:8px;padding:5px 9px;border-radius:9px;background:#e8d6a9;color:#463817;font-size:11px}
+.seh-profile-exit{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin:8px 0 0;padding:9px 12px;border:1px solid #b98f32;border-radius:11px;background:#fff8e7;color:#59451b;font-size:13px}
+.seh-profile-exit span{font-size:19px}
+@media(max-width:420px){.seh-profile-summary{padding:11px;gap:11px}.seh-profile-avatar{width:68px;height:68px;flex-basis:68px}.seh-profile-name{font-size:14px}}
 .meal-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}.meal-tabs button{margin:0;padding:10px;font-size:12px}.meal-tabs button.active{background:#ffbd16;color:#111}.meal-card{background:#101e2d;border:1px solid #2b4053;border-radius:14px;padding:12px;margin:10px 0}.meal-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.meal-head h3{margin:0;font-size:15px}.meal-total{color:#b9c7d3;font-size:11px}.food-line{display:grid;grid-template-columns:1fr 82px 58px auto;gap:6px;align-items:center;border-top:1px solid #253746;padding:9px 0}.food-line:first-child{border-top:0}.food-name{font-size:12px}.food-meta{font-size:10px;color:#aeb9c4}.mini{margin:0;padding:7px 8px;font-size:11px}.meal-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.meal-summary .stat{padding:10px}.student-meal{border:1px solid #2b4053;border-radius:14px;margin:9px 0;padding:12px;background:#101b28}.checkfood{display:flex;align-items:center;gap:8px;font-size:12px;padding:7px 0}.checkfood input{width:auto}.report-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:9px 0;border-bottom:1px solid #253746;font-size:12px}.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:12px;z-index:50}.modal-back.show{display:flex}.modal{width:min(520px,100%);max-height:90vh;overflow:auto;background:#0d1722;border:1px solid #34495c;border-radius:16px;padding:15px}.modal h3{margin:0 0 12px}.close-row{display:flex;gap:8px}.close-row button{margin-top:0}.sub-result{background:#062f29;border:1px solid #079875;border-radius:12px;padding:10px;margin-top:10px}
 @media(max-width:600px){.meal-tabs{grid-template-columns:1fr 1fr 1fr}.food-line{grid-template-columns:1fr 70px 52px auto}.meal-summary{grid-template-columns:1fr 1fr}}
 button,.client,.meal-card,.badge{transition:transform .08s ease,opacity .08s ease}
@@ -76,6 +93,11 @@ button:active,.client:active,.meal-card:active,.badge:active{transform:scale(.98
   body:has(#workout.active) #workout textarea { font-size: 15px; }
   body:has(#workout.active) #workout #workoutList .meal-card { margin-bottom: 12px; }
 }
+
+/* Trainee profile photo crop controls */
+#sehPhotoCropModal{position:fixed;inset:0;z-index:10050;background:rgba(0,0,0,.86);display:none;align-items:center;justify-content:center;padding:14px;direction:rtl}
+#sehPhotoCropModal.show{display:flex}#sehPhotoCropModal .seh-crop-panel{width:min(420px,100%);background:#101923;border:1px solid #c7a34b;border-radius:16px;padding:14px;color:#fff}
+#sehPhotoCropModal canvas{display:block;width:min(280px,75vw);height:min(280px,75vw);margin:10px auto;background:#222;border-radius:50%;touch-action:none}#sehPhotoCropModal .seh-crop-actions{display:flex;gap:8px}#sehPhotoCropModal .seh-crop-actions button{flex:1}
 </style>
 <style>
 #authScreen{position:fixed;inset:0;background:#050a11;z-index:999;display:flex;align-items:center;justify-content:center;padding:16px}
@@ -597,6 +619,7 @@ body.locked{overflow:hidden!important}
 <div class="grid2">
 <div><label>نام و نام خانوادگی</label><input id="pn"></div>
 <div><label>سن</label><input id="page" type="number"></div>
+<div><label>تاریخ تولد</label><input id="pbirth" type="text" inputmode="numeric" placeholder="مثلاً ۱۳۷۵/۰۷/۱۸" autocomplete="off"></div>
 <div><label>وزن</label><input id="pweight" type="number"></div>
 <div><label>قد</label><input id="pheight" type="number"></div>
 <div><label>هدف</label><select id="pgoal"><option>کاهش وزن</option><option>افزایش وزن</option><option>عضله‌سازی</option><option>چربی‌سوزی</option><option>تناسب اندام</option></select></div>
@@ -605,6 +628,7 @@ body.locked{overflow:hidden!important}
 <div><label>تجهیزات منزل</label><input id="pequipment"></div>
 </div>
 <button onclick="saveProfile()">ذخیره پروفایل</button>
+<button type="button" id="sehDeleteTraineePhotoEdit" class="secondary" style="display:none;margin-top:8px" onclick="window.sehDeleteTraineePhoto()">🗑️ حذف عکس پروفایل</button>
 <button class="secondary" onclick="openClientMealPlan()">🍽️ برنامه غذایی این شاگرد</button>
 </div>
 
@@ -933,8 +957,8 @@ window.addEventListener('unhandledrejection', function(e) {
 </script>
 
 <script>
-const SUPABASE_URL="https://udptdznbvewkublvzmtm.supabase.co";
-const SUPABASE_KEY="sb_publishable_00blmWtMSM1BrKuD9d6Khw_1LraYc3d";
+const SUPABASE_URL="https://qfakyudgidsumeuoqoot.supabase.co";
+const SUPABASE_KEY="sb_publishable_Z7-iwP8A1QQOlXpWIVtE2g_twXL-WNZ";
 let foods=[], clients=[], currentClient=null;
 
 const $=id=>document.getElementById(id);
@@ -1194,7 +1218,7 @@ async function loadClients(){
     // Read with the signed-in user's access token so RLS, not the public key,
     // decides which trainee records this coach is allowed to see.
     if(typeof window.sbGet!=="function")throw new Error("اتصال امن اطلاعات شاگردان هنوز آماده نیست؛ صفحه را تازه‌سازی کنید.");
-    const data=await window.sbGet("/trainees?select=id,full_name,phone,gender,birth_date,current_weight,height,goal,training_level,training_history,limitations,training_type,home_equipment,created_at&order=created_at.desc");
+    const data=await window.sbGet("/trainees?select=id,full_name,phone,gender,birth_date,current_weight,height,goal,training_level,training_history,limitations,training_type,home_equipment,profile_image,created_at&order=created_at.desc");
     if(!Array.isArray(data))throw new Error("پاسخ فهرست شاگردان معتبر نیست.");
 
     clients=data.map(c=>({
@@ -1212,6 +1236,7 @@ async function loadClients(){
       limitations:c.limitations,
       training_type:c.training_type||"gym",
       home_equipment:c.home_equipment||"",
+      profile_image:c.profile_image||null,
       createdAt:c.created_at,
       active:true,
       plans:0
@@ -1268,8 +1293,36 @@ function updateStats(){
 }
 
 
+function renderCoachSelectedTraineeHeader(){
+  const section=$("client");
+  if(!section||!currentClient)return;
+  let header=document.getElementById("coachSelectedTraineeHeader");
+  if(!header){
+    header=document.createElement("div");
+    header.id="coachSelectedTraineeHeader";
+    header.className="coach-selected-trainee-header";
+    section.insertBefore(header,section.firstChild);
+  }
+  header.replaceChildren();
+  const avatar=document.createElement("div");
+  avatar.className="coach-selected-trainee-avatar";
+  const fallback=document.createElement("span");
+  fallback.textContent=["زن","female","f"].includes(String(currentClient.gender||"").toLowerCase())?"👩":"👤";
+  avatar.appendChild(fallback);
+  if(currentClient.profile_image){
+    const img=document.createElement("img");
+    img.alt="عکس پروفایل شاگرد";
+    img.src=currentClient.profile_image;
+    img.onerror=function(){this.remove();};
+    avatar.insertBefore(img,fallback);
+  }
+  const name=document.createElement("strong");
+  name.textContent=currentClient.name||currentClient.full_name||"شاگرد بدون نام";
+  header.append(avatar,name);
+}
 function selectClient(id){
   currentClient=clients.find(x=>String(x.id)===String(id));if(!currentClient)return;
+  renderCoachSelectedTraineeHeader();
   if(typeof window.sehUseCalorieTrainee==="function")window.sehUseCalorieTrainee(currentClient.id);
   $("pn").value=currentClient.name||"";$("page").value=currentClient.age||"";$("pweight").value=currentClient.weight||"";
   $("pheight").value=currentClient.height||"";$("pgoal").value=currentClient.goal||"کاهش وزن";
@@ -1312,7 +1365,10 @@ async function saveProfile(){
 }
 
 async function saveProfileExtras(){if(!currentClient)return alert('اول شاگرد را انتخاب کنید.');try{await sbWrite(`/trainees?id=eq.${encodeURIComponent(currentClient.id)}`,'PATCH',{training_type:$('ptype2').value,home_equipment:$('pequipment2').value.trim()||null,limitations:$('plimit').value.trim()||null});alert('اطلاعات تکمیلی ذخیره شد.');await loadClients();}catch(e){alert('ذخیره اطلاعات تکمیلی انجام نشد.\n'+e.message);}}
-async function saveSupplement(){if(!currentClient)return alert('اول شاگرد را انتخاب کنید.');const selected=$('suppName').value;const name=(selected==='__custom__'?$('suppCustomName').value:selected).trim();if(!name)return alert('یک ویتامین یا مکمل انتخاب کنید یا نام مورد دلخواه را وارد کنید.');try{await sbWrite('/trainee_supplements','POST',{trainee_id:currentClient.id,name,dose:$('suppDose').value.trim()||null,timing:$('suppTiming').value.trim()||null,frequency:$('suppFrequency').value.trim()||null,days:$('suppDays').value.trim()||null,duration:$('suppDuration').value.trim()||null,coach_note:$('suppNote').value.trim()||null,status:'active'});await loadSupplements();['suppName','suppDose','suppTiming','suppFrequency','suppDays','suppDuration','suppNote','suppCustomName'].forEach(id=>{if($(id))$(id).value='';});$('suppCustomWrap').style.display='none';}catch(e){alert('ثبت مکمل انجام نشد.'+String.fromCharCode(10)+e.message);}}async function loadSupplements(){if(!currentClient||!$('suppList'))return;const traineeMode=typeof authProfile!=='undefined'&&authProfile?.role==='trainee';try{const rows=await sbGet(`/trainee_supplements?trainee_id=eq.${encodeURIComponent(currentClient.id)}&order=created_at.desc`);const visibleRows=traineeMode?rows.filter(x=>String(x.status||'active').toLowerCase()==='active'):rows;$('suppList').innerHTML=visibleRows.map(x=>`<div class="report-row"><span>💊 ${esc(x.name)} — ${esc(x.dose||'')}</span><b>${esc(x.timing||'')} ${traineeMode?'':esc(x.status||'')}</b></div>`).join('')||(traineeMode?'هنوز مکمل یا ویتامینی توسط مربی برای شما ثبت نشده است.':'مکملی ثبت نشده است.');}catch(e){const msg=String(e?.message||e||'خطای نامشخص');let friendly='خطا در بارگذاری مکمل‌ها: '+msg.slice(0,280);if(/PGRST205|schema cache|Could not find the table/i.test(msg))friendly='جدول trainee_supplements در دسترس API نیست یا در حافظهٔ طرح ثبت نشده است. جزئیات: '+msg.slice(0,220);else if(/42P01|relation .* does not exist/i.test(msg))friendly='جدول trainee_supplements در پایگاه داده وجود ندارد. جزئیات: '+msg.slice(0,220);else if(/42501|row-level security|permission denied/i.test(msg))friendly='دسترسی خواندن مکمل‌ها رد شده است؛ باید سیاست‌های دسترسی و RLS بررسی شود. جزئیات: '+msg.slice(0,220);$('suppList').textContent=friendly;console.error('loadSupplements failed:',e);}}
+async function saveSupplement(){if(!currentClient)return alert('اول شاگرد را انتخاب کنید.');const selected=$('suppName').value;const name=(selected==='__custom__'?$('suppCustomName').value:selected).trim();if(!name)return alert('یک ویتامین یا مکمل انتخاب کنید یا نام مورد دلخواه را وارد کنید.');try{await sbWrite('/trainee_supplements','POST',{trainee_id:currentClient.id,name,dose:$('suppDose').value.trim()||null,timing:$('suppTiming').value.trim()||null,frequency:$('suppFrequency').value.trim()||null,days:$('suppDays').value.trim()||null,duration:$('suppDuration').value.trim()||null,coach_note:$('suppNote').value.trim()||null,status:'active'});await loadSupplements();['suppName','suppDose','suppTiming','suppFrequency','suppDays','suppDuration','suppNote','suppCustomName'].forEach(id=>{if($(id))$(id).value='';});$('suppCustomWrap').style.display='none';}catch(e){alert('ثبت مکمل انجام نشد.'+String.fromCharCode(10)+e.message);}}
+async function editSupplement(id){if(!currentClient)return alert('اول شاگرد را انتخاب کنید.');try{const rows=await sbGet('/trainee_supplements?id=eq.'+encodeURIComponent(id)+'&trainee_id=eq.'+encodeURIComponent(currentClient.id)+'&limit=1');const x=rows[0];if(!x)return alert('مکمل پیدا نشد؛ فهرست را تازه کنید.');const fields=[['name','نام مکمل'],['dose','دوز / مقدار'],['timing','زمان مصرف'],['frequency','تعداد / دفعات'],['days','روزهای مصرف'],['duration','مدت دوره'],['coach_note','یادداشت مربی']];const values={};for(const [key,label] of fields){const value=prompt('ویرایش '+label+':',x[key]||'');if(value===null)return;values[key]=value.trim()||null;}if(!values.name)return alert('نام مکمل نمی‌تواند خالی باشد.');await sbWrite('/trainee_supplements?id=eq.'+encodeURIComponent(id)+'&trainee_id=eq.'+encodeURIComponent(currentClient.id),'PATCH',values);await loadSupplements();}catch(e){alert('ویرایش مکمل انجام نشد.\\n'+e.message);}}
+async function deleteSupplement(id){if(!currentClient)return alert('اول شاگرد را انتخاب کنید.');if(!confirm('این مکمل از پرونده شاگرد حذف شود؟ این کار قابل بازگشت نیست.'))return;try{await sbWrite('/trainee_supplements?id=eq.'+encodeURIComponent(id)+'&trainee_id=eq.'+encodeURIComponent(currentClient.id),'DELETE');await loadSupplements();}catch(e){alert('حذف مکمل انجام نشد.\\n'+e.message);}}
+async function loadSupplements(){if(!currentClient||!$('suppList'))return;const traineeMode=typeof authProfile!=='undefined'&&authProfile?.role==='trainee';try{const rows=await sbGet('/trainee_supplements?trainee_id=eq.'+encodeURIComponent(currentClient.id)+'&order=created_at.desc');const visibleRows=traineeMode?rows.filter(x=>String(x.status||'active').toLowerCase()==='active'):rows;$('suppList').innerHTML=visibleRows.map(x=>'<div class="report-row" style="display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap"><span>💊 '+esc(x.name)+' — '+esc(x.dose||'')+'<br><small>'+esc(x.timing||'')+' '+esc(x.frequency||'')+' '+esc(x.days||'')+' '+esc(x.duration||'')+'</small></span><span><b>'+ (traineeMode?'':esc(x.status||'')) +'</b>'+(traineeMode?'':' <button type="button" class="secondary" onclick="editSupplement(\''+esc(x.id)+'\')">✏️ ویرایش</button> <button type="button" class="secondary" onclick="deleteSupplement(\''+esc(x.id)+'\')">🗑 حذف</button>')+'</span></div>').join('')||(traineeMode?'هنوز مکمل یا ویتامینی توسط مربی برای شما ثبت نشده است.':'مکملی ثبت نشده است.');}catch(e){const msg=String(e?.message||e||'خطای نامشخص');let friendly='خطا در بارگذاری مکمل‌ها: '+msg.slice(0,280);if(/PGRST205|schema cache|Could not find the table/i.test(msg))friendly='جدول trainee_supplements در دسترس API نیست یا در حافظهٔ طرح ثبت نشده است. جزئیات: '+msg.slice(0,220);else if(/42P01|relation .* does not exist/i.test(msg))friendly='جدول trainee_supplements در پایگاه داده وجود ندارد. جزئیات: '+msg.slice(0,220);else if(/42501|row-level security|permission denied/i.test(msg))friendly='دسترسی خواندن مکمل‌ها رد شده است؛ باید سیاست‌های دسترسی و RLS بررسی شود. جزئیات: '+msg.slice(0,220);$('suppList').textContent=friendly;console.error('loadSupplements failed:',e);}}
 async function saveInjury(){if(!currentClient)return alert('اول شاگرد را انتخاب کنید.');const type=$('injType').value.trim();if(!type)return alert('نوع مشکل را وارد کنید.');try{await sbWrite('/trainee_injuries','POST',{trainee_id:currentClient.id,problem_type:type,body_area:$('injArea').value.trim()||null,severity:$('injSeverity').value.trim()||null,record_date:$('injDate').value||today(),movement_limit:$('injLimit').value.trim()||null,coach_note:$('injNote').value.trim()||null,status:$('injStatus').value});await loadInjuries();}catch(e){alert('ثبت محدودیت انجام نشد.\n'+e.message);}}
 async function loadInjuries(){if(!currentClient||!$('injList'))return;try{const rows=await sbGet(`/trainee_injuries?trainee_id=eq.${encodeURIComponent(currentClient.id)}&order=created_at.desc`);$('injList').innerHTML=rows.map(x=>{const note=String(x.coach_note||'');const detail=String(x.movement_limit||'');const fileMetaSource=detail.startsWith('HEALTH_REPORT_FILE::')?detail:note;let extra='';if(fileMetaSource.startsWith('HEALTH_REPORT_FILE::')){let meta={};try{meta=JSON.parse(fileMetaSource.slice('HEALTH_REPORT_FILE::'.length));}catch(e){}const safePath=String(meta.path||'');const safeName=String(meta.name||'فایل آزمایش');extra='<div style="margin-top:6px">📎 '+esc(safeName)+(meta.note?' — '+esc(meta.note):'')+' <button type="button" class="mini secondary" onclick="openTraineeHealthFile(\''+esc(safePath).replace(/'/g,'&#39;')+'\')">🔎 مشاهده فایل</button></div>';}else if(note){extra='<div class="muted" style="margin-top:6px;white-space:pre-wrap">'+esc(note)+'</div>';}return '<div class="report-row" style="display:block;padding:10px 0;border-bottom:1px solid #293b4b"><div style="display:flex;justify-content:space-between;gap:8px"><span>⚠️ '+esc(x.problem_type)+' | '+esc(x.body_area||'')+'</span><b>'+esc(x.status||'')+'</b></div>'+(x.severity?'<div class="muted">وضعیت: '+esc(x.severity)+'</div>':'')+(x.movement_limit&&!detail.startsWith('HEALTH_REPORT_FILE::')?'<div class="muted" style="white-space:pre-wrap">شرح: '+esc(x.movement_limit)+'</div>':'')+extra+'</div>';}).join('')||'موردی ثبت نشده است.';}catch(e){$('injList').textContent='برای فعال شدن این بخش، SQL جدید را اجرا کنید.';}}
 window.openTraineeHealthFile=async function(path){if(!path||!AUTH_SUPABASE?.storage)return alert('مسیر فایل معتبر نیست.');try{const {data,error}=await AUTH_SUPABASE.storage.from('trainee-health-reports').createSignedUrl(path,300);if(error)throw error;if(!data?.signedUrl)throw new Error('لینک امن فایل ساخته نشد.');window.open(data.signedUrl,'_blank','noopener');}catch(e){alert('نمایش فایل انجام نشد؛ مجوز مشاهده مربی و فضای ذخیره‌سازی را بررسی کنید. '+(e?.message||String(e)));}};
@@ -1789,6 +1845,7 @@ async function loadNutritionForClient(){
   // شاگرد و گزارش فقط وعده‌هایی را ببینند که دست‌کم یک غذای معتبر با مقدار مثبت دارند؛ فهرست مربی برای ویرایش خالی‌ها کامل می‌ماند.
   const visibleStudentMeals=meals.filter(m=>(m.foods||[]).some(x=>x.food_id&&x.food&&x.amount!==null&&x.amount!==undefined&&String(x.amount).trim()!==''&&Number(x.amount)>0));
   renderStudentMeals(visibleStudentMeals,p);renderMealReport(visibleStudentMeals,p);
+  try{const frame=document.getElementById("sehNutritionBuilderFrame");if(frame?.contentWindow)frame.contentWindow.postMessage({type:"sehNutritionBuilderRefresh"},location.origin);}catch(refreshError){}
  }catch(e){console.error("Nutrition load failed at: "+nutritionLoadStage,e);if(sameTrainee())alert("دریافت برنامه غذایی از Supabase انجام نشد.\nمرحله خطا: "+nutritionLoadStage+"\n"+(e?.message||String(e)));}
 }
 async function sbApiHeaders(extra={}){
@@ -1802,8 +1859,37 @@ async function sbApiHeaders(extra={}){
  return headers;
 }
 async function sbGet(path){
- const r=await fetch(SUPABASE_URL+"/rest/v1"+path,{headers:await sbApiHeaders()});
- if(!r.ok)throw new Error(await r.text());return r.json();
+ let authRetried=false,schemaRetried=false,networkRetried=false;
+ while(true){
+  let r;
+  try{
+   r=await fetch(SUPABASE_URL+"/rest/v1"+path,{headers:await sbApiHeaders()});
+  }catch(networkError){
+   if(!networkRetried){networkRetried=true;await new Promise(resolve=>setTimeout(resolve,650));continue;}
+   throw networkError;
+  }
+  if(r.ok)return r.json();
+  const raw=await r.text();
+  let detail={};try{detail=JSON.parse(raw)||{};}catch(e){}
+  // A mobile app resumed after being backgrounded can hold an expired access
+  // token. Refresh once and repeat the exact same read with the new session.
+  if(r.status===401&&!authRetried&&window.AUTH_SUPABASE?.auth?.refreshSession){
+   authRetried=true;
+   try{
+    const refreshed=await window.AUTH_SUPABASE.auth.refreshSession();
+    if(!refreshed.error&&refreshed.data?.session)continue;
+    throw refreshed.error||new Error("نشست تازه‌سازی نشد.");
+   }catch(refreshError){
+    throw new Error("نشست ورود منقضی شده است؛ یک‌بار خارج و دوباره وارد شوید. "+(refreshError?.message||String(refreshError)));
+   }
+  }
+  // PostgREST can briefly serve a stale schema cache after a database wake or
+  // schema reload. Retry this read once; never hide a persistent missing table.
+  if(!schemaRetried&&(detail.code==="PGRST205"||/schema cache/i.test(raw))){
+   schemaRetried=true;await new Promise(resolve=>setTimeout(resolve,900));continue;
+  }
+  throw new Error(raw||("HTTP "+r.status));
+ }
 }
 async function sbWrite(path,method,body){
  const r=await fetch(SUPABASE_URL+"/rest/v1"+path,{method,headers:await sbApiHeaders({"Prefer":"return=representation"}),body:JSON.stringify(body)});
@@ -2435,15 +2521,76 @@ if($("prDate"))$("prDate").value=today();if($("anDate"))$("anDate").value=today(
     }
     if(panel.parentElement!==section)section.appendChild(panel);
   }
+  function renderTraineeProfileHeader(root){
+    if(!root || !authProfile || authProfile.role!=='trainee')return;
+    let wrap=root.querySelector('.seh-profile-wrap');
+    if(!wrap){
+      wrap=document.createElement('div');
+      wrap.className='seh-profile-wrap';
+      root.insertBefore(wrap,root.firstChild);
+    }
+    const c=currentClient||{};
+    const signupButton=document.getElementById('sehAddTraineeRequestOpen');
+    if(signupButton)signupButton.remove();
+    const name=c.full_name||c.name||authProfile.full_name||'شاگرد';
+    const gender=String(c.gender||'').toLowerCase();
+    const fallback=(gender==='زن'||gender==='female'||gender==='f')?'👩':'👨';
+    wrap.innerHTML='<div class="seh-profile-summary" role="button" tabindex="0" aria-label="باز کردن پروفایل من" onclick="dashOpen(\'client\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();dashOpen(\'client\')}">'+
+      '<div class="seh-profile-avatar"><span class="seh-profile-fallback">'+fallback+'</span><img class="seh-profile-image" alt="عکس پروفایل"><button type="button" class="seh-profile-photo-add" aria-label="افزودن عکس پروفایل" onclick="event.stopPropagation();document.getElementById(\'sehTraineePhotoInput\').click()">+</button></div>'+
+      '<div class="seh-profile-info"><div class="seh-profile-name"></div><div class="seh-profile-birth"></div></div></div>'+
+      '<input id="sehTraineePhotoInput" type="file" accept="image/*" hidden onchange="window.sehSaveTraineePhoto(this)">'+
+      '<button type="button" class="seh-profile-exit" onclick="logoutApp()"><span>↪</span> خروج از حساب کاربری</button>'+
+      '';
+    wrap.querySelector('.seh-profile-name').textContent=name;
+    const birthNode=wrap.querySelector('.seh-profile-birth');
+    const birthText=window.isoToJalaliDate?window.isoToJalaliDate(c.birth_date):'';
+    if(birthNode)birthNode.textContent=birthText?'🎂 '+birthText:'🎂 تاریخ تولد ثبت نشده';
+    const img=wrap.querySelector('.seh-profile-image');
+    const fallbackNode=wrap.querySelector('.seh-profile-fallback');
+    const editDeleteButton=document.getElementById('sehDeleteTraineePhotoEdit');
+    if(editDeleteButton)editDeleteButton.style.display=(authProfile&&authProfile.role==='trainee'&&c.profile_image)?'inline-flex':'none';
+    if(c.profile_image){
+      img.onload=()=>{img.style.display='block';fallbackNode.style.display='none';};
+      img.onerror=()=>{img.style.display='none';fallbackNode.style.display='block';};
+      img.src=c.profile_image;
+    }else{img.style.display='none';fallbackNode.style.display='block';}
+  }
+  window.renderTraineeProfileHeader = renderTraineeProfileHeader;
+
+  window.sehSaveTraineeBirth=async function(){
+    const input=document.getElementById('sehTraineeBirthInput');
+    if(!input||!currentClient||!currentClient.id){alert('پرونده شاگرد پیدا نشد؛ دوباره وارد شوید.');return;}
+    const raw=window.getJalaliVisibleValue?window.getJalaliVisibleValue(input):String(input.value||'');
+    // The shared Jalali picker exposes the converted ISO date through the input.value getter.
+    const iso=String(input.value||'').slice(0,10);
+    if(!raw||!/^\\d{4}-\\d{2}-\\d{2}$/.test(iso)){alert('تاریخ تولد معتبر نیست؛ از تقویم یا قالب ۱۳۷۵/۰۷/۱۸ استفاده کنید.');return;}
+    try{
+      const rows=await window.sbWrite('/trainees?id=eq.'+encodeURIComponent(currentClient.id),'PATCH',{birth_date:iso});
+      if(!Array.isArray(rows)||!rows.some(row=>String(row.id)===String(currentClient.id)&&String(row.birth_date||'').slice(0,10)===iso)){
+        throw new Error('ذخیره تاریخ تولد در پایگاه داده تأیید نشد.');
+      }
+      currentClient.birth_date=iso;
+      if(Array.isArray(clients)){const row=clients.find(x=>String(x.id)===String(currentClient.id));if(row)row.birth_date=iso;}
+      const profileRoot=document.getElementById('traineeDashboard');if(profileRoot)renderTraineeProfileHeader(profileRoot);
+      const status=document.getElementById('sehTraineeBirthStatus');
+      if(status)status.textContent='✓ تاریخ تولد ذخیره شد';
+    }catch(e){console.error('Trainee birth date save failed',e);alert('ذخیره تاریخ تولد انجام نشد. '+(e.message||''));}
+  };
+
+  let sehCropBitmap=null,sehCropScale=1,sehCropX=0,sehCropY=0,sehCropPointer=null;
+  function sehCropDraw(){const canvas=document.getElementById('sehPhotoCropCanvas');if(!canvas||!sehCropBitmap)return;const ctx=canvas.getContext('2d'),w=320,h=320;ctx.clearRect(0,0,w,h);const base=Math.max(w/sehCropBitmap.width,h/sehCropBitmap.height),scale=base*sehCropScale,dw=sehCropBitmap.width*scale,dh=sehCropBitmap.height*scale;ctx.save();ctx.beginPath();ctx.arc(160,160,160,0,Math.PI*2);ctx.clip();ctx.drawImage(sehCropBitmap,(w-dw)/2+sehCropX,(h-dh)/2+sehCropY,dw,dh);ctx.restore();}
+  function sehClosePhotoCrop(){const modal=document.getElementById('sehPhotoCropModal');if(modal)modal.classList.remove('show');if(sehCropBitmap&&sehCropBitmap.close)sehCropBitmap.close();sehCropBitmap=null;sehCropPointer=null;}
+  function sehEnsurePhotoCropModal(){let modal=document.getElementById('sehPhotoCropModal');if(modal)return modal;modal=document.createElement('div');modal.id='sehPhotoCropModal';modal.innerHTML='<div class="seh-crop-panel"><h3>برش عکس پروفایل</h3><p class="muted">عکس را با انگشت جابه‌جا کنید و اندازه را تنظیم کنید.</p><canvas id="sehPhotoCropCanvas" width="320" height="320"></canvas><label for="sehPhotoCropZoom">بزرگ‌نمایی</label><input id="sehPhotoCropZoom" type="range" min="1" max="3" step=".01" value="1"><div class="seh-crop-actions"><button type="button" class="secondary" id="sehPhotoCropCancel">انصراف</button><button type="button" id="sehPhotoCropSave">ذخیره برش</button></div></div>';document.body.appendChild(modal);modal.querySelector('#sehPhotoCropCancel').onclick=sehClosePhotoCrop;modal.querySelector('#sehPhotoCropZoom').oninput=e=>{sehCropScale=Number(e.target.value)||1;sehCropDraw();};const canvas=modal.querySelector('canvas');canvas.addEventListener('pointerdown',e=>{sehCropPointer={x:e.clientX,y:e.clientY,ox:sehCropX,oy:sehCropY};canvas.setPointerCapture(e.pointerId);});canvas.addEventListener('pointermove',e=>{if(!sehCropPointer)return;const factor=320/canvas.getBoundingClientRect().width;sehCropX=sehCropPointer.ox+(e.clientX-sehCropPointer.x)*factor;sehCropY=sehCropPointer.oy+(e.clientY-sehCropPointer.y)*factor;sehCropDraw();});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>canvas.addEventListener(ev,()=>{sehCropPointer=null;}));modal.querySelector('#sehPhotoCropSave').onclick=window.sehCommitTraineePhotoCrop;return modal;}
+  window.sehSaveTraineePhoto=async function(input){const file=input&&input.files&&input.files[0];if(!file)return;if(!file.type||!file.type.startsWith('image/')){alert('لطفاً یک فایل تصویری انتخاب کنید.');input.value='';return;}if(file.size>8*1024*1024){alert('حجم عکس باید کمتر از ۸ مگابایت باشد.');input.value='';return;}if(!currentClient||!currentClient.id){alert('پرونده شاگرد پیدا نشد؛ دوباره وارد شوید.');input.value='';return;}try{if(!('createImageBitmap' in window))throw new Error('مرورگر این گوشی امکان برش عکس را پشتیبانی نمی‌کند.');sehCropBitmap=await createImageBitmap(file);sehCropScale=1;sehCropX=0;sehCropY=0;const modal=sehEnsurePhotoCropModal();modal.classList.add('show');modal.querySelector('#sehPhotoCropZoom').value='1';sehCropDraw();}catch(e){console.error('Trainee photo crop open failed',e);alert('باز کردن برش عکس انجام نشد. '+(e.message||''));}finally{if(input)input.value='';}};
+  window.sehCommitTraineePhotoCrop=async function(){if(!sehCropBitmap||!currentClient||!currentClient.id)return;const button=document.getElementById('sehPhotoCropSave');if(button){button.disabled=true;button.textContent='در حال ذخیره…';}try{const canvas=document.createElement('canvas');canvas.width=320;canvas.height=320;const ctx=canvas.getContext('2d'),base=Math.max(320/sehCropBitmap.width,320/sehCropBitmap.height),scale=base*sehCropScale,dw=sehCropBitmap.width*scale,dh=sehCropBitmap.height*scale;ctx.save();ctx.beginPath();ctx.arc(160,160,160,0,Math.PI*2);ctx.clip();ctx.drawImage(sehCropBitmap,(320-dw)/2+sehCropX,(320-dh)/2+sehCropY,dw,dh);ctx.restore();const imageData=canvas.toDataURL('image/jpeg',.8),traineeId=String(currentClient.id);const rows=await window.sbWrite('/trainees?id=eq.'+encodeURIComponent(traineeId),'PATCH',{profile_image:imageData});if(!Array.isArray(rows)||!rows.some(row=>String(row.id)===traineeId&&row.profile_image===imageData))throw new Error('ذخیره عکس در پایگاه داده تأیید نشد.');currentClient.profile_image=imageData;if(Array.isArray(clients)){const row=clients.find(x=>String(x.id)===traineeId);if(row)row.profile_image=imageData;}sehClosePhotoCrop();const root=document.getElementById('traineeDashboard');if(root)renderTraineeProfileHeader(root);alert('عکس پروفایل ذخیره شد.');}catch(e){console.error('Trainee profile photo save failed',e);alert('ذخیره عکس انجام نشد. '+(e.message||''));}finally{if(button){button.disabled=false;button.textContent='ذخیره برش';}}};
+  window.sehDeleteTraineePhoto=async function(){if(!currentClient||!currentClient.id||!currentClient.profile_image)return;if(!confirm('عکس پروفایل حذف شود؟'))return;const traineeId=String(currentClient.id);try{const rows=await window.sbWrite('/trainees?id=eq.'+encodeURIComponent(traineeId),'PATCH',{profile_image:null});if(!Array.isArray(rows)||!rows.some(row=>String(row.id)===traineeId&&row.profile_image==null))throw new Error('حذف عکس در پایگاه داده تأیید نشد.');currentClient.profile_image=null;if(Array.isArray(clients)){const row=clients.find(x=>String(x.id)===traineeId);if(row)row.profile_image=null;}const root=document.getElementById('traineeDashboard');if(root)renderTraineeProfileHeader(root);alert('عکس پروفایل حذف شد.');}catch(e){console.error('Trainee profile photo delete failed',e);alert('حذف عکس انجام نشد. '+(e.message||''));}};
+
+
   function normalizeTraineeProfileCards(root){
     const grid=root&&root.querySelector('.v4-dashboard');
     if(!grid)return;
     const cards=Array.from(grid.querySelectorAll('.v4-card'));
-    const profiles=cards.filter(card=>
-      card.hasAttribute('data-profile-card') ||
-      /dashOpen\\(\\s*['"]client['"]\\s*\\)/.test(card.getAttribute('onclick')||'') ||
-      /پروفایل من/.test(card.textContent||'')
-    );
+    const profiles=cards.filter(card=>card.hasAttribute('data-profile-card') || /dashOpen\\(\\s*['"]client['"]\\s*\\)/.test(card.getAttribute('onclick')||'') || /پروفایل من/.test(card.textContent||''));
     if(!profiles.length){
       grid.insertAdjacentHTML('beforeend',`<div class="v4-card" data-profile-card="1" onclick="dashOpen('client')"><b>👤</b>پروفایل من<span class="v4-small">مشاهده و ثبت اطلاعات شخصی</span></div>`);
       return;
@@ -2459,6 +2606,7 @@ if($("prDate"))$("prDate").value=today();if($("anDate"))$("anDate").value=today(
       /* Rebuild an incomplete dashboard shell rather than permanently skipping plan cards. */
       if(!grid||planCards.length<2) existing.remove();
       else {
+        renderTraineeProfileHeader(existing);
         normalizeTraineeProfileCards(existing);
         moveActivityPanelToStudentDashboard();
         addTraineeWorkoutExportPanel();
@@ -2480,6 +2628,7 @@ if($("prDate"))$("prDate").value=today();if($("anDate"))$("anDate").value=today(
         <div class="v4-card" id="sehChatEntryCard" role="button" tabindex="0" onclick="window.sehOpenTraineeChat&&window.sehOpenTraineeChat()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.sehOpenTraineeChat&&window.sehOpenTraineeChat()}"><b style="display:block;font-size:24px;margin-bottom:8px">💬</b><strong>گفت‌وگو با مربی</strong><span class="v4-small">ارسال پیام به مربی</span></div>
       </div>`;
     const page=document.querySelector('.page');const nav=document.querySelector('.nav');page.insertBefore(sec,nav.nextSibling);
+    renderTraineeProfileHeader(sec);
     normalizeTraineeProfileCards(sec);
     moveActivityPanelToStudentDashboard();
     addTraineeWorkoutExportPanel();
@@ -2799,12 +2948,33 @@ window.loadDashboard = loadDashboard;
       try{await sbWrite(`/trainees?id=eq.${encodeURIComponent(c.id)}`,'PATCH',{auth_user_id:user.id,phone_normalized:authPhone||c.phone_normalized||null});}catch(e){showAuthError('اتصال حساب شاگرد انجام نشد. '+(e.message||''));await AUTH_SUPABASE.auth.signOut();return;}
       c.auth_user_id=user.id;
     }
-    authProfile={id:user.id,role:'trainee',full_name:c.full_name||user.phone||'شاگرد',trainee_id:c.id};
-    clients=[{id:c.id,name:c.full_name,phone:c.phone,gender:c.gender,birth_date:c.birth_date,age:c.age??calcAge(c.birth_date),weight:c.current_weight,height:c.height,goal:c.goal,level:c.training_level,history:c.training_history,limitations:c.limitations,training_type:c.training_type||'gym',home_equipment:c.home_equipment||'',training_days:c.training_days||'',training_time:c.training_time||'',weekly_sessions:c.weekly_sessions||null,club_registration_date:c.club_registration_date||null,profile_image:c.profile_image||null,createdAt:c.created_at||null,active:true,plans:0}];currentClient=clients[0];
+    authProfile={id:user.id,role:'trainee',full_name:c.full_name||user.phone||'شاگرد',trainee_id:c.id};document.body.classList.add('seh-trainee-mode');
+    clients=[{id:c.id,name:c.full_name,full_name:c.full_name,phone:c.phone,gender:c.gender,birth_date:c.birth_date,profile_image:c.profile_image||null,age:c.age??calcAge(c.birth_date),weight:c.current_weight,height:c.height,goal:c.goal,level:c.training_level,history:c.training_history,limitations:c.limitations,training_type:c.training_type||'gym',home_equipment:c.home_equipment||'',training_days:c.training_days||'',training_time:c.training_time||'',weekly_sessions:c.weekly_sessions||null,club_registration_date:c.club_registration_date||null,createdAt:c.created_at||null,active:true,plans:0}];currentClient=clients[0];
     qsAll('.nav button').forEach(b=>b.style.display='none');$id('navDash').style.display='block';
     ['client','meal','workout','progress'].forEach(sec=>{const b=qsAll('.nav button').find(x=>String(x.getAttribute('onclick')||'').includes("'"+sec+"'"));if(b)b.style.display='block';});
     document.body.classList.remove('locked');$id('authScreen').style.display='none';$id('authUserBar').style.display='block';$id('authUserText').textContent=`${c.full_name||user.phone} | شاگرد`;
-    addScheduleUI();showSection('traineeDashboard',$id('navDash'));await loadDashboard();if(window.__sehRenderTraineeProfileHeader){window.__sehRenderTraineeProfileHeader();if(window.__sehRefreshTraineeProfileHeader)await window.__sehRefreshTraineeProfileHeader();}
+    addScheduleUI();
+    // On trainee login, prepare the dashboard data without routing through
+    // selectClient(), because that function intentionally opens the coach profile.
+    // The trainee can still open and edit their profile manually from its dashboard card.
+    const setProfileValue=(id,value)=>{const el=$id(id);if(el)el.value=value==null?'':String(value);};
+    setProfileValue('pn',c.full_name||'');
+    setProfileValue('page',c.age??calcAge(c.birth_date)??'');
+    setProfileValue('pweight',c.current_weight??'');
+    setProfileValue('pheight',c.height??'');
+    setProfileValue('pgoal',c.goal||'کاهش وزن');
+    setProfileValue('plevel',c.training_level||'مبتدی');
+    // Paint the dashboard first; optional panels refresh without blocking login.
+    showSection('traineeDashboard',$id('navDash'));
+    Promise.allSettled([
+      loadNutritionForClient(),loadWorkoutForClient(),loadSupplements(),
+      loadInjuries(),loadActivityToday(),loadDashboard(),
+      loadProgressHistory(),loadFastingSummary()
+    ]).then(results=>{
+      results.forEach((item,index)=>{
+        if(item.status==='rejected')console.warn('Trainee dashboard background load failed:',index,item.reason);
+      });
+    });
   }
 
   function buildAuthTabs(){
@@ -3075,6 +3245,81 @@ window.loadDashboard = loadDashboard;
 
 
 
+
+
+<!-- SEH_COACH_APPROVAL_PASSWORDLESS_LOGIN_V1 -->
+<script>
+(function(){
+ 'use strict';
+ const KEY='seh_pending_device_link_v1';
+ const $=id=>document.getElementById(id);
+ function norm(v){
+  let p=String(v||'').trim().replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[^0-9+]/g,'');
+  if(p.startsWith('0098'))p='+'+p.slice(2);else if(p.startsWith('98'))p='+'+p;else if(p.startsWith('0'))p='+98'+p.slice(1);else if(p.startsWith('9'))p='+98'+p;
+  return p;
+ }
+ function secret(){return Array.from(crypto.getRandomValues(new Uint8Array(32))).map(x=>x.toString(16).padStart(2,'0')).join('');}
+ function read(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+ function save(v){localStorage.setItem(KEY,JSON.stringify(v))}
+ function clear(){localStorage.removeItem(KEY)}
+ function status(t,ok){const e=$('sehApprovalLoginStatus');if(e){e.textContent=t;e.style.color=ok?'#9be2b0':'#ffd28a';}}
+ function render(){
+  const box=$('traineeLoginBox');if(!box)return;
+  const blocks=Array.from(box.querySelectorAll('.trainee-auth-block'));
+  let block=blocks.find(b=>(b.querySelector('h3')?.textContent||'').includes('ورود شاگرد'));
+  if(!block)return;
+  if(block.dataset.sehApprovalLogin==='1' && $('sehApprovalPhone'))return;
+  block.dataset.sehApprovalLogin='1';
+  block.innerHTML='<h3>👤 ورود شاگرد</h3><p class="muted" style="line-height:1.9">شماره موبایل و نام خود را وارد کنید. پس از تأیید مربی، همین گوشی بدون رمز وارد حساب شما می‌شود.</p><label>نام و نام خانوادگی</label><input id="sehApprovalName" type="text" autocomplete="name" placeholder="نام کامل شما"><label>شماره موبایل ثبت‌شده در باشگاه</label><input id="sehApprovalPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09121234567"><button type="button" id="sehApprovalRequestBtn" onclick="window.sehRequestApprovalLogin()">📨 درخواست ورود از مربی</button><p id="sehApprovalLoginStatus" class="muted" style="font-size:12px;line-height:1.9;white-space:pre-wrap"></p>';
+  if(read())status('درخواست قبلی شما در حال پیگیری است؛ منتظر تأیید مربی بمانید.');
+ }
+ let busy=false;
+ async function poll(){
+  const p=read();if(!p||busy||!window.AUTH_SUPABASE?.auth?.signInWithPassword)return;
+  busy=true;
+  try{
+   const {data,error}=await window.AUTH_SUPABASE.functions.invoke('trainee-device-link',{body:{action:'claim',request_id:p.id,request_secret:p.secret}});
+   if(error)throw error;
+   if(data?.status==='pending'){status('درخواست شما ثبت شده است؛ منتظر تأیید مربی بمانید.');return;}
+   if(['rejected','expired','claimed'].includes(data?.status)){clear();status(data.message||'این درخواست دیگر معتبر نیست؛ دوباره درخواست بدهید.');return;}
+   if(data?.success&&data?.temporary_password&&data?.phone){
+    const signed=await window.AUTH_SUPABASE.auth.signInWithPassword({phone:data.phone,password:data.temporary_password});
+    if(signed.error)throw signed.error;
+    if(!signed.data?.user||!signed.data?.session?.access_token||!signed.data?.session?.refresh_token)throw new Error('نشست ورود ساخته نشد.');
+    const saved=await window.AUTH_SUPABASE.auth.setSession({access_token:signed.data.session.access_token,refresh_token:signed.data.session.refresh_token});
+    if(saved.error)throw saved.error;
+    const verified=await window.AUTH_SUPABASE.auth.getSession();
+    if(verified.error||verified.data?.session?.user?.id!==signed.data.user.id)throw new Error('ذخیره نشست ورود انجام نشد.');
+    clear();status('مربی تأیید کرد؛ در حال ورود به حساب شما…',true);
+    if(typeof window.finishLogin!=='function')throw new Error('بخش تکمیل ورود آماده نیست؛ صفحه را تازه‌سازی کنید.');
+    await window.finishLogin(signed.data.user);
+   }
+  }catch(e){console.warn('coach-approved passwordless login',e);status('بررسی یا ورود انجام نشد. اینترنت را بررسی کنید و دوباره تلاش کنید. '+(e?.message||''));}
+  finally{busy=false;}
+ }
+ window.sehRequestApprovalLogin=async function(){
+  const name=$('sehApprovalName')?.value.trim()||'',phone=norm($('sehApprovalPhone')?.value||''),btn=$('sehApprovalRequestBtn');
+  if(name.length<2){status('نام و نام خانوادگی را وارد کنید.');return;}
+  if(!/^\+989\d{9}$/.test(phone)){status('شماره موبایل معتبر نیست؛ مانند 09121234567 وارد کنید.');return;}
+  if(read()){status('درخواست قبلی هنوز در حال بررسی است.');return;}
+  if(!window.AUTH_SUPABASE?.functions?.invoke){status('ارتباط با سامانه آماده نیست؛ صفحه را تازه‌سازی کنید.');return;}
+  if(btn){btn.disabled=true;btn.textContent='⏳ در حال ارسال درخواست…';}
+  try{
+   const sec=secret();
+   const {data,error}=await window.AUTH_SUPABASE.functions.invoke('trainee-device-link',{body:{action:'request',full_name:name,phone,request_secret:sec}});
+   if(error)throw error;if(data?.error)throw new Error(data.error);if(!data?.request_id)throw new Error('شناسه درخواست دریافت نشد.');
+   save({id:data.request_id,secret:sec,phone});
+   status('درخواست برای مربی ارسال شد. همین صفحه را باز نگه دارید؛ پس از تأیید، خودکار وارد می‌شوید.',true);
+   poll();
+  }catch(e){status('ارسال درخواست انجام نشد: '+(e?.message||String(e)));}
+  finally{if(btn){btn.disabled=false;btn.textContent='📨 درخواست ورود از مربی';}}
+ };
+ render();
+ [700,1600,2800,3900,4800].forEach(ms=>setTimeout(render,ms));
+ setInterval(()=>{if(read())poll();},6500);
+ if(read())setTimeout(poll,1200);
+})();
+<\/script>
 
 </body></html>`;
     const w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}
@@ -4802,7 +5047,7 @@ window.toggleExerciseFavorite=async function(id,value){try{await sbWrite(`/train
       const workoutLabel=ps.workout==='due'?'برنامه تمرینی: سه روز یا کمتر تا پایان':ps.workout==='active'?'برنامه تمرینی معتبر دارد':ps.workout==='missing'?'برنامه تمرینی ندارد':'وضعیت تمرینی در حال بررسی';
       const nutritionLabel=ps.nutrition==='due'?'برنامه غذایی: سه روز یا کمتر تا پایان':ps.nutrition==='active'?'برنامه غذایی معتبر دارد':ps.nutrition==='missing'?'برنامه غذایی ندارد':'وضعیت غذایی در حال بررسی';
       const badges=planBadge('workout',ps.workout,workoutLabel)+planBadge('nutrition',ps.nutrition,nutritionLabel);
-      return `<button type="button" data-trainee-id="${String(c.id).replace(/"/g,'&quot;')}" class="coach-name-cell${selected?' selected':''}" onclick="selectClient('${String(c.id).replace(/'/g,'')}');document.querySelectorAll('#coachMobileCards .coach-name-cell').forEach(x=>x.classList.toggle('selected',x===this))" aria-label="انتخاب شاگرد ${esc(c.name||'بدون نام')}؛ ${regLabel}؛ ${workoutLabel}؛ ${nutritionLabel}" title="${regLabel}">${regDot}<span class="coach-trainee-name-text">${esc(c.name||'بدون نام')}</span><span class="coach-plan-badges">${badges}</span></button>`;
+      return `<button type="button" data-trainee-id="${String(c.id).replace(/"/g,'&quot;')}" class="coach-name-cell${selected?' selected':''}" onclick="selectClient('${String(c.id).replace(/'/g,'')}');document.querySelectorAll('#coachMobileCards .coach-name-cell').forEach(x=>x.classList.toggle('selected',x===this))" aria-label="انتخاب شاگرد ${esc(c.name||'بدون نام')}؛ ${regLabel}؛ ${workoutLabel}؛ ${nutritionLabel}" title="${regLabel}">${regDot}<span class="coach-list-avatar" aria-hidden="true">${c.profile_image?`<img src="${esc(c.profile_image)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'">`:''}<span class="coach-list-avatar-fallback" style="${c.profile_image?'display:none;':''}">${['زن','female','f'].includes(String(c.gender||'').toLowerCase())?'👩':'👤'}</span></span><span class="coach-trainee-name-text">${esc(c.name||'بدون نام')}</span><span class="coach-plan-badges">${badges}</span></button>`;
     }).join(''):(allClients.length===0&&registrationFilter!=='pending'&&registrationFilter!=='incomplete'&&registrationFilter!=='complete'?'<div style="padding:12px;border:1px solid #8b6b2b;border-radius:10px;margin-top:10px"><strong>هنوز شاگردی برای این حساب نمایش داده نمی‌شود.</strong><p>ورود مربی انجام شده، اما درخواست فهرست شاگردان ردیفی برنگردانده است. این حالت معمولاً به پیوند رکورد در جدول trainees با شناسه مربی یا سیاست‌های RLS مربوط است؛ از این پیام به‌تنهایی نمی‌توان علت قطعی را تعیین کرد.</p><p>برای بررسی دقیق، شناسه حساب ورود و مقدار coach_user_id رکوردهای جدول trainees باید در همان پروژه Supabase مقایسه شوند.</p><button type="button" onclick="showTraineeDiagnostic()">نمایش شناسه حساب و وضعیت اتصال</button> <button type="button" onclick="loadClients()">تلاش دوباره</button></div>':'<div class="muted" style="padding:12px">شاگرد یا درخواست ثبت‌نامی با این جستجو یا فیلتر پیدا نشد.</div>');
     if(typeof window.updateStats==='function')window.updateStats();
   };
@@ -5119,6 +5364,9 @@ window.toggleExerciseFavorite=async function(id,value){try{await sbWrite(`/train
 .jalali-days button{padding:7px 0;min-width:0;min-height:31px;font-size:12px}
 .jalali-days button.jp-selected{background:#ffbd16;color:#111;border-color:#ffbd16}
 .jalali-days button.jp-today{border-color:#08a88b}
+.jalali-days.jp-years{grid-template-columns:repeat(4,minmax(0,1fr));max-height:230px;overflow-y:auto}
+.jalali-days.jp-years button{min-height:38px}
+.jalali-pop .jp-month{border:0;background:transparent;color:#fff;padding:6px 2px;cursor:pointer}
 .jalali-pop-foot{display:flex;gap:6px;margin-top:9px}
 .jalali-pop-foot button{flex:1}
 .jalali-pop-foot .jp-confirm{background:#ffbd16;color:#111;border-color:#ffbd16}
@@ -5140,7 +5388,7 @@ window.toggleExerciseFavorite=async function(id,value){try{await sbWrite(`/train
  const nativeValue=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value');
  // Read the actual visible Jalali text without the compatibility .value getter, which exposes ISO to legacy code.
  window.getJalaliVisibleValue=function(idOrInput){const input=typeof idOrInput==='string'?document.getElementById(idOrInput):idOrInput;return input?String(nativeValue.get.call(input)??'').trim():'';};
- let pop=null,active=null,view=null,chosen=null;
+ let pop=null,active=null,view=null,chosen=null,pickerMode='days';
  function shown(input){return nativeValue.get.call(input);}
  function rawSet(input,v){nativeValue.set.call(input,v);}
  function setupInput(input){
@@ -5165,8 +5413,8 @@ window.toggleExerciseFavorite=async function(id,value){try{await sbWrite(`/train
    input.addEventListener('change',()=>{const raw=shown(input),iso=jToIso(raw);if(raw&&!iso){input.setCustomValidity('تاریخ شمسی معتبر وارد کنید؛ نمونه: ۱۴۰۵/۰۸/۱۸');}else{input.setCustomValidity('');if(iso)rawSet(input,isoToJ(iso));}});
    input.addEventListener('input',()=>input.setCustomValidity(''));
  }
- function ensurePop(){if(pop)return;pop=document.createElement('div');pop.className='jalali-pop';pop.hidden=true;pop.innerHTML='<div class="jalali-pop-head"><button type="button" data-act="prev" aria-label="ماه قبل">‹</button><div class="jp-month"></div><button type="button" data-act="next" aria-label="ماه بعد">›</button></div><div class="jalali-days"></div><div class="jalali-pop-foot"><button type="button" data-act="today">امروز</button><button type="button" data-act="cancel">بستن</button><button type="button" class="jp-confirm" data-act="confirm">تأیید</button></div>';
-   pop.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;if(a==='prev'||a==='next'){view[1]+=a==='prev'?-1:1;if(view[1]<1){view[1]=12;view[0]--;}if(view[1]>12){view[1]=1;view[0]++;}render();}else if(a==='today'){view=todayJ().slice(0,2);chosen=todayJ();render();}else if(a==='cancel'){close();}else if(a==='confirm'){if(active&&chosen){const iso=jToIso(chosen.join('/'));if(iso){active.value=iso;active.setCustomValidity('');active.dispatchEvent(new Event('input',{bubbles:true}));active.dispatchEvent(new Event('change',{bubbles:true}));}}close();}else if(b.dataset.day){chosen=[view[0],view[1],+b.dataset.day];render();}});
+ function ensurePop(){if(pop)return;pop=document.createElement('div');pop.className='jalali-pop';pop.hidden=true;pop.innerHTML='<div class="jalali-pop-head"><button type="button" data-act="prev" aria-label="ماه قبل">‹</button><button type="button" class="jp-month" data-act="years" aria-label="انتخاب سال"></button><button type="button" data-act="next" aria-label="ماه بعد">›</button></div><div class="jalali-days"></div><div class="jalali-pop-foot"><button type="button" data-act="today">امروز</button><button type="button" data-act="cancel">بستن</button><button type="button" class="jp-confirm" data-act="confirm">تأیید</button></div>';
+   pop.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;if(a==='years'){pickerMode=pickerMode==='years'?'days':'years';render();}else if(a==='prev'||a==='next'){if(pickerMode==='years'){view[0]+=a==='prev'?-12:12;}else{view[1]+=a==='prev'?-1:1;if(view[1]<1){view[1]=12;view[0]--;}if(view[1]>12){view[1]=1;view[0]++;}}render();}else if(a==='today'){view=todayJ().slice(0,2);chosen=todayJ();pickerMode='days';render();}else if(a==='cancel'){close();}else if(a==='confirm'){if(active&&chosen){const iso=jToIso(chosen.join('/'));if(iso){active.value=iso;active.setCustomValidity('');active.dispatchEvent(new Event('input',{bubbles:true}));active.dispatchEvent(new Event('change',{bubbles:true}));}}close();}else if(b.dataset.year){view[0]=Number(b.dataset.year);pickerMode='days';render();}else if(b.dataset.day){chosen=[view[0],view[1],+b.dataset.day];render();}});
    document.body.appendChild(pop);
    document.addEventListener('pointerdown',e=>{if(pop&&!pop.hidden&&!pop.contains(e.target)&&e.target!==active&&!e.target.closest('.jalali-open-btn'))close();});
    window.addEventListener('resize',position);window.addEventListener('scroll',position,true);
@@ -5174,10 +5422,12 @@ window.toggleExerciseFavorite=async function(id,value){try{await sbWrite(`/train
  function open(input){setupInput(input);ensurePop();active=input;const raw=shown(input),iso=jToIso(raw);chosen=null;
    // Convert ISO date to Jalali with explicit components.
    if(iso){const p=iso.split('-').map(Number);chosen=g2j(p[0],p[1],p[2]);}
-   if(!chosen){const t=todayJ();chosen=t.slice();}view=chosen.slice(0,2);pop.hidden=false;render();position();}
+   if(!chosen){const t=todayJ();chosen=t.slice();}view=chosen.slice(0,2);pickerMode='days';pop.hidden=false;render();position();}
  function close(){if(pop)pop.hidden=true;active=null;}
  function position(){if(!pop||pop.hidden||!active)return;const r=active.getBoundingClientRect();const w=Math.min(310,window.innerWidth-24);let left=Math.max(12,Math.min(window.innerWidth-w-12,r.left));let top=r.bottom+5;if(top+300>window.innerHeight)top=Math.max(12,r.top-300);pop.style.left=left+'px';pop.style.top=top+'px';}
- function render(){if(!pop||!view)return;pop.querySelector('.jp-month').textContent=months[view[1]-1]+' '+String(view[0]).replace(/\d/g,d=>faDigits[+d]);const days=pop.querySelector('.jalali-days');days.innerHTML=weekdays.map(w=>'<span>'+w+'</span>').join('');
+ function render(){if(!pop||!view)return;const title=pop.querySelector('.jp-month');title.textContent=pickerMode==='years'?'انتخاب سال · '+String(view[0]).replace(/\d/g,d=>faDigits[+d]):months[view[1]-1]+' '+String(view[0]).replace(/\d/g,d=>faDigits[+d]);const days=pop.querySelector('.jalali-days');days.innerHTML='';days.classList.toggle('jp-years',pickerMode==='years');
+   if(pickerMode==='years'){const current=todayJ()[0];for(let y=current;y>=1200;y--){const b=document.createElement('button');b.type='button';b.textContent=String(y).replace(/\d/g,x=>faDigits[+x]);b.dataset.year=String(y);if(y===view[0])b.classList.add('jp-selected');days.appendChild(b);}return;}
+   days.innerHTML=weekdays.map(w=>'<span>'+w+'</span>').join('');
    const [gy,gm,gd]=j2g(view[0],view[1],1);const offset=(new Date(Date.UTC(gy,gm-1,gd)).getUTCDay()+1)%7;for(let i=0;i<offset;i++)days.insertAdjacentHTML('beforeend','<span></span>');
    let max=view[1]<=6?31:30;if(view[1]===12&&!validJ(view[0],12,30))max=29;
    for(let d=1;d<=max;d++){const sel=chosen&&chosen[0]===view[0]&&chosen[1]===view[1]&&chosen[2]===d;const now=todayJ();const istoday=now[0]===view[0]&&now[1]===view[1]&&now[2]===d;const b=document.createElement('button');b.type='button';b.textContent=String(d).replace(/\d/g,x=>faDigits[+x]);b.dataset.day=String(d);if(sel)b.classList.add('jp-selected');if(istoday)b.classList.add('jp-today');days.appendChild(b);}
@@ -9050,9 +9300,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  // پشتیبان برای کارت پروفایل داشبورد
  document.addEventListener('click',function(e){
   var card=e.target&&e.target.closest&&e.target.closest('[data-profile-card]');
-  // The trainee navigation guard below owns cards inside #traineeDashboard.
-  // Let it record the requested section and invoke openTraineeProfile exactly once.
-  if(card&&card.closest&&card.closest('#traineeDashboard'))return;
   if(card){e.preventDefault();e.stopPropagation();window.openTraineeProfile();}
  },true);
  window.closeTraineeMembershipCard=closeMembership;
@@ -9458,11 +9705,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if(bar){
       const row=bar.querySelector('.row');
       if(row&&!$('sehSwitchAccountBtn')){
-        const b=document.createElement('button');b.id='sehSwitchAccountBtn';b.type='button';b.className='secondary';b.textContent='🔄 تغییر حساب';
+        const b=document.createElement('button');b.id='sehSwitchAccountBtn';b.type='button';b.className='logout-btn';b.textContent='🔄 تغییر حساب';
         b.addEventListener('click',async()=>{
           const auth=window.AUTH_SUPABASE;
           if(!auth?.auth){alert('سامانه ورود آماده نیست؛ صفحه را تازه‌سازی کنید.');return;}
-          if(!confirm('با تغییر حساب، از حساب فعلی خارج می‌شوید. ادامه می‌دهید؟'))return;
           b.disabled=true;
           try{const {error}=await auth.auth.signOut();if(error)throw error;location.reload();}
           catch(e){b.disabled=false;alert('تغییر حساب انجام نشد: '+(e?.message||String(e)));}
@@ -9741,16 +9987,16 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       const rows=data?.requests||[];
       if(!rows.length){box.innerHTML='<p class="muted">در حال حاضر درخواست اتصال گوشی جدید وجود ندارد.</p>';return;}
       const esc=v=>typeof window.esc==="function"?window.esc(String(v??"")):String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
-      box.innerHTML='<div class="v4-table"><table><thead><tr><th>شاگرد</th><th>شماره</th><th>درخواست‌دهنده</th><th>تاریخ</th><th>تصمیم مربی</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+esc(r.trainee?.full_name||"پرونده شاگرد")+'</td><td>'+esc(r.phone_normalized||"—")+'</td><td>'+esc(r.requested_name||"—")+'</td><td>'+esc(new Date(r.requested_at).toLocaleDateString("fa-IR"))+'</td><td><button class="mini" onclick="reviewDeviceLinkRequest(\''+r.id+'\',\'approve\')">✅ تأیید اتصال</button> <button class="mini danger" onclick="reviewDeviceLinkRequest(\''+r.id+'\',\'reject\')">رد</button></td></tr>').join("")+'</tbody></table></div>';
+      box.innerHTML='<div class="v4-table"><table><thead><tr><th>شاگرد</th><th>شماره</th><th>درخواست‌دهنده</th><th>تاریخ</th><th>تصمیم مربی</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+esc(r.trainee?.full_name||"پرونده شاگرد")+'</td><td>'+esc(r.phone_normalized||"—")+'</td><td>'+esc(r.requested_name||"—")+'</td><td>'+esc(new Date(r.requested_at).toLocaleDateString("fa-IR"))+'</td><td><button class="mini" onclick="reviewDeviceLinkRequest(\''+r.id+'\',\'approve\')">✅ تأیید ورود</button> <button class="mini danger" onclick="reviewDeviceLinkRequest(\''+r.id+'\',\'reject\')">رد</button></td></tr>').join("")+'</tbody></table></div>';
     }catch(e){console.error("load device link requests",e);box.innerHTML='<p class="v4-danger">دریافت درخواست‌های اتصال انجام نشد: '+String(e?.message||e)+'</p>';}
   }
   window.loadDeviceLinkRequests=loadDeviceLinkRequests;
   window.reviewDeviceLinkRequest=async function(id,decision){
-    if(!confirm(decision==="approve"?"اتصال این گوشی به حساب قبلی شاگرد تأیید شود؟ پس از تأیید، گوشی جدید وارد همان حساب می‌شود.":"درخواست اتصال این گوشی رد شود؟"))return;
+    if(!confirm(decision==="approve"?"ورود این شاگرد تأیید شود؟ پس از تأیید، گوشی جدید وارد همان حساب می‌شود.":"درخواست اتصال این گوشی رد شود؟"))return;
     try{
       const {data,error}=await AUTH_SUPABASE.functions.invoke("review-trainee-device-link",{body:{action:"review",request_id:id,decision}});
       if(error)throw error;if(data?.error)throw new Error(data.error);
-      alert(decision==="approve"?"اتصال تأیید شد. گوشی جدید پس از چند ثانیه به همان حساب قبلی وارد می‌شود.":"درخواست اتصال رد شد.");
+      alert(decision==="approve"?"ورود شاگرد تأیید شد؛ گوشی او به‌صورت خودکار وارد حساب می‌شود.":"درخواست اتصال رد شد.");
       await loadDeviceLinkRequests();
     }catch(e){alert("بررسی درخواست انجام نشد: "+(e?.message||String(e)));}
   };
@@ -9766,7 +10012,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function ensureDevicePanel(){
     const reg=$("registrationRequestsPanel");if(!reg)return;if($("deviceLinkRequestsPanel")){moveCoachUtilityCardsBelowTrainees();return;}
     const panel=document.createElement("div");panel.id="deviceLinkRequestsPanel";panel.className="card";panel.style.marginTop="12px";
-    panel.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><h3 style="margin:0">📱 درخواست‌های اتصال گوشی جدید</h3><button type="button" class="secondary mini" id="refreshDeviceLinkRequests">🔄 تازه‌سازی</button></div><p class="muted">فقط با تأیید مربی، گوشی جدید به همان حساب قبلی متصل می‌شود؛ سوابق شاگرد حفظ خواهد شد.</p><div id="deviceLinkRequests"><p class="muted">در حال دریافت درخواست‌ها…</p></div>';
+    panel.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><h3 style="margin:0">📱 درخواست‌های ورود شاگردان</h3><button type="button" class="secondary mini" id="refreshDeviceLinkRequests">🔄 تازه‌سازی</button></div><p class="muted">فقط با تأیید مربی، گوشی جدید به همان حساب قبلی متصل می‌شود؛ سوابق شاگرد حفظ خواهد شد.</p><div id="deviceLinkRequests"><p class="muted">در حال دریافت درخواست‌ها…</p></div>';
     reg.insertAdjacentElement("afterend",panel);$("refreshDeviceLinkRequests")?.addEventListener("click",loadDeviceLinkRequests);moveCoachUtilityCardsBelowTrainees();
   }
   const oldLoadClients=window.loadClients;
@@ -11341,7 +11587,10 @@ body.workout-output.workout-compact{
      lastPlanId=String(plan.id);
    }catch(e){
      console.warn('Weekly workout report:',e);
-     box.innerHTML='<h3>📊 گزارش هفتگی برنامه تمرینی</h3><p class="muted">بخش گزارش نمایش داده شده، اما آمار از پایگاه داده دریافت نشد. اتصال یا دسترسی حساب را بررسی کنید.</p>';
+     var detail=String(e&&e.message||e||'خطای نامشخص').slice(0,360);
+     box.innerHTML='<h3>📊 گزارش هفتگی برنامه تمرینی</h3><p class="muted">دریافت آمار ناموفق بود؛ اطلاعات قبلی حذف نشده است. جزئیات خطا: '+esc(detail)+'</p><button type="button" id="sehWeeklyRetry">تلاش دوباره برای دریافت گزارش</button>';
+     var retry=box.querySelector('#sehWeeklyRetry');
+     if(retry)retry.addEventListener('click',function(){schedule(true);});
    }
  }
  function schedule(force){if(timer)clearTimeout(timer);timer=setTimeout(function(){timer=null;refresh(!!force);},250);}
@@ -12232,6 +12481,15 @@ body.workout-output.workout-compact{
     ['sehCalName','sehCalHeight','sehCalWeight','sehCalTarget'].forEach(function(id){el(id).value='';});
     el('sehCalSex').value='male';el('sehCalAge').value='30';el('sehCalGoal').value='lose';el('sehCalWeeks').value='12';el('sehCalActivity').value='1.55';el('sehCalSessions').value='3';el('sehCalDuration').value='60';el('sehCalcResult').innerHTML='';showGoalFields();
   };
+  window.sehApplyCalorieTargetsToNutrition=function(calories,protein,carbs,fat){
+    var traineeId=(typeof currentClient!=='undefined'&&currentClient&&currentClient.id!=null)?String(currentClient.id):'';
+    if(!traineeId){alert('ابتدا یک شاگرد را از پنل مربی انتخاب کن.');return;}
+    if(typeof window.showSection==='function')window.showSection('meal',null);
+    var frame=document.getElementById('sehNutritionBuilderFrame');
+    if(!frame||!frame.contentWindow){alert('برنامه‌ساز غذایی هنوز آماده نیست؛ دوباره تلاش کن.');return;}
+    var payload={type:'sehNutritionApplyTargets',traineeId:traineeId,calories:calories,protein:protein,carbs:carbs,fat:fat};
+    setTimeout(function(){try{frame.contentWindow.postMessage(payload,window.location.origin);}catch(e){console.warn('Nutrition target transfer failed',e);}},180);
+  };
   window.sehCalcCalories=function(){
     var sex=el('sehCalSex').value,age=num('sehCalAge'),height=num('sehCalHeight'),weight=num('sehCalWeight'),goal=el('sehCalGoal').value;
     var targetRaw=String(el('sehCalTarget').value||'').trim(),target=goal==='maintain'?weight:(targetRaw===''?null:Number(targetRaw)),weeks=goal==='maintain'?0:num('sehCalWeeks'),activity=num('sehCalActivity'),sessions=num('sehCalSessions'),duration=num('sehCalDuration');
@@ -12263,6 +12521,7 @@ body.workout-output.workout-compact{
     html+='</div><p class="muted" style="margin-top:10px">هدف: '+({lose:'کاهش وزن',maintain:'حفظ وزن',gain:'افزایش وزن'}[goal])+' | تمرین: '+sessions+' جلسه در هفته، هر جلسه '+duration+' دقیقه.</p>';
     if(warnings.length)html+='<div style="margin-top:10px;padding:12px;border-radius:10px;background:#fff1e8;color:#7b2d12"><strong>موارد قابل بررسی</strong><ul style="margin:6px 0 0;padding-right:20px">'+warnings.map(function(w){return '<li>'+w+'</li>';}).join('')+'</ul></div>';
     html+='<p style="font-size:12px;color:#777;margin-top:10px">برآورد با فرمول Mifflin–St Jeor و تخمین تقریبی ۷۷۰۰ کیلوکالری به ازای هر کیلوگرم تغییر وزن انجام شده است. نیاز واقعی با توجه به شرایط فرد، داروها، بیماری‌ها و روند وزن متفاوت است؛ نتیجه را با پیگیری وزن و ارزیابی مربی/متخصص تنظیم کن.</p>';
+    html+='<button type="button" style="margin-top:12px;background:#c7a34b;color:#241b0c;font-weight:bold" onclick="window.sehApplyCalorieTargetsToNutrition('+calories+','+protein+','+carbs+','+fat+')">📥 انتقال این اعداد به کادرهای برنامه غذایی</button><p style="font-size:11px;color:#66512b;margin:7px 2px 0">با زدن این دکمه، چهار عدد در کادرهای هدف برنامه‌ساز غذایی قرار می‌گیرند؛ ذخیره برنامه همچنان با دکمه ثبت برنامه انجام می‌شود.</p>';
     el('sehCalcResult').innerHTML=html;
   };
 })();
@@ -12272,6 +12531,19 @@ body.workout-output.workout-compact{
 <style id="workout-renewal-alert-style">#clientList .coach-name-cell.workout-renewal-due{position:relative;border-color:#c62828!important;background:#fff0f0!important;color:#9f1717!important;box-shadow:inset 0 0 0 1px #c62828!important}#clientList .coach-name-cell.workout-renewal-due::before{content:"";display:inline-block;width:9px;height:9px;min-width:9px;border-radius:50%;background:#d71920;margin-left:5px;vertical-align:middle;box-shadow:0 0 0 2px #d7192026}#clientList .workout-renewal-dot{display:none!important}#workoutStartDateFa{display:block;margin-top:4px;font-size:12px}</style>
 <script id="workout-start-date-jalali-label">(function(){function workoutLocalDateKey(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}function updateWorkoutStartDateFa(){var el=document.getElementById("workoutStartDate"),out=document.getElementById("workoutStartDateFa");if(!el||!out)return;var v=el.value;if(!v){out.textContent="تاریخ شروع را انتخاب کنید.";return;}try{out.textContent="تاریخ شروع انتخاب‌شده: "+new Intl.DateTimeFormat("fa-IR-u-ca-persian",{year:"numeric",month:"long",day:"numeric",timeZone:"UTC"}).format(new Date(v+"T00:00:00Z"));}catch(e){out.textContent="تاریخ شروع: "+v;}}window.updateWorkoutStartDateFa=updateWorkoutStartDateFa;document.addEventListener("change",function(e){if(e.target&&e.target.id==="workoutStartDate")updateWorkoutStartDateFa();});document.addEventListener("DOMContentLoaded",updateWorkoutStartDateFa);})();</script>
 <script id="workout-renewal-name-badges">(function(){var original=window.renderClients;if(typeof original!=="function")return;window.renderClients=function(){var r=original.apply(this,arguments);setTimeout(function(){var due=window.__sehWorkoutRenewalDueIds instanceof Set?window.__sehWorkoutRenewalDueIds:new Set();document.querySelectorAll("#clientList .coach-name-cell[data-trainee-id]").forEach(function(btn){var id=String(btn.getAttribute("data-trainee-id")||""),isDue=due.has(id),client=(Array.isArray(window.clients)?window.clients:[]).find(function(c){return String(c.id)===id;}),name=(client&&client.name)||btn.textContent.replace("🔴","").trim()||"بدون نام";btn.classList.toggle("workout-renewal-due",isDue);var dot=btn.querySelector(".workout-renewal-dot");if(isDue){if(!dot){dot=document.createElement("span");dot.className="workout-renewal-dot";dot.setAttribute("aria-hidden","true");dot.style.cssText="display:inline-block!important;width:9px;height:9px;min-width:9px;border-radius:50%;background:#d71920;margin-left:6px;vertical-align:middle;box-shadow:0 0 0 2px #d7192026;";btn.prepend(dot);}}else if(dot){dot.remove();}var textNode=Array.from(btn.childNodes).find(function(n){return n.nodeType===3&&n.textContent.trim();});if(textNode)textNode.textContent=String(name);var registrationLabel=btn.getAttribute("title")||"";btn.setAttribute("aria-label","انتخاب شاگرد "+name+(registrationLabel?"؛ "+registrationLabel:"")+(isDue?"؛ تمدید برنامه تمرینی":""));});},0);return r;};})();</script>
+<style id="coach-profile-photo-display">
+/* Coach-only profile photo display; does not modify trainee profile data. */
+#clientList .coach-list-avatar{display:inline-flex;position:relative;flex:0 0 30px;width:30px;height:30px;border-radius:50%;overflow:hidden;align-items:center;justify-content:center;background:#ead9ae;border:1.5px solid #c7a34b;margin-inline:0 5px}
+#clientList .coach-list-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+#clientList .coach-list-avatar-fallback{width:100%;height:100%;align-items:center;justify-content:center;font-size:17px}
+#clientList .coach-name-cell{gap:4px}
+#clientList .coach-trainee-name-text{min-width:0}
+.coach-selected-trainee-header{display:flex;align-items:center;justify-content:flex-start;gap:13px;margin:0 0 14px;padding:12px 15px;border:1px solid #c7a34b;border-radius:16px;background:linear-gradient(135deg,#fff8e7,#f4e7c5);color:#342b18;direction:rtl;min-height:84px}
+.coach-selected-trainee-avatar{display:flex;position:relative;flex:0 0 62px;width:62px;height:62px;border-radius:50%;overflow:hidden;align-items:center;justify-content:center;background:#ead9ae;border:3px solid #c7a34b;font-size:29px}
+.coach-selected-trainee-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.coach-selected-trainee-header strong{font-size:16px;font-weight:800;overflow-wrap:anywhere}
+@media(max-width:420px){.coach-selected-trainee-header{padding:10px 12px;min-height:76px}.coach-selected-trainee-avatar{width:56px;height:56px;flex-basis:56px}}
+</style>
 <style id="coach-trainee-name-grid">
 /* Scoped only to the trainee list; all other cards and components remain unchanged. */
 #clientList #coachMobileCards.coach-card-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:8px}
@@ -12817,213 +13089,6 @@ window.sehResetTurnstile=function(){};
 })();
 </script>
 
-<script id="SEH_TRAINEE_BACK_NAV_V1_20261031">
-/* Browser Back between trainee sections only; no logout, reload, or data writes. */
-(function(){
- 'use strict';
- if(window.__sehTraineeBackNavV1)return;
- window.__sehTraineeBackNavV1=true;
- var handlingPop=false;
- function role(){
-  try{if(typeof authProfile!=='undefined'&&authProfile&&authProfile.role)return String(authProfile.role).toLowerCase();}catch(e){}
-  return String(window.authProfile&&window.authProfile.role||'').toLowerCase();
- }
- function sectionFor(key){return ({analysis:'traineeAnalysis',activity:'activitySection',goals:'traineeGoalsSection'})[key]||key;}
- function valid(id){var el=document.getElementById(id);return !!(el&&el.classList&&el.classList.contains('section'));}
- function activeId(){var el=document.querySelector('.section.active');return el&&el.id||'traineeDashboard';}
- function restoreRoute(id){
-  id=sectionFor(id);
-  // Re-enter the profile through its normal loader so Forward restores its fields.
-  if(id==='client'&&typeof window.openTraineeProfile==='function'){window.openTraineeProfile();return true;}
-  return setRoute(id);
- }
- function setRoute(id){
-  id=sectionFor(id);if(!valid(id))return false;
-  document.querySelectorAll('.section').forEach(function(sec){
-   var chosen=sec.id===id;sec.classList.toggle('active',chosen);
-   if(chosen){sec.hidden=false;sec.removeAttribute('hidden');sec.removeAttribute('aria-hidden');sec.style.setProperty('display','block','important');sec.style.setProperty('visibility','visible','important');}
-   else{sec.style.setProperty('display','none','important');sec.style.setProperty('visibility','hidden','important');sec.setAttribute('aria-hidden','true');}
-  });
-  document.querySelectorAll('.nav button').forEach(function(btn){btn.classList.remove('active');});
-  if(id==='traineeDashboard'){var dash=document.getElementById('navDash');if(dash)dash.classList.add('active');}
-  else{
-   var key=id==='traineeAnalysis'?'analysis':id==='activitySection'?'activity':id;
-   var nav=Array.from(document.querySelectorAll('.nav button')).find(function(btn){return String(btn.getAttribute('onclick')||'').indexOf("'"+key+"'")>=0;});
-   if(nav)nav.classList.add('active');
-  }
-  return true;
- }
- function pushRoute(id){
-  if(role()!=='trainee'||id==='membership'||id==='sehChatSection')return;
-  var next=sectionFor(id),current=activeId();
-  // Some trainee sections (analysis and goals) are created lazily by dashOpen
-  // after this capture-phase click handler runs. Record their route before creation.
-  if(current===next)return;
-  try{var state=Object.assign({},history.state||{});if(!state.sehTraineeNav){state.sehTraineeNav={section:current};history.replaceState(state,'');}state.sehTraineeNav={section:next};history.pushState(state,'');}
-  catch(e){console.warn('ثبت مسیر بازگشت شاگرد انجام نشد:',e);}
- }
- function clickedRoute(e){
-  if(role()!=='trainee')return;
-  var target=e.target&&e.target.closest?e.target.closest('.nav button, [data-profile-card], [onclick*="dashOpen("], [onclick*="showSection("]'):null;
-  if(!target)return;
-  var key='';
-  if(target.id==='navDash')key='traineeDashboard';
-  else if(target.hasAttribute('data-profile-card')||target.closest('#traineeDashboard [data-profile-card]'))key='client';
-  else{var code=String(target.getAttribute('onclick')||'');var m=code.match(/(?:showSection|dashOpen)\(['"]([^'"]+)['"]/);if(m)key=m[1];}
-  if(key)pushRoute(key);
- }
- window.addEventListener('click',clickedRoute,true);
- window.addEventListener('popstate',function(e){
-  if(role()!=='trainee')return;
-  var route=e.state&&e.state.sehTraineeNav&&e.state.sehTraineeNav.section;if(!route)return;
-  handlingPop=true;try{restoreRoute(route);}finally{setTimeout(function(){handlingPop=false;},0);}
- },true);
- var priorReturn=window.sehReturnToDashboard;
- if(typeof priorReturn==='function')window.sehReturnToDashboard=function(){if(handlingPop)return;return priorReturn.apply(this,arguments);};
- function initialize(){
-  if(role()!=='trainee')return;
-  try{var state=Object.assign({},history.state||{});if(!state.sehTraineeNav)state.sehTraineeNav={section:activeId()};history.replaceState(state,'');}catch(e){}
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});else initialize();
-})();
-</script>
-
-<script id="seh-trainee-profile-header-v2-20261031">
-(function(){
- 'use strict';
- if(window.__sehTraineeProfileHeaderV2)return;
- window.__sehTraineeProfileHeaderV2=true;
- const $=id=>document.getElementById(id);
- const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- function jalaliDate(value){
-  if(!value)return 'تاریخ تولد ثبت نشده';
-  const d=new Date(String(value).slice(0,10)+'T12:00:00');
-  if(Number.isNaN(d.getTime()))return 'تاریخ تولد ثبت نشده';
-  try{return new Intl.DateTimeFormat('fa-IR-u-ca-persian',{year:'numeric',month:'long',day:'numeric'}).format(d);}
-  catch(e){return String(value);}
- }
- function isTrainee(){
-  try{return (typeof authProfile!=='undefined'&&authProfile&&authProfile.role==='trainee')||(window.authProfile&&window.authProfile.role==='trainee');}catch(e){return false;}
- }
- function style(){
-  if($('sehTraineeProfileHeaderStyle'))return;
-  const st=document.createElement('style');st.id='sehTraineeProfileHeaderStyle';
-  st.textContent=`
-   #sehTraineeProfileHeader{display:flex;align-items:center;gap:14px;padding:16px;margin:0 0 8px;border:1px solid #d5b66a;border-radius:18px;background:linear-gradient(120deg,#fff8e8,#f1dfb5);color:#302719;box-shadow:0 5px 18px rgba(70,48,12,.10);direction:rtl}
-   #sehTraineeProfileExitRow{display:flex;justify-content:flex-start;margin:0 0 12px}
-   #sehTraineeProfileExitBtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:36px;padding:6px 14px;border:1px solid #c5a04e;border-radius:11px;background:#fff8e8;color:#60491d;font-size:13px;font-weight:700;box-shadow:0 2px 7px rgba(70,48,12,.08)}
-   #sehTraineeProfileExitBtn span{font-size:21px;line-height:1}
-   #sehTraineeProfileExitBtn:disabled{opacity:.55}
-   #authUserBar{display:none!important}
-   #sehTraineeProfileHeader .seh-ph-avatar-wrap{position:relative;flex:0 0 88px;width:88px;height:88px}
-   #sehTraineeProfileHeader .seh-ph-avatar{width:88px;height:88px;border-radius:50%;border:3px solid #c5a04e;background:#f7edda;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:38px;color:#765b25;box-shadow:0 2px 8px #8a6c3030}
-   #sehTraineeProfileHeader .seh-ph-avatar img{width:100%;height:100%;object-fit:cover}
-   #sehTraineeProfileHeader .seh-ph-add{position:absolute;left:-2px;bottom:0;width:30px;height:30px;min-width:30px;padding:0;margin:0;border-radius:50%;border:2px solid #fff8e8;background:#b58b36;color:white;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center}
-   #sehTraineeProfileHeader .seh-ph-info{min-width:0;flex:1}
-   #sehTraineeProfileHeader .seh-ph-kicker{font-size:11px;color:#876c35;margin-bottom:4px}
-   #sehTraineeProfileHeader .seh-ph-name{font-size:17px;font-weight:800;line-height:1.6;overflow-wrap:anywhere;color:#342916}
-   #sehTraineeProfileHeader .seh-ph-birth{font-size:12px;color:#715d38;margin-top:3px}
-   #sehTraineeProfileHeader .seh-ph-note{font-size:10px;color:#8a744e;margin-top:5px}
-   @media(max-width:420px){#sehTraineeProfileHeader{gap:11px;padding:13px}#sehTraineeProfileHeader .seh-ph-avatar-wrap,#sehTraineeProfileHeader .seh-ph-avatar{width:78px;height:78px;flex-basis:78px}#sehTraineeProfileHeader .seh-ph-name{font-size:15px}}
-  `;
-  document.head.appendChild(st);
- }
- function avatarMarkup(c){
-  const image=String(c?.profile_image||'');
-  if(image.startsWith('data:image/')||/^https:\/\//i.test(image))return '<img src="'+esc(image)+'" alt="عکس پروفایل">';
-  const female=/زن|female/i.test(String(c?.gender||'')),male=/مرد|male/i.test(String(c?.gender||''));
-  return '<span aria-hidden="true">'+(female?'👩🏻':male?'👨🏻':'👤')+'</span>';
- }
- function ensureCard(){
-  if(!isTrainee())return null;
-  const dash=$('traineeDashboard');if(!dash)return null;
-  style();
-  let card=$('sehTraineeProfileHeader');
-  if(!card){
-   card=document.createElement('div');card.id='sehTraineeProfileHeader';card.setAttribute('aria-label','پروفایل شاگرد');
-   card.innerHTML='<div class="seh-ph-avatar-wrap"><div class="seh-ph-avatar" id="sehTraineeProfileAvatar"></div><button type="button" class="seh-ph-add" id="sehTraineeProfileChoose" aria-label="انتخاب عکس پروفایل" title="انتخاب عکس">＋</button><input type="file" id="sehTraineeProfileFile" accept="image/*" hidden></div><div class="seh-ph-info"><div class="seh-ph-kicker">پروفایل شخصی من</div><div class="seh-ph-name" id="sehTraineeProfileName">شاگرد</div><div class="seh-ph-birth" id="sehTraineeProfileBirth">تاریخ تولد ثبت نشده</div><div class="seh-ph-note" id="sehTraineeProfileNote">برای افزودن تصویر، علامت + را بزنید.</div></div>';
-   const page=document.querySelector('.page')||dash.parentElement;
-   if(page)page.insertBefore(card,page.firstChild);else dash.insertBefore(card,dash.firstChild);
-   const exitRow=document.createElement('div');exitRow.id='sehTraineeProfileExitRow';
-   exitRow.innerHTML='<button type="button" id="sehTraineeProfileExitBtn" aria-label="خروج از حساب کاربری"><span aria-hidden="true">↪</span> خروج از حساب کاربری</button>';
-   card.insertAdjacentElement('afterend',exitRow);
-   const exitBtn=$('sehTraineeProfileExitBtn');
-   exitBtn.addEventListener('click',async function(){
-    if(exitBtn.disabled)return;
-    if(!window.confirm('آیا می‌خواهید از حساب کاربری خارج شوید؟'))return;
-    exitBtn.disabled=true;
-    try{if(typeof window.logoutApp==='function')await window.logoutApp();else throw new Error('امکان خروج از حساب در حال حاضر فراهم نیست.');}
-    catch(e){exitBtn.disabled=false;window.alert('خروج از حساب انجام نشد. دوباره تلاش کنید.');console.error(e);}
-   });
-   const choose=$('sehTraineeProfileChoose'),file=$('sehTraineeProfileFile');
-   choose.addEventListener('click',()=>file.click());
-   file.addEventListener('change',()=>saveSelectedImage(file));
-  }
-  const c=(typeof currentClient!=='undefined'&&currentClient)||window.currentClient||{};
-  $('sehTraineeProfileAvatar').innerHTML=avatarMarkup(c);
-  $('sehTraineeProfileName').textContent=c.full_name||c.name||((typeof authProfile!=='undefined'&&authProfile?.full_name)||'شاگرد');
-  $('sehTraineeProfileBirth').textContent='🎂 '+jalaliDate(c.birth_date);
-  return card;
- }
- async function refreshProfileData(){
-  if(!isTrainee()||typeof currentClient==='undefined'||!currentClient?.id)return;
-  try{
-   const rows=await sbGet('/trainees?id=eq.'+encodeURIComponent(currentClient.id)+'&select=id,full_name,gender,birth_date,profile_image&limit=1');
-   if(!Array.isArray(rows)||!rows[0])return;
-   if(!currentClient||String(currentClient.id)!==String(rows[0].id))return;
-   Object.assign(currentClient,{full_name:rows[0].full_name,name:rows[0].full_name,gender:rows[0].gender,birth_date:rows[0].birth_date,profile_image:rows[0].profile_image});
-   ensureCard();
-  }catch(e){console.warn('خواندن اطلاعات کارت پروفایل انجام نشد:',e);}
- }
- async function imageData(file){
-  if(!file||!file.type||!file.type.startsWith('image/'))throw new Error('لطفاً یک فایل تصویری انتخاب کنید.');
-  if(file.size>8*1024*1024)throw new Error('حجم عکس باید کمتر از ۸ مگابایت باشد.');
-  const url=URL.createObjectURL(file);
-  try{
-   const img=await new Promise((resolve,reject)=>{const x=new Image();x.onload=()=>resolve(x);x.onerror=()=>reject(new Error('باز کردن تصویر ممکن نشد.'));x.src=url;});
-   const side=420,scale=Math.min(1,side/Math.max(img.naturalWidth,img.naturalHeight));
-   const w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));
-   const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-   const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);
-   let data=canvas.toDataURL('image/jpeg',0.78);
-   if(data.length>190000)data=canvas.toDataURL('image/jpeg',0.62);
-   if(data.length>260000)throw new Error('حجم عکس پس از فشرده‌سازی هنوز زیاد است؛ لطفاً عکس دیگری انتخاب کنید.');
-   return data;
-  }finally{URL.revokeObjectURL(url);}
- }
- async function saveSelectedImage(input){
-  const file=input.files&&input.files[0];if(!file)return;
-  const c=(typeof currentClient!=='undefined'&&currentClient)||window.currentClient;
-  const id=c&&c.id;if(!id){alert('پرونده شاگرد پیدا نشد؛ لطفاً دوباره وارد شوید.');input.value='';return;}
-  const note=$('sehTraineeProfileNote'),button=$('sehTraineeProfileChoose');
-  try{
-   button.disabled=true;note.textContent='در حال آماده‌سازی و ذخیره عکس…';
-   const data=await imageData(file);
-   if(!isTrainee()||!currentClient||String(currentClient.id)!==String(id))throw new Error('حساب شاگرد تغییر کرده است؛ ذخیره عکس لغو شد.');
-   const saved=await sbWrite('/trainees?id=eq.'+encodeURIComponent(id),'PATCH',{profile_image:data});
-   if(!Array.isArray(saved)||!saved.some(x=>String(x.id)===String(id)&&String(x.profile_image||'')===data))throw new Error('ذخیره عکس در پایگاه داده تأیید نشد.');
-   currentClient.profile_image=data;ensureCard();note.textContent='عکس پروفایل با موفقیت ذخیره شد.';
-  }catch(e){console.error('profile image save failed',e);note.textContent='ذخیره عکس انجام نشد.';alert('ذخیره عکس پروفایل انجام نشد. '+(e?.message||String(e)));}
-  finally{button.disabled=false;input.value='';}
- }
- function install(){
-  if(!window.loadDashboard||window.loadDashboard.__sehProfileHeaderWrapped)return;
-  const old=window.loadDashboard;
-  const wrapped=async function(){
-   const result=await old.apply(this,arguments);
-   if(isTrainee()){ensureCard();await refreshProfileData();}
-   return result;
-  };
-  wrapped.__sehProfileHeaderWrapped=true;window.loadDashboard=wrapped;
- }
- window.__sehRenderTraineeProfileHeader=ensureCard;
- window.__sehRefreshTraineeProfileHeader=refreshProfileData;
- install();
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
-})();
-</script>
-
-<!-- SEH COACH LOGIN VISIBLE DIAGNOSTIC -->
 <script id="seh-coach-login-visible-diagnostic-20261016">
 (function(){
   function visibleStatus(message){
@@ -13412,6 +13477,8 @@ window.sehResetTurnstile=function(){};
       window.currentClient = updated;
       normalizeProfile();
       if(typeof window.loadDashboard === 'function') await window.loadDashboard();
+      const traineeHeader = document.getElementById('traineeDashboard');
+      if(traineeHeader && typeof window.renderTraineeProfileHeader === 'function') window.renderTraineeProfileHeader(traineeHeader);
       alert('پروفایل شما با موفقیت ذخیره و از پایگاه داده بررسی شد.');
     }catch(e){
       console.error('trainee profile save failed', e);
@@ -14211,27 +14278,34 @@ window.sehResetTurnstile=function(){};
   }
   function client(){return window.AUTH_SUPABASE;}
   function addStudentRecovery(){
-    const box=$('traineeLoginBox');
-    if(!box||$('sehRecoveryStudentPanel'))return;
-    const panel=document.createElement('div');
+    /* There are legacy duplicate traineeLoginBox IDs in the page. Always attach
+       recovery to the currently visible login box, not the first hidden legacy copy. */
+    const boxes=Array.from(document.querySelectorAll('[id="traineeLoginBox"]'));
+    if(!boxes.length)return;
+    const visible=boxes.filter(b=>!b.classList.contains('hide')&&b.getClientRects().length>0);
+    const box=visible[visible.length-1]||boxes[boxes.length-1];
+    let panel=$('sehRecoveryStudentPanel');
+    if(!panel){panel=document.createElement('div');panel.id='sehRecoveryStudentPanel';}
+    if(panel.parentElement!==box)box.appendChild(panel);
+    if(panel.dataset.sehRecoveryBound==='1')return;
     panel.id='sehRecoveryStudentPanel';
     panel.className='trainee-auth-block';
     panel.innerHTML=
       '<h3>🔑 بازیابی رمز با تأیید مربی</h3>'+
-      '<p class="muted">بدون پیامک: درخواست را بفرستید. پس از تأیید مربی، شناسهٔ درخواست و کد یک‌بارمصرف را از خود مربی دریافت کنید.</p>'+
+      '<p class="muted">بدون پیامک: درخواست را بفرستید. پس از تأیید مربی، فقط کد چهاررقمی را از مربی بگیرید.</p>'+
       '<label for="sehRecoveryPhone">شماره موبایل ثبت‌شده</label><input id="sehRecoveryPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09121234567">'+
       '<button type="button" id="sehRecoveryRequestBtn">📨 درخواست بازیابی رمز</button>'+
       '<div id="sehRecoveryRequestStatus" role="status" style="display:none;white-space:pre-wrap;line-height:1.8;margin-top:8px"></div>'+
       '<hr style="border-color:#344b60;margin:14px 0">'+
       '<h3>🔐 تعیین رمز جدید</h3>'+
-      '<label for="sehRecoveryRequestId">شناسهٔ درخواست (از مربی بگیرید)</label><input id="sehRecoveryRequestId" autocomplete="off" placeholder="شناسهٔ درخواست">'+
-      '<label for="sehRecoveryCode">کد ۸ رقمی بازیابی</label><input id="sehRecoveryCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="کد دریافت‌شده از مربی">'+
+      '<label for="sehRecoveryCode">کد ۴ رقمی بازیابی</label><input id="sehRecoveryCode" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="کد دریافت‌شده از مربی">'+
       '<label for="sehRecoveryNewPassword">رمز جدید (حداقل ۸ کاراکتر)</label><input id="sehRecoveryNewPassword" type="password" autocomplete="new-password" minlength="8" placeholder="رمز جدید">'+
       '<label for="sehRecoveryNewPassword2">تکرار رمز جدید</label><input id="sehRecoveryNewPassword2" type="password" autocomplete="new-password" minlength="8" placeholder="تکرار رمز جدید">'+
       '<button type="button" id="sehRecoveryResetBtn">🔒 ذخیره رمز جدید</button>'+
       '<div id="sehRecoveryResetStatus" role="status" style="display:none;white-space:pre-wrap;line-height:1.8;margin-top:8px"></div>';
-    box.appendChild(panel);
-    const loginPhone=$('traineePhoneLogin');
+    /* Keep recovery outside the replaceable login form, but inside the active auth box. */
+    panel.dataset.sehRecoveryBound='1';
+    const loginPhone=box.querySelector('#traineePhoneLogin');
     $('sehRecoveryPhone').value=loginPhone?.value||'';
     loginPhone?.addEventListener('change',()=>{if(!$('sehRecoveryPhone').value)$('sehRecoveryPhone').value=loginPhone.value;});
     $('sehRecoveryRequestBtn').addEventListener('click',async()=>{
@@ -14248,21 +14322,20 @@ window.sehResetTurnstile=function(){};
     });
     $('sehRecoveryResetBtn').addEventListener('click',async()=>{
       const btn=$('sehRecoveryResetBtn'),phone=phoneNorm($('sehRecoveryPhone').value);
-      const request_id=$('sehRecoveryRequestId').value.trim(),code=$('sehRecoveryCode').value.trim();
+      const code=$('sehRecoveryCode').value.trim().replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
       const new_password=$('sehRecoveryNewPassword').value||'',repeat=$('sehRecoveryNewPassword2').value||'';
       if(!/^\+989\d{9}$/.test(phone)){message('sehRecoveryResetStatus','شماره موبایل ثبت‌شده را درست وارد کنید.',false);return;}
-      if(!/^[0-9a-f-]{36}$/i.test(request_id)){message('sehRecoveryResetStatus','شناسهٔ درخواست را دقیقاً از مربی دریافت و وارد کنید.',false);return;}
-      if(!/^\d{8}$/.test(code)){message('sehRecoveryResetStatus','کد بازیابی باید ۸ رقم باشد.',false);return;}
+      if(!/^\d{4}$/.test(code)){message('sehRecoveryResetStatus','کد بازیابی باید ۴ رقم باشد.',false);return;}
       if(new_password.length<8||new_password.length>128){message('sehRecoveryResetStatus','رمز جدید باید بین ۸ تا ۱۲۸ کاراکتر باشد.',false);return;}
       if(new_password!==repeat){message('sehRecoveryResetStatus','رمز جدید و تکرار آن یکسان نیستند.',false);return;}
       btn.disabled=true;btn.textContent='⏳ در حال ذخیره…';
       try{
-        const {data,error}=await client().functions.invoke('trainee-password-recovery',{body:{action:'reset',request_id,code,new_password}});
+        const {data,error}=await client().functions.invoke('trainee-password-recovery',{body:{action:'reset',phone,code,new_password}});
         if(error)throw error;if(data?.error)throw new Error(data.error);
         message('sehRecoveryResetStatus',data?.message||'رمز جدید ذخیره شد؛ اکنون وارد شوید.',true);
         $('traineePhoneLogin').value=$('sehRecoveryPhone').value;
         $('traineeLoginPassword').value=new_password;
-        $('sehRecoveryRequestId').value='';$('sehRecoveryCode').value='';
+        $('sehRecoveryCode').value='';
         $('sehRecoveryNewPassword').value='';$('sehRecoveryNewPassword2').value='';
       }catch(e){console.error('[seh recovery reset]',e);message('sehRecoveryResetStatus','تغییر رمز انجام نشد: '+(e?.message||String(e)),false);}
       finally{btn.disabled=false;btn.textContent='🔒 ذخیره رمز جدید';}
@@ -14313,16 +14386,15 @@ window.sehResetTurnstile=function(){};
         codeBox.innerHTML='<h3 style="margin:0 0 8px">🔐 کد بازیابی — فقط همین بار نمایش داده می‌شود</h3>'+
           '<p><b>شاگرد:</b> '+esc(btn.dataset.sehRecoveryName||'شاگرد')+'</p>'+
           '<p><b>شماره:</b> '+esc(btn.dataset.sehRecoveryPhone||'')+'</p>'+
-          '<p><b>شناسهٔ درخواست:</b><br><code style="word-break:break-all">'+esc(request_id)+'</code></p>'+
           '<p style="font-size:24px;font-weight:bold;letter-spacing:4px;margin:12px 0">'+esc(data.recovery_code||'')+'</p>'+
-          '<p>اعتبار: ۱۵ دقیقه. شناسهٔ درخواست و کد را فقط به خود شاگرد بدهید؛ پیامک خودکار ارسال نمی‌شود.</p>'+
-          '<button type="button" id="sehRecoveryCopyDetails">📋 کپی شناسه و کد</button>';
+          '<p>اعتبار: ۱۵ دقیقه. کد را فقط به خود شاگرد بدهید؛ پیامک خودکار ارسال نمی‌شود.</p>'+
+          '<button type="button" id="sehRecoveryCopyDetails">📋 کپی کد بازیابی</button>';
         $('sehRecoveryCopyDetails').addEventListener('click',async()=>{
-          const textValue='شناسه درخواست: '+request_id+'\nکد بازیابی: '+String(data.recovery_code||'');
-          try{await navigator.clipboard.writeText(textValue);message('sehCoachRecoveryMessage','شناسه و کد کپی شد؛ آن را فقط به خود شاگرد بدهید.',true);}
-          catch(e){message('sehCoachRecoveryMessage','کپی خودکار ممکن نیست؛ شناسه و کد را از کادر بالا دستی منتقل کنید.',false);}
+          const textValue='کد بازیابی: '+String(data.recovery_code||'');
+          try{await navigator.clipboard.writeText(textValue);message('sehCoachRecoveryMessage','کد بازیابی کپی شد؛ آن را فقط به خود شاگرد بدهید.',true);}
+          catch(e){message('sehCoachRecoveryMessage','کپی خودکار ممکن نیست؛ کد را از کادر بالا دستی منتقل کنید.',false);}
         });
-        message('sehCoachRecoveryMessage','درخواست تأیید شد. کد ۱۵ دقیقه اعتبار دارد و در سرور به‌صورت متن خام نگهداری نمی‌شود.',true);
+        message('sehCoachRecoveryMessage','درخواست تأیید شد. کد چهاررقمی ۱۵ دقیقه اعتبار دارد و در سرور به‌صورت متن خام نگهداری نمی‌شود.',true);
       }else{
         $('sehRecoveryIssuedCode').style.display='none';
         message('sehCoachRecoveryMessage','درخواست بازیابی رد شد.',true);
@@ -14803,119 +14875,141 @@ window.sehResetTurnstile=function(){};
 </script>
 
 
-<script id="seh-trainee-hide-dashboard-logout-v1-20261031">
-/* Hide the dashboard logout control for trainees only.
-   Keep the existing logout function and coach control unchanged. */
+<script id="SEH_TRAINEE_BACK_NAV_SAFE_V2_20261031">
+/* Trainee-only history navigation. Preserve the existing section/profile handlers. */
 (function(){
-  'use strict';
-  function sync(){
-    var bar=document.getElementById('authUserBar');
-    if(!bar)return;
-    var label=document.getElementById('authUserText');
-    var trainee=!!(label && /شاگرد/.test(label.textContent||''));
-    var button=bar.querySelector('.logout-btn');
-    if(button){
-      button.style.setProperty('display',trainee?'none':'','important');
-      button.setAttribute('aria-hidden',trainee?'true':'false');
-      button.tabIndex=trainee?-1:0;
-    }
+ 'use strict';
+ if(window.__sehTraineeBackNavSafeV2)return;
+ window.__sehTraineeBackNavSafeV2=true;
+ var initialized=false,restoring=false,returnedFromCard=false;
+ function role(){
+  try{if(window.authProfile&&window.authProfile.role)return String(window.authProfile.role).toLowerCase();}catch(e){}
+  try{if(typeof authProfile!=='undefined'&&authProfile&&authProfile.role)return String(authProfile.role).toLowerCase();}catch(e){}
+  var t=document.getElementById('authUserText');
+  return t&&/شاگرد/.test(t.textContent||'')?'trainee':'';
+ }
+ function normalize(id){
+  return ({analysis:'traineeAnalysis',activity:'activitySection',goals:'traineeGoalsSection'})[id]||id||'traineeDashboard';
+ }
+ function current(){
+  var profile=document.getElementById('client');
+  if(profile&&profile.classList.contains('active'))return 'client';
+  var el=document.querySelector('.section.active');
+  return el&&el.id||'traineeDashboard';
+ }
+ function init(){
+  if(initialized||role()!=='trainee')return false;
+  initialized=true;
+  try{
+   var state=Object.assign({},history.state||{});
+   state.sehTraineeBackV2={route:current(),kind:'base'};
+   history.replaceState(state,'');
+   // Do not add a hidden dashboard guard entry: it makes exiting require
+   // an extra Back press. The route entries themselves provide card navigation.
+  }catch(e){initialized=false;console.warn('راه‌اندازی مسیر بازگشت شاگرد انجام نشد',e);}
+  return initialized;
+ }
+ function writeRoute(id,replace){
+  if(role()!=='trainee'||restoring)return;
+  init();
+  var to=normalize(id),state=Object.assign({},history.state||{}),entry=state.sehTraineeBackV2;
+  if(entry&&normalize(entry.route)===to)return;
+  state.sehTraineeBackV2={route:to,kind:'route'};
+  try{history[replace?'replaceState':'pushState'](state,'');}
+  catch(e){console.warn('ثبت مسیر بازگشت انجام نشد',e);}
+ }
+ function show(id){
+  id=normalize(id);
+  if(id==='client'&&typeof window.openTraineeProfile==='function'){
+   window.openTraineeProfile();return true;
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});
-  else sync();
-  var bar=document.getElementById('authUserBar');
-  if(bar){
-    var observer=new MutationObserver(sync);
-    observer.observe(bar,{subtree:true,childList:true,characterData:true});
+  var target=document.getElementById(id);
+  if(!target||!target.classList.contains('section'))return false;
+  document.querySelectorAll('.section').forEach(function(sec){
+   var active=sec===target;
+   sec.classList.toggle('active',active);
+   if(active){sec.hidden=false;sec.removeAttribute('hidden');sec.removeAttribute('aria-hidden');sec.classList.remove('hide');sec.style.setProperty('display','block','important');sec.style.setProperty('visibility','visible','important');}
+   else{sec.style.setProperty('display','none','important');sec.style.setProperty('visibility','hidden','important');sec.setAttribute('aria-hidden','true');}
+  });
+  document.querySelectorAll('.nav button').forEach(function(b){b.classList.remove('active');});
+  var nav=id==='traineeDashboard'?document.getElementById('navDash'):null;
+  if(nav)nav.classList.add('active');
+  if(id!=='traineeDashboard'){
+   var key=id==='traineeAnalysis'?'analysis':id==='activitySection'?'activity':id;
+   var match=Array.from(document.querySelectorAll('.nav button')).find(function(b){return String(b.getAttribute('onclick')||'').indexOf("'"+key+"'")>=0;});
+   if(match)match.classList.add('active');
   }
-  window.addEventListener('pageshow',sync);
-  setTimeout(sync,300);
-  setTimeout(sync,1200);
+  return true;
+ }
+ var originalProfile=window.openTraineeProfile;
+ if(typeof originalProfile==='function'){
+  window.openTraineeProfile=function(){
+   if(role()==='trainee'&&!restoring&&current()!=='client')writeRoute('client',false);
+   return originalProfile.apply(this,arguments);
+  };
+ }
+ var originalChat=window.sehOpenTraineeChat;
+ if(typeof originalChat==='function'){
+  window.sehOpenTraineeChat=function(){
+   if(role()==='trainee'&&!restoring&&current()!=='sehChatSection')writeRoute('sehChatSection',false);
+   return originalChat.apply(this,arguments);
+  };
+ }
+ ['showSection','dashOpen'].forEach(function(name){
+  var original=window[name];
+  if(typeof original!=='function')return;
+  window[name]=function(id){
+   if(role()==='trainee'&&!restoring&&id)writeRoute(id,false);
+   return original.apply(this,arguments);
+  };
+ });
+ var originalReturn=window.sehReturnToDashboard;
+ window.sehReturnToDashboard=function(){
+  if(role()!=='trainee')return typeof originalReturn==='function'?originalReturn.apply(this,arguments):undefined;
+  writeRoute('traineeDashboard',true);
+  if(typeof originalReturn==='function')return originalReturn.apply(this,arguments);
+  return show('traineeDashboard');
+ };
+ window.addEventListener('popstate',function(e){
+  if(role()!=='trainee')return;
+  var entry=e.state&&e.state.sehTraineeBackV2;
+  var dashboard=current()==='traineeDashboard';
+  // A single Back from any trainee card must return directly to the dashboard.
+  // Replace the popped entry so a second Back can leave the app normally.
+  if(dashboard){
+   // If this dashboard was reached by backing out of a card, one extra
+   // stale in-app history entry may remain. Skip it automatically on the
+   // trainee's next Back press, so the same single press exits the app.
+   if(returnedFromCard){
+    returnedFromCard=false;
+    e.stopImmediatePropagation();
+    setTimeout(function(){try{history.back();}catch(err){}},0);
+   }
+   return;
+  }
+  // From any card, one Back returns to dashboard.
+  e.stopImmediatePropagation();
+  returnedFromCard=true;
+  restoring=true;
+  try{
+   show('traineeDashboard');
+   var state=Object.assign({},e.state||{});
+   state.sehTraineeBackV2={route:'traineeDashboard',kind:'base'};
+   history.replaceState(state,'');
+  }finally{restoring=false;}
+ },true);
+ // Authentication completes asynchronously after DOMContentLoaded. Initialize
+ // only once the trainee profile is actually available; never reset an active stack.
+ var attempts=0,timer=setInterval(function(){
+  attempts++;
+  if(init()||attempts>=600)clearInterval(timer);
+ },250);
+ document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')init();});
 })();
 </script>
 
-
-<script id="seh-trainee-account-exit-v1-20261031">
-/* Trainee-only compact account sign-out and app-back confirmation.
-   Keeps the existing sign-out implementation and internal section history intact. */
-(function(){
-  'use strict';
-  var busy=false;
-  function isTrainee(){
-    try{if(typeof authProfile!=='undefined'&&authProfile&&authProfile.role)return String(authProfile.role).toLowerCase()==='trainee';}catch(e){}
-    try{if(window.authProfile&&window.authProfile.role)return String(window.authProfile.role).toLowerCase()==='trainee';}catch(e){}
-    var t=document.getElementById('authUserText');
-    return !!(t&&/شاگرد/.test(t.textContent||''));
-  }
-  function activeDashboard(){
-    var d=document.getElementById('traineeDashboard');
-    return !!(d&&d.classList.contains('active'));
-  }
-  function ensureButton(){
-    var bar=document.getElementById('authUserBar');
-    var row=bar&&bar.querySelector('.row');
-    var label=document.getElementById('authUserText');
-    if(!bar||!row||!label)return;
-    var old=row.querySelector('.logout-btn');
-    /* The preceding trainee-only patch already hides this legacy button. Avoid rewriting its style here. */
-    var btn=row.querySelector('#sehTraineeAccountExitBtn');
-    if(!isTrainee()){
-      if(btn)btn.style.display='none';
-      return;
-    }
-    if(!btn){
-      btn=document.createElement('button');
-      btn.type='button';
-      btn.id='sehTraineeAccountExitBtn';
-      btn.className='seh-trainee-account-exit';
-      btn.textContent='↪';
-      btn.title='خروج از حساب کاربری';
-      btn.setAttribute('aria-label','خروج از حساب کاربری');
-      btn.addEventListener('click',async function(){
-        if(busy)return;
-        if(!window.confirm('آیا می‌خواهید از حساب کاربری خارج شوید؟'))return;
-        busy=true;btn.disabled=true;
-        try{
-          if(typeof window.logoutApp==='function')await window.logoutApp();
-          else if(window.AUTH_SUPABASE&&window.AUTH_SUPABASE.auth){await window.AUTH_SUPABASE.auth.signOut();location.reload();}
-          else throw new Error('امکان خروج از حساب در حال حاضر فراهم نیست.');
-        }catch(e){busy=false;btn.disabled=false;window.alert('خروج از حساب انجام نشد. دوباره تلاش کنید.');console.error(e);}
-      });
-      row.insertBefore(btn,old||null);
-    }
-    btn.style.display='inline-flex';
-  }
-  function installStyle(){
-    if(document.getElementById('seh-trainee-account-exit-style'))return;
-    var s=document.createElement('style');s.id='seh-trainee-account-exit-style';
-    s.textContent=
-      '#authUserBar .row{align-items:center;gap:8px!important}'+
-      '#authUserBar #authUserText{flex:1 1 auto;min-width:0;margin:0!important;text-align:right}'+
-      '#authUserBar .seh-trainee-account-exit{display:inline-flex;align-items:center;justify-content:center;flex:0 0 30px;width:30px;height:30px;min-width:30px;padding:0!important;margin:0!important;border:1px solid #526477!important;border-radius:9px!important;background:#172536!important;color:#f2d18b!important;font-size:20px!important;line-height:1!important;box-shadow:none!important}'+
-      '#authUserBar .seh-trainee-account-exit:disabled{opacity:.55}'+
-      '@media(max-width:520px){#authUserBar .row{flex-wrap:nowrap!important}}';
-    document.head.appendChild(s);
-  }
-  function sync(){installStyle();ensureButton();}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});else sync();
-  var bar=document.getElementById('authUserBar');
-  if(bar)new MutationObserver(sync).observe(bar,{subtree:true,childList:true,characterData:true});
-  setTimeout(sync,300);setTimeout(sync,1200);
-  window.addEventListener('pageshow',sync);
-  window.addEventListener('popstate',function(e){
-    if(!isTrainee()||!activeDashboard())return;
-    var route=e.state&&e.state.sehTraineeNav&&e.state.sehTraineeNav.section;
-    if(route)return; // Internal trainee navigation is handled by the existing Back controller.
-    if(window.confirm('آیا می‌خواهید از برنامه خارج شوید؟'))return;
-    try{
-      var state=Object.assign({},history.state||{});
-      state.sehTraineeExitGuard=true;
-      history.pushState(state,'',location.href);
-    }catch(err){console.warn('بازگردانی صفحه پس از انصراف از خروج ناموفق بود:',err);}
-  },false);
-})();
-</script>
 <script>
-/* Coach-only bridge for the isolated nutrition builder test. */
+/* Coach-only bridge for the embedded nutrition builder. */
 window.sehNutritionBuilderBridge={
  async getContext(){
   if(!currentClient||currentClient.id==null)throw new Error('ابتدا یک شاگرد را انتخاب کن.');
