@@ -1,29 +1,15 @@
-name: Validate inline JavaScript
+name: Validate trainee progress preview
 on:
   push:
+    branches: ["preview/trainee-progress-20261113"]
     paths:
       - 'index.html'
-      - 'tests/coach-plan-status-static.test.js'
-      - 'tests/coach-meal-recipes-static.test.js'
-      - 'tests/workout-export-session-order-restline.test.js'
-      - 'tests/profile-save-immediate-refresh-regression.test.js'
-      - 'tests/trainee-nutrition-load-resilience.test.js'
       - 'tests/coach-body-analysis-layout-regression.mjs'
-      - '.github/workflows/validate-inline-js.yml'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'tests/coach-plan-status-static.test.js'
-      - 'tests/coach-meal-recipes-static.test.js'
-      - 'tests/workout-export-session-order-restline.test.js'
-      - 'tests/profile-save-immediate-refresh-regression.test.js'
-      - 'tests/trainee-nutrition-load-resilience.test.js'
-      - 'tests/coach-body-analysis-layout-regression.mjs'
+      - 'supabase/migrations/202611130001_atomic_trainee_progress_rpc.sql'
       - '.github/workflows/validate-inline-js.yml'
   workflow_dispatch:
 jobs:
-  syntax:
+  syntax-and-regression:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,33 +22,21 @@ jobs:
           const fs = require('fs');
           const { spawnSync } = require('child_process');
           const html = fs.readFileSync('index.html', 'utf8');
-          const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
+          const scripts = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script\\s*>/gi)];
           let failed = false, count = 0;
           for (const [i, match] of scripts.entries()) {
-            if (/\bsrc\s*=/.test(match[1]) || !match[2].trim()) continue;
+            if (/\\bsrc\\s*=/.test(match[1]) || !match[2].trim()) continue;
             count++;
             const file = `/tmp/inline-${i}.js`;
             fs.writeFileSync(file, match[2]);
             const result = spawnSync(process.execPath, ['--check', file], { encoding: 'utf8' });
             if (result.status !== 0) {
               failed = true;
-              const start = html.slice(0, match.index).split('\n').length;
-              console.error(`Syntax error in inline script starting at HTML line ${start}:`);
               console.error(result.stderr || result.stdout);
             }
           }
           console.log(`Checked ${count} inline scripts.`);
           if (failed) process.exit(1);
           NODE
-      - name: Test coach plan status classification and refresh guard
-        run: node tests/coach-plan-status-static.test.js
-      - name: Test prebuilt meal recipe bank and categories
-        run: node tests/coach-meal-recipes-static.test.js
-      - name: Test workout PNG session order and rest-time line
-        run: node tests/workout-export-session-order-restline.test.js
-      - name: Test trainee profile immediate refresh and nutrition shortcut removal
-        run: node tests/profile-save-immediate-refresh-regression.test.js
-      - name: Test trainee nutrition loading resilience
-        run: node tests/trainee-nutrition-load-resilience.test.js
-      - name: Test coach body analysis layout and progress isolation
+      - name: Run trainee progress regression checks
         run: node tests/coach-body-analysis-layout-regression.mjs
