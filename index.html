@@ -438,6 +438,7 @@ body.locked{overflow:hidden!important}
   <button onclick="showSection('meal',this)">📋 برنامه غذایی</button>
   <button onclick="showSection('workout',this)">🏋️ برنامه تمرینی</button>
   <button onclick="showSection('progress',this)">📊 پیشرفت</button>
+  <button id="navBodyAnalysis" onclick="showSection('bodyAnalysis',this)">🧬 آنالیز بدن</button>
 </div>
 
 <!-- FOOD -->
@@ -852,22 +853,8 @@ body.locked{overflow:hidden!important}
 </div>
 </section>
 
-<!-- PROGRESS -->
-<section id="progress" class="section">
-<div class="card" id="progressEntryPanel" style="display:none" aria-hidden="true">
-<h2>📊 کارت پیشرفت دستی</h2>
-<div class="grid2">
-<div><label>تاریخ</label><input id="prDate" type="date"></div>
-<div><label>وزن</label><input id="prWeight" type="number" step="0.1"></div>
-<div><label>دور کمر (سانتی‌متر)</label><input id="waist" type="number" step="0.1" min="1" inputmode="decimal"></div>
-<div><label>دور سینه (سانتی‌متر)</label><input id="chest" type="number" step="0.1" min="1" inputmode="decimal"></div>
-<div><label>دور باسن (سانتی‌متر)</label><input id="hip" type="number" step="0.1" min="1" inputmode="decimal"></div>
-<div><label>دور شکم (سانتی‌متر)</label><input id="glute" type="number" step="0.1" min="1" inputmode="decimal"></div>
-<div><label>دور ران (اختیاری، سانتی‌متر)</label><input id="thigh" type="number" step="0.1" min="1" inputmode="decimal"></div>
-</div>
-<button onclick="saveProgress()">ثبت اندازه‌ها</button>
-</div>
-
+<!-- COACH BODY ANALYSIS: moved existing entry card out of Progress -->
+<section id="bodyAnalysis" class="section">
 <div class="card" id="bodyAnalysisEntryPanel">
 <h2>📊 آنالیز بدن</h2>
 <div class="grid2">
@@ -885,6 +872,25 @@ body.locked{overflow:hidden!important}
 <button onclick="saveAnalysis()">ثبت آنالیز</button>
 <p class="muted">فایل برای ذخیره دائمی نیاز به Storage در Supabase دارد؛ فعلاً اطلاعات عددی این فرم ذخیره می‌شود.</p>
 </div>
+</section>
+
+<!-- PROGRESS -->
+<section id="progress" class="section">
+<div class="card" id="progressEntryPanel" style="display:none" aria-hidden="true">
+<h2>📊 کارت پیشرفت دستی</h2>
+<div class="grid2">
+<div><label>تاریخ</label><input id="prDate" type="date"></div>
+<div><label>وزن</label><input id="prWeight" type="number" step="0.1"></div>
+<div><label>دور کمر (سانتی‌متر)</label><input id="waist" type="number" step="0.1" min="1" inputmode="decimal"></div>
+<div><label>دور سینه (سانتی‌متر)</label><input id="chest" type="number" step="0.1" min="1" inputmode="decimal"></div>
+<div><label>دور باسن (سانتی‌متر)</label><input id="hip" type="number" step="0.1" min="1" inputmode="decimal"></div>
+<div><label>دور شکم (سانتی‌متر)</label><input id="glute" type="number" step="0.1" min="1" inputmode="decimal"></div>
+<div><label>دور ران (اختیاری، سانتی‌متر)</label><input id="thigh" type="number" step="0.1" min="1" inputmode="decimal"></div>
+</div>
+<button onclick="saveProgress()">ثبت اندازه‌ها</button>
+</div>
+
+
 
 <div class="card">
 <h2>💬 یادداشت مربی</h2>
