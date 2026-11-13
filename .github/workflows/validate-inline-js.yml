@@ -22,10 +22,10 @@ jobs:
           const fs = require('fs');
           const { spawnSync } = require('child_process');
           const html = fs.readFileSync('index.html', 'utf8');
-          const scripts = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script\\s*>/gi)];
+          const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
           let failed = false, count = 0;
           for (const [i, match] of scripts.entries()) {
-            if (/\\bsrc\\s*=/.test(match[1]) || !match[2].trim()) continue;
+            if (/\bsrc\s*=/.test(match[1]) || !match[2].trim()) continue;
             count++;
             const file = `/tmp/inline-${i}.js`;
             fs.writeFileSync(file, match[2]);
