@@ -4,6 +4,8 @@ import fs from "node:fs";
 const html = fs.readFileSync("index.html", "utf8");
 const migration = fs.readFileSync("supabase/migrations/202611130001_atomic_trainee_progress_rpc.sql", "utf8");
 
+assert.match(html, /<section id="bodyAnalysis" class="section">[\\s\\S]*?id="bodyAnalysisEntryPanel"/);
+assert.match(html, /id="navBodyAnalysis" onclick="showSection\\('bodyAnalysis',this\\)"/);
 assert.match(html, /id="progressEntryPanel" style="display:none"/);
 assert.match(html, /traineeCanEnter=activeProfile\?\.role==='trainee'/);
 assert.match(html, /entryPanel\.style\.display=traineeCanEnter\?'block':'none'/);
