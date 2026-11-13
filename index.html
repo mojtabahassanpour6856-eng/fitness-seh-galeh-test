@@ -8236,8 +8236,7 @@ const oldWorkoutRenderer=window.renderWorkoutList;
 
 
 <script id="FITNESS_PROGRESS_PANEL_V1">
-/* Coach progress shell — stage 1: visual structure only.
-   No database reads/writes, no changes to trainee forms or stored records. */
+/* Stage 1: empty coach progress layout only. No data access or mutation. */
 (function(){
   const $=id=>document.getElementById(id);
   let attempts=0;
@@ -8246,67 +8245,51 @@ const oldWorkoutRenderer=window.renderWorkoutList;
     if(profile?.role!=='coach') return false;
     const section=$('progress');
     if(!section) return false;
-
     let report=$('progressHistory');
-    if(!report){
-      report=document.createElement('div');
-      report.id='progressHistory';
-      report.className='card';
-    }
-    report.innerHTML='<h2>📝 گزارش ثبت‌شده توسط شاگرد</h2><div id="progressHistoryBody" class="muted">محل نمایش گزارش شاگرد در مرحله بعد آماده می‌شود.</div>';
-
+    if(!report){report=document.createElement('div');report.id='progressHistory';report.className='card';}
+    const reportMarkup='<h2>📝 گزارش ثبت‌شده توسط شاگرد</h2><div id="progressHistoryBody" class="muted">محل نمایش گزارش شاگرد در مرحله بعد آماده می‌شود.</div>';
+    if(report.innerHTML!==reportMarkup) report.innerHTML=reportMarkup;
     let chart=$('progressTrend');
-    if(!chart){
-      chart=document.createElement('div');
-      chart.id='progressTrend';
-      chart.className='card';
-    }
-    chart.innerHTML='<h2>📈 نمودار روند پیشرفت</h2><div id="progressTrendBody" class="muted">محل نمایش نمودار پیشرفت در مرحله بعد آماده می‌شود.</div>';
-
-    // Coach view contains exactly these two cards; all legacy coach panels
-    // are hidden, not deleted. Trainee view and all data remain untouched.
+    if(!chart){chart=document.createElement('div');chart.id='progressTrend';chart.className='card';}
+    const chartMarkup='<h2>📈 نمودار روند پیشرفت</h2><div id="progressTrendBody" class="muted">محل نمایش نمودار پیشرفت در مرحله بعد آماده می‌شود.</div>';
+    if(chart.innerHTML!==chartMarkup) chart.innerHTML=chartMarkup;
+    // Hide legacy coach-only panels without deleting their markup or touching trainee mode.
     Array.from(section.children).forEach(node=>{
-      if(node!==report && node!==chart){
+      if(node!==report&&node!==chart){
         node.style.setProperty('display','none','important');
         node.setAttribute('aria-hidden','true');
       }
     });
-    report.style.removeProperty('display');
-    chart.style.removeProperty('display');
-    report.removeAttribute('aria-hidden');
-    chart.removeAttribute('aria-hidden');
+    report.style.removeProperty('display'); chart.style.removeProperty('display');
+    report.removeAttribute('aria-hidden'); chart.removeAttribute('aria-hidden');
     section.insertBefore(report,section.firstChild);
     section.insertBefore(chart,report.nextSibling);
     return true;
   }
-
   function start(){
     if(buildCoachProgressShell()) return;
     if(attempts++<40) setTimeout(start,250);
   }
-  const previousShow=window.showSection;
-  if(typeof previousShow==='function'&&!window.__coachProgressShellShowWrapped){
+  const oldShow=window.showSection;
+  if(typeof oldShow==='function'&&!window.__coachProgressShellShowWrapped){
     window.showSection=function(id,btn){
-      const result=previousShow.apply(this,arguments);
+      const result=oldShow.apply(this,arguments);
       if(id==='progress') setTimeout(buildCoachProgressShell,0);
       return result;
     };
     window.__coachProgressShellShowWrapped=true;
   }
-  const previousSelect=window.selectClient;
-  if(typeof previousSelect==='function'&&!window.__coachProgressShellSelectWrapped){
+  const oldSelect=window.selectClient;
+  if(typeof oldSelect==='function'&&!window.__coachProgressShellSelectWrapped){
     window.selectClient=async function(){
-      const result=await previousSelect.apply(this,arguments);
+      const result=await oldSelect.apply(this,arguments);
       buildCoachProgressShell();
       return result;
     };
     window.__coachProgressShellSelectWrapped=true;
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
   else start();
-  const observer=new MutationObserver(()=>buildCoachProgressShell());
-  const section=$('progress');
-  if(section) observer.observe(section,{childList:true});
 })();
 </script>
 
