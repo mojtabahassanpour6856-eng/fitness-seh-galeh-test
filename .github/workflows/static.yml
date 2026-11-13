@@ -1,7 +1,7 @@
 name: Deploy isolated preview to GitHub Pages
 on:
   push:
-    branches: ["main", "experiment/nutrition-builder-isolated-20261105"]
+    branches: ["main", "experiment/nutrition-builder-isolated-20261105", "feature/coach-progress-shell-empty-20261113"]
   workflow_dispatch:
 permissions:
   contents: read
