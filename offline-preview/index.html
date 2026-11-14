@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff8e9"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>پیش‌نمایش آفلاین | فیتنس سه‌قلعه</title>
+<style>
+:root{font-family:Tahoma,Arial,sans-serif;color:#40331b;background:#fffdf8}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(145deg,#fffdf8,#f7efd9)}
+main{max-width:760px;margin:auto;padding:24px 18px 48px}.hero{padding:26px 22px;border:1px solid #d6b96c;border-radius:20px;background:#fff9eb;box-shadow:0 8px 28px #70551a12}
+.brand{font-size:14px;color:#94752e;font-weight:700}h1{font-size:clamp(24px,5vw,34px);margin:12px 0 8px;color:#4a3918}.subtitle{line-height:2;color:#76643f;margin:0}
+.badge{display:inline-block;margin-top:16px;padding:6px 11px;border-radius:20px;background:#f1e4bd;color:#71551d;font-size:12px;font-weight:bold}
+.panel{margin-top:18px;padding:20px;border:1px solid #eadfbe;border-radius:16px;background:#fff;box-shadow:0 5px 20px #70551a0a}h2{font-size:18px;margin:0 0 10px}p{line-height:2}
+button{width:100%;border:0;border-radius:12px;padding:14px 16px;background:#9c7b32;color:#fff;font-size:15px;font-weight:bold;cursor:pointer;margin-top:10px}
+button.secondary{background:#f5edda;color:#634d1d;border:1px solid #d8c38a}.note{font-size:13px;color:#786b4c}
+#offlineNotice{display:none;margin-top:18px;padding:16px;border:1px solid #c8a64e;border-radius:14px;background:#fff4d7;line-height:2}#offlineNotice strong{display:block;margin-bottom:5px}
+#authDemo,#privateDemo{display:none}body.limited #authDemo,body.limited #privateDemo{display:none!important}body.limited #loginPanel{display:none!important}body.limited #offlineNotice{display:block}
+body.limited .private-nav,body.limited .private-content{display:none!important}.private-nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.private-nav span{padding:8px 12px;background:#f3ead3;border-radius:9px;font-size:13px}
+.status{font-size:13px;color:#6f5a2b;margin-top:12px}footer{text-align:center;color:#9a8a65;font-size:12px;margin-top:24px}
+</style></head>
+<body><main>
+<section class="hero"><div class="brand">FITNESS SEH GALEH · مربی من</div><h1>پیش‌نمایش ایمنی حالت آفلاین</h1>
+<p class="subtitle">این محیط فقط برای آزمایش رفتار پوسته برنامه در Android Chrome و نسخه نصب‌شده PWA ساخته شده است.</p><span class="badge">محیط آزمایشی مستقل · بدون اتصال به Supabase</span></section>
+<section id="offlineNotice" role="status"><strong>حالت آفلاین محدود</strong>اتصال اینترنت در دسترس نیست. پوسته برنامه باز شده، اما هیچ بخش خصوصی، فهرست شاگردان یا اطلاعات مالی نمایش داده نمی‌شود. پس از اتصال مجدد، وضعیت آنلاین دوباره بررسی خواهد شد.</section>
+<section class="panel" id="loginPanel"><h2>شروع آزمایش</h2><p>برای شبیه‌سازی ورود موفق، دکمه زیر را در حالت آنلاین بزنید. هیچ حساب کاربری، رمز عبور یا اطلاعاتی به سرور ارسال نمی‌شود؛ فقط دسترسی آزمایشی همین مرورگر فعال می‌شود.</p>
+<button id="simulateLogin">ثبت ورود آزمایشی (فقط همین دستگاه)</button><p class="note">پس از آن، اینترنت را قطع و برنامه را ببندید و دوباره باز کنید تا پوسته محدود را آزمایش کنید.</p></section>
+<section class="panel" id="authDemo"><h2>وضعیت ورود آزمایشی تأیید شد</h2><p>این صفحه نمایشی است و داده واقعی ندارد. در حالت آنلاین، فایل سلامت محیط آزمایش بررسی شده است.</p>
+<div class="private-nav"><span>نمای کلی</span><span>شاگردان نمونه</span><span>برنامه‌ها</span><span>گزارش‌ها</span></div>
+<div id="privateDemo" class="private-content"><p><strong>بخش نمایشی خصوصی</strong></p><p>این متن فقط برای اثبات تفاوت رابط احراز‌شده با پوسته محدود است؛ هیچ اطلاعات شاگردی در این محیط وجود ندارد.</p></div>
+<button class="secondary" id="simulateLogout">خروج آزمایشی و حذف نشانگر</button></section>
+<p class="status" id="statusText" aria-live="polite">در حال آماده‌سازی محیط آزمایش…</p><footer>فیتنس سه‌قلعه · فقط برای تست آفلاین · هیچ داده واقعی در این محیط ذخیره نمی‌شود.</footer>
+</main>
+<script>
+(function(){
+'use strict';const KEY='seh.offline-safe-shell.v1';const status=document.getElementById('statusText');const loginPanel=document.getElementById('loginPanel');const authDemo=document.getElementById('authDemo');const healthUrl='./health.txt?check=';let checking=false;
+function marker(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');return !!(x&&x.version===1&&x.view==='home');}catch(_){return false;}}
+function setStatus(s){status.textContent=s;}
+function showLimited(){if(!marker())return false;document.body.classList.add('limited');loginPanel.style.display='none';authDemo.style.display='none';setStatus('پوسته محدود نمایش داده می‌شود؛ محتوای خصوصی پنهان است.');return true;}
+function showVerified(){document.body.classList.remove('limited');document.getElementById('offlineNotice').style.display='none';loginPanel.style.display='none';authDemo.style.display='block';setStatus('اتصال آنلاین بررسی شد؛ حالت نمایشی احراز‌شده فعال است.');}
+async function verifyOnline(){if(checking)return;if(!marker())return;if(!navigator.onLine){showLimited();return;}checking=true;try{const response=await fetch(healthUrl+Date.now(),{cache:'no-store',credentials:'omit'});if(!response.ok)throw new Error('health check failed');showVerified();}catch(_){showLimited();}finally{checking=false;}}
+async function start(){if(!navigator.onLine){if(!showLimited())setStatus('آفلاین هستید و ورود آزمایشی قبلی وجود ندارد.');return;}if(marker()){await verifyOnline();return;}setStatus('آنلاین هستید؛ برای شروع، ورود آزمایشی را ثبت کنید.');}
+document.getElementById('simulateLogin').addEventListener('click',async function(){if(!navigator.onLine){setStatus('برای ثبت ورود آزمایشی ابتدا اینترنت را وصل کنید.');return;}try{const response=await fetch(healthUrl+Date.now(),{cache:'no-store',credentials:'omit'});if(!response.ok)throw new Error('health check failed');localStorage.setItem(KEY,JSON.stringify({version:1,view:'home'}));showVerified();}catch(_){setStatus('بررسی آنلاین موفق نبود؛ نشانگر ذخیره نشد.');}});
+document.getElementById('simulateLogout').addEventListener('click',function(){localStorage.removeItem(KEY);document.body.classList.remove('limited');authDemo.style.display='none';loginPanel.style.display='block';setStatus('نشانگر آزمایشی حذف شد؛ شروع آفلاین باید روی صفحه ورود بماند.');});
+window.addEventListener('online',function(){setTimeout(verifyOnline,250);});window.addEventListener('offline',function(){if(!document.body.classList.contains('limited'))setStatus('اینترنت قطع شد؛ صفحه باز فعلی در حافظه باقی می‌ماند.');});
+window.addEventListener('pageshow',function(){setTimeout(start,100);});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(()=>setStatus('پوسته آزمایشی آماده است؛ ورود آزمایشی را ثبت کنید.')).catch(()=>setStatus('ثبت Service Worker ناموفق بود؛ صفحه را آنلاین دوباره باز کنید.'));}
+start();
+})();
+</script></body></html>
