@@ -15,7 +15,10 @@ const SHELL_ASSETS = [
   'top-genesis-pdf-parser.js',
   'top-genesis-csv-parser.js',
   'top-genesis-publication.js',
-  'top-genesis-archive.js'
+    'top-genesis-archive.js',
+  'experiments/workout-template-planner.html',
+  'experiments/workout-persistence-adapter.js',
+  'experiments/atomic-workout-rpc-adapter.js'
 ];
 const SHELL_ASSET_PATHS = new Set(SHELL_ASSETS);
 const APP_SCOPE = new URL(self.registration.scope);
