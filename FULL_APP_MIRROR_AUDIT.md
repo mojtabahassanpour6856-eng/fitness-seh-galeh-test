@@ -32,7 +32,7 @@ Create a complete, isolated test mirror of the Fitness Seh Galeh app. The test m
   - delete-archived-trainee
   - trainee-password-recovery
   - send-coach-chat-push
-- Test project has no deployed Edge Functions at audit time.
+- Test project currently has 13 active Edge Functions (same function-name set as production, but deployed versions/hashes are not yet verified as equivalent).
 - Production contains real user data. No production rows, auth users, storage objects, or secrets may be copied to test.
 - The main app's `index.html` is too large for the current GitHub file-fetch wrapper to return its contents reliably. A zero-length wrapper response is NOT evidence that the actual source file is empty.
 - Production manifest contains a production Pages URL/scope; it must be adjusted only in the test branch to the test Pages base path.
@@ -65,3 +65,14 @@ Create a complete, isolated test mirror of the Fitness Seh Galeh app. The test m
 ## Current state
 - Dedicated integration branch created from test repository `main`.
 - This commit records the audit baseline only; it does not claim that the full app has been transferred.
+
+
+## Work branch progress (2026-11-15)
+- Dedicated branch: `integration/full-app-mirror-20261115` in the test repository.
+- Main `index.html` source was fetched through its Git blob SHA (about 1.2 MB) and copied to the work branch.
+- Only the Supabase project URL and publishable key were replaced with the TEST project's public values. Checks confirmed no production Supabase URL/key strings remain in the copied app shell.
+- Copied and SHA-verified app dependencies: Supabase JS vendor bundle, coach nutrition builder, Top Genesis PDF embed/parser/CSV parser/publication/archive modules, and PDF test page.
+- Copied service worker and adjusted its shell asset list to match the test manifest's SVG-only icon (production PNG icons are binary and absent from the test branch).
+- Test manifest retained its test-only identity and scope; it was not overwritten by production manifest.
+- Test Supabase already has 13 active Edge Functions. Their presence is confirmed; exact code parity and test-secret configuration remain to be verified.
+- No Production DB writes, deployments, or data copies were performed.
