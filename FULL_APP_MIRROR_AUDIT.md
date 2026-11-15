@@ -1,78 +1,66 @@
-# Full App Mirror — Migration Audit
-Date: 2026-11-15
-Status: audit baseline only; no production changes and no production data copied.
+# Fitness Seh Galeh — Full App Mirror Audit
+Updated: 2026-11-15
+Status: TEST-only integration branch; draft review; production untouched.
 
-## Objective
-Create a complete, isolated test mirror of the Fitness Seh Galeh app. The test mirror must use only the TEST Supabase project and synthetic accounts/data. Production source, database, users, storage, and secrets must remain untouched.
+## Scope and isolation
+- Production repository: `mojtabahassanpour6856-eng/fitness-seh-galeh` (`main`).
+- Test repository: `mojtabahassanpour6856-eng/fitness-seh-galeh-test`.
+- Test work branch: `integration/full-app-mirror-20261115`.
+- Test Supabase ref: `udptdznbvewkublvzmtm`.
+- Production Supabase ref: `qfakyudgidsumeuoqoot` — read-only during this work; no writes, deploys, or data copies.
+- Test Pages path and PWA scope: `/fitness-seh-galeh-test/`.
+- PR #7 remains OPEN, DRAFT, and UNMERGED. Do not merge or publish the full mirror until manual QA and explicit approval.
 
-## Repositories
-- Source of truth: `mojtabahassanpour6856-eng/fitness-seh-galeh`, branch `main`.
-- Test target: `mojtabahassanpour6856-eng/fitness-seh-galeh-test`.
-- Work branch: `integration/full-app-mirror-20261115`.
-- Test Pages base path: `/fitness-seh-galeh-test/`.
+## Database parity and synthetic data
+- Production public tables: 58.
+- Test public tables: 58.
+- Test reference data: 240 foods and 323 exercises.
+- Test-only account data: 2 synthetic trainee rows and 1 coach profile; 0 registration requests at audit time.
+- No production trainee records, auth users, payment rows, private plans, or personal storage objects were copied.
+- Four tables in `workout_batch_test` have RLS enabled but no policies. The schema has no USAGE for `anon` or `authenticated`, so those tables are not reachable through those roles.
+- `public.exercises_duplicate_archive_20261023` is empty, has RLS enabled, no policies, and no SELECT grant to `anon` or `authenticated`. It remains an isolated archive; no structural change made.
 
-## Supabase projects
-- Production project ref: `qfakyudgidsumeuoqoot` — DO NOT WRITE.
-- Test project ref: `udptdznbvewkublvzmtm` — target for isolated setup only.
+## Edge Functions
+- All 13 production Edge Function names exist in TEST.
+- The source files for all 13 functions were fetched from both projects and compared byte-for-byte: all are identical.
+- The `verify_jwt` settings also match for all 13 functions. Deployment version numbers differ because the environments have separate deployment histories.
+- Registration review flow checked: the Edge Function validates the caller with `auth.getUser()`, requires a coach profile, then calls the atomic review RPC with the service-role client. The public RPC wrapper and its private implementation are service-role-only.
+- Registration creation flow checked: the current app invokes `trainee-registration-request`; that function uses the service-role client and the rate-limit RPC. The auth-user trigger creates the trainee/profile row required by the subsequent approval flow.
+- The legacy `submit_trainee_registration_request` RPC is not referenced in the test app shell and is no longer executable by `anon` or `authenticated`; the supported path is the Edge Function.
 
-## Confirmed audit findings
-- Production currently has 54 public tables (including application, trainee, payment, nutrition, workout, messaging, registration, recovery, device-link, and body-analysis data).
-- Test project is materially behind production schema; it has only a subset of the required public tables.
-- Production has 13 active Edge Functions returned by the current inventory:
-  - send-sms
-  - clever-worker
-  - trainee-registration-request
-  - review-trainee-registration
-  - apply-trainee-schedule
-  - food-nutrition-search
-  - trainee-device-link
-  - review-trainee-device-link
-  - trainee-registration-login
-  - send-chat-push
-  - delete-archived-trainee
-  - trainee-password-recovery
-  - send-coach-chat-push
-- Test project currently has 13 active Edge Functions (same function-name set as production, but deployed versions/hashes are not yet verified as equivalent).
-- Production contains real user data. No production rows, auth users, storage objects, or secrets may be copied to test.
-- The main app's `index.html` is too large for the current GitHub file-fetch wrapper to return its contents reliably. A zero-length wrapper response is NOT evidence that the actual source file is empty.
-- Production manifest contains a production Pages URL/scope; it must be adjusted only in the test branch to the test Pages base path.
-- Production service worker is `sw.js` and currently has an explicit static shell asset list. It must be reviewed and aligned with the complete test asset tree.
+## Security changes made in TEST
+- Revoked direct execution from PUBLIC/anon/authenticated for the trigger-only SECURITY DEFINER functions:
+  - `apply_approved_registration_details()`
+  - `handle_new_trainee_auth_user()`
+  - `set_challenge_owner()`
+  - `set_trainer_exercise_owner()`
+  - `set_trainee_owner()`
+- Trigger attachments remain present and unchanged.
+- `consume_registration_rate_limit(...)` is now executable only by `service_role` (plus the owner); the Edge Function's service-role path is preserved.
+- Revoked PUBLIC/anon/authenticated execution of the obsolete legacy registration RPC.
+- Verified function privileges after changes: no anonymous access to the reviewed SECURITY DEFINER functions; the rate-limit RPC remains callable by service_role.
+- Security advisor now reports 0 anonymous SECURITY DEFINER warnings. One authenticated SECURITY DEFINER warning remains for `save_coach_nutrition_builder_plan(jsonb)`; its body checks `auth.uid()`, coach role, and trainee ownership/access before writing, so authenticated execution is intentional.
+- Leaked-password protection remains disabled in Auth and requires a dashboard setting change.
+- Five RLS-without-policy informational findings remain as described above.
 
-## Known test-environment gaps/errors
-- Test app previously returned missing-column/table errors for trainees, exercises, profiles, trainer_exercises, coach_chat_messages, and trainee_registration_requests.
-- Test UI reported registration error code `42.1`; root cause is not established. Capture the exact browser response and corresponding Postgres/Edge logs before changing schema/policies.
-- Test DB had prior incremental repairs. These are not a substitute for replaying the authoritative schema/migrations from source.
+## App shell, PWA, and CI
+- The test app shell uses only `https://udptdznbvewkublvzmtm.supabase.co` and the TEST publishable key.
+- A production Supabase DNS-prefetch reference was found in the copied HTML and removed from this TEST branch. No production Supabase endpoint remains in the app shell after the correction; no service-role or secret key is embedded in HTML.
+- Test manifest identity, start URL, and scope stay under `/fitness-seh-galeh-test/`.
+- All 14 service-worker shell assets are present in the test repository tree.
+- The static/offline-preview GitHub Actions check initially failed because two assertions did not allow harmless whitespace in the root service worker. The assertions were corrected to be whitespace-tolerant.
+- Latest workflow run for the integration branch passed: `43726989624`.
+- The test repository's current `main` Pages deployment succeeded earlier, but PR #7's full-app integration branch has not been merged or published. The existing Pages deployment is not proof that the full app mirror is live.
 
-## Required migration sequence
-1. Export and inventory the complete source repository tree and commit SHA, including hidden files, workflows, assets, PWA files, vendor assets, and any Supabase directory.
-2. Compare source and test repository trees; preserve existing test-only experiments and never overwrite them silently.
-3. Copy source code to this dedicated integration branch, excluding secrets and production-only environment values.
-4. Review all runtime configuration references (Supabase URL/key, Edge Function invocations, auth redirect URLs, storage buckets, SMS, Turnstile, push, analytics, and Pages paths).
-5. Build/reconstruct the TEST database schema from authoritative migrations/schema definitions. Do not infer missing tables/columns from UI errors.
-6. Recreate required TEST-only RLS policies, grants, indexes, triggers, RPCs, and storage policies. Verify isolation with coach and trainee test accounts.
-7. Deploy Edge Functions to TEST only. Configure test secrets separately; never read or expose production secret values.
-8. Seed only synthetic food/exercise/reference data and synthetic trainees.
-9. Run build/static checks, PWA/offline checks, and end-to-end workflows for coach and trainee roles.
-10. Open a draft PR from this branch to test `main` only after the mirror passes review. Never merge to production repository.
+## Secrets and provider configuration — still pending
+The Supabase connector used for this audit does not expose Edge Function secret values or a secret-inventory action. No secret values were read or printed. Source inspection shows these environment variable names are referenced:
+- Supabase runtime: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, `SUPABASE_PUBLISHABLE_KEY`.
+- Push: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`.
+- SMS: `SMSIR_API_KEY`, `SEND_SMS_HOOK_SECRET`.
+The TEST values and presence must be confirmed in the TEST project's Edge Function secrets before live SMS/push tests. Important provider mismatch to resolve: the current `send-sms` source calls `https://api.sms.ir/v1/send/verify` and expects `SMSIR_API_KEY`; verify/reconcile this with the selected FarazSMS provider before enabling SMS in TEST.
 
-## Safety gates
-- No writes to production Supabase or production GitHub repository.
-- No production student/trainee records copied.
-- No production credentials copied or printed.
-- No deployment to the test Pages main branch until the full mirror is reviewed.
-- If source tree or environment mapping cannot be verified, stop rather than guess.
-
-## Current state
-- Dedicated integration branch created from test repository `main`.
-- This commit records the audit baseline only; it does not claim that the full app has been transferred.
-
-
-## Work branch progress (2026-11-15)
-- Dedicated branch: `integration/full-app-mirror-20261115` in the test repository.
-- Main `index.html` source was fetched through its Git blob SHA (about 1.2 MB) and copied to the work branch.
-- Only the Supabase project URL and publishable key were replaced with the TEST project's public values. Checks confirmed no production Supabase URL/key strings remain in the copied app shell.
-- Copied and SHA-verified app dependencies: Supabase JS vendor bundle, coach nutrition builder, Top Genesis PDF embed/parser/CSV parser/publication/archive modules, and PDF test page.
-- Copied service worker and adjusted its shell asset list to match the test manifest's SVG-only icon (production PNG icons are binary and absent from the test branch).
-- Test manifest retained its test-only identity and scope; it was not overwritten by production manifest.
-- Test Supabase already has 13 active Edge Functions. Their presence is confirmed; exact code parity and test-secret configuration remain to be verified.
-- No Production DB writes, deployments, or data copies were performed.
+## Remaining QA gates
+1. Confirm TEST Edge Function secrets and decide the SMS provider alignment; never copy Production secret values.
+2. Run browser tests using only synthetic TEST coach/trainee accounts: registration, approval, login, password recovery, chat/push, nutrition plan save, Top Genesis upload/parse/publication, storage, and PWA install/update/offline.
+3. Reproduce registration error `42.1` with the exact browser response and matching Edge/PostgREST logs. The current TEST registration-request table is empty, so the failure has not yet been reproduced in this audit.
+4. Only after successful manual QA and explicit approval, consider merging PR #7 into TEST repository `main` to publish the full test mirror. Never merge this PR into the Production repository.
