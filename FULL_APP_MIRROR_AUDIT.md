@@ -18,7 +18,7 @@ Create a complete, isolated test mirror of the Fitness Seh Galeh app. The test m
 ## Confirmed audit findings
 - Production currently has 54 public tables (including application, trainee, payment, nutrition, workout, messaging, registration, recovery, device-link, and body-analysis data).
 - Test project is materially behind production schema; it has only a subset of the required public tables.
-- Production has 14 active Edge Functions:
+- Production has 13 active Edge Functions returned by the current inventory:
   - send-sms
   - clever-worker
   - trainee-registration-request
@@ -32,7 +32,6 @@ Create a complete, isolated test mirror of the Fitness Seh Galeh app. The test m
   - delete-archived-trainee
   - trainee-password-recovery
   - send-coach-chat-push
-  - (14th active function to be re-verified by source/deployment inventory; do not assume a function name from this note)
 - Test project has no deployed Edge Functions at audit time.
 - Production contains real user data. No production rows, auth users, storage objects, or secrets may be copied to test.
 - The main app's `index.html` is too large for the current GitHub file-fetch wrapper to return its contents reliably. A zero-length wrapper response is NOT evidence that the actual source file is empty.
