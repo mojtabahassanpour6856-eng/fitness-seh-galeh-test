@@ -59,9 +59,9 @@ test('root PWA manifest references an existing install icon',()=>{
 });
 
 test('root service worker caches only same-origin static shell assets and handles notifications',()=>{
- assert.match(rootSw,/const SHELL_ASSETS=/);
+ assert.match(rootSw,/const\s+SHELL_ASSETS\s*=/);
  assert.match(rootSw,/SHELL_ASSET_PATHS\.has\(relativePath\)/);
- assert.match(rootSw,/if\(!isInAppScope\(url\)\)return/);
+ assert.match(rootSw,/if\s*\(\s*!isInAppScope\(url\)\s*\)\s*return/);
  assert.match(rootSw,/addEventListener\('push'/);
  assert.match(rootSw,/addEventListener\('notificationclick'/);
  assert.doesNotMatch(rootSw,/\/rest\/v1\/|\/functions\/v1\/|Authorization|service_role/i);
