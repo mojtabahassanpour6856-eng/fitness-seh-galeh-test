@@ -66,3 +66,18 @@ test('root service worker caches only same-origin static shell assets and handle
  assert.match(rootSw,/addEventListener\('notificationclick'/);
  assert.doesNotMatch(rootSw,/\/rest\/v1\/|\/functions\/v1\/|Authorization|service_role/i);
 });
+
+
+test('root app is isolated to the TEST Supabase project and exposes no privileged key',()=>{
+ assert.match(rootHtml,/https:\\/\\/udptdznbvewkublvzmtm\\.supabase\\.co/);
+ assert.doesNotMatch(rootHtml,/qfakyudgidsumeuoqoot|qfakyudgidsumeuoqoot\\.supabase\\.co/i);
+ assert.doesNotMatch(rootHtml,/service_role|sb_secret_[A-Za-z0-9_-]+/i);
+});
+
+test('every root service-worker shell asset exists in the test repository',()=>{
+ const match=rootSw.match(/const\\s+SHELL_ASSETS\\s*=\\s*\\[([\\s\\S]*?)\\];/);
+ assert.ok(match,'root service-worker shell asset list should be present');
+ const assets=[...match[1].matchAll(/'([^']+)'/g)].map(item=>item[1]);
+ assert.ok(assets.length>=10,'full test app shell should include its supporting assets');
+ for(const asset of assets) assert.ok(fs.existsSync(asset),`missing test shell asset: ${asset}`);
+});
