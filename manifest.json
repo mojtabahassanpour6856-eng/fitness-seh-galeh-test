@@ -1,12 +1,12 @@
 {
-  "id": "https://mojtabahassanpour6856-eng.github.io/fitness-seh-galeh/",
+  "id": "/fitness-seh-galeh-test/",
   "name": "فیتنس سه قلعه | مربی من",
   "short_name": "فیتنس سه‌قلعه",
   "description": "اپلیکیشن فیتنس سه‌قلعه؛ مربی من",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "https://mojtabahassanpour6856-eng.github.io/fitness-seh-galeh/?appicon=gold20261018",
-  "scope": "https://mojtabahassanpour6856-eng.github.io/fitness-seh-galeh/",
+  "start_url": "/fitness-seh-galeh-test/?appicon=gold20261018",
+  "scope": "/fitness-seh-galeh-test/",
   "display": "standalone",
   "display_override": [
     "standalone"
