@@ -35,3 +35,30 @@ test('PWA scope is isolated to this preview folder',()=>{
  assert.equal(manifest.start_url,'./');
  assert.equal(manifest.display,'standalone');
 });
+
+const rootHtml=fs.readFileSync('index.html','utf8');
+const rootSw=fs.readFileSync('sw.js','utf8');
+const rootManifest=JSON.parse(fs.readFileSync('manifest.json','utf8'));
+
+test('root test PWA identity, start URL and scope stay inside the test Pages path',()=>{
+ assert.equal(rootManifest.id,'/fitness-seh-galeh-test/');
+ assert.equal(rootManifest.start_url,'/fitness-seh-galeh-test/?appicon=gold20261018');
+ assert.equal(rootManifest.scope,'/fitness-seh-galeh-test/');
+ assert.match(rootHtml,/<link rel="manifest" href="\.\/manifest\.json">/);
+ assert.match(rootHtml,/navigator\.serviceWorker\.register\('\.\/sw\.js',\{scope:'\.\/'\}\)/);
+ assert.doesNotMatch(rootHtml,/<base\\b/i);
+});
+
+test('root PWA manifest references an existing install icon',()=>{
+ assert.equal(rootManifest.icons.length,1);
+ assert.equal(rootManifest.icons[0].src,'icon.svg');
+ assert.equal(rootManifest.icons[0].type,'image/svg+xml');
+ assert.ok(fs.existsSync(rootManifest.icons[0].src));
+ assert.match(fs.readFileSync(rootManifest.icons[0].src,'utf8'),/<svg[\\s>]/i);
+});
+
+test('root service worker remains notification-only and does not cache app data',()=>{
+ assert.match(rootSw,/addEventListener\\('push'/);
+ assert.match(rootSw,/addEventListener\\('notificationclick'/);
+ assert.doesNotMatch(rootSw,/addEventListener\\('fetch'|caches\\.|cache\\.put/i);
+});
