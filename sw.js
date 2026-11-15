@@ -8,8 +8,6 @@ const SHELL_ASSETS = [
   'index.html',
   'manifest.json',
   'icon.svg',
-  'icon-192.png',
-  'icon-512.png',
   'vendor/supabase-2.119.0.js',
   'coach-nutrition-builder.html',
   'top-genesis-pdf-app-embed.js',
