@@ -4,6 +4,10 @@ on:
     branches: [main]
     paths:
       - 'offline-preview/**'
+      - 'manifest.json'
+      - 'index.html'
+      - 'sw.js'
+      - 'icon.svg'
       - 'tests/offline-preview-static.test.mjs'
       - '.github/workflows/test-offline-preview.yml'
 permissions:
