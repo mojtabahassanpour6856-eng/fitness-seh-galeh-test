@@ -5724,6 +5724,33 @@ window.toggleExerciseFavorite=async function(id,value){try{await sbWrite(`/train
 })();
 </script>
 
+<script id="seh-session-accessor-last-mile-guard-v1">
+/* Isolated final guard: keep coach list loading independent of optional auth wrappers. */
+(function(){
+  'use strict';
+  function ensureSessionAccessor(){
+    if(typeof window.__sehGetSessionSingleFlight==='function')return;
+    window.__sehGetSessionSingleFlight=function(){
+      var client=window.AUTH_SUPABASE;
+      if(!client||!client.auth||typeof client.auth.getSession!=='function'){
+        return Promise.reject(new Error('سرویس نشست ورود آماده نیست؛ صفحه را تازه‌سازی کنید.'));
+      }
+      return client.auth.getSession();
+    };
+  }
+  ensureSessionAccessor();
+  if(typeof window.loadClients==='function'&&!window.__sehLoadClientsSessionGuard){
+    var original=window.loadClients;
+    window.loadClients=async function(){
+      ensureSessionAccessor();
+      return original.apply(this,arguments);
+    };
+    window.__sehLoadClientsSessionGuard=true;
+  }
+  document.addEventListener('DOMContentLoaded',ensureSessionAccessor,{once:true});
+})();
+</script>
+
 <script>
 /* Persian Jalali date entry for birth and membership dates; database values remain ISO Gregorian. */
 (function(){
