@@ -3250,10 +3250,19 @@ window.loadDashboard = loadDashboard;
     finally{window.sehResetTurnstile?.(btn);if(btn){btn.disabled=false;btn.textContent='📨 ارسال درخواست ثبت‌نام';}}
   };
   window.loginTraineePhone=async function(){
-    const phone=phoneNorm($id('traineePhoneLogin')?.value||'');
-    const password=$id('traineeLoginPassword')?.value||'';
+    // Duplicate legacy login panels reuse IDs. Read only the visible fields
+    // from the active trainee login panel, never document.getElementById().
+    const visibleLoginBoxes=Array.from(document.querySelectorAll('#traineeLoginBox')).filter(el=>el.getClientRects().length&&!el.classList.contains('hide'));
+    const loginBox=visibleLoginBoxes[visibleLoginBoxes.length-1]||null;
+    const visibleField=(id)=>{
+      const scope=loginBox||document;
+      const matches=Array.from(scope.querySelectorAll('[id="'+id+'"]'));
+      return matches.find(el=>el.getClientRects().length&&!el.closest('.hide'))||null;
+    };
+    const phone=phoneNorm(visibleField('traineePhoneLogin')?.value||'');
+    const password=visibleField('traineeLoginPassword')?.value||'';
     if(!/^\+989\d{9}$/.test(phone)||!password){showAuthError('شماره موبایل معتبر و رمز عبور را وارد کنید.');return;}
-    const btn=$id('sehPhonePasswordLogin');
+    const btn=loginBox?.querySelector('button[onclick*="loginTraineePhone"],button#sehPhonePasswordLogin')||null;
     if(btn){btn.disabled=true;btn.textContent='⏳ در حال ورود…';}
     try{
       const {data,error}=await window.sehTraineeSignInWithPassword(phone,password);
