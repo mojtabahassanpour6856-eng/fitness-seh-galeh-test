@@ -381,9 +381,18 @@ body.locked{overflow:hidden!important}
     }
     var phoneInput=field('traineePhoneLogin','tel');
     var passwordInput=field('traineeLoginPassword','password');
+    // If an old duplicated ID is present inside this card, prefer the populated field.
+    if(phoneInput&&!String(phoneInput.value||'').trim()){
+      var populatedPhone=Array.from(scope.querySelectorAll('input[type="tel"],input[inputmode="tel"]')).find(function(el){return String(el.value||'').trim();});
+      if(populatedPhone)phoneInput=populatedPhone;
+    }
+    if(passwordInput&&!String(passwordInput.value||'').trim()){
+      var populatedPassword=Array.from(scope.querySelectorAll('input[type="password"]')).find(function(el){return String(el.value||'').trim();});
+      if(populatedPassword)passwordInput=populatedPassword;
+    }
     var phone=normalize(phoneInput&&phoneInput.value);
     var password=String(passwordInput&&passwordInput.value||'').trim();
-    if(!/^\+989\d{9}$/.test(phone)||!password){show('شماره موبایل معتبر و رمز عبور را وارد کنید. نمونه: 09121234567');return;}
+    if(!/^\+989\d{9}$/.test(phone)||!password){show('ورودی تشخیص داده نشد. شماره خوانده‌شده: '+(phone||'خالی')+'؛ رمز: '+(password?'وارد شده':'خالی')+'. لطفاً فیلدهای همین کادر ورود را بررسی کنید.');return;}
     if(!window.AUTH_SUPABASE||!window.AUTH_SUPABASE.auth){var se=window.__fitnessLastScriptError;var detail=se?(se.message+' | فایل: '+(se.source||'نامشخص').split('/').pop()+' | خط: '+(se.line||'?')+' | ستون: '+(se.column||'?')):'خطای جاوااسکریپت ثبت نشده است';show('اتصال ورود شاگرد هنوز آماده نشده است. '+detail);return;}
     if(typeof window.finishLogin!=='function'){show('بخش تکمیل ورود بارگذاری نشده است. '+(window.__fitnessLastScriptError&&window.__fitnessLastScriptError.message||'خطای اجرای اسکریپت اصلی را بررسی می‌کنم.'));return;}
     if(button){button.disabled=true;button.textContent='⏳ در حال ورود…';}
@@ -399,7 +408,12 @@ body.locked{overflow:hidden!important}
     var button=event.target&&event.target.closest?event.target.closest('button'):null;
     if(!button)return;
     var box=button.closest('#traineeLoginBox');
-    if(!box||!/ورود شاگرد/.test(button.textContent||''))return;
+    var block=button.closest('.trainee-auth-block');
+    // Some active login cards are rendered outside the legacy #traineeLoginBox.
+    // Route every explicit trainee-login button through this same scoped handler.
+    var isTraineeLogin=/ورود شاگرد/.test(button.textContent||'') ||
+      /loginTraineePhone|sehTraineeSignInWithPassword/.test(button.getAttribute('onclick')||'');
+    if(!isTraineeLogin||(!block&&!box))return;
     event.preventDefault();
     event.stopPropagation();
     if(event.stopImmediatePropagation)event.stopImmediatePropagation();
