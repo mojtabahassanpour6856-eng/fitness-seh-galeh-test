@@ -375,7 +375,7 @@ body.locked{overflow:hidden!important}
     if(typeof window.finishLogin!=='function'){show('بخش تکمیل ورود بارگذاری نشده است. '+(window.__fitnessLastScriptError&&window.__fitnessLastScriptError.message||'خطای اجرای اسکریپت اصلی را بررسی می‌کنم.'));return;}
     if(button){button.disabled=true;button.textContent='⏳ در حال ورود…';}
     try{
-      var result=await window.AUTH_SUPABASEwindow.sehTraineeSignInWithPassword(phone,password);
+      var result=await window.sehTraineeSignInWithPassword(phone,password);
       if(result.error)throw result.error;
       if(!result.data||!result.data.user)throw new Error('حساب شاگرد دریافت نشد.');
       await window.finishLogin(result.data.user);
@@ -3519,7 +3519,7 @@ window.loadDashboard = loadDashboard;
    if(data?.status==='pending'){status('درخواست شما ثبت شده است؛ منتظر تأیید مربی بمانید.');return;}
    if(['rejected','expired','claimed'].includes(data?.status)){clear();status(data.message||'این درخواست دیگر معتبر نیست؛ دوباره درخواست بدهید.');return;}
    if(data?.success&&data?.temporary_password&&data?.phone){
-    const signed=await window.AUTH_SUPABASEwindow.sehTraineeSignInWithPassword(data.phone,data.temporary_password);
+    const signed=await window.sehTraineeSignInWithPassword(data.phone,data.temporary_password);
     if(signed.error)throw signed.error;
     if(!signed.data?.user||!signed.data?.session?.access_token||!signed.data?.session?.refresh_token)throw new Error('نشست ورود ساخته نشد.');
     const saved=await window.AUTH_SUPABASE.auth.setSession({access_token:signed.data.session.access_token,refresh_token:signed.data.session.refresh_token});
@@ -12358,7 +12358,7 @@ body.workout-output.workout-compact{
     if(btn){btn.disabled=true;btn.textContent='⏳ در حال ورود…';}
     if(err)err.style.display='none';
     try{
-      const {data,error}=await window.AUTH_SUPABASEwindow.sehTraineeSignInWithPassword(phone,password);
+      const {data,error}=await window.sehTraineeSignInWithPassword(phone,password);
       if(error)throw error;
       if(!data?.user||!data?.session?.access_token||!data?.session?.refresh_token)throw new Error('ورود انجام شد اما نشست امن شاگرد ساخته نشد.');
       const saved=await window.AUTH_SUPABASE.auth.setSession({access_token:data.session.access_token,refresh_token:data.session.refresh_token});
