@@ -363,11 +363,9 @@ body.locked{overflow:hidden!important}
     return p;
   }
   async function runLogin(button){
-    if(typeof window.loginTraineePhone==='function'){
-      try { await window.loginTraineePhone(button); }
-      catch(e){ show('ورود انجام نشد: '+(e&&e.message||e)); }
-      return;
-    }
+    // Always use this capture-phase router. Older global loginTraineePhone
+    // handlers are reassigned several times by legacy scripts and may read
+    // stale/hidden duplicate fields before this scoped validation runs.
     // Duplicate legacy auth panels can leave hidden inputs with the same IDs.
     // Read the fields from the exact visible login panel whose button was clicked.
     // Prefer the exact login card containing the clicked button. The page has
