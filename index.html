@@ -3605,8 +3605,18 @@ window.loadDashboard = loadDashboard;
   window.sehTraineeEmailAliasForPhone=aliasForPhone;
   window.sehTraineeSignInWithPassword=async function(phone,password){
     if(!window.AUTH_SUPABASE?.auth?.signInWithPassword)throw new Error('سامانه ورود آماده نیست؛ صفحه را تازه‌سازی کنید.');
-    const email=await aliasForPhone(phone);
-    return await window.AUTH_SUPABASE.auth.signInWithPassword({email,password});
+    const normalized=normalizePhone(phone);
+    const email=await aliasForPhone(normalized);
+    // New registrations use a deterministic email alias. Older test accounts
+    // were created with Supabase Phone identity, so retain a controlled fallback.
+    const emailResult=await window.AUTH_SUPABASE.auth.signInWithPassword({email,password});
+    if(!emailResult.error)return emailResult;
+    const phoneCandidates=[normalized,normalized.slice(1)];
+    for(const candidate of phoneCandidates){
+      const phoneResult=await window.AUTH_SUPABASE.auth.signInWithPassword({phone:candidate,password});
+      if(!phoneResult.error)return phoneResult;
+    }
+    return emailResult;
   };
 })();
 </script>
