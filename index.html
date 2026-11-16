@@ -443,7 +443,7 @@ body.locked{overflow:hidden!important}
         <h3>🔐 ورود شاگرد</h3>
         <label>شماره موبایل</label><input id="traineePhoneLogin" type="tel" inputmode="tel" autocomplete="username" placeholder="09121234567">
         <label>رمز عبور</label><input id="traineeLoginPassword" type="password" autocomplete="current-password" placeholder="رمز شخصی هنگام ثبت‌نام">
-        <button type="button" onclick="if(typeof window.loginTraineePhone==='function')window.loginTraineePhone();else {const e=document.getElementById('authError');e.textContent='بخش ورود شاگرد بارگذاری نشده است؛ صفحه را تازه‌سازی کنید.';e.style.display='block';}">ورود شاگرد</button>
+        <button type="button" onclick="if(typeof window.loginTraineePhone==='function')window.loginTraineePhone(this);else {const e=document.getElementById('authError');e.textContent='بخش ورود شاگرد بارگذاری نشده است؛ صفحه را تازه‌سازی کنید.';e.style.display='block';}">ورود شاگرد</button>
         <p class="muted">ورود پس از تأیید درخواست ثبت‌نام توسط مربی امکان‌پذیر است.</p>
       </div>
     </div>
@@ -3214,7 +3214,7 @@ window.loadDashboard = loadDashboard;
           <label>ساعت تمرین</label><input id="traineeRegTime" type="time">
           <button type="button" onclick="registerTraineePhone()">📨 ارسال درخواست ثبت‌نام</button>
         </div>
-        <div class="trainee-auth-block"><h3>🔐 ورود شاگرد</h3><label>شماره موبایل</label><input id="traineePhoneLogin" type="tel" inputmode="tel" autocomplete="username" placeholder="09121234567"><label>رمز عبور</label><input id="traineeLoginPassword" type="password" autocomplete="current-password" placeholder="رمز شخصی هنگام ثبت‌نام"><button type="button" onclick="loginTraineePhone()">ورود شاگرد</button><p class="muted">پس از تأیید درخواست، با رمز ورود اولیه 123456 وارد شوید و رمز شخصی خود را تعیین کنید.</p></div>
+        <div class="trainee-auth-block"><h3>🔐 ورود شاگرد</h3><label>شماره موبایل</label><input id="traineePhoneLogin" type="tel" inputmode="tel" autocomplete="username" placeholder="09121234567"><label>رمز عبور</label><input id="traineeLoginPassword" type="password" autocomplete="current-password" placeholder="رمز شخصی هنگام ثبت‌نام"><button type="button" onclick="loginTraineePhone(this)">ورود شاگرد</button><p class="muted">پس از تأیید درخواست، با رمز ورود اولیه 123456 وارد شوید و رمز شخصی خود را تعیین کنید.</p></div>
       </div><div id="authError" class="auth-error"></div>`;
     if(!$id('traineeAuthStyle')){
       const st=document.createElement('style');st.id='traineeAuthStyle';st.textContent=`
@@ -12366,11 +12366,17 @@ body.workout-output.workout-compact{
     else if(p.startsWith('9')) p='+98'+p;
     return p;
   }
-  window.loginTraineePhone=async function(){
-    const phone=normalizePhone(document.getElementById('traineePhoneLogin')?.value);
-    const password=document.getElementById('traineeLoginPassword')?.value||'';
-    const err=document.getElementById('authError');
-    const btn=document.getElementById('traineeLoginBox')?.querySelectorAll('.trainee-auth-block button')[1];
+  window.loginTraineePhone=async function(trigger){
+    // Fallback path: read only from the exact login card whose button was pressed.
+    const block=trigger?.closest?.('.trainee-auth-block')||null;
+    const boxes=Array.from(document.querySelectorAll('[id="traineeLoginBox"]')).filter(el=>el.getClientRects().length&&!el.classList.contains('hide'));
+    const box=block?.closest('[id="traineeLoginBox"]')||boxes[boxes.length-1]||null;
+    const scope=block||box||document;
+    const field=id=>Array.from(scope.querySelectorAll('[id="'+id+'"]')).find(el=>el.getClientRects().length&&!el.closest('.hide'))||null;
+    const phone=normalizePhone(field('traineePhoneLogin')?.value);
+    const password=field('traineeLoginPassword')?.value||'';
+    const err=document.querySelector('#authScreen #authError')||document.getElementById('authError');
+    const btn=trigger||block?.querySelector('button')||null;
     const show=msg=>{if(err){err.textContent=msg;err.style.display='block';}};
     if(!/^\\+989\\d{9}$/.test(phone)||!password){show('شماره موبایل معتبر و رمز عبور را وارد کنید. نمونه شماره: 09121234567');return;}
     if(!window.AUTH_SUPABASE){show('اتصال ورود بارگذاری نشده است. لطفاً صفحه را تازه‌سازی کنید. '+(window.__fitnessLastScriptError?.message||''));return;}
