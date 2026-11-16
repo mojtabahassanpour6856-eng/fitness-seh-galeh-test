@@ -3246,7 +3246,7 @@ window.loadDashboard = loadDashboard;
     const btn=$id('sehPhonePasswordLogin');
     if(btn){btn.disabled=true;btn.textContent='⏳ در حال ورود…';}
     try{
-      const {data,error}=await AUTH_SUPABASEwindow.sehTraineeSignInWithPassword(phone,password);
+      const {data,error}=await window.sehTraineeSignInWithPassword(phone,password);
       if(error)throw error;
       if(!data?.user||!data?.session?.access_token||!data?.session?.refresh_token)throw new Error('ورود انجام شد اما نشست امن شاگرد ساخته نشد؛ دوباره تلاش کنید.');
       const savedSession=await AUTH_SUPABASE.auth.setSession({access_token:data.session.access_token,refresh_token:data.session.refresh_token});
@@ -10161,7 +10161,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function authReady(){return !!window.AUTH_SUPABASE?.auth;}
   async function enterWithTemporaryPassword(data,storeKey,statusId){
     if(!data?.phone||!data?.temporary_password)throw new Error("اطلاعات ورود امن کامل دریافت نشد.");
-    const {data:auth,error}=await AUTH_SUPABASEwindow.sehTraineeSignInWithPassword(data.phone,data.temporary_password);
+    const {data:auth,error}=await window.sehTraineeSignInWithPassword(data.phone,data.temporary_password);
     if(error)throw error;
     if(!auth?.user||!auth?.session?.access_token||!auth?.session?.refresh_token)throw new Error("ورود انجام شد اما نشست امن حساب شاگرد ساخته نشد.");
     const saved=await AUTH_SUPABASE.auth.setSession({access_token:auth.session.access_token,refresh_token:auth.session.refresh_token});
