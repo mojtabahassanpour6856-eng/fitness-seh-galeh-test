@@ -15790,3 +15790,34 @@ window.sehNutritionBuilderBridge={
 })();
 </script>
 </body></html>
+
+<script id="seh-session-accessor-terminal-override-v2">
+/* Last-in-document repair: make the session accessor callable at the exact point
+   the final coach-list loader runs, even if an earlier optional wrapper failed. */
+(function(){
+  'use strict';
+  function install(){
+    window.__sehGetSessionSingleFlight = function(){
+      var client = window.AUTH_SUPABASE;
+      if (!client || !client.auth || typeof client.auth.getSession !== 'function') {
+        return Promise.reject(new Error('سرویس نشست ورود آماده نیست؛ اتصال حساب را بررسی کنید.'));
+      }
+      return client.auth.getSession();
+    };
+  }
+  install();
+  var prior = window.loadClients;
+  if (typeof prior === 'function' && !window.__sehTerminalLoadClientsRepairV2) {
+    window.loadClients = function(){
+      install();
+      return prior.apply(this, arguments);
+    };
+    window.__sehTerminalLoadClientsRepairV2 = true;
+  }
+  window.addEventListener('error', function(event){
+    if (String(event.message || '').indexOf('__sehGetSessionSingleFlight') !== -1) {
+      install();
+    }
+  }, true);
+})();
+</script>
