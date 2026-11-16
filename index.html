@@ -3611,6 +3611,74 @@ window.loadDashboard = loadDashboard;
 })();
 </script>
 
+
+<!-- SEH_TEST_AUTH_COMPAT_GUARD_20261116 -->
+<script id="seh-test-auth-compat-guard">
+(function(){
+ 'use strict';
+ // Restore a safe session accessor if an earlier optional script failed before installing it.
+ if(typeof window.__sehGetSessionSingleFlight!=='function'){
+   window.__sehGetSessionSingleFlight=function(){
+     var auth=window.AUTH_SUPABASE&&window.AUTH_SUPABASE.auth;
+     if(!auth||typeof auth.getSession!=='function')return Promise.reject(new Error('سرویس نشست ورود آماده نیست؛ صفحه را تازه‌سازی کنید.'));
+     return auth.getSession();
+   };
+ }
+ function normalizePhone(value){
+   var p=String(value||'').trim()
+     .replace(/[۰-۹]/g,function(d){return String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d));})
+     .replace(/[٠-٩]/g,function(d){return String('٠١٢٣٤٥٦٧٨٩'.indexOf(d));})
+     .replace(/[\s()\-]/g,'');
+   if(/^09\d{9}$/.test(p))return '+98'+p.slice(1);
+   if(/^989\d{9}$/.test(p))return '+'+p;
+   if(/^00989\d{9}$/.test(p))return '+'+p.slice(2);
+   if(/^\+989\d{9}$/.test(p))return p;
+   return p;
+ }
+ // Use the clicked login card and its first phone/password fields; do not rely on
+ // getClientRects(), which can misclassify fields in nested mobile/PWA layouts.
+ window.loginTraineePhone=async function(trigger){
+   var block=trigger&&trigger.closest?trigger.closest('.trainee-auth-block'):null;
+   var box=block&&block.closest('[id="traineeLoginBox"]');
+   if(!box){
+     var boxes=Array.from(document.querySelectorAll('[id="traineeLoginBox"]'));
+     box=boxes.filter(function(x){return !x.classList.contains('hide')&&!x.closest('.hide');}).pop()||boxes[boxes.length-1];
+   }
+   var scope=block||box||document;
+   var phoneInput=scope.querySelector('input[id="traineePhoneLogin"],input[type="tel"]');
+   var passwordInput=scope.querySelector('input[id="traineeLoginPassword"],input[type="password"]');
+   var phone=normalizePhone(phoneInput&&phoneInput.value);
+   var password=passwordInput&&passwordInput.value||'';
+   var err=document.querySelector('#authScreen #authError')||document.getElementById('authError');
+   function show(message){if(err){err.textContent=message;err.style.display='block';}}
+   if(!/^\+989\d{9}$/.test(phone)||!password){
+     show('شماره موبایل و رمز عبور را کامل وارد کنید. شماره باید مانند 09121234567 باشد. (شماره تشخیص‌داده‌شده: '+(phone||'خالی')+')');
+     return;
+   }
+   var btn=trigger||scope.querySelector('button');
+   if(btn){btn.disabled=true;btn.textContent='⏳ در حال ورود…';}
+   if(err)err.style.display='none';
+   try{
+     if(typeof window.sehTraineeSignInWithPassword!=='function')throw new Error('سرویس ورود شاگرد بارگذاری نشده است؛ صفحه را تازه‌سازی کنید.');
+     var result=await window.sehTraineeSignInWithPassword(phone,password);
+     if(result.error)throw result.error;
+     var data=result.data;
+     if(!data||!data.user||!data.session||!data.session.access_token||!data.session.refresh_token)throw new Error('اطلاعات ورود یا نشست امن شاگرد از سرویس دریافت نشد.');
+     var saved=await window.AUTH_SUPABASE.auth.setSession({access_token:data.session.access_token,refresh_token:data.session.refresh_token});
+     if(saved.error)throw saved.error;
+     var verified=await window.AUTH_SUPABASE.auth.getSession();
+     if(verified.error||!verified.data||!verified.data.session||verified.data.session.user.id!==data.user.id)throw new Error('نشست ورود شاگرد ذخیره نشد؛ دوباره تلاش کنید.');
+     await window.finishLogin(data.user);
+   }catch(e){
+     console.error('[SEH trainee login]',e);
+     show('ورود شاگرد انجام نشد: '+(e&&e.message||String(e)));
+   }finally{
+     if(btn){btn.disabled=false;btn.textContent='ورود شاگرد';}
+   }
+ };
+})();
+</script>
+
 </body></html>`;
     const w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}
   };
