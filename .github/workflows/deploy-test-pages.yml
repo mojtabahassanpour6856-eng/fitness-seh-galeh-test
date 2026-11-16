@@ -31,3 +31,31 @@ jobs:
         uses: actions/deploy-pages@v5
         with:
           artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Verify published TEST site
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          body="$(mktemp)"
+          trap 'rm -f "$body"' EXIT
+          status=""
+          for attempt in $(seq 1 18); do
+            status="$(curl --silent --show-error --location --max-time 30 --output "$body" --write-out '%{http_code}' "$PAGES_URL" || true)"
+            if [ "$status" = "200" ]; then
+              break
+            fi
+            echo "Pages response not ready (attempt $attempt, HTTP ${status:-no response}); waiting..."
+            sleep 5
+          done
+          if [ "$status" != "200" ]; then
+            echo "::error::TEST Pages URL did not return HTTP 200 (last status: ${status:-no response})"
+            exit 1
+          fi
+          grep -Fq '<title>فیتنس سه‌قلعه</title>' "$body"
+          grep -Fq 'FITNESS SEH GALEH' "$body"
+          grep -Fq 'udptdznbvewkublvzmtm.supabase.co' "$body"
+          if grep -Fq 'qfakyudgidsumeuoqoot' "$body"; then
+            echo "::error::Production Supabase ref was found in the deployed TEST HTML"
+            exit 1
+          fi
+          echo "PASS: deployed TEST app returned HTTP 200 and contains TEST-only branding and Supabase reference."
