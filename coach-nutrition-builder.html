@@ -19,7 +19,52 @@ td input,td select{width:100%;min-width:0;border:1px solid #e5dcc8;border-radius
 .modal-back{display:none;position:fixed;inset:0;background:#201b13a8;z-index:10;padding:12px;overflow:auto}.modal-back.show{display:block}.picker{max-width:620px;margin:20px auto;padding:13px}.picker h3{font-size:14px;margin:0 0 10px}.field{margin:9px 0}.field label{display:block;font-size:11px;margin-bottom:5px}.field select,.field input{width:100%;padding:9px;border:1px solid #e2d3af;border-radius:7px;background:white;font:inherit;font-size:12px}.modal-actions{display:flex;gap:7px;margin-top:12px}.modal-actions button{flex:1;border:0;border-radius:8px;padding:10px;font:inherit;font-size:11px;background:#b8943d;color:white}.modal-actions .cancel{background:#eee7d8;color:#574b35}
 .ingredient{display:grid;grid-template-columns:minmax(0,1fr) 75px 100px 34px;gap:5px;align-items:center;margin:7px 0}.ingredient select,.ingredient input{min-width:0;width:100%;padding:7px 3px;border:1px solid #e2d3af;border-radius:6px;font:inherit;font-size:10px;background:white}.metrics{font-size:10px;background:#faf5e9;border-radius:8px;padding:8px;line-height:2;margin-top:8px}
 .toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#302b20;color:white;padding:10px 15px;border-radius:9px;font-size:11px;display:none;max-width:90%;text-align:center}
-.meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.meta-grid label{display:block;font-size:10px;color:#69552c}.meta-grid input{display:block;width:100%;margin-top:4px;padding:8px 6px;border:1px solid #e2d3af;border-radius:7px;background:#fff;color:#302b20;font:inherit;font-size:11px;min-width:0}.target-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;background:#fffdf8;border:1px solid #e5d8b9;border-radius:12px;padding:10px;margin:0 0 10px}.target-grid label{display:block;font-size:10px;color:#69552c}.target-grid input{display:block;width:100%;margin-top:4px;padding:8px 6px;border:1px solid #e2d3af;border-radius:7px;background:#fff;color:#302b20;font:inherit;font-size:12px;min-width:0}.preset-box{background:#fffdf8;border:1px solid #e5d8b9;border-radius:13px;padding:11px;margin:0 0 10px}.preset-head{font-size:13px;font-weight:bold;margin-bottom:7px}.preset-actions{display:flex;gap:7px;flex-wrap:wrap}.preset-btn{flex:1;min-width:145px;border:1px solid #c7a34b;border-radius:9px;background:#fbf5e7;color:#70551c;padding:10px 8px;font:inherit;font-size:11px;font-weight:bold}.preset-note{font-size:10px;color:#82765f;line-height:1.8;margin-top:7px}.target-caption{grid-column:1/-1;font-size:10px;color:#82765f;line-height:1.7}.target-grid strong{font-size:12px;color:#69552c}@media(max-width:390px){.target-grid{gap:6px;padding:8px}}.connection-ok{border-color:#b8d9b6;background:#f1f8ed;color:#315b2c}.connection-warn{border-color:#e7c98a;background:#fff8e8;color:#795b20}@media(max-width:390px){body{padding:7px}.meal{padding:8px}.meal-name{min-width:76px;font-size:12px}.opt,.add{min-width:27px;height:28px;padding:0 5px}.small-btn{font-size:9px}.ingredient{grid-template-columns:minmax(0,1fr) 58px 82px 30px}}
+.meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.meta-grid label{display:block;font-size:10px;color:#69552c}.meta-grid input{display:block;width:100%;margin-top:4px;padding:8px 6px;border:1px solid #e2d3af;border-radius:7px;background:#fff;color:#302b20;font:inherit;font-size:11px;min-width:0}.target-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;background:#fffdf8;border:1px solid #e5d8b9;border-radius:12px;padding:10px;margin:0 0 10px}.target-grid label{display:block;font-size:10px;color:#69552c}.target-grid input{display:block;width:100%;margin-top:4px;padding:8px 6px;border:1px solid #e2d3af;border-radius:7px;background:#fff;color:#302b20;font:inherit;font-size:12px;min-width:0}.target-caption{grid-column:1/-1;font-size:10px;color:#82765f;line-height:1.7}.target-grid strong{font-size:12px;color:#69552c}@media(max-width:390px){.target-grid{gap:6px;padding:8px}}.connection-ok{border-color:#b8d9b6;background:#f1f8ed;color:#315b2c}.connection-warn{border-color:#e7c98a;background:#fff8e8;color:#795b20}@media(max-width:390px){body{padding:7px}.meal{padding:8px}.meal-name{min-width:76px;font-size:12px}.opt,.add{min-width:27px;height:28px;padding:0 5px}.small-btn{font-size:9px}.ingredient{grid-template-columns:minmax(0,1fr) 58px 82px 30px}}
+
+.nutrition-template-box{background:#fffdf8;border:1px solid #e5d8b9;border-radius:12px;padding:10px;margin:0 0 10px;box-shadow:0 2px 8px #5b47200b}
+.nutrition-template-title{font-size:13px;font-weight:bold;color:#69552c;margin:0 0 8px}
+.nutrition-template-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.nutrition-template-card{min-width:0;border:1px solid #e6d9bb;background:#fff;border-radius:9px;padding:8px;display:flex;flex-direction:column;gap:7px}
+.nutrition-template-card:last-child:nth-child(odd){grid-column:1/-1}
+.nutrition-template-card-name{font-size:11px;font-weight:bold;color:#5d4920;line-height:1.6}
+.nutrition-template-card-status{font-size:9px;color:#85795f}
+.nutrition-template-card-status.saved{color:#3f7137}
+.nutrition-template-calories{background:#fbf5e7;border:1px solid #ead9b4;border-radius:7px;padding:7px 6px;font-size:9px;line-height:1.8;color:#70551c}.nutrition-template-calories strong{font-size:13px;color:#5b4315}.nutrition-template-calories small{display:block;color:#956b24;font-size:8px}.nutrition-template-calories.empty{color:#8a806d;background:#faf8f2}
+.nutrition-template-calorie-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.nutrition-template-calorie-option{min-width:0;background:#fbf5e7;border:1px solid #ead9b4;border-radius:6px;padding:5px 3px;text-align:center;font-size:8px;line-height:1.7;color:#70551c}.nutrition-template-calorie-option strong{display:block;font-size:11px;color:#5b4315}.nutrition-template-calorie-option small{display:block;font-size:7px;color:#956b24}.nutrition-template-calorie-option.empty{background:#faf8f2;border-color:#eee7d8;color:#8a806d}.nutrition-template-calories-label{font-size:9px;color:#70551c;font-weight:bold}
+.nutrition-template-card button{width:100%;border:1px solid #c7a34b;border-radius:7px;background:#fbf5e7;color:#70551c;padding:8px 5px;font:inherit;font-size:10px;font-weight:bold}
+.nutrition-template-card button.primary{background:#b8943d;color:#fff}
+.nutrition-template-card button.secondary{background:#fff;color:#70551c;border-style:dashed}
+.nutrition-template-card.is-editing{border:2px solid #b8943d;background:#fffaf0}
+.nutrition-template-card button:disabled{opacity:.55}
+.nutrition-template-help{font-size:9px;line-height:1.8;color:#82765f;margin-top:8px}
+.nutrition-template-loading{grid-column:1/-1;text-align:center;font-size:10px;color:#82765f;padding:10px}
+@media(min-width:600px){.nutrition-template-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.nutrition-template-card:last-child:nth-child(odd){grid-column:auto}.nutrition-template-card{padding:7px}.nutrition-template-card-name{font-size:10px}}
+@media(max-width:390px){.nutrition-template-box{padding:8px}.nutrition-template-grid{gap:5px}.nutrition-template-card{padding:6px}.nutrition-template-card-name{font-size:10px}.nutrition-template-card button{font-size:9px}}
+
+.plan-meta-box{margin:12px 0;padding:13px;border:1px solid #d9c89f;border-radius:14px;background:#fffdf7}
+.plan-meta-title{font-weight:800;color:#80652d;margin-bottom:10px}
+.plan-meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.plan-meta-grid label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:700;color:#55482f}
+.plan-meta-grid input,.plan-meta-grid textarea{box-sizing:border-box;width:100%;min-width:0;padding:10px;border:1px solid #d8cfbb;border-radius:9px;background:#fff;color:#29251d;font:inherit}
+.date-hint{font-size:10px;font-weight:400;color:#887b62;line-height:1.6}
+.jalali-date-wrap{display:flex;align-items:stretch;gap:5px;position:relative;width:100%}
+.jalali-date-wrap input{flex:1;min-width:0;direction:ltr;text-align:center;font-variant-numeric:tabular-nums}
+.date-picker-trigger{flex:0 0 42px;border:1px solid #c7a34b;border-radius:9px;background:#fbf5e7;color:#765b23;font-size:20px;cursor:pointer}
+.jalali-picker{position:absolute;z-index:30;top:calc(100% + 7px);right:0;width:min(310px,calc(100vw - 48px));padding:10px;border:1px solid #d9c89f;border-radius:12px;background:#fffdf8;box-shadow:0 8px 25px #302b2030}
+.jalali-picker[hidden]{display:none}
+.jalali-picker-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+.jalali-picker-head strong{font-size:12px;color:#69552c}
+.jalali-picker-head button{width:32px;height:30px;border:1px solid #e2d3af;border-radius:7px;background:#faf5e9;color:#71551b;font-size:17px}
+.jalali-picker-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center}
+.jalali-picker-grid span{font-size:10px;color:#887b62;padding:5px 0}
+.jalali-picker-grid button{height:32px;border:1px solid #eee5d4;border-radius:7px;background:#fff;color:#302b20;font:inherit;font-size:11px}
+.jalali-picker-grid button.today{border-color:#c7a34b;color:#8a6823;font-weight:bold}
+.jalali-picker-grid button.selected{background:#b8943d;border-color:#b8943d;color:#fff}
+.jalali-picker-foot{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
+.jalali-picker-foot button{border:0;background:transparent;color:#8a6823;font:inherit;font-size:10px;padding:5px}
+.plan-meta-grid textarea{resize:vertical;min-height:58px}
+.plan-notes-field{grid-column:1/-1}
+@media(max-width:420px){.plan-meta-grid{grid-template-columns:1fr}.plan-notes-field{grid-column:auto}}
 </style></head>
 <body>
 <header><h1>باشگاه فیتنس سه‌قلعه</h1><div class="sub">برنامه‌ساز غذایی · پیش‌نمایش تعاملی مربی</div></header>
@@ -31,8 +76,23 @@ td input,td select{width:100%;min-width:0;border:1px solid #e5dcc8;border-radius
 <input id="planCalories" type="number"><input id="planProtein" type="number">
 <input id="planCarbs" type="number"><input id="planFat" type="number">
 </div>
+<section class="nutrition-template-box" id="nutritionTemplateBox">
+ <div class="nutrition-template-title">⚡ پنج الگوی آماده برنامه غذایی</div>
+ <div class="nutrition-template-grid" id="nutritionTemplateCards">
+  <div class="nutrition-template-loading">در حال دریافت الگوهای ذخیره‌شده…</div>
+ </div>
+ <div class="nutrition-template-help">برای ساخت هر الگو، برنامه کامل را در همین قالب آماده کن و «ذخیره در این کارت» را بزن. پس از ذخیره، کارت فقط دکمه «کپی در برنامه» را نشان می‌دهد. کپی‌کردن هیچ تغییری در پرونده شاگرد ایجاد نمی‌کند؛ ثبت برای شاگرد همچنان با دکمه ثبت برنامه انجام می‌شود.</div>
+</section>
+<section class="plan-meta-box" id="planMetaFields">
+ <div class="plan-meta-title">📝 مشخصات برنامه غذایی</div>
+ <div class="plan-meta-grid">
+  <label>عنوان برنامه<input id="planTitleInput" type="text" maxlength="120" placeholder="مثلاً برنامه افزایش وزن معمولی"></label>
+  <label>تاریخ شروع<div class="jalali-date-wrap"><input id="planStartInput" type="text" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="۱۴۰۵/۰۸/۲۰" aria-label="تاریخ شروع به شمسی"><button type="button" class="date-picker-trigger" aria-label="انتخاب تاریخ شروع" onclick="openJalaliPicker('planStartInput')">▦</button><div class="jalali-picker" id="picker-planStartInput" hidden></div></div><small class="date-hint">شمسی؛ برای انتخاب، روی آیکون تقویم بزن یا تاریخ را وارد کن.</small></label>
+  <label>تاریخ پایان<div class="jalali-date-wrap"><input id="planEndInput" type="text" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="۱۴۰۵/۰۹/۲۰" aria-label="تاریخ پایان به شمسی"><button type="button" class="date-picker-trigger" aria-label="انتخاب تاریخ پایان" onclick="openJalaliPicker('planEndInput')">▦</button><div class="jalali-picker" id="picker-planEndInput" hidden></div></div><small class="date-hint">اختیاری؛ شمسی. برای انتخاب، روی آیکون تقویم بزن.</small></label>
+  <label class="plan-notes-field">یادداشت برنامه<textarea id="planNotesInput" rows="2" maxlength="2000" placeholder="توضیحات و نکات مربی برای شاگرد…"></textarea></label>
+ </div>
+</section>
 <div class="target-grid" id="autoTargets"><div class="target-caption"><strong>🎯 اهداف روزانه برنامه</strong><br><span id="targetSource">با انتخاب شاگرد، در صورت وجود اطلاعات کافی به‌صورت خودکار محاسبه می‌شوند؛ امکان ویرایش دستی وجود دارد.</span></div><label>کالری روزانه<input id="targetCaloriesInput" type="number" min="0" step="1" inputmode="numeric"></label><label>پروتئین هدف (گرم)<input id="targetProteinInput" type="number" min="0" step="1" inputmode="numeric"></label><label>کربوهیدرات هدف (گرم)<input id="targetCarbsInput" type="number" min="0" step="1" inputmode="numeric"></label><label>چربی هدف (گرم)<input id="targetFatInput" type="number" min="0" step="1" inputmode="numeric"></label></div>
-<section class="preset-box" id="nutritionPresetV1"><div class="preset-head">⚡ قالب آماده برنامه غذایی</div><div class="preset-actions"><button class="preset-btn" type="button" onclick="applyWeightLossPreset()">کاهش وزن شدید · قالب اولیه</button></div><div class="preset-note">با انتخاب قالب، ۸ وعده و ۲۲ گزینه غذایی در همین صفحه بارگذاری می‌شود. مقادیر قابل ویرایش‌اند و تا زدن دکمه ثبت، چیزی در پرونده شاگرد ذخیره نمی‌شود. این قالب نقطه شروع است و باید با شرایط هر شاگرد تنظیم شود.</div></section>
 <div class="top-actions"><button class="save-all" id="saveAllBtn" onclick="saveAll()">💾 ثبت تمام برنامه غذایی در پرونده شاگرد</button><button class="save-all" style="background:#75633e" onclick="toggleStudentPreview()">👤 پیش‌نمایش شاگرد</button></div><div id="studentPreview" class="summary" style="display:none"></div>
 <div class="summary" id="daySummary">جمع گزینه‌های انتخاب‌شده نمایش داده می‌شود؛ گزینه‌های جایگزین با هم جمع نمی‌شوند.</div>
 <div class="section-title">وعده‌های برنامه غذایی</div><div id="meals"></div>
@@ -52,28 +112,268 @@ const categoryNames={breakfast:'صبحانه',lunch:'ناهار',dinner:'شام'
 const names=['صبحانه','میان‌وعده صبح','ناهار','میان‌وعده عصر','شام','قبل خواب','قبل تمرین','بعد تمرین'];
 const state=names.map(name=>({name,active:[1],selected:1,open:false,options:{1:{rows:[],target:0}}}));
 
-/* nutritionPresetV1: قالب پایه کاهش وزن؛ فقط در حافظه همین برنامه‌ساز اعمال می‌شود. */
-const weightLossPresetV1=[
- [[ [6,35],[16,200],[22,80] ],[ [14,100],[2,35],[74,100] ],[ [49,170],[6,20],[23,100] ],[ [54,50],[18,35] ]],
- [[ [23,150],[27,10] ],[ [17,150],[22,60] ]],
- [[ [8,120],[1,100],[73,100],[74,100] ],[ [12,130],[5,150],[75,80] ],[ [59,120],[52,100],[76,100] ],[ [19,150],[14,50],[73,100] ]],
- [[ [49,150],[26,100] ],[ [18,30],[24,150] ]],
- [[ [12,120],[5,120],[75,100] ],[ [8,110],[19,100],[74,100] ],[ [10,100],[73,100],[76,100] ],[ [14,100],[17,100],[75,100] ]],
- [[ [49,150],[33,8] ],[ [16,200],[46,15] ]],
- [[ [22,80],[16,150] ],[ [54,30],[29,8] ]],
- [[ [46,20],[16,200] ],[ [14,100],[23,100] ]]
+/* Five coach-owned nutrition templates stored in Supabase */
+const nutritionTemplateDefinitions=[
+ {id:'weight-loss-severe',name:'کاهش وزن شدید'},
+ {id:'weight-loss-normal',name:'کاهش وزن معمولی'},
+ {id:'fitness-maintenance',name:'تناسب اندام'},
+ {id:'weight-gain-normal',name:'افزایش وزن معمولی'},
+ {id:'weight-gain-severe',name:'افزایش وزن شدید'}
 ];
-function applyWeightLossPreset(){
- const hasData=state.some(m=>m.active.some(n=>(m.options[n]?.rows||[]).length));
- if(hasData&&!confirm('قالب جدید جایگزین محتوای فعلی همین برنامه‌ساز می‌شود. هنوز چیزی در پرونده شاگرد ذخیره نشده است. ادامه می‌دهی؟'))return;
- state.forEach((m,i)=>{
-  const group=weightLossPresetV1[i];
-  m.active=group.map((_,j)=>j+1);
-  m.selected=1;m.open=true;m.options={};
-  group.forEach((rows,j)=>{m.options[j+1]={rows:rows.map(([foodId,amount])=>({foodId,amount,unit:'گرم',gramsPerUnit:null,recipeName:null})),target:0}});
- });
+const builtInSevereWeightLossTemplate={"version":1,"state":[{"name":"صبحانه","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":3,"amount":2,"unit":"کف دست","gramsPerUnit":30},{"foodId":18,"amount":30,"unit":"گرم"},{"foodId":28,"amount":4,"unit":"عدد","gramsPerUnit":4},{"foodId":73,"amount":100,"unit":"گرم"}],"target":329.6},"2":{"rows":[{"foodId":2,"amount":2,"unit":"کف دست","gramsPerUnit":30},{"foodId":18,"amount":30,"unit":"گرم"},{"foodId":243,"amount":30,"unit":"گرم"},{"foodId":74,"amount":100,"unit":"گرم"},{"foodId":73,"amount":100,"unit":"گرم"}],"target":244.2},"3":{"rows":[{"foodId":15,"amount":3,"unit":"عدد","gramsPerUnit":33},{"foodId":2,"amount":1,"unit":"کف دست","gramsPerUnit":30},{"foodId":73,"amount":100,"unit":"گرم"},{"foodId":74,"amount":100,"unit":"گرم"}],"target":162.2},"4":{"rows":[{"foodId":6,"amount":40,"unit":"گرم"},{"foodId":16,"amount":150,"unit":"میلی‌لیتر"},{"foodId":22,"amount":70,"unit":"گرم"},{"foodId":82,"amount":1,"unit":"گرم"}],"target":283.4}}},{"name":"میان‌وعده صبح","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":41,"amount":1,"unit":"لیوان","gramsPerUnit":240},{"foodId":34,"amount":5,"unit":"عدد","gramsPerUnit":0.5},{"foodId":23,"amount":100,"unit":"گرم"}],"target":61.9},"2":{"rows":[{"foodId":42,"amount":1,"unit":"لیوان","gramsPerUnit":240},{"foodId":8,"amount":100,"unit":"گرم"},{"foodId":188,"amount":100,"unit":"گرم"}],"target":186.8}}},{"name":"ناهار","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":1,"amount":80,"unit":"گرم"},{"foodId":241,"amount":150,"unit":"گرم"},{"foodId":195,"amount":150,"unit":"گرم"}],"target":288.5},"2":{"rows":[{"foodId":1,"amount":80,"unit":"گرم"},{"foodId":199,"amount":30,"unit":"گرم"},{"foodId":12,"amount":180,"unit":"گرم"},{"foodId":33,"amount":1,"unit":"عدد","gramsPerUnit":8},{"foodId":193,"amount":150,"unit":"گرم"}],"target":447},"3":{"rows":[{"foodId":193,"amount":100,"unit":"گرم"},{"foodId":201,"amount":150,"unit":"گرم"},{"foodId":30,"amount":5,"unit":"گرم"}],"target":354.2},"4":{"rows":[{"foodId":98,"amount":120,"unit":"گرم"},{"foodId":3,"amount":2,"unit":"کف دست","gramsPerUnit":30},{"foodId":243,"amount":100,"unit":"گرم"}],"target":510.6}}},{"name":"میان‌وعده عصر","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":191,"amount":100,"unit":"گرم"},{"foodId":15,"amount":2,"unit":"عدد","gramsPerUnit":33},{"foodId":27,"amount":5,"unit":"عدد","gramsPerUnit":1.2}],"target":101.1},"2":{"rows":[{"foodId":23,"amount":100,"unit":"گرم"},{"foodId":17,"amount":100,"unit":"گرم"}],"target":115}}},{"name":"شام","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":241,"amount":150,"unit":"گرم"},{"foodId":207,"amount":100,"unit":"گرم"},{"foodId":124,"amount":80,"unit":"گرم"},{"foodId":126,"amount":80,"unit":"گرم"},{"foodId":2,"amount":1,"unit":"کف دست","gramsPerUnit":30}],"target":304.8},"2":{"rows":[{"foodId":19,"amount":100,"unit":"گرم"},{"foodId":243,"amount":1,"unit":"بشقاب","gramsPerUnit":100},{"foodId":3,"amount":2,"unit":"کف دست","gramsPerUnit":30}],"target":353},"3":{"rows":[{"foodId":8,"amount":100,"unit":"گرم"},{"foodId":5,"amount":70,"unit":"گرم"},{"foodId":195,"amount":100,"unit":"گرم"}],"target":245.9},"4":{"rows":[{"foodId":107,"amount":2,"unit":"عدد","gramsPerUnit":50},{"foodId":2,"amount":50,"unit":"گرم"},{"foodId":73,"amount":100,"unit":"گرم"},{"foodId":74,"amount":100,"unit":"گرم"}],"target":317.5}}},{"name":"قبل خواب","active":[1],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":27,"amount":5,"unit":"عدد","gramsPerUnit":1.2}],"target":34.7}}},{"name":"قبل تمرین","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":45,"amount":1,"unit":"لیوان","gramsPerUnit":240},{"foodId":22,"amount":50,"unit":"گرم"},{"foodId":29,"amount":1,"unit":"قاشق غذاخوری","gramsPerUnit":15}],"target":137.5},"2":{"rows":[],"target":0}}},{"name":"بعد تمرین","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":16,"amount":250,"unit":"میلی‌لیتر"},{"foodId":49,"amount":150,"unit":"گرم"},{"foodId":26,"amount":5,"unit":"عدد","gramsPerUnit":5},{"foodId":6,"amount":20,"unit":"گرم"},{"foodId":82,"amount":1,"unit":"گرم"}],"target":302.8},"2":{"rows":[{"foodId":241,"amount":100,"unit":"گرم"},{"foodId":5,"amount":70,"unit":"گرم"},{"foodId":193,"amount":100,"unit":"گرم"}],"target":188.9}}}],"plan":{"title":"کاهش وزن شدید","daily_calories":"1636.9","protein_target":"132.7","carbs_target":"170.2","fat_target":"47.9"}};
+const builtInNormalWeightLossTemplate={"version":1,"state":[{"name":"صبحانه","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":107,"amount":2,"unit":"عدد","gramsPerUnit":50},{"foodId":3,"amount":2,"unit":"کف دست","gramsPerUnit":30},{"foodId":73,"amount":50,"unit":"گرم"},{"foodId":74,"amount":50,"unit":"گرم"}],"target":0},"2":{"rows":[{"foodId":18,"amount":40,"unit":"گرم"},{"foodId":28,"amount":4,"unit":"عدد","gramsPerUnit":4},{"foodId":2,"amount":2,"unit":"کف دست","gramsPerUnit":30},{"foodId":243,"amount":30,"unit":"گرم"}],"target":0},"3":{"rows":[{"foodId":6,"amount":40,"unit":"گرم"},{"foodId":16,"amount":200,"unit":"میلی‌لیتر"},{"foodId":22,"amount":60,"unit":"گرم"}],"target":0},"4":{"rows":[{"foodId":107,"amount":1,"unit":"عدد","gramsPerUnit":50},{"foodId":15,"amount":2,"unit":"عدد","gramsPerUnit":33},{"foodId":204,"amount":2,"unit":"عدد","gramsPerUnit":30},{"foodId":73,"amount":100,"unit":"گرم"}],"target":0}}},{"name":"میان‌وعده صبح","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":23,"amount":1,"unit":"عدد","gramsPerUnit":160},{"foodId":27,"amount":10,"unit":"عدد","gramsPerUnit":1.2}],"target":0},"2":{"rows":[{"foodId":24,"amount":1,"unit":"عدد","gramsPerUnit":150},{"foodId":17,"amount":100,"unit":"گرم"}],"target":0}}},{"name":"ناهار","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":8,"amount":150,"unit":"گرم"},{"foodId":1,"amount":100,"unit":"گرم"},{"foodId":188,"amount":150,"unit":"گرم"}],"target":0},"2":{"rows":[{"foodId":12,"amount":150,"unit":"گرم"},{"foodId":5,"amount":150,"unit":"گرم"},{"foodId":193,"amount":100,"unit":"گرم"}],"target":0},"3":{"rows":[{"foodId":10,"amount":120,"unit":"گرم"},{"foodId":1,"amount":100,"unit":"گرم"},{"foodId":188,"amount":150,"unit":"گرم"}],"target":0},"4":{"rows":[{"foodId":19,"amount":150,"unit":"گرم"},{"foodId":17,"amount":100,"unit":"گرم"},{"foodId":2,"amount":2,"unit":"کف دست","gramsPerUnit":30}],"target":0}}},{"name":"میان‌وعده عصر","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":22,"amount":100,"unit":"گرم"},{"foodId":40,"amount":200,"unit":"میلی‌لیتر"},{"foodId":34,"amount":5,"unit":"عدد","gramsPerUnit":0.5}],"target":0},"2":{"rows":[{"foodId":16,"amount":240,"unit":"میلی‌لیتر"},{"foodId":33,"amount":2,"unit":"عدد","gramsPerUnit":8}],"target":0}}},{"name":"شام","active":[1,2,3],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":8,"amount":120,"unit":"گرم"},{"foodId":76,"amount":70,"unit":"گرم"},{"foodId":77,"amount":50,"unit":"گرم"},{"foodId":128,"amount":30,"unit":"گرم"},{"foodId":30,"amount":5,"unit":"گرم"}],"target":0},"2":{"rows":[{"foodId":107,"amount":2,"unit":"عدد","gramsPerUnit":50},{"foodId":77,"amount":100,"unit":"گرم"},{"foodId":126,"amount":50,"unit":"گرم"},{"foodId":2,"amount":2,"unit":"کف دست","gramsPerUnit":30}],"target":0},"3":{"rows":[{"foodId":19,"amount":150,"unit":"گرم"},{"foodId":17,"amount":100,"unit":"گرم"},{"foodId":2,"amount":2,"unit":"کف دست","gramsPerUnit":30}],"target":0}}},{"name":"قبل خواب","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":27,"amount":5,"unit":"عدد","gramsPerUnit":1.2}],"target":0},"2":{"rows":[{"foodId":16,"amount":240,"unit":"میلی‌لیتر"}],"target":0}}},{"name":"قبل تمرین","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":22,"amount":100,"unit":"گرم"}],"target":0},"2":{"rows":[{"foodId":54,"amount":1,"unit":"عدد","gramsPerUnit":30},{"foodId":32,"amount":1,"unit":"قاشق مرباخوری","gramsPerUnit":14}],"target":0}}},{"name":"بعد تمرین","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":8,"amount":80,"unit":"گرم"},{"foodId":73,"amount":100,"unit":"گرم"}],"target":0},"2":{"rows":[{"foodId":107,"amount":2,"unit":"عدد","gramsPerUnit":50},{"foodId":75,"amount":50,"unit":"گرم"}],"target":0}}}],"plan":{"title":"کاهش وزن معمولی","daily_calories":null,"protein_target":null,"carbs_target":null,"fat_target":null}};
+const builtInWeightGainSevereTemplate={"version":1,"state":[{"name":"صبحانه","active":[1,2,3,5],"selected":1,"open":false,"options":{"1":{"name":"املت تخم‌مرغ، نان و پنیر","rows":[{"foodId":14,"amount":150,"unit":"گرم"},{"foodId":74,"amount":150,"unit":"گرم"},{"foodId":30,"amount":10,"unit":"گرم"},{"foodId":2,"amount":120,"unit":"گرم"},{"foodId":18,"amount":30,"unit":"گرم"}],"target":0},"2":{"name":"تخم‌مرغ، سیب‌زمینی و نان","rows":[{"foodId":14,"amount":100,"unit":"گرم"},{"foodId":5,"amount":250,"unit":"گرم"},{"foodId":2,"amount":100,"unit":"گرم"},{"foodId":30,"amount":5,"unit":"گرم"}],"target":0},"3":{"name":"اوتمیل شیر، موز و خرما","rows":[{"foodId":48,"amount":250,"unit":"میلی‌لیتر"},{"foodId":6,"amount":70,"unit":"گرم"},{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":33,"amount":30,"unit":"گرم"},{"foodId":29,"amount":20,"unit":"گرم"}],"target":0},"5":{"name":"نیمرو و سیب‌زمینی","rows":[{"foodId":14,"amount":150,"unit":"گرم"},{"foodId":5,"amount":200,"unit":"گرم"},{"foodId":2,"amount":100,"unit":"گرم"},{"foodId":30,"amount":10,"unit":"گرم"}],"target":0}}},{"name":"میان‌وعده صبح","active":[2,4,5],"selected":2,"open":false,"options":{"2":{"name":"نان با کره بادام‌زمینی و عسل","rows":[{"foodId":2,"amount":100,"unit":"گرم"},{"foodId":29,"amount":25,"unit":"گرم"},{"foodId":32,"amount":20,"unit":"گرم"},{"foodId":48,"amount":200,"unit":"میلی‌لیتر"}],"target":0},"4":{"name":"ساندویچ تخم‌مرغ و سیب‌زمینی","rows":[{"foodId":2,"amount":100,"unit":"گرم"},{"foodId":14,"amount":100,"unit":"گرم"},{"foodId":5,"amount":100,"unit":"گرم"},{"foodId":30,"amount":5,"unit":"گرم"}],"target":0},"5":{"name":"شیک شیر، موز، ارده و خرما","rows":[{"foodId":48,"amount":300,"unit":"میلی‌لیتر"},{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":157,"amount":20,"unit":"گرم"},{"foodId":33,"amount":30,"unit":"گرم"}],"target":0}}},{"name":"ناهار","active":[1,2,3,5],"selected":1,"open":false,"options":{"1":{"name":"چلو مرغ","rows":[{"foodId":1,"amount":300,"unit":"گرم"},{"foodId":8,"amount":150,"unit":"گرم"},{"foodId":30,"amount":10,"unit":"گرم"},{"foodId":109,"amount":150,"unit":"گرم"}],"target":0},"2":{"name":"عدس‌پلو با گوشت و کشمش","rows":[{"foodId":1,"amount":250,"unit":"گرم"},{"foodId":19,"amount":100,"unit":"گرم"},{"foodId":11,"amount":100,"unit":"گرم"},{"foodId":34,"amount":20,"unit":"گرم"},{"foodId":30,"amount":10,"unit":"گرم"}],"target":0},"3":{"name":"ماکارونی با گوشت چرخ‌کرده","rows":[{"foodId":7,"amount":300,"unit":"گرم"},{"foodId":11,"amount":120,"unit":"گرم"},{"foodId":166,"amount":20,"unit":"گرم"},{"foodId":30,"amount":10,"unit":"گرم"}],"target":0},"5":{"name":"برنج، سیب‌زمینی و تخم‌مرغ","rows":[{"foodId":1,"amount":250,"unit":"گرم"},{"foodId":5,"amount":200,"unit":"گرم"},{"foodId":14,"amount":100,"unit":"گرم"},{"foodId":30,"amount":10,"unit":"گرم"}],"target":0}}},{"name":"میان‌وعده عصر","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"name":"معجون حجم شیر، موز و خرما","rows":[{"foodId":48,"amount":300,"unit":"میلی‌لیتر"},{"foodId":22,"amount":150,"unit":"گرم"},{"foodId":33,"amount":30,"unit":"گرم"},{"foodId":6,"amount":40,"unit":"گرم"},{"foodId":29,"amount":20,"unit":"گرم"}],"target":0},"2":{"name":"ساندویچ سیب‌زمینی و تخم‌مرغ","rows":[{"foodId":2,"amount":100,"unit":"گرم"},{"foodId":5,"amount":200,"unit":"گرم"},{"foodId":14,"amount":100,"unit":"گرم"},{"foodId":30,"amount":5,"unit":"گرم"}],"target":0},"3":{"name":"کیک خانگی جو دوسر و موز","rows":[{"foodId":6,"amount":50,"unit":"گرم"},{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":14,"amount":50,"unit":"گرم"},{"foodId":48,"amount":150,"unit":"میلی‌لیتر"},{"foodId":32,"amount":15,"unit":"گرم"}],"target":0},"4":{"name":"ماست، موز، عسل و گردو","rows":[{"foodId":109,"amount":200,"unit":"گرم"},{"foodId":32,"amount":20,"unit":"گرم"},{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":28,"amount":15,"unit":"گرم"}],"target":0}}},{"name":"شام","active":[1,2],"selected":1,"open":false,"options":{"1":{"name":"ماکارونی با گوشت چرخ‌کرده","rows":[{"foodId":7,"amount":250,"unit":"گرم"},{"foodId":11,"amount":100,"unit":"گرم"},{"foodId":166,"amount":20,"unit":"گرم"},{"foodId":30,"amount":10,"unit":"گرم"}],"target":0},"2":{"name":"برنج و مرغ با سیب‌زمینی","rows":[{"foodId":1,"amount":250,"unit":"گرم"},{"foodId":8,"amount":130,"unit":"گرم"},{"foodId":5,"amount":150,"unit":"گرم"},{"foodId":30,"amount":5,"unit":"گرم"}],"target":0}}},{"name":"قبل خواب","active":[1,5,6],"selected":1,"open":false,"options":{"1":{"name":"شیک شیر، موز، جو دوسر و کره بادام‌زمینی","rows":[{"foodId":48,"amount":250,"unit":"میلی‌لیتر"},{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":6,"amount":30,"unit":"گرم"},{"foodId":29,"amount":20,"unit":"گرم"}],"target":0},"5":{"name":"شیک شیر، موز، جو دوسر و کشمش","rows":[{"foodId":48,"amount":250,"unit":"میلی‌لیتر"},{"foodId":22,"amount":100,"unit":"گرم"},{"foodId":6,"amount":30,"unit":"گرم"},{"foodId":34,"amount":20,"unit":"گرم"}],"target":0},"6":{"name":"معجون شیر، موز، خرما و کره بادام‌زمینی","rows":[{"foodId":48,"amount":250,"unit":"میلی‌لیتر"},{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":33,"amount":30,"unit":"گرم"},{"foodId":29,"amount":15,"unit":"گرم"}],"target":0}}},{"name":"قبل تمرین","active":[3,6],"selected":3,"open":false,"options":{"3":{"name":"سیب‌زمینی، تخم‌مرغ و نان","rows":[{"foodId":5,"amount":200,"unit":"گرم"},{"foodId":14,"amount":50,"unit":"گرم"},{"foodId":2,"amount":40,"unit":"گرم"}],"target":0},"6":{"name":"اوتمیل سبک موز و عسل","rows":[{"foodId":48,"amount":200,"unit":"میلی‌لیتر"},{"foodId":6,"amount":40,"unit":"گرم"},{"foodId":22,"amount":80,"unit":"گرم"},{"foodId":32,"amount":10,"unit":"گرم"}],"target":0}}},{"name":"بعد تمرین","active":[1,2,3,4,6],"selected":1,"open":false,"options":{"1":{"name":"معجون حجم بعد تمرین","rows":[{"foodId":48,"amount":350,"unit":"میلی‌لیتر"},{"foodId":22,"amount":150,"unit":"گرم"},{"foodId":33,"amount":40,"unit":"گرم"},{"foodId":6,"amount":50,"unit":"گرم"},{"foodId":29,"amount":20,"unit":"گرم"}],"target":0},"2":{"name":"شیک شیر، موز، عسل، جو دوسر و ماست","rows":[{"foodId":48,"amount":300,"unit":"میلی‌لیتر"},{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":32,"amount":15,"unit":"گرم"},{"foodId":6,"amount":30,"unit":"گرم"},{"foodId":109,"amount":100,"unit":"گرم"}],"target":0},"3":{"name":"شیک شیر، موز، ارده و خرما","rows":[{"foodId":48,"amount":300,"unit":"میلی‌لیتر"},{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":157,"amount":25,"unit":"گرم"},{"foodId":33,"amount":30,"unit":"گرم"}],"target":0},"4":{"name":"شیک شیر، موز، کره بادام‌زمینی و بیسکویت","rows":[{"foodId":48,"amount":300,"unit":"میلی‌لیتر"},{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":29,"amount":30,"unit":"گرم"},{"foodId":162,"amount":30,"unit":"گرم"}],"target":0},"6":{"name":"ساندویچ تخم‌مرغ و سیب‌زمینی با شیرموز","rows":[{"foodId":2,"amount":100,"unit":"گرم"},{"foodId":14,"amount":100,"unit":"گرم"},{"foodId":5,"amount":150,"unit":"گرم"},{"foodId":48,"amount":200,"unit":"میلی‌لیتر"},{"foodId":22,"amount":100,"unit":"گرم"}],"target":0}}}],"plan":{"title":"افزایش وزن شدید","daily_calories":null,"protein_target":null,"carbs_target":null,"fat_target":null}};
+let nutritionTemplateCache={};
+let nutritionTemplatesBusy=false;
+let nutritionTemplateEditingId=null;
+let nutritionTemplateLoadAttempts=0;
+let nutritionTemplateLoadTimer=null;
+const builtInWeightGainNormalTemplate={"version":1,"state":[{"name":"صبحانه","active":[1,2,3],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":14,"amount":100,"unit":"گرم","recipeName":"املت مقوی"},{"foodId":74,"amount":100,"unit":"گرم","recipeName":"املت مقوی"},{"foodId":30,"amount":5,"unit":"گرم","recipeName":"املت مقوی"},{"foodId":2,"amount":90,"unit":"گرم","recipeName":"املت مقوی"}],"target":0,"name":"املت مقوی"},"2":{"rows":[{"foodId":6,"amount":60,"unit":"گرم","recipeName":"اوتمیل افزایش وزن"},{"foodId":16,"amount":250,"unit":"میلی‌لیتر","recipeName":"اوتمیل افزایش وزن"},{"foodId":22,"amount":120,"unit":"گرم","recipeName":"اوتمیل افزایش وزن"},{"foodId":29,"amount":15,"unit":"گرم","recipeName":"اوتمیل افزایش وزن"},{"foodId":32,"amount":10,"unit":"گرم","recipeName":"اوتمیل افزایش وزن"}],"target":0,"name":"اوتمیل افزایش وزن"},"3":{"rows":[{"foodId":14,"amount":100,"unit":"گرم"},{"foodId":18,"amount":30,"unit":"گرم"},{"foodId":2,"amount":90,"unit":"گرم"},{"foodId":28,"amount":10,"unit":"گرم"},{"foodId":74,"amount":100,"unit":"گرم"}],"target":0,"name":"نان و تخم‌مرغ و پنیر"}}},{"name":"میان‌وعده اول","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":16,"amount":250,"unit":"میلی‌لیتر"},{"foodId":29,"amount":15,"unit":"گرم"}],"target":0,"name":"شیرموز و کره بادام‌زمینی"},"2":{"rows":[{"foodId":49,"amount":170,"unit":"گرم"},{"foodId":34,"amount":20,"unit":"گرم"},{"foodId":28,"amount":10,"unit":"گرم"}],"target":0,"name":"ماست یونانی با کشمش و گردو"},"3":{"rows":[{"foodId":23,"amount":150,"unit":"گرم"},{"foodId":27,"amount":20,"unit":"گرم"},{"foodId":2,"amount":40,"unit":"گرم"}],"target":0,"name":"سیب، بادام و نان"},"4":{"rows":[{"foodId":54,"amount":60,"unit":"گرم"},{"foodId":18,"amount":30,"unit":"گرم"},{"foodId":16,"amount":200,"unit":"میلی‌لیتر"}],"target":0,"name":"ساندویچ پنیر و شیر"}}},{"name":"ناهار","active":[1,2,3,4,5],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":8,"amount":150,"unit":"گرم"},{"foodId":1,"amount":220,"unit":"گرم"},{"foodId":193,"amount":150,"unit":"گرم"}],"target":0,"name":"مرغ و برنج"},"2":{"rows":[{"foodId":10,"amount":130,"unit":"گرم"},{"foodId":1,"amount":200,"unit":"گرم"},{"foodId":195,"amount":150,"unit":"گرم"}],"target":0,"name":"گوشت و برنج"},"3":{"rows":[{"foodId":12,"amount":150,"unit":"گرم"},{"foodId":5,"amount":250,"unit":"گرم"},{"foodId":193,"amount":150,"unit":"گرم"}],"target":0,"name":"ماهی و سیب‌زمینی"},"4":{"rows":[{"foodId":19,"amount":180,"unit":"گرم"},{"foodId":1,"amount":180,"unit":"گرم"},{"foodId":17,"amount":100,"unit":"گرم"}],"target":0,"name":"عدس‌پلو با ماست"},"5":{"rows":[{"foodId":7,"amount":200,"unit":"گرم"},{"foodId":11,"amount":85,"unit":"گرم"}],"target":0,"name":"ماکارونی با گوشت چرخ‌کرده"}}},{"name":"میان‌وعده دوم","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":18,"amount":40,"unit":"گرم"},{"foodId":54,"amount":60,"unit":"گرم"},{"foodId":23,"amount":100,"unit":"گرم"}],"target":0,"name":"نان و پنیر و میوه"},"2":{"rows":[{"foodId":16,"amount":250,"unit":"میلی‌لیتر"},{"foodId":33,"amount":25,"unit":"گرم"},{"foodId":27,"amount":10,"unit":"گرم"}],"target":0,"name":"شیر و خرما و بادام"}}},{"name":"قبل تمرین","active":[1,2,3],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":42,"amount":150,"unit":"میلی‌لیتر"}],"target":0,"name":"موز و قهوه"},"2":{"rows":[{"foodId":54,"amount":60,"unit":"گرم"},{"foodId":32,"amount":15,"unit":"گرم"}],"target":0,"name":"نان تست با عسل"},"3":{"rows":[{"foodId":5,"amount":180,"unit":"گرم"},{"foodId":16,"amount":200,"unit":"میلی‌لیتر"}],"target":0,"name":"سیب‌زمینی و شیر"}}},{"name":"بعد تمرین","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":8,"amount":120,"unit":"گرم"},{"foodId":1,"amount":180,"unit":"گرم"}],"target":0,"name":"مرغ و برنج"},"2":{"rows":[{"foodId":14,"amount":100,"unit":"گرم"},{"foodId":54,"amount":80,"unit":"گرم"},{"foodId":16,"amount":200,"unit":"میلی‌لیتر"}],"target":0,"name":"تخم‌مرغ و نان و شیر"},"3":{"rows":[{"foodId":46,"amount":25,"unit":"گرم"},{"foodId":16,"amount":250,"unit":"میلی‌لیتر"},{"foodId":22,"amount":100,"unit":"گرم"}],"target":0,"name":"شیک پروتئین و موز"},"4":{"rows":[{"foodId":10,"amount":120,"unit":"گرم"},{"foodId":5,"amount":220,"unit":"گرم"}],"target":0,"name":"گوشت و سیب‌زمینی"}}},{"name":"شام","active":[1,2,3,4,5],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":8,"amount":130,"unit":"گرم"},{"foodId":1,"amount":180,"unit":"گرم"},{"foodId":193,"amount":150,"unit":"گرم"}],"target":0,"name":"مرغ و برنج و سالاد"},"2":{"rows":[{"foodId":10,"amount":120,"unit":"گرم"},{"foodId":2,"amount":100,"unit":"گرم"},{"foodId":195,"amount":150,"unit":"گرم"}],"target":0,"name":"گوشت و نان و سالاد"},"3":{"rows":[{"foodId":12,"amount":150,"unit":"گرم"},{"foodId":1,"amount":160,"unit":"گرم"},{"foodId":74,"amount":100,"unit":"گرم"}],"target":0,"name":"ماهی و برنج"},"4":{"rows":[{"foodId":14,"amount":100,"unit":"گرم"},{"foodId":5,"amount":200,"unit":"گرم"},{"foodId":73,"amount":100,"unit":"گرم"},{"foodId":74,"amount":100,"unit":"گرم"}],"target":0,"name":"املت و سیب‌زمینی"},"5":{"rows":[{"foodId":19,"amount":180,"unit":"گرم"},{"foodId":54,"amount":60,"unit":"گرم"},{"foodId":17,"amount":100,"unit":"گرم"}],"target":0,"name":"عدسی و نان و ماست"}}},{"name":"قبل خواب","active":[1,2],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":16,"amount":250,"unit":"میلی‌لیتر"},{"foodId":28,"amount":10,"unit":"گرم"}],"target":0,"name":"شیر و گردو"},"2":{"rows":[{"foodId":49,"amount":170,"unit":"گرم"},{"foodId":33,"amount":15,"unit":"گرم"},{"foodId":27,"amount":10,"unit":"گرم"}],"target":0,"name":"ماست یونانی با خرما و بادام"}}}],"plan":{"title":"افزایش وزن معمولی","daily_calories":null,"protein_target":null,"carbs_target":null,"fat_target":null}};
+const builtInFitnessTemplate={"version":1,"state":[{"name":"صبحانه","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":14,"amount":100,"unit":"گرم"},{"foodId":2,"amount":60,"unit":"گرم"},{"foodId":73,"amount":75,"unit":"گرم"},{"foodId":74,"amount":75,"unit":"گرم"}],"target":323.2},"2":{"rows":[{"foodId":14,"amount":100,"unit":"گرم","recipeName":"املت"},{"foodId":74,"amount":100,"unit":"گرم","recipeName":"املت"},{"foodId":30,"amount":5,"unit":"گرم","recipeName":"املت"},{"foodId":54,"amount":60,"unit":"گرم","recipeName":"املت"}],"target":353.4,"name":"املت"},"3":{"rows":[{"foodId":6,"amount":40,"unit":"گرم","recipeName":"اوتمیل جو دوسر"},{"foodId":16,"amount":200,"unit":"میلی‌لیتر","recipeName":"اوتمیل جو دوسر"},{"foodId":22,"amount":100,"unit":"گرم","recipeName":"اوتمیل جو دوسر"},{"foodId":82,"amount":2,"unit":"گرم","recipeName":"اوتمیل جو دوسر"}],"target":333.5,"name":"اوتمیل جو دوسر"},"4":{"rows":[{"foodId":18,"amount":40,"unit":"گرم"},{"foodId":28,"amount":10,"unit":"گرم"},{"foodId":2,"amount":60,"unit":"گرم"},{"foodId":243,"amount":100,"unit":"گرم"}],"target":316.8}}},{"name":"میان‌وعده صبح","active":[1,2,3],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":23,"amount":150,"unit":"گرم"},{"foodId":27,"amount":10,"unit":"عدد","gramsPerUnit":1.2}],"target":147.5},"2":{"rows":[{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":16,"amount":200,"unit":"میلی‌لیتر"}],"target":190.8},"3":{"rows":[{"foodId":16,"amount":200,"unit":"میلی‌لیتر"},{"foodId":25,"amount":100,"unit":"گرم"}],"target":145}}},{"name":"ناهار","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":8,"amount":150,"unit":"گرم"},{"foodId":1,"amount":150,"unit":"گرم"},{"foodId":195,"amount":150,"unit":"گرم"}],"target":472.5},"2":{"rows":[{"foodId":10,"amount":130,"unit":"گرم"},{"foodId":1,"amount":150,"unit":"گرم"},{"foodId":193,"amount":150,"unit":"گرم"}],"target":514.6},"3":{"rows":[{"foodId":12,"amount":150,"unit":"گرم"},{"foodId":5,"amount":180,"unit":"گرم"},{"foodId":195,"amount":100,"unit":"گرم"}],"target":401.6},"4":{"rows":[{"foodId":8,"amount":150,"unit":"گرم"},{"foodId":1,"amount":150,"unit":"گرم"},{"foodId":74,"amount":100,"unit":"گرم"}],"target":460.5}}},{"name":"میان‌وعده عصر","active":[1,2,3],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":49,"amount":150,"unit":"گرم"},{"foodId":28,"amount":10,"unit":"گرم"}],"target":174.9},"2":{"rows":[{"foodId":23,"amount":150,"unit":"گرم"},{"foodId":29,"amount":15,"unit":"گرم"}],"target":166.2},"3":{"rows":[{"foodId":18,"amount":40,"unit":"گرم"},{"foodId":54,"amount":40,"unit":"گرم"}],"target":158.8}}},{"name":"شام","active":[1,2,3],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":8,"amount":130,"unit":"گرم"},{"foodId":193,"amount":200,"unit":"گرم"}],"target":264.5},"2":{"rows":[{"foodId":12,"amount":150,"unit":"گرم"},{"foodId":195,"amount":200,"unit":"گرم"}],"target":265},"3":{"rows":[{"foodId":19,"amount":200,"unit":"گرم"},{"foodId":54,"amount":40,"unit":"گرم"}],"target":330.8}}},{"name":"قبل خواب","active":[1,2,3],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":16,"amount":200,"unit":"میلی‌لیتر"},{"foodId":82,"amount":2,"unit":"گرم"}],"target":88.9},"2":{"rows":[{"foodId":17,"amount":150,"unit":"گرم"},{"foodId":28,"amount":10,"unit":"گرم"}],"target":159.9},"3":{"rows":[{"foodId":115,"amount":200,"unit":"میلی‌لیتر"}],"target":104}}},{"name":"قبل تمرین","active":[1,2,3,4],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":22,"amount":120,"unit":"گرم"},{"foodId":42,"amount":150,"unit":"میلی‌لیتر"}],"target":109.8},"2":{"rows":[{"foodId":54,"amount":40,"unit":"گرم"},{"foodId":32,"amount":15,"unit":"گرم"}],"target":144.4},"3":{"rows":[{"foodId":5,"amount":150,"unit":"گرم"},{"foodId":40,"amount":150,"unit":"میلی‌لیتر"}],"target":132},"4":{"rows":[{"foodId":22,"amount":100,"unit":"گرم"},{"foodId":238,"amount":18,"unit":"گرم"}],"target":158.7}}},{"name":"بعد تمرین","active":[1,2,3],"selected":1,"open":false,"options":{"1":{"rows":[{"foodId":8,"amount":100,"unit":"گرم"},{"foodId":1,"amount":100,"unit":"گرم"}],"target":295},"2":{"rows":[{"foodId":14,"amount":100,"unit":"گرم"},{"foodId":54,"amount":60,"unit":"گرم"}],"target":291.2},"3":{"rows":[{"foodId":10,"amount":130,"unit":"گرم"},{"foodId":5,"amount":180,"unit":"گرم"}],"target":438.7}}}],"plan":{"title":"تناسب اندام","daily_calories":null,"protein_target":null,"carbs_target":null,"fat_target":null}};
+function nutritionTemplateClient(){
+ const client=window.parent&&window.parent.AUTH_SUPABASE;
+ if(!client||typeof client.from!=='function')throw new Error('اتصال امن دیتابیس در پنل مربی هنوز در حال آماده‌شدن است.');
+ return client;
+}
+function nutritionTemplateHasFood(plan){
+ return Array.isArray(plan)&&plan.some(m=>m&&m.options&&Object.values(m.options).some(o=>o&&Array.isArray(o.rows)&&o.rows.length));
+}
+
+/* Local-only autosave for coach template drafts. This never writes trainee records. */
+const nutritionDraftStorageKey='fitness-seh-galeh:coach-nutrition-template-draft:v1';
+let nutritionDraftTimer=null;
+function persistNutritionDraft(){
+ if(!nutritionTemplateEditingId)return;
+ try{
+  const payload={version:1,templateId:nutritionTemplateEditingId,savedAt:Date.now(),
+   state:JSON.parse(JSON.stringify(state)),
+   plan:{title:document.getElementById('planTitle')?.value||'',
+    daily_calories:document.getElementById('targetCaloriesInput')?.value||'',
+    protein_target:document.getElementById('targetProteinInput')?.value||'',
+    carbs_target:document.getElementById('targetCarbsInput')?.value||'',
+    fat_target:document.getElementById('targetFatInput')?.value||''}};
+  localStorage.setItem(nutritionDraftStorageKey,JSON.stringify(payload));
+ }catch(e){console.warn('Nutrition draft autosave failed',e)}
+}
+function scheduleNutritionDraftSave(){
+ if(!nutritionTemplateEditingId)return;
+ clearTimeout(nutritionDraftTimer);
+ nutritionDraftTimer=setTimeout(persistNutritionDraft,180);
+}
+function restoreNutritionDraft(){
+ try{
+  const raw=localStorage.getItem(nutritionDraftStorageKey);if(!raw)return;
+  const d=JSON.parse(raw);
+  if(!d||d.version!==1||!nutritionTemplateDefinitions.some(x=>x.id===d.templateId)||!Array.isArray(d.state)||!nutritionTemplateHasFood(d.state))return;
+  state.splice(0,state.length,...JSON.parse(JSON.stringify(d.state)));
+  nutritionTemplateEditingId=d.templateId;
+  const p=d.plan||{};
+  const title=document.getElementById('planTitle');if(title)title.value=p.title||'';
+  syncTargetFields({daily_calories:p.daily_calories,protein_target:p.protein_target,carbs_target:p.carbs_target,fat_target:p.fat_target});
+  renderNutritionTemplateCards();
+  notify('پیش‌نویس ذخیره‌شده الگوی غذایی بازیابی شد.');
+ }catch(e){console.warn('Nutrition draft restore failed',e)}
+}
+window.addEventListener('pagehide',persistNutritionDraft);
+document.addEventListener('input',function(e){
+ if(e.target&&['planTitle','targetCaloriesInput','targetProteinInput','targetCarbsInput','targetFatInput'].includes(e.target.id))scheduleNutritionDraftSave();
+});
+function startNutritionTemplate(id){
+ const def=nutritionTemplateDefinitions.find(x=>x.id===id);if(!def)return;
+ const row=nutritionTemplateCache[id],data=row&&row.template_data;
+ if(nutritionTemplateHasFood(state)&&!confirm('محتوای فعلی برنامه‌ساز جایگزین می‌شود. اگر لازم است ابتدا آن را در کارت خودش ذخیره کن. ادامه می‌دهی؟'))return;
+ nutritionTemplateEditingId=id;
+ if(data&&Array.isArray(data.state)){
+  state.splice(0,state.length,...JSON.parse(JSON.stringify(data.state)));
+  const p=data.plan||{};
+  syncTargetFields({daily_calories:p.daily_calories,protein_target:p.protein_target,carbs_target:p.carbs_target,fat_target:p.fat_target});
+ }else{
+  state.forEach(m=>{m.active=[1];m.selected=1;m.open=false;m.options={1:{rows:[],target:0}}});
+  syncTargetFields({daily_calories:'',protein_target:'',carbs_target:'',fat_target:''});
+ }
+ document.getElementById('planTitle').value=def.name;
+ targetManualDirty=true;
+ renderNutritionTemplateCards();
  draw();
- notify('قالب کاهش وزن بارگذاری شد؛ مقدارها را متناسب با شاگرد تنظیم و سپس ثبت کن.');
+ setConnectionStatus('در حال ساخت الگوی «'+def.name+'»؛ وعده‌ها را پایین صفحه با دکمه افزودن از بانک غذا تکمیل کن. هنوز چیزی برای شاگرد ثبت نشده است.',true);
+ const meals=document.getElementById('meals');
+ if(meals)setTimeout(()=>meals.scrollIntoView({behavior:'smooth',block:'start'}),80);
+ notify('الگوی «'+def.name+'» باز شد؛ غذاها را به وعده‌ها اضافه کن و در پایان دکمه ذخیره همین کارت را بزن.');
+}
+function templateOptionCalories(templateData,optionNumber){
+ const meals=Array.isArray(templateData&&templateData.state)?templateData.state:[];
+ if(!meals.length)return null;
+ let calories=0,hasFood=false,hasUnconverted=false;
+ meals.forEach(meal=>{
+  const selected=meal&&meal.options&&meal.options[optionNumber];
+  const rows=selected&&Array.isArray(selected.rows)?selected.rows:[];
+  if(rows.length)hasFood=true;
+  if(rows.some(row=>!metric(row)))hasUnconverted=true;
+  calories+=total(rows).cal;
+ });
+ if(!hasFood)return null;
+ return {calories:fmt(calories),hasUnconverted};
+}
+function templateCaloriesMarkup(templateData){
+ return '<div class="nutrition-template-calories"><div class="nutrition-template-calories-label">🔥 مجموع کالری هر گزینه در تمام وعده‌ها</div><div class="nutrition-template-calorie-options">'+[1,2,3].map(n=>{
+  const estimate=templateOptionCalories(templateData,n);
+  return '<div class="nutrition-template-calorie-option '+(estimate?'':'empty')+'">گزینه '+n+(estimate?'<strong>'+estimate.calories.toLocaleString('fa-IR')+'</strong> کیلوکالری'+(estimate.hasUnconverted?'<small>جمع ناقص</small>':''):'<small>ثبت نشده</small>')+'</div>';
+ }).join('')+'</div></div>';
+}
+function renderNutritionTemplateCards(){
+ const host=document.getElementById('nutritionTemplateCards');if(!host)return;
+ host.innerHTML=nutritionTemplateDefinitions.map(t=>{
+  const row=nutritionTemplateCache[t.id];
+  const saved=!!(row&&row.template_data&&Array.isArray(row.template_data.state));
+  const editing=nutritionTemplateEditingId===t.id;
+  const calorieLine=saved?templateCaloriesMarkup(row.template_data):'';
+  const actions=editing
+   ?'<button class="primary" type="button" onclick="saveNutritionTemplate(\''+t.id+'\')" '+(nutritionTemplatesBusy?'disabled':'')+'>'+(nutritionTemplatesBusy?'در حال ذخیره…':'ذخیره این الگو')+'</button><button class="secondary" type="button" onclick="copyNutritionTemplate(\''+t.id+'\')">کپی در برنامه</button>'
+   :(saved
+    ?'<button class="primary" type="button" onclick="copyNutritionTemplate(\''+t.id+'\')">کپی در برنامه</button><button class="secondary" type="button" onclick="startNutritionTemplate(\''+t.id+'\')">ویرایش این الگو</button>'
+    :'<button class="primary" type="button" onclick="startNutritionTemplate(\''+t.id+'\')">ورود و تکمیل این الگو</button>');
+  const status=editing?(nutritionTemplatesBusy?'⏳ در حال ذخیره الگو…':'✏️ در حال تکمیل؛ پس از پایان ذخیره کن'):(saved?'✓ الگو ذخیره شده':'برای شروع وارد کارت شو');
+  return '<article class="nutrition-template-card '+(editing?'is-editing':'')+'"><div class="nutrition-template-card-name">'+t.name+'</div><div class="nutrition-template-card-status '+(saved?'saved':'')+'">'+status+'</div>'+calorieLine+actions+'</article>';
+ }).join('');
+}
+async function loadNutritionTemplates(){
+ const host=document.getElementById('nutritionTemplateCards');
+ // Show built-in templates immediately; the card must not depend on a successful
+ // database round-trip just to become visible.
+ nutritionTemplateCache=nutritionTemplateCache||{};
+ const builtIns=[
+  ['weight-loss-severe','کاهش وزن شدید',builtInSevereWeightLossTemplate],
+  ['weight-loss-normal','کاهش وزن معمولی',builtInNormalWeightLossTemplate],
+  ['fitness-maintenance','تناسب اندام',builtInFitnessTemplate],
+  ['weight-gain-normal','افزایش وزن معمولی',builtInWeightGainNormalTemplate],
+  ['weight-gain-severe','افزایش وزن شدید',builtInWeightGainSevereTemplate]
+ ];
+ builtIns.forEach(([id,name,data])=>{
+  if(!nutritionTemplateCache[id]||!Array.isArray(nutritionTemplateCache[id].template_data?.state)){
+   nutritionTemplateCache[id]={template_key:id,name,template_data:data,_builtin:true};
+  }
+ });
+ renderNutritionTemplateCards();
+ try{
+  const client=nutritionTemplateClient();
+  // The iframe is loaded eagerly, before the parent app finishes creating
+  // AUTH_SUPABASE and restoring the coach session. Wait for that existing
+  // session instead of treating the startup race as a permanent failure.
+  if(client.auth&&typeof client.auth.getSession==='function'){
+   const sessionResult=await client.auth.getSession();
+   if(sessionResult.error)throw sessionResult.error;
+   if(!sessionResult.data||!sessionResult.data.session||!sessionResult.data.session.user){
+    if(nutritionTemplateLoadAttempts<40){
+     nutritionTemplateLoadAttempts++;
+     clearTimeout(nutritionTemplateLoadTimer);
+     nutritionTemplateLoadTimer=setTimeout(loadNutritionTemplates,500);
+     return;
+    }
+    throw new Error('نشست مربی هنوز آماده نشده است؛ قالب‌های آماده همچنان قابل استفاده‌اند.');
+   }
+  }
+  const {data,error}=await client.from('coach_nutrition_templates')
+   .select('id,template_key,name,template_data,updated_at').order('template_key',{ascending:true});
+  if(error)throw error;
+  nutritionTemplateLoadAttempts=0;
+  clearTimeout(nutritionTemplateLoadTimer);
+  // Keep built-ins as fallbacks, then let saved coach versions override them.
+  (data||[]).forEach(row=>{
+   if(row&&row.template_key&&row.template_data&&Array.isArray(row.template_data.state)){
+    nutritionTemplateCache[row.template_key]=row;
+   }
+  });
+  builtIns.forEach(([id,name,data])=>{
+   if(!nutritionTemplateCache[id]||!Array.isArray(nutritionTemplateCache[id].template_data?.state)){
+    nutritionTemplateCache[id]={template_key:id,name,template_data:data,_builtin:true};
+   }
+  });
+  renderNutritionTemplateCards();
+ }catch(e){
+  const message=String(e&&e.message||e);
+  if(/اتصال امن دیتابیس در پنل مربی هنوز در حال آماده‌شدن است/.test(message)&&nutritionTemplateLoadAttempts<40){
+   nutritionTemplateLoadAttempts++;
+   clearTimeout(nutritionTemplateLoadTimer);
+   nutritionTemplateLoadTimer=setTimeout(loadNutritionTemplates,500);
+   return;
+  }
+  // Do not replace the cards with an error panel: built-in templates work
+  // without the database and can still be copied into the coach's plan.
+  renderNutritionTemplateCards();
+  console.error('Nutrition templates load failed; built-in templates remain available',e);
+ }
+}
+async function saveNutritionTemplate(id){
+ const def=nutritionTemplateDefinitions.find(x=>x.id===id);if(!def||nutritionTemplatesBusy)return;
+ if(nutritionTemplateEditingId!==id){notify('ابتدا از روی همین کارت گزینه ورود و تکمیل را بزن.');return}
+ if(!nutritionTemplateHasFood(state)){notify('ابتدا وعده‌ها و مواد غذایی این الگو را کامل کن.');return}
+ const templateData={
+  version:1,
+  state:JSON.parse(JSON.stringify(state)),
+  plan:{
+   title:def.name,
+   daily_calories:document.getElementById('targetCaloriesInput').value||null,
+   protein_target:document.getElementById('targetProteinInput').value||null,
+   carbs_target:document.getElementById('targetCarbsInput').value||null,
+   fat_target:document.getElementById('targetFatInput').value||null
+  }
+ };
+ nutritionTemplatesBusy=true;renderNutritionTemplateCards();
+ try{
+  const client=nutritionTemplateClient();
+  if(!client.auth||typeof client.auth.getSession!=='function')throw new Error('نشست مربی قابل بررسی نیست؛ یک‌بار صفحه را تازه‌سازی کن.');
+  const {data:sessionData,error:sessionError}=await client.auth.getSession();
+  if(sessionError)throw sessionError;
+  const coachUserId=sessionData&&sessionData.session&&sessionData.session.user&&sessionData.session.user.id;
+  if(!coachUserId)throw new Error('نشست مربی منقضی شده است؛ بدون خروج از حساب صفحه را تازه‌سازی کن و دوباره ذخیره کن.');
+  const {data,error}=await client.from('coach_nutrition_templates')
+   .upsert({coach_user_id:coachUserId,template_key:id,name:def.name,template_data:templateData},{onConflict:'coach_user_id,template_key'})
+   .select('id,template_key,name,template_data,updated_at').single();
+  if(error)throw error;
+  if(!data||data.template_key!==id||!Array.isArray(data.template_data?.state))throw new Error('پاسخ ذخیره معتبر نبود؛ الگو دوباره دریافت شود.');
+  nutritionTemplateCache[id]=data;
+  nutritionTemplateEditingId=null;
+  try{localStorage.removeItem(nutritionDraftStorageKey)}catch(e){}
+  renderNutritionTemplateCards();
+  notify('الگوی «'+def.name+'» با موفقیت در دیتابیس ذخیره شد.');
+ }catch(e){
+  const detail=[e&&e.message,e&&e.details,e&&e.hint,e&&e.code?'کد '+e.code:null].filter(Boolean).join(' · ');
+  notify('ذخیره الگو انجام نشد: '+(detail||'خطای نامشخص دیتابیس'));
+  console.error('Nutrition template save failed',e);
+ }finally{
+  nutritionTemplatesBusy=false;
+  renderNutritionTemplateCards();
+ }
+}
+function copyNutritionTemplate(id){
+ const row=nutritionTemplateCache[id],data=row&&row.template_data;
+ if(!data||!Array.isArray(data.state)){notify('اطلاعات این الگو کامل نیست؛ دوباره الگوها را دریافت کن.');return}
+ if(nutritionTemplateHasFood(state)&&!confirm('محتوای فعلی برنامه‌ساز جایگزین الگو می‌شود. هنوز چیزی در پرونده شاگرد ثبت نمی‌شود. ادامه می‌دهی؟'))return;
+ // Keep the selected trainee's calculated or manually entered nutrition targets.
+ const traineeTargets={
+  daily_calories:document.getElementById('targetCaloriesInput').value,
+  protein_target:document.getElementById('targetProteinInput').value,
+  carbs_target:document.getElementById('targetCarbsInput').value,
+  fat_target:document.getElementById('targetFatInput').value
+ };
+ // Replace any coach-only draft so it cannot restore the previous template
+ // over the newly selected one after an iframe reload.
+ clearTimeout(nutritionDraftTimer);
+ try{localStorage.removeItem(nutritionDraftStorageKey)}catch(e){console.warn('Nutrition draft cleanup failed',e)}
+ nutritionTemplateEditingId=null;
+ const copiedState=JSON.parse(JSON.stringify(data.state));
+ state.splice(0,state.length,...copiedState);
+ const p=data.plan||{};
+ const definition=nutritionTemplateDefinitions.find(x=>x.id===id);
+ const copiedTitle=(definition&&definition.name)||row.name||p.title||'برنامه غذایی';
+ document.getElementById('planTitle').value=copiedTitle;
+ document.getElementById('planTitleInput').value=copiedTitle;
+ syncTargetFields(traineeTargets);
+ targetManualDirty=true;
+ renderNutritionTemplateCards();
+ draw();
+ setConnectionStatus('الگوی «'+(definition&&definition.name||row.name||'برنامه غذایی')+'» در برنامه‌ساز جایگزین شد. هنوز در پرونده شاگرد ثبت نشده است؛ برای ثبت نهایی دکمه ثبت تمام برنامه غذایی را بزن.',true);
+ notify('الگوی «'+(definition&&definition.name||row.name||'برنامه غذایی')+'» با موفقیت جایگزین شد؛ برای ثبت نهایی دکمه ثبت برنامه را بزن.');
 }
 
 let pickerContext=null,draft=[];
@@ -103,6 +403,7 @@ function unitFactor(item){
   [/جو دوسر|آرد|پودر|سرلاک|وی پروتئین|کازئین|کاکائو|دارچین|شکر|نمک|کنجد|تخم کتان|چیا/,{ 'قاشق چایخوری':3,'قاشق غذاخوری':10}],
   [/برنج|ماکارونی|پاستا|عدس|لوبیا|نخود|بلغور|کینوا/,{ 'قاشق چایخوری':5,'قاشق غذاخوری':15}]
  ];
+ if(u==='قاشق مرباخوری'){if(/عسل|شیره|مربا/.test(n))return 14;if(/روغن/.test(n))return 9;return 10;}
  if(u==='قاشق چایخوری'||u==='قاشق غذاخوری'){
   for(const [re,map] of spoonRules)if(re.test(n))return map[u];
   return u==='قاشق چایخوری'?5:15;
@@ -145,14 +446,14 @@ function metric(item){const f=foods.find(x=>x.id===item.foodId),factor=f&&unitFa
 function total(rows){return rows.reduce((a,row)=>{const n=metric(row);if(n){a.cal+=n.cal;a.p+=n.p;a.c+=n.c;a.f+=n.f}return a},{cal:0,p:0,c:0,f:0})}
 function fmt(n){return Math.round(n*10)/10}
 function option(m){return m.options[m.selected]||(m.options[m.selected]={rows:[],target:0})}
-function draw(){document.getElementById('meals').innerHTML=state.map((m,i)=>{const o=option(m),t=total(o.rows);return '<section class="meal"><div class="meal-head"><div class="meal-name">'+m.name+'</div><div class="options">'+m.active.map(n=>'<button class="opt '+(m.selected===n?'active':'')+'" onclick="choose('+i+','+n+')">'+n+'</button>').join('')+(m.active.length<4?'<button class="add" onclick="addOption('+i+')">＋</button>':'')+'</div><button class="expand" onclick="toggle('+i+')">'+(m.open?'⌃':'⌄')+'</button></div><div class="option-panel '+(m.open?'show':'')+'"><div class="panel-title">'+m.name+' · گزینه '+m.selected+'</div><div class="table-wrap"><table><thead><tr><th>نام غذا / دستور</th><th>مقدار</th><th>واحد</th><th>ویرایش</th><th>حذف</th></tr></thead><tbody>'+o.rows.map((r,j)=>{const f=foods.find(x=>x.id===r.foodId);return '<tr><td>'+ (f?f.name:'—')+'</td><td><input type="number" min=".1" step=".1" value="'+r.amount+'" onchange="changeAmount('+i+','+j+',this.value)"></td><td>'+r.unit+(r.unit!=='گرم'&&r.gramsPerUnit?' · '+fmt(r.gramsPerUnit)+' گرم/واحد':'')+'</td><td><button class="trash" onclick="editRow('+i+','+j+')">✎</button></td><td><button class="trash" onclick="removeRow('+i+','+j+')">🗑</button></td></tr>'}).join('')+'</tbody></table></div><div class="row-actions"><button class="small-btn" onclick="openPicker('+i+')">＋ افزودن از بانک غذا</button><button class="small-btn save-one" onclick="saveOption('+i+')">✓ تأیید این گزینه</button></div><div class="target"><label>هدف کالری این گزینه:</label><input type="number" min="0" value="'+(o.target||'')+'" placeholder="مثلاً ۴۵۰" onchange="changeTarget('+i+',this.value)"></div><div class="nutrition-line">کالری: '+fmt(t.cal)+' kcal · پروتئین: '+fmt(t.p)+' g · کربوهیدرات: '+fmt(t.c)+' g · چربی: '+fmt(t.f)+' g'+(o.target?' · اختلاف با هدف: '+fmt(t.cal-o.target)+' kcal':'')+'</div>'+(hasUnconverted(o.rows)?'<div class="hint" style="color:#9a5b00">برای محاسبه دقیق، واحد این ردیف‌ها را به گرم تبدیل و ثبت کن؛ تبدیل عدد، قاشق، لیوان و میلی‌لیتر بدون وزن یا چگالی معتبر انجام نمی‌شود و فعلاً در جمع کالری لحاظ نشده است.</div>':'')+'<div class="hint">تغییر مقدار یا حذف و افزودن هر جزء، محاسبات را فوراً به‌روز می‌کند. دستور اصلی بانک تغییر نمی‌کند.</div></div></section>'}).join('');updateDaySummary()}
+function draw(){scheduleNutritionDraftSave();document.getElementById('meals').innerHTML=state.map((m,i)=>{const o=option(m),t=total(o.rows);return '<section class="meal"><div class="meal-head"><div class="meal-name">'+m.name+'</div><div class="options">'+m.active.map(n=>'<button class="opt '+(m.selected===n?'active':'')+'" onclick="choose('+i+','+n+')">'+n+'</button>').join('')+(m.active.length<4?'<button class="add" onclick="addOption('+i+')">＋</button>':'')+'</div><button class="expand" onclick="toggle('+i+')">'+(m.open?'⌃':'⌄')+'</button></div><div class="option-panel '+(m.open?'show':'')+'"><div class="panel-title">'+m.name+' · گزینه '+m.selected+((o.name||o.rows.find(r=>r.recipeName)?.recipeName)?' · '+(o.name||o.rows.find(r=>r.recipeName).recipeName):'')+'</div><div class="table-wrap"><table><thead><tr><th>نام غذا / دستور</th><th>مقدار</th><th>واحد</th><th>ویرایش</th><th>حذف</th></tr></thead><tbody>'+o.rows.map((r,j)=>({r,j})).sort((a,b)=>{const fa=foods.find(x=>x.id===a.r.foodId),fb=foods.find(x=>x.id===b.r.foodId);return (fa?fa.name:'').localeCompare(fb?fb.name:'','fa')}).map(({r,j})=>{const f=foods.find(x=>x.id===r.foodId);return '<tr><td>'+ (f?f.name:'—')+'</td><td><input type="number" min=".1" step=".1" value="'+r.amount+'" onchange="changeAmount('+i+','+j+',this.value)"></td><td>'+r.unit+(r.unit!=='گرم'&&r.gramsPerUnit?' · '+fmt(r.gramsPerUnit)+' گرم/واحد':'')+'</td><td><button class="trash" onclick="editRow('+i+','+j+')">✎</button></td><td><button class="trash" onclick="removeRow('+i+','+j+')">🗑</button></td></tr>'}).join('')+'</tbody></table></div><div class="row-actions"><button class="small-btn" onclick="openPicker('+i+')">＋ افزودن از بانک غذا</button><button class="small-btn save-one" onclick="saveOption('+i+')">✓ تأیید این گزینه</button></div><div class="target"><label>هدف کالری این گزینه:</label><input type="number" min="0" value="'+(o.target||'')+'" placeholder="مثلاً ۴۵۰" onchange="changeTarget('+i+',this.value)"></div><div class="nutrition-line">کالری: '+fmt(t.cal)+' kcal · پروتئین: '+fmt(t.p)+' g · کربوهیدرات: '+fmt(t.c)+' g · چربی: '+fmt(t.f)+' g'+(o.target?' · اختلاف با هدف: '+fmt(t.cal-o.target)+' kcal':'')+'</div>'+(hasUnconverted(o.rows)?'<div class="hint" style="color:#9a5b00">برای محاسبه دقیق، واحد این ردیف‌ها را به گرم تبدیل و ثبت کن؛ تبدیل عدد، قاشق، لیوان و میلی‌لیتر بدون وزن یا چگالی معتبر انجام نمی‌شود و فعلاً در جمع کالری لحاظ نشده است.</div>':'')+'<div class="hint">تغییر مقدار یا حذف و افزودن هر جزء، محاسبات را فوراً به‌روز می‌کند. دستور اصلی بانک تغییر نمی‌کند.</div></div></section>'}).join('');updateDaySummary()}
 function updateDaySummary(){const t=state.reduce((a,m)=>{const n=total(option(m).rows);a.cal+=n.cal;a.p+=n.p;a.c+=n.c;a.f+=n.f;return a},{cal:0,p:0,c:0,f:0});const pending=state.some(m=>hasUnconverted(option(m).rows));document.getElementById('daySummary').textContent='جمع گزینه‌های انتخاب‌شده: '+fmt(t.cal)+' kcal · پروتئین '+fmt(t.p)+' g · کربوهیدرات '+fmt(t.c)+' g · چربی '+fmt(t.f)+' g؛ گزینه‌های جایگزین با هم جمع نمی‌شوند.'+(pending?' ⚠️ بعضی ردیف‌ها به‌دلیل واحد غیرگرمی در محاسبه لحاظ نشده‌اند.':'')}
 function choose(i,n){state[i].selected=n;state[i].open=true;draw()}function addOption(i){const m=state[i],n=[1,2,3,4].find(x=>!m.active.includes(x));if(n){m.active.push(n);m.selected=n;m.options[n]={rows:[],target:0};m.open=true;draw()}}
 function toggle(i){state[i].open=!state[i].open;draw()}function changeAmount(i,j,v){option(state[i]).rows[j].amount=Number(v);draw()}function changeTarget(i,v){option(state[i]).target=Number(v)||0;draw()}function removeRow(i,j){option(state[i]).rows.splice(j,1);draw()}
 function openPicker(i){pickerContext={meal:i,edit:-1};draft=[];document.getElementById('pickMode').value='single';document.getElementById('pickCategory').value='all';document.getElementById('modal').classList.add('show');renderPicker()}
 function editRow(i,j){pickerContext={meal:i,edit:j};const row=option(state[i]).rows[j];draft=[{...row}];document.getElementById('pickMode').value='single';document.getElementById('pickCategory').value='all';document.getElementById('modal').classList.add('show');renderPicker();document.getElementById('pickSelection').innerHTML='<div class="field"><label>غذای انتخاب‌شده</label><select id="foodPick">'+foodOptions(row.foodId)+'</select></div><div class="field"><label>مقدار</label><input id="singleAmount" type="number" min=".1" step=".1" value="'+row.amount+'"></div><div class="field"><label>واحد</label><select id="singleUnit">'+unitOptions(row.unit)+'</select></div><div class="field"><label>وزن تقریبی هر واحد به گرم (قابل اصلاح)</label><input id="singleGramWeight" type="number" min=".01" step=".01" value="'+(row.gramsPerUnit||'')+'" placeholder="وزن واقعی هر واحد"></div><div class="hint">برای بیشتر واحدها وزن تقریبی خودکار محاسبه می‌شود؛ اگر وزن دقیق‌تری داری می‌توانی وارد کنی.</div>'}
-function foodOptions(selected){return foods.map(f=>'<option value="'+f.id+'" '+(f.id===selected?'selected':'')+'>'+f.name+'</option>').join('')}
-function unitOptions(selected){const units=['گرم','عدد','مغز','حبه','قاشق چایخوری','قاشق غذاخوری','لیوان','پیمانه','کف دست','بشقاب','پرس','میلی‌لیتر'];if(selected&&!units.includes(selected))units.push(selected);return units.map(u=>'<option '+(u===selected?'selected':'')+'>'+u+'</option>').join('')}
+function foodOptions(selected){return [...foods].sort((a,b)=>a.name.localeCompare(b.name,'fa')).map(f=>'<option value="'+f.id+'" '+(f.id===selected?'selected':'')+'>'+f.name+'</option>').join('')}
+function unitOptions(selected){const units=['گرم','عدد','مغز','حبه','قاشق چایخوری','قاشق مرباخوری','قاشق غذاخوری','لیوان','پیمانه','کف دست','بشقاب','پرس','میلی‌لیتر'];if(selected&&!units.includes(selected))units.push(selected);return units.map(u=>'<option '+(u===selected?'selected':'')+'>'+u+'</option>').join('')}
 function renderPicker(){const mode=document.getElementById('pickMode').value,cat=document.getElementById('pickCategory').value;const host=document.getElementById('pickSelection'),editor=document.getElementById('editor');editor.innerHTML='';if(mode==='single'){const list=[...foods].sort((a,b)=>a.name.localeCompare(b.name,'fa'));host.innerHTML='<div class="field"><label>انتخاب غذا</label><select id="foodPick">'+list.map(f=>'<option value="'+f.id+'">'+f.name+'</option>').join('')+'</select></div><div class="field"><label>مقدار</label><input id="singleAmount" type="number" min=".1" step=".1" value="100"></div><div class="field"><label>واحد</label><select id="singleUnit">'+unitOptions('گرم')+'</select></div><div class="field"><label>وزن هر واحد به گرم (اختیاری)</label><input id="singleGramWeight" type="number" min=".01" step=".01" placeholder="مثلاً وزن یک گردو؛ اجباری نیست"></div><div class="hint">می‌توانی ۵ عدد گردو، ۱ بشقاب سالاد، ۲ قاشق یا هر واحد دیگری وارد کنی؛ ثبت برنامه متوقف نمی‌شود. وزن فقط برای محاسبه دقیق کالری لازم است و اگر وارد نشود، مقدار در جمع کالری محاسبه نمی‌شود.</div>'}else{const list=recipes.filter(r=>cat==='all'||r.category===cat);host.innerHTML='<div class="field"><label>انتخاب دستور ترکیبی</label><select id="recipePick">'+list.map((r,i)=>'<option value="'+recipes.indexOf(r)+'">'+r.name+'</option>').join('')+'</select></div>';host.insertAdjacentHTML('beforeend','<div class="hint">با انتخاب دستور، اجزای آن در پایین نمایش داده می‌شوند. تغییرات فقط در نسخه برنامه فعلی اعمال می‌شود.</div>');document.getElementById('recipePick').onchange=loadRecipeDraft;loadRecipeDraft()}}
 function loadRecipeDraft(){const idx=Number(document.getElementById('recipePick')?.value),r=recipes[idx];if(!r)return;draft=r.ingredients.map(x=>({...x}));renderEditor()}
 function renderEditor(){const host=document.getElementById('editor');if(!draft.length){host.innerHTML='<p class="hint">این دستور هنوز ماده‌ای ندارد.</p>';return}host.innerHTML='<b style="font-size:11px">اجزای دستور · قابل ویرایش</b>'+draft.map((x,i)=>'<div class="ingredient"><select onchange="draft['+i+'].foodId=Number(this.value);renderEditor()">'+foodOptions(x.foodId)+'</select><input type="number" min=".1" step=".1" value="'+x.amount+'" onchange="draft['+i+'].amount=Number(this.value);renderEditor()"><select onchange="draft['+i+'].unit=this.value">'+unitOptions(x.unit)+'</select><input type="number" min=".01" step=".01" placeholder="گرم/واحد" value="'+(x.gramsPerUnit||'')+'" onchange="draft['+i+'].gramsPerUnit=Number(this.value)||null;renderEditor()"><button class="trash" onclick="draft.splice('+i+',1);renderEditor()">×</button></div>').join('')+'<div class="field"><label>افزودن ماده از بانک غذا</label><div class="ingredient"><select id="newFood">'+foodOptions(foods[0].id)+'</select><input id="newAmount" type="number" value="100" min=".1" step=".1"><select id="newUnit">'+unitOptions('گرم')+'</select><button class="add" onclick="addIngredient()">＋</button></div></div><div class="metrics">'+metricsText(total(draft))+'</div>'}
@@ -161,11 +462,13 @@ function addIngredient(){const id=Number(document.getElementById('newFood').valu
 function confirmPick(){if(!pickerContext)return;const mode=document.getElementById('pickMode').value;let rows=[];if(mode==='single'){const id=Number(document.getElementById('foodPick').value),amount=Number(document.getElementById('singleAmount').value),unit=document.getElementById('singleUnit').value,gramsPerUnit=Number(document.getElementById('singleGramWeight').value)||null;if(!Number.isFinite(amount)||amount<=0){notify('مقدار معتبر وارد کن.');return}rows=[{foodId:id,amount,unit,gramsPerUnit}]}else{if(!draft.length||draft.some(x=>!Number.isFinite(Number(x.amount))||Number(x.amount)<=0)){notify('مواد و مقدارهای دستور را بررسی کن.');return}const selectedRecipe=recipes[Number(document.getElementById('recipePick')?.value)];rows=draft.map(x=>({...x,recipeName:selectedRecipe?.name||null}))}const o=option(state[pickerContext.meal]);if(pickerContext.edit>=0)o.rows.splice(pickerContext.edit,1,...rows);else o.rows.push(...rows);closePicker();draw()}
 function closePicker(){document.getElementById('modal').classList.remove('show');pickerContext=null;draft=[]}
 function toggleStudentPreview(){const box=document.getElementById('studentPreview');if(box.style.display==='none'){renderStudentPreview();box.style.display='block'}else box.style.display='none'}
-function renderStudentPreview(){const box=document.getElementById('studentPreview');box.innerHTML='<b>نمایش برنامه از دید شاگرد</b><div class="hint">تمام گزینه‌های ثبت‌شده هر وعده نمایش داده می‌شوند؛ شاگرد می‌تواند از بین آن‌ها انتخاب کند.</div>'+state.map(m=>'<div style="padding:8px 0;border-top:1px solid #eadfc8"><b>'+m.name+'</b>'+m.active.map(n=>{const o=m.options[n]||{rows:[]},t=total(o.rows);return '<div style="margin:7px 0;padding:8px;background:#fff;border:1px solid #eee4cf;border-radius:8px"><b>گزینه '+n+'</b><div>'+o.rows.map(row=>{const f=foods.find(x=>x.id===row.foodId);return (f?f.name:'')+' · '+row.amount+' '+row.unit}).join('، ')+'</div><small>'+fmt(t.cal)+' kcal · پروتئین '+fmt(t.p)+'g · کربوهیدرات '+fmt(t.c)+'g · چربی '+fmt(t.f)+'g</small></div>'}).join('')+'</div>').join('')}
+function renderStudentPreview(){const box=document.getElementById('studentPreview');box.innerHTML='<b>نمایش برنامه از دید شاگرد</b><div class="hint">تمام گزینه‌های ثبت‌شده هر وعده نمایش داده می‌شوند؛ شاگرد می‌تواند از بین آن‌ها انتخاب کند.</div>'+state.map(m=>'<div style="padding:8px 0;border-top:1px solid #eadfc8"><b>'+m.name+'</b>'+[...m.active].sort((a,b)=>a-b).map((n,idx)=>{const o=m.options[n]||{rows:[]},t=total(o.rows);return '<div style="margin:7px 0;padding:8px;background:#fff;border:1px solid #eee4cf;border-radius:8px"><b>گزینه '+(idx+1)+(o.name||o.rows.find(r=>r.recipeName)?.recipeName?' · '+(o.name||o.rows.find(r=>r.recipeName).recipeName):'')+'</b><div>'+o.rows.map(row=>{const f=foods.find(x=>x.id===row.foodId);return (f?f.name:'')+' · '+row.amount+' '+row.unit}).join('، ')+'</div><small>'+fmt(t.cal)+' kcal · پروتئین '+fmt(t.p)+'g · کربوهیدرات '+fmt(t.c)+'g · چربی '+fmt(t.f)+'g</small></div>'}).join('')+'</div>').join('')}
 function saveOption(i){notify('گزینه '+state[i].selected+' آماده ثبت است؛ برای ذخیره قطعی، دکمه ثبت تمام برنامه را بزن.')} 
 function saveAll(){return saveAllToTrainee()}
 function notify(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';clearTimeout(window.nt);window.nt=setTimeout(()=>e.style.display='none',3000)}
+restoreNutritionDraft();
 draw();
+loadNutritionTemplates();
 </script><script>
 (function(){
  var scheduled=false;
@@ -208,6 +511,25 @@ let builderTrainee=null,builderBusy=false,builderExistingNotes='';
 function setConnectionStatus(msg,ok=false){const el=document.getElementById('connectionStatus');if(el){el.textContent=msg;el.classList.toggle('connection-ok',ok);el.classList.toggle('connection-warn',!ok)}}
 function parentBridge(){if(window.parent===window||window.location.origin!==window.parent.location.origin)throw new Error('این صفحه باید از داخل پنل مربی باز شود.');const b=window.parent.sehNutritionBuilderBridge;if(!b)throw new Error('پل ارتباطی پنل مربی هنوز آماده نیست؛ صفحه را یک‌بار تازه‌سازی کن.');return b}
 function toPersianDigits(n){return String(n).replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)])}
+function normalizeDateDigits(v){return String(v||'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^0-9]/g,'')}
+function formatJalaliInput(input){let d=normalizeDateDigits(input.value).slice(0,8);if(d.length>4)d=d.slice(0,4)+'/'+d.slice(4,6)+(d.length>6?'/'+d.slice(6,8):'');else if(d.length>4)d=d.slice(0,4)+'/'+d.slice(4);input.value=toPersianDigits(d)}
+const persianCalendar=new Intl.DateTimeFormat('en-US-u-ca-persian-nu-latn',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:'UTC'});
+function isoToJalali(iso){if(!iso)return '';const m=String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return '';const parts=persianCalendar.formatToParts(new Date(Date.UTC(+m[1],+m[2]-1,+m[3])));const p={};parts.forEach(x=>p[x.type]=x.value);return toPersianDigits(p.year+'/'+p.month+'/'+p.day)}
+function jalaliToIso(value){const d=normalizeDateDigits(value);if(d.length!==8)return null;const jy=+d.slice(0,4),jm=+d.slice(4,6),jd=+d.slice(6,8);if(jy<1300||jy>1500||jm<1||jm>12||jd<1||jd>31)return null;const start=Date.UTC(jy+621,2,18),end=Date.UTC(jy+622,3,5);for(let t=start;t<=end;t+=86400000){const parts=persianCalendar.formatToParts(new Date(t)),p={};parts.forEach(x=>p[x.type]=x.value);if(+p.year===jy&&+p.month===jm&&+p.day===jd){const dt=new Date(t);return dt.getUTCFullYear()+'-'+String(dt.getUTCMonth()+1).padStart(2,'0')+'-'+String(dt.getUTCDate()).padStart(2,'0')}}return null}
+const jalaliMonthNames=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+const jalaliWeekNames=['ش','ی','د','س','چ','پ','ج'];
+let activeJalaliPicker=null;
+function jalaliPartsFromIso(iso){const s=isoToJalali(iso);const d=normalizeDateDigits(s);return d.length===8?{year:+d.slice(0,4),month:+d.slice(4,6),day:+d.slice(6,8)}:null}
+function jalaliMonthLength(y,m){let n=0;for(let d=1;d<=31;d++){if(jalaliToIso(String(y)+String(m).padStart(2,'0')+String(d).padStart(2,'0')))n=d;else if(n)break}return n}
+function todayJalaliParts(){return jalaliPartsFromIso(new Date().toISOString().slice(0,10))}
+function openJalaliPicker(inputId){const input=document.getElementById(inputId),panel=document.getElementById('picker-'+inputId);if(!input||!panel)return;if(activeJalaliPicker&&activeJalaliPicker!==panel)activeJalaliPicker.hidden=true;activeJalaliPicker=panel;const selected=jalaliPartsFromIso(jalaliToIso(input.value)||'');const today=todayJalaliParts();panel.dataset.inputId=inputId;panel.dataset.year=(selected||today).year;panel.dataset.month=(selected||today).month;renderJalaliPicker(panel);panel.hidden=false}
+function renderJalaliPicker(panel){const y=Number(panel.dataset.year),m=Number(panel.dataset.month),input=document.getElementById(panel.dataset.inputId),chosen=jalaliPartsFromIso(jalaliToIso(input?.value)||''),today=todayJalaliParts(),firstIso=jalaliToIso(String(y)+String(m).padStart(2,'0')+'01'),firstDow=firstIso?(new Date(firstIso+'T00:00:00Z').getUTCDay()+1)%7:0,days=jalaliMonthLength(y,m);let html='<div class="jalali-picker-head"><button type="button" aria-label="ماه قبل" onclick="event.preventDefault();event.stopPropagation();shiftJalaliPicker(-1)">‹</button><strong>'+toPersianDigits(jalaliMonthNames[m-1]+' '+y)+'</strong><button type="button" aria-label="ماه بعد" onclick="event.preventDefault();event.stopPropagation();shiftJalaliPicker(1)">›</button></div><div class="jalali-picker-grid">'+jalaliWeekNames.map(x=>'<span>'+x+'</span>').join('');for(let i=0;i<firstDow;i++)html+='<span></span>';for(let d=1;d<=days;d++){const iso=jalaliToIso(String(y)+String(m).padStart(2,'0')+String(d).padStart(2,'0')),sel=chosen&&chosen.year===y&&chosen.month===m&&chosen.day===d,istoday=today&&today.year===y&&today.month===m&&today.day===d;html+='<button type="button" class="'+(sel?'selected ':istoday?'today':'')+'" onclick="chooseJalaliDate('+y+','+m+','+d+')">'+toPersianDigits(d)+'</button>'}html+='</div><div class="jalali-picker-foot"><button type="button" onclick="chooseTodayJalali()">امروز</button><button type="button" onclick="closeJalaliPicker()">بستن</button></div>';panel.innerHTML=html}
+function shiftJalaliPicker(delta){if(!activeJalaliPicker)return;let y=Number(activeJalaliPicker.dataset.year),m=Number(activeJalaliPicker.dataset.month)+delta;if(m<1){m=12;y--}if(m>12){m=1;y++}activeJalaliPicker.dataset.year=y;activeJalaliPicker.dataset.month=m;renderJalaliPicker(activeJalaliPicker)}
+function chooseJalaliDate(y,m,d){if(!activeJalaliPicker)return;const input=document.getElementById(activeJalaliPicker.dataset.inputId),iso=jalaliToIso(String(y)+String(m).padStart(2,'0')+String(d).padStart(2,'0'));if(!iso)return;input.value=isoToJalali(iso);input.dispatchEvent(new Event('change',{bubbles:true}));closeJalaliPicker()}
+function chooseTodayJalali(){const t=todayJalaliParts();if(t)chooseJalaliDate(t.year,t.month,t.day)}
+function closeJalaliPicker(){if(activeJalaliPicker)activeJalaliPicker.hidden=true;activeJalaliPicker=null}
+document.addEventListener('click',e=>{if(!activeJalaliPicker)return;if(e.target.closest('.jalali-picker-head button')){e.preventDefault();e.stopPropagation();return}if(activeJalaliPicker.contains(e.target)||e.target.closest('.date-picker-trigger'))return;closeJalaliPicker()});
+function bindJalaliDateInputs(){[['planStartInput','planStart'],['planEndInput','planEnd']].forEach(([visibleId,hiddenId])=>{const input=document.getElementById(visibleId);if(!input||input.dataset.jalaliBound)return;input.dataset.jalaliBound='1';input.addEventListener('input',()=>formatJalaliInput(input));input.addEventListener('blur',()=>{if(!input.value.trim())return;const iso=jalaliToIso(input.value);if(iso)input.value=isoToJalali(iso);});});}
 function builderMealName(index,optionNo){return dbMealNames[index]+(optionNo===1?'':toPersianDigits(optionNo))}
 function decodeMealName(name){const n=String(name||'').normalize('NFC').replace(/[\s\u200c\u200f]/g,'');for(let i=0;i<dbMealNames.length;i++){const base=dbMealNames[i].replace(/[\s\u200c\u200f]/g,'');if(!n.startsWith(base))continue;const tail=n.slice(base.length).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));const opt=tail?Number(tail):1;if(Number.isInteger(opt)&&opt>=1&&opt<=4)return {index:i,opt}}return null}
 function fromDbUnitNote(note){const m=String(note||'').match(/\[seh-gpu:([0-9]+(?:\.[0-9]+)?)\]/);return m?Number(m[1]):null}
@@ -254,6 +576,12 @@ async function loadBuilderContext(){
   document.getElementById('planTitle').value=ctx.plan?.title||'برنامه غذایی';
   document.getElementById('planStart').value=ctx.plan?.start_date||new Date().toISOString().slice(0,10);
   document.getElementById('planEnd').value=ctx.plan?.end_date||'';
+  document.getElementById('planTitleInput').value=ctx.plan?.title||'برنامه غذایی';
+  bindJalaliDateInputs();
+  const startIso=ctx.plan?.start_date||new Date().toISOString().slice(0,10);
+  document.getElementById('planStartInput').value=isoToJalali(startIso);
+  document.getElementById('planEndInput').value=isoToJalali(ctx.plan?.end_date||'');
+  document.getElementById('planNotesInput').value=ctx.plan?.notes||'';
   const savedTargets={daily_calories:ctx.plan?.daily_calories,protein_target:ctx.plan?.protein_target,carbs_target:ctx.plan?.carbs_target,fat_target:ctx.plan?.fat_target};
   const hasSavedTargets=Object.values(savedTargets).some(v=>v!==null&&v!==undefined&&v!=='');
   if(changedTrainee||!targetManualDirty){const next={};['daily_calories','protein_target','carbs_target','fat_target'].forEach(k=>{const v=savedTargets[k];next[k]=(v!==null&&v!==undefined&&v!=='')?v:(calculated?calculated[k]:'')});syncTargetFields(next)}
@@ -315,19 +643,38 @@ async function saveAllToTrainee(){
  const meals=[];
  for(let i=0;i<state.length;i++){
   const m=state[i];
-  for(const n of m.active){
+  for(const [displayIndex,n] of [...m.active].sort((a,b)=>a-b).entries()){
    const o=m.options[n]||{rows:[],target:0};
    if(o.rows.some(r=>!Number.isFinite(Number(r.amount))||Number(r.amount)<=0)){notify('مقدار غذاها را بررسی کن.');return}
-   meals.push({meal_index:i,option_no:n,target:Number(o.target)||0,foods:o.rows.map(r=>({food_id:Number(r.foodId),amount:Number(r.amount),unit:String(r.unit||'گرم'),grams_per_unit:r.gramsPerUnit||null,recipe_name:r.recipeName||null}))});
+   meals.push({meal_index:i,option_no:displayIndex+1,target:Number(o.target)||0,foods:o.rows.map(r=>({food_id:Number(r.foodId),amount:Number(r.amount),unit:String(r.unit||'گرم'),grams_per_unit:r.gramsPerUnit||null,recipe_name:r.recipeName||null}))});
   }
  }
  if(meals.length>32){notify('تعداد گزینه‌های برنامه بیشتر از حد مجاز است.');return}
- const plan={title:document.getElementById('planTitle').value.trim()||'برنامه غذایی',start_date:document.getElementById('planStart').value||null,end_date:document.getElementById('planEnd').value||null,daily_calories:Number(document.getElementById('targetCaloriesInput').value)||null,protein_target:Number(document.getElementById('targetProteinInput').value)||null,carbs_target:Number(document.getElementById('targetCarbsInput').value)||null,fat_target:Number(document.getElementById('targetFatInput').value)||null,notes:builderExistingNotes}
+ const primaryMeals=meals.filter(x=>x.option_no===1);
+ const totalFoodRows=meals.reduce((sum,x)=>sum+x.foods.length,0);
+ if(primaryMeals.length!==8||primaryMeals.some(x=>x.foods.length===0)||totalFoodRows===0){
+  notify('ثبت متوقف شد: هر ۸ وعده اصلی باید حداقل یک ماده غذایی داشته باشد. قالب را دوباره انتخاب و بررسی کن.');
+  setConnectionStatus('ثبت انجام نشد؛ اطلاعات ناقص است و چیزی در پرونده شاگرد تغییر نکرد.',false);
+  return;
+ }
+ const titleValue=document.getElementById('planTitleInput').value.trim()||'برنامه غذایی';
+ const startText=document.getElementById('planStartInput').value.trim();
+ const endText=document.getElementById('planEndInput').value.trim();
+ const startValue=startText?jalaliToIso(startText):null;
+ const endValue=endText?jalaliToIso(endText):null;
+ if(startText&&!startValue){notify('تاریخ شروع را به‌صورت شمسی و معتبر مثل ۱۴۰۵/۰۸/۲۰ وارد کن.');document.getElementById('planStartInput').focus();return}
+ if(endText&&!endValue){notify('تاریخ پایان را به‌صورت شمسی و معتبر مثل ۱۴۰۵/۰۹/۲۰ وارد کن.');document.getElementById('planEndInput').focus();return}
+ if(startValue&&endValue&&endValue<startValue){notify('تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.');return}
+ const notesValue=document.getElementById('planNotesInput').value.trim();
+ const plan={title:titleValue,start_date:startValue,end_date:endValue,daily_calories:Number(document.getElementById('targetCaloriesInput').value)||null,protein_target:Number(document.getElementById('targetProteinInput').value)||null,carbs_target:Number(document.getElementById('targetCarbsInput').value)||null,fat_target:Number(document.getElementById('targetFatInput').value)||null,notes:notesValue}
  builderBusy=true;const btn=document.getElementById('saveAllBtn');btn.disabled=true;btn.textContent='در حال ثبت امن برنامه…';
  try{
   const result=await parentBridge().save({trainee_id:String(builderTrainee.id),plan,meals});
-  setConnectionStatus('برنامه غذایی برای '+(builderTrainee.name||'شاگرد')+' با موفقیت ثبت شد؛ نسخه قبلی حفظ شده است.',true);
-  notify('برنامه در پرونده شاگرد ثبت شد.');
+  if(!result||!Number.isFinite(Number(result.food_rows))||Number(result.food_rows)<1||Number(result.meal_options)<8){
+   throw new Error('تأیید نهایی سرور نشان می‌دهد غذاها یا وعده‌ها کامل ثبت نشده‌اند؛ برنامه را دوباره بررسی کن.');
+  }
+  setConnectionStatus('برنامه غذایی کامل برای '+(builderTrainee.name||'شاگرد')+' با موفقیت ثبت شد؛ نسخه قبلی حفظ شده است.',true);
+  notify('برنامه کامل در پرونده شاگرد ثبت شد.');
  }catch(e){setConnectionStatus('ذخیره انجام نشد: '+e.message,false);notify('ذخیره انجام نشد؛ اطلاعات واردشده پاک نشده است.')}
  finally{builderBusy=false;btn.disabled=false;btn.textContent='💾 ثبت تمام برنامه غذایی در پرونده شاگرد'}
 }

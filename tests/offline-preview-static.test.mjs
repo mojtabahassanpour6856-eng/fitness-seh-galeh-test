@@ -58,8 +58,29 @@ test('root PWA manifest references an existing install icon',()=>{
  assert.ok(fs.readFileSync(rootManifest.icons[0].src,'utf8').includes('<svg'));
 });
 
-test('root service worker remains notification-only and does not cache app data',()=>{
- assert.ok(rootSw.includes("addEventListener('push'"));
- assert.ok(rootSw.includes("addEventListener('notificationclick'"));
- assert.equal(/addEventListener\(['"]fetch['"]|caches\.|cache\.put/i.test(rootSw),false);
+test('root service worker caches only same-origin static shell assets and handles notifications',()=>{
+ assert.match(rootSw,/const\s+SHELL_ASSETS\s*=/);
+ assert.match(rootSw,/SHELL_ASSET_PATHS\.has\(relativePath\)/);
+ assert.match(rootSw,/if\s*\(\s*!isInAppScope\(url\)\s*\)\s*return/);
+ assert.match(rootSw,/addEventListener\('push'/);
+ assert.match(rootSw,/addEventListener\('notificationclick'/);
+ assert.doesNotMatch(rootSw,/\/rest\/v1\/|\/functions\/v1\/|Authorization|service_role/i);
+});
+
+
+test('root app is isolated to the TEST Supabase project and exposes no privileged key',()=>{
+ assert.ok(rootHtml.includes('https://udptdznbvewkublvzmtm.supabase.co'));
+ assert.doesNotMatch(rootHtml,/qfakyudgidsumeuoqoot/i);
+ assert.doesNotMatch(rootHtml,/service_role|sb_secret_[A-Za-z0-9_-]+/i);
+});
+
+test('every root service-worker shell asset exists in the test repository',()=>{
+ const start=rootSw.indexOf('const SHELL_ASSETS = [');
+ assert.ok(start>=0,'root service-worker shell asset list should be present');
+ const end=rootSw.indexOf('];',start);
+ assert.ok(end>start,'root service-worker shell asset list should close');
+ const block=rootSw.slice(start,end);
+ const assets=[...block.matchAll(/'([^']+)'/g)].map(item=>item[1]);
+ assert.ok(assets.length>=10,'full test app shell should include its supporting assets');
+ for(const asset of assets) assert.ok(fs.existsSync(asset),`missing test shell asset: ${asset}`);
 });
