@@ -26,6 +26,33 @@ main{max-width:1320px;margin:auto;padding:28px 20px 50px}.title{display:flex;jus
 footer{text-align:center;color:#a59a89;font-size:11px;padding:22px}
 @media(max-width:950px){.layout{grid-template-columns:1fr 1fr}.anatomy-card{grid-column:1/-1;grid-row:1}.anatomy-wrap{min-height:400px}.anatomy-wrap svg{height:370px}}
 @media(max-width:600px){header{padding:14px}.badge{display:none}main{padding:20px 12px}.title{display:block}.title h1{font-size:21px}.layout{grid-template-columns:1fr}.anatomy-card{grid-column:auto;grid-row:auto}.anatomy-wrap{min-height:370px}.anatomy-wrap svg{height:350px}.muscle-list{grid-template-columns:1fr 1fr}}
+
+/* Visual refinement inspired by the approved cream-and-gold concept */
+header{background:linear-gradient(110deg,#fffaf0,#f3e2bd 42%,#fffdf8);box-shadow:0 3px 18px #8a682015}
+.mark{box-shadow:0 5px 12px #9e773633}
+main{max-width:1500px}
+.layout{grid-template-columns:minmax(210px,.72fr) minmax(390px,1.25fr) minmax(300px,.95fr);gap:14px}
+.card{border-radius:22px;padding:20px}
+.anatomy-card{background:linear-gradient(160deg,#fffdf9,#f8f1e8);border-color:#e8d7b7}
+.anatomy-wrap{min-height:520px;background:radial-gradient(ellipse at 50% 40%,#fff 0,#fffaf2 54%,#f2e9dc 100%);border:1px solid #ead9b8}
+.anatomy-wrap svg{height:475px;filter:drop-shadow(0 8px 7px #76644a16)}
+.muscle{stroke-width:1.8}
+.muscle.selected{fill:#e74b42;stroke:#a92e2b;filter:drop-shadow(0 0 5px #e74b4266)}
+.muscle-btn{padding:12px 8px;border-radius:13px;font-weight:600}
+.muscle-btn.active{background:linear-gradient(120deg,#fff0e9,#fbe0d8);box-shadow:inset 0 0 0 1px #e7a19a}
+.tabs{background:#f5eee2;padding:4px;border-radius:14px}
+.tab{border:0}.tab.active{background:linear-gradient(120deg,#d6ad60,#a97b2e);color:#fff;box-shadow:0 3px 9px #a77c3733}
+.exercise-list{gap:10px}
+.exercise{display:flex;align-items:center;gap:12px;min-height:78px;padding:10px;border-radius:15px;transition:.18s}
+.exercise:before{content:"🏋️";display:grid;place-items:center;flex:0 0 68px;height:55px;border-radius:11px;background:linear-gradient(135deg,#f4e6cc,#fffaf0);font-size:26px}
+.exercise b{font-size:13px}.exercise small{line-height:1.8}
+.exercise.active{border:2px solid #d6a74f;background:#fff8e9;box-shadow:0 4px 13px #b48a3b18}
+.detail{background:linear-gradient(130deg,#fbf5e9,#fffdf8);border-color:#ead9b8;border-radius:16px}
+.add{background:linear-gradient(110deg,#d6a844,#a97622);box-shadow:0 5px 13px #a9762230}
+.plan{border-color:#e8d7b7}
+@media(max-width:950px){.layout{grid-template-columns:1fr 1fr}.anatomy-wrap{min-height:440px}.anatomy-wrap svg{height:410px}}
+@media(max-width:600px){.layout{grid-template-columns:1fr}.anatomy-wrap{min-height:390px}.anatomy-wrap svg{height:370px}.card{padding:15px}}
+
 </style>
 </head>
 <body>
