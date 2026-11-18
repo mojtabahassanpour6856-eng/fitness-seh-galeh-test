@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>آناتومی هوشمند تمرین | پیش‌نمونه</title>
+<style>
+:root{--ink:#39352f;--muted:#8b8173;--gold:#b38a43;--gold2:#ead9b7;--paper:#fbf8f1;--card:#fffdf9;--line:#eee5d6;--red:#d84b48;--orange:#e6a04b;--shadow:0 10px 30px #5b48200d}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Tahoma,"Segoe UI",sans-serif}
+header{padding:22px clamp(16px,4vw,48px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#fffdf9}
+.brand{display:flex;align-items:center;gap:12px}.mark{width:44px;height:44px;border-radius:14px;background:linear-gradient(145deg,#d5b777,#9e7736);display:grid;place-items:center;color:white;font-size:22px}.brand b{display:block;font-size:17px}.brand small{color:var(--muted)}
+.badge{border:1px solid var(--gold2);border-radius:30px;padding:8px 14px;color:#8e6b31;font-size:12px;background:#fcf7eb}
+main{max-width:1320px;margin:auto;padding:28px 20px 50px}.title{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:22px}.title h1{font-size:25px;margin:0 0 8px}.title p{margin:0;color:var(--muted);font-size:13px;line-height:1.8}
+.layout{display:grid;grid-template-columns:minmax(230px,.85fr) minmax(330px,1.2fr) minmax(270px,1fr);gap:18px;align-items:stretch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px}
+.card h2{font-size:16px;margin:0 0 15px}.sub{font-size:12px;color:var(--muted);line-height:1.8}
+.muscle-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}.muscle-btn,.tab,.exercise{font:inherit;cursor:pointer}
+.muscle-btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 8px;text-align:center;font-size:12px;color:#665e53}.muscle-btn.active{background:#fff0ed;border-color:#e9aaa4;color:#a83230;font-weight:bold}
+.tabs{display:flex;gap:8px;margin:12px 0}.tab{flex:1;border:1px solid var(--line);background:white;border-radius:10px;padding:9px;color:#746b5e}.tab.active{background:#f5eddd;border-color:#d9c18f;color:#795b26}
+.anatomy-wrap{background:radial-gradient(ellipse at 50% 38%,#fff 0,#fbf7ef 70%);border:1px solid var(--line);border-radius:16px;min-height:480px;display:grid;place-items:center;position:relative;overflow:hidden}
+.anatomy-wrap svg{height:440px;max-width:100%;width:auto}.muscle{fill:#c9bba7;stroke:#a99b88;stroke-width:1.5;cursor:pointer;transition:.18s}.muscle:hover{fill:#e7a29b}.muscle.selected{fill:var(--red);stroke:#a92e2b}.bone{fill:#e8dfd0;stroke:#c9bda9;stroke-width:2}.bodyline{stroke:#c9bda9;stroke-width:2;fill:none}
+.legend{display:flex;justify-content:center;gap:15px;margin-top:12px;font-size:11px;color:var(--muted)}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:5px;background:var(--red)}
+.exercise-list{display:grid;gap:9px}.exercise{width:100%;text-align:right;border:1px solid var(--line);background:#fff;border-radius:13px;padding:12px;color:var(--ink)}.exercise.active{border-color:#d7bd89;background:#fcf7eb}.exercise b{font-size:13px;display:block;margin-bottom:5px}.exercise small{color:var(--muted);font-size:11px}
+.detail{margin-top:14px;padding:14px;border-radius:14px;background:#f8f3e9;border:1px solid #eee1c8}.detail h3{margin:0 0 8px;font-size:14px}.tags{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}.tag{font-size:10px;padding:6px 8px;border-radius:20px;background:#f9e4e0;color:#a43d38}.tag.secondary{background:#f8ebd5;color:#95672b}
+.add{width:100%;border:0;border-radius:11px;padding:12px;margin-top:12px;background:linear-gradient(100deg,#c6a15d,#a77c37);color:#fff;font-weight:bold;cursor:pointer;font-size:13px}
+.plan{margin-top:18px}.plan-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}.empty{color:var(--muted);font-size:12px}
+footer{text-align:center;color:#a59a89;font-size:11px;padding:22px}
+@media(max-width:950px){.layout{grid-template-columns:1fr 1fr}.anatomy-card{grid-column:1/-1;grid-row:1}.anatomy-wrap{min-height:400px}.anatomy-wrap svg{height:370px}}
+@media(max-width:600px){header{padding:14px}.badge{display:none}main{padding:20px 12px}.title{display:block}.title h1{font-size:21px}.layout{grid-template-columns:1fr}.anatomy-card{grid-column:auto;grid-row:auto}.anatomy-wrap{min-height:370px}.anatomy-wrap svg{height:350px}.muscle-list{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="mark">✦</div><div><b>فیتنس سه‌قلعه | مربی من</b><small>ابزار هوشمند طراحی تمرین</small></div></div><span class="badge">پیش‌نمایش آزمایشی · بدون اتصال به اطلاعات شاگردان</span></header>
+<main>
+<div class="title"><div><h1>آناتومی هوشمند تمرین</h1><p>عضله موردنظر را از فهرست یا روی تصویر انتخاب کنید؛ حرکات مرتبط نمایش داده می‌شوند.</p></div><span class="sub">نسخه مفهومی تعاملی</span></div>
+<div class="layout">
+<section class="card">
+<h2>گروه‌های عضلانی</h2><div class="sub">انتخاب سریع ناحیه هدف</div>
+<div class="muscle-list" id="muscleButtons"></div>
+<div class="detail" style="margin-top:18px"><b style="font-size:13px">راهنمای رنگ‌ها</b><p class="sub"><span class="dot"></span>عضله انتخاب‌شده</p><p class="sub"><span class="dot" style="background:#e6a04b"></span>عضله کمکی (در مرحله بعد)</p></div>
+</section>
+<section class="card anatomy-card">
+<h2>نقشه عضلات بدن</h2><div class="tabs"><button class="tab active" data-view="front">نمای جلو</button><button class="tab" data-view="back">نمای پشت</button></div>
+<div class="anatomy-wrap"><svg viewBox="0 0 300 510" role="img" aria-label="تصویر شماتیک عضلات بدن">
+<circle class="bone" cx="150" cy="43" r="28"/><path class="bone" d="M133 72 L167 72 174 91 126 91Z"/>
+<path class="bone" d="M118 92 Q150 80 182 92 L204 190 Q190 216 184 265 L116 265 Q110 216 96 190Z"/>
+<path class="bone" d="M116 95 Q88 99 76 125 L55 222 Q53 239 66 242 Q79 244 84 226 L111 158Z"/>
+<path class="bone" d="M184 95 Q212 99 224 125 L245 222 Q247 239 234 242 Q221 244 216 226 L189 158Z"/>
+<path class="bone" d="M119 263 L181 263 174 365 160 365 150 290 140 365 126 365Z"/>
+<path class="bone" d="M126 365 L140 365 133 485 Q123 495 116 484Z M160 365 L174 365 184 484 Q177 495 167 485Z"/>
+<g id="frontMuscles">
+<path class="muscle" data-id="upper-chest" d="M112 112 Q130 94 148 112 L146 142 Q126 145 112 128Z"/>
+<path class="muscle" data-id="upper-chest" d="M188 112 Q170 94 152 112 L154 142 Q174 145 188 128Z"/>
+<path class="muscle" data-id="chest" d="M110 132 Q130 144 148 145 L146 174 Q119 174 108 153Z"/>
+<path class="muscle" data-id="chest" d="M190 132 Q170 144 152 145 L154 174 Q181 174 192 153Z"/>
+<path class="muscle" data-id="lower-chest" d="M110 155 Q128 177 146 174 L145 190 Q121 187 108 169Z"/>
+<path class="muscle" data-id="lower-chest" d="M190 155 Q172 177 154 174 L155 190 Q179 187 192 169Z"/>
+<path class="muscle" data-id="shoulders" d="M99 102 Q112 92 123 105 L112 139 Q94 137 91 120Z"/>
+<path class="muscle" data-id="shoulders" d="M201 102 Q188 92 177 105 L188 139 Q206 137 209 120Z"/>
+<path class="muscle" data-id="biceps" d="M83 143 Q97 141 101 158 L91 206 Q78 207 77 190Z"/>
+<path class="muscle" data-id="biceps" d="M217 143 Q203 141 199 158 L209 206 Q222 207 223 190Z"/>
+<path class="muscle" data-id="abs" d="M132 190 L148 190 147 251 132 251Z"/>
+<path class="muscle" data-id="abs" d="M152 190 L168 190 168 251 153 251Z"/>
+<path class="muscle" data-id="quads" d="M119 270 L146 270 137 352 119 358Z"/>
+<path class="muscle" data-id="quads" d="M154 270 L181 270 181 358 163 352Z"/>
+</g>
+<g id="backMuscles" style="display:none">
+<path class="muscle" data-id="traps" d="M119 93 L150 83 181 93 174 137 150 154 126 137Z"/>
+<path class="muscle" data-id="lats" d="M119 139 L145 153 139 220 111 196 103 160Z"/>
+<path class="muscle" data-id="lats" d="M181 139 L155 153 161 220 189 196 197 160Z"/>
+<path class="muscle" data-id="triceps" d="M82 143 L99 145 94 204 78 207Z"/>
+<path class="muscle" data-id="triceps" d="M218 143 L201 145 206 204 222 207Z"/>
+<path class="muscle" data-id="glutes" d="M116 224 Q150 213 184 224 L180 267 120 267Z"/>
+<path class="muscle" data-id="hamstrings" d="M119 270 L147 270 139 353 118 358Z"/>
+<path class="muscle" data-id="hamstrings" d="M153 270 L181 270 182 358 161 353Z"/>
+<path class="muscle" data-id="calves" d="M119 370 L138 370 132 470 116 482Z"/>
+<path class="muscle" data-id="calves" d="M162 370 L181 370 184 482 168 470Z"/>
+</g></svg></div><div class="legend"><span><i class="dot"></i>ناحیه انتخاب‌شده</span><span>برای تغییر ناحیه روی عضله بزنید</span></div>
+</section>
+<section class="card">
+<h2>حرکات پیشنهادی</h2><div class="sub" id="selectedLabel">ابتدا یک عضله انتخاب کنید</div><div class="exercise-list" id="exerciseList" style="margin-top:14px"></div>
+<div class="detail" id="exerciseDetail"><h3>جزئیات حرکت</h3><p class="sub">با انتخاب یک حرکت، عضلات هدف و نکات اجرایی در این قسمت نمایش داده می‌شود.</p></div>
+<button class="add" id="addBtn" disabled style="opacity:.55">＋ افزودن به برنامه تمرینی</button>
+</section>
+</div>
+<section class="card plan"><h2>پیش‌نمایش جلسه تمرینی</h2><div id="planList" class="empty">هنوز حرکتی به این پیش‌نمایش اضافه نشده است.</div></section>
+</main><footer>FITNESS SEH GALEH · نمونه اولیه تعاملی · اطلاعات این صفحه آزمایشی است.</footer>
+<script>
+const groups=[
+{id:"upper-chest",name:"بالاسینه",view:"front"},{id:"chest",name:"سینه میانی",view:"front"},{id:"lower-chest",name:"زیرسینه",view:"front"},{id:"shoulders",name:"سرشانه",view:"front"},{id:"biceps",name:"جلو بازو",view:"front"},{id:"abs",name:"شکم",view:"front"},{id:"quads",name:"چهارسر ران",view:"front"},
+{id:"traps",name:"کول",view:"back"},{id:"lats",name:"زیربغل",view:"back"},{id:"triceps",name:"پشت بازو",view:"back"},{id:"glutes",name:"باسن",view:"back"},{id:"hamstrings",name:"همسترینگ",view:"back"},{id:"calves",name:"ساق پا",view:"back"}];
+const exercises={
+"upper-chest":[["پرس بالاسینه دمبل","هالتر/دمبل","بالاسینه","سرشانه جلویی و پشت بازو"],["پرس بالاسینه هالتر","هالتر","بالاسینه","سرشانه جلویی و پشت بازو"],["فلای سیم‌کش از پایین","سیم‌کش","بالاسینه","جلودلتوئید"]],
+"chest":[["پرس سینه دمبل","دمبل","سینه میانی","سه‌سر بازویی و سرشانه جلویی"],["پرس سینه دستگاه","دستگاه","سینه میانی","سه‌سر بازویی"]],
+"lower-chest":[["دیپ سینه","وزن بدن","سینه پایینی","سه‌سر بازویی"],["کراس‌اور از بالا به پایین","سیم‌کش","سینه پایینی","دلتوئید جلویی"]],
+"shoulders":[["پرس سرشانه دمبل","دمبل","سرشانه","سه‌سر بازویی"],["نشر جانب دمبل","دمبل","دلتوئید میانی","تراپز"]],
+"biceps":[["جلو بازو دمبل تناوبی","دمبل","جلو بازو","براکیالیس"],["جلو بازو هالتر","هالتر","جلو بازو","ساعد"]],
+"abs":[["کرانچ","وزن بدن","راست شکمی","مایل شکمی"],["پلانک","وزن بدن","عضلات مرکزی","سرینی"]],
+"quads":[["اسکوات","هالتر","چهارسر ران","سرینی و همسترینگ"]],
+"traps":[["شراگ دمبل","دمبل","تراپز","ساعد"]],
+"lats":[["لت سیم‌کش از جلو","سیم‌کش","پشتی بزرگ","جلو بازو و گرد بزرگ"],["قایقی سیم‌کش","سیم‌کش","میانی پشت","جلو بازو"]],
+"triceps":[["پشت بازو سیم‌کش","سیم‌کش","سه‌سر بازویی","—"]],
+"glutes":[["هیپ تراست","هالتر","سرینی بزرگ","همسترینگ"]],
+"hamstrings":[["پشت پا دستگاه","دستگاه","همسترینگ","ساق پا"]],
+"calves":[["ساق ایستاده","دستگاه/وزن بدن","دوقلو و نعلی","—"]]};
+let selectedGroup=null,selectedExercise=null,view="front",plan=[];
+const $=s=>document.querySelector(s);
+function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'">'+g.name+'</button>').join("");}
+function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(g.view!==view)setView(g.view);selectedExercise=null;renderGroups();document.querySelectorAll(".muscle").forEach(el=>el.classList.toggle("selected",el.dataset.id===id));$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>یک حرکت را انتخاب کنید تا عضلات درگیر و نکات آن نمایش داده شود.</p>";$("#addBtn").disabled=true;$("#addBtn").style.opacity=".55";}
+function setView(v){view=v;$("#frontMuscles").style.display=v==="front"?"":"none";$("#backMuscles").style.display=v==="back"?"":"none";document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.view===v));}
+function renderExercises(){const list=exercises[selectedGroup]||[];$("#exerciseList").innerHTML=list.map((e,i)=>'<button class="exercise '+(selectedExercise===i?'active':'')+'" data-ex="'+i+'"><b>'+e[0]+'</b><small>تجهیزات: '+e[1]+' · عضله اصلی: '+e[2]+'</small></button>').join("")||'<p class="sub">برای این عضله هنوز حرکتی ثبت نشده است.</p>';}
+function chooseExercise(i){selectedExercise=i;const e=exercises[selectedGroup][i];$("#exerciseDetail").innerHTML='<h3>'+e[0]+'</h3><p class="sub">تجهیزات: '+e[1]+'</p><div class="tags"><span class="tag">عضله اصلی: '+e[2]+'</span><span class="tag secondary">عضلات کمکی: '+e[3]+'</span></div><p class="sub">آموزش تصویری و نمایش مرحله‌به‌مرحله اجرای حرکت در فاز بعدی به این بخش متصل می‌شود.</p>';$("#addBtn").disabled=false;$("#addBtn").style.opacity="1";renderExercises();}
+$("#muscleButtons").addEventListener("click",e=>{const b=e.target.closest("[data-group]");if(b)chooseGroup(b.dataset.group);});
+document.querySelector(".anatomy-wrap").addEventListener("click",e=>{const m=e.target.closest(".muscle");if(m)chooseGroup(m.dataset.id);});
+$("#exerciseList").addEventListener("click",e=>{const b=e.target.closest("[data-ex]");if(b)chooseExercise(+b.dataset.ex);});
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{setView(t.dataset.view);selectedGroup=null;selectedExercise=null;document.querySelectorAll(".muscle").forEach(m=>m.classList.remove("selected"));renderGroups();$("#selectedLabel").textContent="ابتدا یک عضله انتخاب کنید";$("#exerciseList").innerHTML="";}));
+$("#addBtn").addEventListener("click",()=>{if(selectedExercise===null)return;const e=exercises[selectedGroup][selectedExercise];plan.push(e[0]);$("#planList").innerHTML=plan.map((n,i)=>'<div class="plan-row"><span>'+(i+1)+'. '+n+'</span><span>✓</span></div>').join("");});
+renderGroups();
+</script></body></html>
