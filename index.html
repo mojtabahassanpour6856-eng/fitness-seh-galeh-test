@@ -3086,150 +3086,7 @@ window.loadDashboard = loadDashboard;
 
 
 
-<!-- SEH OTP TRAINEE AUTH V2: TEST ONLY -->
-<script id="seh-otp-trainee-auth-v2">
-(function(){
- 'use strict';
- const $=id=>document.getElementById(id);
- const REG_KEY='seh_otp_pending_registration_v2';
- let pollTimer=null, busy=false;
- function norm(v){
-  let p=String(v||'').trim().replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[\s()-]/g,'');
-  if(/^09\d{9}$/.test(p))p='+98'+p.slice(1);else if(/^989\d{9}$/.test(p))p='+'+p;else if(/^00989\d{9}$/.test(p))p='+'+p.slice(2);return p;
- }
- function sec(){return Array.from(crypto.getRandomValues(new Uint8Array(32))).map(x=>x.toString(16).padStart(2,'0')).join('');}
- function msg(t,ok){const e=$('sehOtpStatus');if(e){e.textContent=t;e.style.color=ok?'#167342':'#a35b12';}}
- function render(){
-  const box=$('traineeLoginBox');if(!box||box.dataset.sehOtpV2==='1')return;
-  box.dataset.sehOtpV2='1';
-  box.innerHTML=`
-   <div class="trainee-auth-block" style="background:#fffaf0;color:#342b1b;border:1px solid #dfc98e;border-radius:12px;padding:14px">
-    <h3>🔐 ورود با کد پیامکی</h3>
-    <p class="muted" style="color:#675a3c">شماره موبایل خود را وارد کنید. کد تأیید برای ورود به همان پرونده قبلی یا ثبت درخواست عضویت ارسال می‌شود.</p>
-    <label>شماره موبایل</label><input id="sehOtpPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09121234567">
-    <button type="button" id="sehOtpSend" style="width:100%;margin-top:8px">📩 ارسال کد پیامکی</button>
-    <div id="sehOtpVerifyBox" style="display:none;margin-top:12px">
-     <label>کد پیامکی</label><input id="sehOtpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="کد دریافت‌شده">
-     <button type="button" id="sehOtpVerify" style="width:100%;margin-top:8px">✅ تأیید کد و ادامه</button>
-    </div>
-    <div id="sehOtpDetails" style="display:none;margin-top:12px;border-top:1px solid #e8d9b3;padding-top:10px">
-     <h4>📝 تکمیل درخواست عضویت</h4>
-     <p class="muted" style="color:#675a3c">شماره شما تأیید شد. برای ارسال درخواست به مربی، اطلاعات زیر را کامل کنید.</p>
-     <label>نام و نام خانوادگی</label><input id="sehOtpName" autocomplete="name" placeholder="نام کامل">
-     <label>تعداد جلسات تمرین در هفته</label><select id="sehOtpSessions"><option value="">انتخاب کنید</option><option value="1">۱ جلسه</option><option value="2">۲ جلسه</option><option value="3">۳ جلسه</option><option value="4">۴ جلسه</option><option value="5">۵ جلسه</option><option value="6">۶ جلسه</option><option value="7">۷ جلسه</option></select>
-     <label>روزهای تمرین</label><input id="sehOtpDays" placeholder="مثلاً شنبه، دوشنبه، چهارشنبه">
-     <label>ساعت تمرین</label><input id="sehOtpTime" type="time">
-     <button type="button" id="sehOtpSubmit" style="width:100%;margin-top:8px">📨 ارسال درخواست برای مربی</button>
-    </div>
-    <p id="sehOtpStatus" class="muted" style="font-size:12px;line-height:1.9;white-space:pre-wrap;margin-top:10px"></p>
-   </div>`;
-  $('sehOtpSend').addEventListener('click',sendCode);
-  $('sehOtpVerify').addEventListener('click',verifyCode);
-  $('sehOtpSubmit').addEventListener('click',submitRegistration);
-  restorePending();
- }
- async function sendCode(){
-  const phone=norm($('sehOtpPhone').value),btn=$('sehOtpSend');
-  if(!/^\+989\d{9}$/.test(phone)){msg('شماره موبایل معتبر نیست؛ مانند 09121234567 وارد کنید.');return;}
-  btn.disabled=true;btn.textContent='⏳ در حال ارسال کد…';
-  try{
-   const {error}=await AUTH_SUPABASE.auth.signInWithOtp({phone,options:{shouldCreateUser:true,channel:'sms'}});
-   if(error)throw error;
-   $('sehOtpPhone').dataset.normalized=phone;
-   $('sehOtpVerifyBox').style.display='block';
-   msg('کد پیامکی ارسال شد. کد را وارد کنید.',true);
-  }catch(e){console.error('OTP send failed',e);msg('ارسال کد انجام نشد: '+(e?.message||String(e)));}
-  finally{btn.disabled=false;btn.textContent='📩 ارسال دوباره کد';}
- }
- async function verifyCode(){
-  const phone=$('sehOtpPhone').dataset.normalized||norm($('sehOtpPhone').value);
-  const token=String($('sehOtpCode').value||'').replace(/\D/g,'');
-  const btn=$('sehOtpVerify');
-  if(!/^\+989\d{9}$/.test(phone)||token.length<4){msg('شماره و کد پیامکی را درست وارد کنید.');return;}
-  btn.disabled=true;btn.textContent='⏳ در حال بررسی…';
-  try{
-   const {data,error}=await AUTH_SUPABASE.auth.verifyOtp({phone,token,type:'sms'});
-   if(error)throw error;if(!data?.user)throw new Error('حساب تأییدشده دریافت نشد.');
-   const requestSecret=sec();
-   let result=null;
-   for(let attempt=0;attempt<3;attempt++){
-    const response=await AUTH_SUPABASE.functions.invoke('trainee-otp-registration',{body:{phone,request_secret:requestSecret}});
-    if(!response.error&&!response.data?.error){result=response.data;break;}
-    const text=response.data?.error||response.error?.message||'';
-    if(attempt<2&&/پرونده شاگرد پس از تأیید شماره ساخته نشد/.test(text)){await new Promise(r=>setTimeout(r,700));continue;}
-    throw new Error(text||'بررسی حساب انجام نشد.');
-   }
-   if(result?.status==='active'){
-    msg('شماره تأیید شد؛ پرونده قبلی شما در حال بارگذاری است.',true);
-    if(typeof window.finishLogin==='function')await window.finishLogin(data.user);
-    return;
-   }
-   if(result?.status==='needs_details'){
-    window.__sehOtpVerified={phone,requestSecret,user:data.user};
-    $('sehOtpDetails').style.display='block';
-    msg('شماره تأیید شد. اطلاعات اولیه را تکمیل و درخواست را ارسال کنید.',true);
-    return;
-   }
-   if(result?.status==='pending'&&result.request_id){
-    savePending({id:result.request_id,secret:requestSecret,phone});
-    await AUTH_SUPABASE.auth.signOut();
-    msg('درخواست شما برای مربی ارسال شد. پس از تأیید، می‌توانید با کد پیامکی وارد شوید.',true);
-    startPolling();
-    return;
-   }
-   throw new Error(result?.message||'پاسخ نامشخص از سامانه دریافت شد.');
-  }catch(e){console.error('OTP verify failed',e);msg('تأیید یا ورود انجام نشد: '+(e?.message||String(e)));}
-  finally{btn.disabled=false;btn.textContent='✅ تأیید کد و ادامه';}
- }
- async function submitRegistration(){
-  const v=window.__sehOtpVerified;if(!v){msg('ابتدا شماره موبایل را با کد پیامکی تأیید کنید.');return;}
-  const full_name=$('sehOtpName').value.trim(),weekly_sessions=Number($('sehOtpSessions').value),training_days=$('sehOtpDays').value.trim(),training_time=$('sehOtpTime').value;
-  if(full_name.length<2||!Number.isInteger(weekly_sessions)||weekly_sessions<1||weekly_sessions>7||!training_days||!training_time){msg('نام، تعداد جلسات، روزها و ساعت تمرین را کامل کنید.');return;}
-  const btn=$('sehOtpSubmit');btn.disabled=true;btn.textContent='⏳ در حال ثبت…';
-  try{
-   const {data,error}=await AUTH_SUPABASE.functions.invoke('trainee-otp-registration',{body:{phone:v.phone,request_secret:v.requestSecret,full_name,weekly_sessions,training_days,training_time}});
-   if(error)throw error;if(data?.error)throw new Error(data.error);
-   if(!data?.request_id)throw new Error('شناسه درخواست دریافت نشد.');
-   savePending({id:data.request_id,secret:v.requestSecret,phone:v.phone});
-   await AUTH_SUPABASE.auth.signOut();
-   $('sehOtpDetails').style.display='none';
-   msg('درخواست عضویت برای مربی ارسال شد. پس از تأیید، ورود شما فعال می‌شود.',true);
-   startPolling();
-  }catch(e){console.error('OTP registration submit failed',e);msg('ثبت درخواست انجام نشد: '+(e?.message||String(e)));}
-  finally{btn.disabled=false;btn.textContent='📨 ارسال درخواست برای مربی';}
- }
- function savePending(v){try{localStorage.setItem(REG_KEY,JSON.stringify(v));}catch(e){}}
- function readPending(){try{return JSON.parse(localStorage.getItem(REG_KEY)||'null');}catch(e){return null;}}
- function clearPending(){try{localStorage.removeItem(REG_KEY);}catch(e){}}
- async function poll(){
-  if(busy)return;const p=readPending();if(!p?.id||!p?.secret)return;busy=true;
-  try{
-   const {data,error}=await AUTH_SUPABASE.functions.invoke('trainee-registration-login',{body:{request_id:p.id,request_secret:p.secret}});
-   if(error)throw error;
-   if(data?.status==='pending'){msg('درخواست شما در انتظار تأیید مربی است.');return;}
-   if(data?.status==='rejected'||data?.status==='expired'||data?.status==='unavailable'||data?.status==='claimed'){
-    clearPending();msg(data.message||'این درخواست دیگر فعال نیست؛ با مربی هماهنگ کنید.');return;
-   }
-   if(data?.success&&data?.temporary_password){
-    const {data:auth,error:loginError}=await AUTH_SUPABASE.auth.signInWithPassword({phone:data.phone,password:data.temporary_password});
-    if(loginError)throw loginError;
-    const update=await AUTH_SUPABASE.auth.updateUser({data:{...(auth.user.user_metadata||{}),role:'trainee',must_change_password:true}});
-    if(update.error)throw update.error;
-    clearPending();
-    msg('مربی درخواست را تأیید کرد؛ حساب شما در حال آماده‌سازی است.',true);
-    if(typeof window.finishLogin==='function')await window.finishLogin(update.data?.user||auth.user);
-   }
-  }catch(e){console.warn('OTP registration polling',e);msg('بررسی وضعیت درخواست موقتاً انجام نشد؛ دوباره تلاش می‌کنیم.');}
-  finally{busy=false;}
- }
- function startPolling(){if(pollTimer)clearInterval(pollTimer);poll();pollTimer=setInterval(()=>{if(readPending())poll();else{clearInterval(pollTimer);pollTimer=null;}},7000);}
- function restorePending(){if(readPending())startPolling();}
- function install(){render();}
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
- [400,1000,2200,4500,8000].forEach(ms=>setTimeout(install,ms));
- window.__sehOtpTraineeAuthV2={install,poll};
-})();
-</script>
+
 
 </body></html>`;
     const w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}
@@ -15169,6 +15026,150 @@ window.sehNutritionBuilderBridge={
   return Array.isArray(result)?result[0]:result;
  }
 };
+</script>
+<!-- SEH OTP TRAINEE AUTH V2: TEST ONLY -->
+<script id="seh-otp-trainee-auth-v2">
+(function(){
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const REG_KEY='seh_otp_pending_registration_v2';
+ let pollTimer=null, busy=false;
+ function norm(v){
+  let p=String(v||'').trim().replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[\s()-]/g,'');
+  if(/^09\d{9}$/.test(p))p='+98'+p.slice(1);else if(/^989\d{9}$/.test(p))p='+'+p;else if(/^00989\d{9}$/.test(p))p='+'+p.slice(2);return p;
+ }
+ function sec(){return Array.from(crypto.getRandomValues(new Uint8Array(32))).map(x=>x.toString(16).padStart(2,'0')).join('');}
+ function msg(t,ok){const e=$('sehOtpStatus');if(e){e.textContent=t;e.style.color=ok?'#167342':'#a35b12';}}
+ function render(){
+  const box=$('traineeLoginBox');if(!box||box.dataset.sehOtpV2==='1')return;
+  box.dataset.sehOtpV2='1';
+  box.innerHTML=`
+   <div class="trainee-auth-block" style="background:#fffaf0;color:#342b1b;border:1px solid #dfc98e;border-radius:12px;padding:14px">
+    <h3>🔐 ورود با کد پیامکی</h3>
+    <p class="muted" style="color:#675a3c">شماره موبایل خود را وارد کنید. کد تأیید برای ورود به همان پرونده قبلی یا ثبت درخواست عضویت ارسال می‌شود.</p>
+    <label>شماره موبایل</label><input id="sehOtpPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09121234567">
+    <button type="button" id="sehOtpSend" style="width:100%;margin-top:8px">📩 ارسال کد پیامکی</button>
+    <div id="sehOtpVerifyBox" style="display:none;margin-top:12px">
+     <label>کد پیامکی</label><input id="sehOtpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="کد دریافت‌شده">
+     <button type="button" id="sehOtpVerify" style="width:100%;margin-top:8px">✅ تأیید کد و ادامه</button>
+    </div>
+    <div id="sehOtpDetails" style="display:none;margin-top:12px;border-top:1px solid #e8d9b3;padding-top:10px">
+     <h4>📝 تکمیل درخواست عضویت</h4>
+     <p class="muted" style="color:#675a3c">شماره شما تأیید شد. برای ارسال درخواست به مربی، اطلاعات زیر را کامل کنید.</p>
+     <label>نام و نام خانوادگی</label><input id="sehOtpName" autocomplete="name" placeholder="نام کامل">
+     <label>تعداد جلسات تمرین در هفته</label><select id="sehOtpSessions"><option value="">انتخاب کنید</option><option value="1">۱ جلسه</option><option value="2">۲ جلسه</option><option value="3">۳ جلسه</option><option value="4">۴ جلسه</option><option value="5">۵ جلسه</option><option value="6">۶ جلسه</option><option value="7">۷ جلسه</option></select>
+     <label>روزهای تمرین</label><input id="sehOtpDays" placeholder="مثلاً شنبه، دوشنبه، چهارشنبه">
+     <label>ساعت تمرین</label><input id="sehOtpTime" type="time">
+     <button type="button" id="sehOtpSubmit" style="width:100%;margin-top:8px">📨 ارسال درخواست برای مربی</button>
+    </div>
+    <p id="sehOtpStatus" class="muted" style="font-size:12px;line-height:1.9;white-space:pre-wrap;margin-top:10px"></p>
+   </div>`;
+  $('sehOtpSend').addEventListener('click',sendCode);
+  $('sehOtpVerify').addEventListener('click',verifyCode);
+  $('sehOtpSubmit').addEventListener('click',submitRegistration);
+  restorePending();
+ }
+ async function sendCode(){
+  const phone=norm($('sehOtpPhone').value),btn=$('sehOtpSend');
+  if(!/^\+989\d{9}$/.test(phone)){msg('شماره موبایل معتبر نیست؛ مانند 09121234567 وارد کنید.');return;}
+  btn.disabled=true;btn.textContent='⏳ در حال ارسال کد…';
+  try{
+   const {error}=await AUTH_SUPABASE.auth.signInWithOtp({phone,options:{shouldCreateUser:true,channel:'sms'}});
+   if(error)throw error;
+   $('sehOtpPhone').dataset.normalized=phone;
+   $('sehOtpVerifyBox').style.display='block';
+   msg('کد پیامکی ارسال شد. کد را وارد کنید.',true);
+  }catch(e){console.error('OTP send failed',e);msg('ارسال کد انجام نشد: '+(e?.message||String(e)));}
+  finally{btn.disabled=false;btn.textContent='📩 ارسال دوباره کد';}
+ }
+ async function verifyCode(){
+  const phone=$('sehOtpPhone').dataset.normalized||norm($('sehOtpPhone').value);
+  const token=String($('sehOtpCode').value||'').replace(/\D/g,'');
+  const btn=$('sehOtpVerify');
+  if(!/^\+989\d{9}$/.test(phone)||token.length<4){msg('شماره و کد پیامکی را درست وارد کنید.');return;}
+  btn.disabled=true;btn.textContent='⏳ در حال بررسی…';
+  try{
+   const {data,error}=await AUTH_SUPABASE.auth.verifyOtp({phone,token,type:'sms'});
+   if(error)throw error;if(!data?.user)throw new Error('حساب تأییدشده دریافت نشد.');
+   const requestSecret=sec();
+   let result=null;
+   for(let attempt=0;attempt<3;attempt++){
+    const response=await AUTH_SUPABASE.functions.invoke('trainee-otp-registration',{body:{phone,request_secret:requestSecret}});
+    if(!response.error&&!response.data?.error){result=response.data;break;}
+    const text=response.data?.error||response.error?.message||'';
+    if(attempt<2&&/پرونده شاگرد پس از تأیید شماره ساخته نشد/.test(text)){await new Promise(r=>setTimeout(r,700));continue;}
+    throw new Error(text||'بررسی حساب انجام نشد.');
+   }
+   if(result?.status==='active'){
+    msg('شماره تأیید شد؛ پرونده قبلی شما در حال بارگذاری است.',true);
+    if(typeof window.finishLogin==='function')await window.finishLogin(data.user);
+    return;
+   }
+   if(result?.status==='needs_details'){
+    window.__sehOtpVerified={phone,requestSecret,user:data.user};
+    $('sehOtpDetails').style.display='block';
+    msg('شماره تأیید شد. اطلاعات اولیه را تکمیل و درخواست را ارسال کنید.',true);
+    return;
+   }
+   if(result?.status==='pending'&&result.request_id){
+    savePending({id:result.request_id,secret:requestSecret,phone});
+    await AUTH_SUPABASE.auth.signOut();
+    msg('درخواست شما برای مربی ارسال شد. پس از تأیید، می‌توانید با کد پیامکی وارد شوید.',true);
+    startPolling();
+    return;
+   }
+   throw new Error(result?.message||'پاسخ نامشخص از سامانه دریافت شد.');
+  }catch(e){console.error('OTP verify failed',e);msg('تأیید یا ورود انجام نشد: '+(e?.message||String(e)));}
+  finally{btn.disabled=false;btn.textContent='✅ تأیید کد و ادامه';}
+ }
+ async function submitRegistration(){
+  const v=window.__sehOtpVerified;if(!v){msg('ابتدا شماره موبایل را با کد پیامکی تأیید کنید.');return;}
+  const full_name=$('sehOtpName').value.trim(),weekly_sessions=Number($('sehOtpSessions').value),training_days=$('sehOtpDays').value.trim(),training_time=$('sehOtpTime').value;
+  if(full_name.length<2||!Number.isInteger(weekly_sessions)||weekly_sessions<1||weekly_sessions>7||!training_days||!training_time){msg('نام، تعداد جلسات، روزها و ساعت تمرین را کامل کنید.');return;}
+  const btn=$('sehOtpSubmit');btn.disabled=true;btn.textContent='⏳ در حال ثبت…';
+  try{
+   const {data,error}=await AUTH_SUPABASE.functions.invoke('trainee-otp-registration',{body:{phone:v.phone,request_secret:v.requestSecret,full_name,weekly_sessions,training_days,training_time}});
+   if(error)throw error;if(data?.error)throw new Error(data.error);
+   if(!data?.request_id)throw new Error('شناسه درخواست دریافت نشد.');
+   savePending({id:data.request_id,secret:v.requestSecret,phone:v.phone});
+   await AUTH_SUPABASE.auth.signOut();
+   $('sehOtpDetails').style.display='none';
+   msg('درخواست عضویت برای مربی ارسال شد. پس از تأیید، ورود شما فعال می‌شود.',true);
+   startPolling();
+  }catch(e){console.error('OTP registration submit failed',e);msg('ثبت درخواست انجام نشد: '+(e?.message||String(e)));}
+  finally{btn.disabled=false;btn.textContent='📨 ارسال درخواست برای مربی';}
+ }
+ function savePending(v){try{localStorage.setItem(REG_KEY,JSON.stringify(v));}catch(e){}}
+ function readPending(){try{return JSON.parse(localStorage.getItem(REG_KEY)||'null');}catch(e){return null;}}
+ function clearPending(){try{localStorage.removeItem(REG_KEY);}catch(e){}}
+ async function poll(){
+  if(busy)return;const p=readPending();if(!p?.id||!p?.secret)return;busy=true;
+  try{
+   const {data,error}=await AUTH_SUPABASE.functions.invoke('trainee-registration-login',{body:{request_id:p.id,request_secret:p.secret}});
+   if(error)throw error;
+   if(data?.status==='pending'){msg('درخواست شما در انتظار تأیید مربی است.');return;}
+   if(data?.status==='rejected'||data?.status==='expired'||data?.status==='unavailable'||data?.status==='claimed'){
+    clearPending();msg(data.message||'این درخواست دیگر فعال نیست؛ با مربی هماهنگ کنید.');return;
+   }
+   if(data?.success&&data?.temporary_password){
+    const {data:auth,error:loginError}=await AUTH_SUPABASE.auth.signInWithPassword({phone:data.phone,password:data.temporary_password});
+    if(loginError)throw loginError;
+    const update=await AUTH_SUPABASE.auth.updateUser({data:{...(auth.user.user_metadata||{}),role:'trainee',must_change_password:true}});
+    if(update.error)throw update.error;
+    clearPending();
+    msg('مربی درخواست را تأیید کرد؛ حساب شما در حال آماده‌سازی است.',true);
+    if(typeof window.finishLogin==='function')await window.finishLogin(update.data?.user||auth.user);
+   }
+  }catch(e){console.warn('OTP registration polling',e);msg('بررسی وضعیت درخواست موقتاً انجام نشد؛ دوباره تلاش می‌کنیم.');}
+  finally{busy=false;}
+ }
+ function startPolling(){if(pollTimer)clearInterval(pollTimer);poll();pollTimer=setInterval(()=>{if(readPending())poll();else{clearInterval(pollTimer);pollTimer=null;}},7000);}
+ function restorePending(){if(readPending())startPolling();}
+ function install(){render();}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+ [400,1000,2200,4500,8000].forEach(ms=>setTimeout(install,ms));
+ window.__sehOtpTraineeAuthV2={install,poll};
+})();
 </script>
 </body>
 </html>
