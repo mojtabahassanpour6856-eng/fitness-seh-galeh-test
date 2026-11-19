@@ -60,6 +60,37 @@ main{max-width:1500px}
 @media(max-width:950px){.layout{grid-template-columns:1fr 1fr}.anatomy-wrap{min-height:560px}.anatomy-wrap svg{height:520px}}
 @media(max-width:600px){.layout{grid-template-columns:1fr}.anatomy-wrap{min-height:510px}.anatomy-wrap svg{height:485px}.card{padding:15px}}
 
+
+/* Approved simple anatomy: neutral grayscale, one red selection only */
+.anatomy-wrap{background:#f7f7f7!important;border-color:#dedede!important}
+.anatomy-wrap svg{filter:none!important}
+.anatomy-wrap svg #skinVolume stop,
+.anatomy-wrap svg #skinBase stop,
+.anatomy-wrap svg #muscleBase stop,
+.anatomy-wrap svg #muscleShade stop,
+.anatomy-wrap svg #muscleBack stop,
+.anatomy-wrap svg #muscleVolume stop{stop-color:#c7c9cb!important}
+.anatomy-wrap svg #skinVolume stop:nth-child(2),
+.anatomy-wrap svg #muscleVolume stop:nth-child(2){stop-color:#b9bbbd!important}
+.anatomy-wrap svg #skinVolume stop:last-child,
+.anatomy-wrap svg #muscleVolume stop:last-child{stop-color:#aeb1b4!important}
+.anatomy-wrap svg .muscle,
+.anatomy-wrap svg .muscle:nth-of-type(3n),
+.anatomy-wrap svg .muscle:nth-of-type(4n){
+ fill:#bfc2c4!important;stroke:#85898c!important;stroke-width:1.35;opacity:1;filter:none!important;
+ transition:fill .16s ease,stroke .16s ease;
+}
+.anatomy-wrap svg .muscle:hover{fill:#bfc2c4!important;stroke:#666b6f!important;stroke-width:1.8}
+.anatomy-wrap svg .muscle.selected,
+.anatomy-wrap svg .muscle.selected:hover{
+ fill:#df4545!important;stroke:#a92727!important;stroke-width:2!important;filter:none!important;opacity:1;
+}
+.anatomy-wrap svg .bone{fill:#d5d7d9!important;stroke:#999da0!important}
+.anatomy-wrap svg .anatomy-detail path{stroke:#85898c!important;filter:none!important;mix-blend-mode:normal!important}
+.muscle-btn.active{background:#fce9e9!important;border-color:#df7777!important;color:#a92727!important;box-shadow:none!important}
+.tab.active{background:#e9e9e9!important;border:1px solid #bfc2c4!important;color:#333!important;box-shadow:none!important}
+@media(max-width:600px){.anatomy-wrap{min-height:420px}.anatomy-wrap svg{height:395px;max-width:100%}}
+
 </style>
 </head>
 <body>
