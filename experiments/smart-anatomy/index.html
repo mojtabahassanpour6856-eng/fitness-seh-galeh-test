@@ -291,7 +291,7 @@ function syncLibrarySelection(){
   "biceps-long":["biceps-"],"biceps-short":["biceps-"],"brachialis":["biceps-"],
   "triceps-long":["triceps-long-"],"triceps-lateral":["triceps-lateral-"],
   "upper-abs":["abs-upper-"],"lower-abs":["abs-lower-"],"obliques":["obliques-"],
-  "quads":["quads-"],"adductors":["adductors-"],"traps":["traps-"],
+  "quads":["quads-"],"adductors":["adductors-"],"abductors":["hip-flexor-"],"traps":["traps-"],
   "lats":["lats-"],"mid-back":["traps-mid-","lats-mid-"],"lower-back":["lower-back-"],
   "glute-max":["gluteus-maximus-"],"glute-med":["gluteus-medius-"],
   "hamstrings":["hamstrings-"],"calves":["calves-"],
@@ -311,7 +311,7 @@ function syncLibrarySelection(){
   "gluteus-maximus-left","gluteus-maximus-right","gluteus-medius-left","gluteus-medius-right",
   "hamstrings-medial-left","hamstrings-medial-right","hamstrings-lateral-left","hamstrings-lateral-right",
   "calves-gastroc-medial-left","calves-gastroc-medial-right","calves-gastroc-lateral-left","calves-gastroc-lateral-right","calves-soleus-left","calves-soleus-right",
-  "forearm-flexors-left","forearm-flexors-right","forearm-extensors-left","forearm-extensors-right"
+  "forearm-left","forearm-right","forearm-flexors-left","forearm-flexors-right","forearm-extensors-left","forearm-extensors-right","hip-flexor-left","hip-flexor-right"
  ];
  if(selectedGroup&&prefixes.length){
   allRegionIds.filter(id=>prefixes.some(prefix=>id.startsWith(prefix))).forEach(id=>libraryState[id]={intensity:8,selected:true});
