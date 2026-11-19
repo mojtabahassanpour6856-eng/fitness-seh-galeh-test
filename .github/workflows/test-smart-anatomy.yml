@@ -1,0 +1,20 @@
+name: Smart anatomy prototype checks
+on:
+  pull_request:
+    branches: ["feature/smart-anatomy-prototype-20261118"]
+    paths:
+      - "experiments/smart-anatomy/**"
+      - "tests/smart-anatomy-static.test.mjs"
+      - ".github/workflows/test-smart-anatomy.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  anatomy-static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test tests/smart-anatomy-static.test.mjs
