@@ -172,7 +172,7 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
    [/^shoulder-front-/,"front-delts"],[/^shoulder-side-/,"side-delts"],[/^deltoid-rear-/,"rear-delts"],
    [/^biceps-/,"biceps-long"],[/^triceps-long-/,"triceps-long"],[/^triceps-lateral-/,"triceps-lateral"],
    [/^abs-upper-/,"upper-abs"],[/^abs-lower-/,"lower-abs"],[/^obliques-/,"obliques"],
-   [/^serratus-anterior-/,"obliques"],[/^quads-/,"quads"],[/^adductors-/,"adductors"],
+   [/^serratus-anterior-/,"serratus"],[/^traps-mid-|^lats-mid-/,"mid-back"],[/^quads-/,"quads"],[/^adductors-/,"adductors"],
    [/^hip-flexor-/,"abductors"],[/^traps-/,"traps"],[/^lats-/,"lats"],
    [/^lower-back-/,"lower-back"],[/^gluteus-maximus-/,"glute-max"],[/^gluteus-medius-/,"glute-med"],
    [/^hamstrings-/,"hamstrings"],[/^calves-/,"calves"],
@@ -188,10 +188,10 @@ const groups=[
 {id:"upper-chest",name:"بالاسینه",view:"front"},{id:"mid-chest",name:"سینه میانی",view:"front"},{id:"lower-chest",name:"زیرسینه",view:"front"},
 {id:"front-delts",name:"سرشانه جلو",view:"front"},{id:"side-delts",name:"سرشانه میانی",view:"front"},{id:"rear-delts",name:"سرشانه خلفی",view:"back"},
 {id:"biceps-long",name:"جلو بازو (تأکید نسبی بر سر بلند)",view:"front"},{id:"biceps-short",name:"جلو بازو (تأکید نسبی بر سر کوتاه)",view:"front"},{id:"brachialis",name:"براکیالیس",view:"front"},{id:"triceps-long",name:"پشت بازو (سر بلند)",view:"back"},{id:"triceps-lateral",name:"پشت بازو (سر خارجی)",view:"back"},
-{id:"upper-abs",name:"راست شکمی (تأکید بر خم‌کردن تنه)",view:"front"},{id:"lower-abs",name:"راست شکمی (تأکید بر چرخش خلفی لگن)",view:"front"},{id:"obliques",name:"پهلو",view:"front"},
+{id:"upper-abs",name:"راست شکمی (تأکید بر خم‌کردن تنه)",view:"front"},{id:"lower-abs",name:"راست شکمی (تأکید بر چرخش خلفی لگن)",view:"front"},{id:"obliques",name:"پهلو",view:"front"},{id:"serratus",name:"دندانه‌ای قدامی",view:"front"},
 {id:"quads",name:"چهارسر ران",view:"front"},{id:"adductors",name:"داخل ران",view:"front"},{id:"abductors",name:"خم‌کننده‌های ران",view:"front"},
 {id:"traps",name:"کول",view:"back"},{id:"lats",name:"زیربغل",view:"back"},{id:"mid-back",name:"میانه پشت",view:"back"},{id:"lower-back",name:"فیله کمر",view:"back"},
-{id:"glute-max",name:"باسن بزرگ",view:"back"},{id:"glute-med",name:"باسن میانی",view:"back"},{id:"hamstrings",name:"همسترینگ",view:"back"},{id:"calves",name:"ساق پا",view:"back"},{id:"forearm-flexors",name:"ساعد (خم‌کننده)",view:"front"},{id:"forearm-extensors",name:"ساعد (بازکننده)",view:"back"}];
+{id:"glute-max",name:"باسن بزرگ",view:"back"},{id:"glute-med",name:"باسن میانی",view:"back"},{id:"hamstrings",name:"همسترینگ",view:"back"},{id:"calves",name:"ساق پا",view:"back"},{id:"tibialis",name:"عضله جلوی ساق",view:"front"},{id:"forearm-flexors",name:"ساعد (خم‌کننده)",view:"front"},{id:"forearm-extensors",name:"ساعد (بازکننده)",view:"back"}];
 const parentMap={"upper-chest":"chest","mid-chest":"chest","lower-chest":"chest","front-delts":"shoulders","side-delts":"shoulders","rear-delts":"shoulders","biceps-long":"biceps","biceps-short":"biceps","brachialis":"biceps","triceps-long":"triceps","triceps-lateral":"triceps","upper-abs":"abs","lower-abs":"abs","obliques":"abs","glute-max":"glutes","glute-med":"glutes"};
 const exercises={
 "upper-chest":[["پرس بالاسینه دمبل","دمبل","سینه بزرگ؛ ناحیه ترقوه‌ای","دلتوئید قدامی و سه‌سر بازویی"],["پرس بالاسینه هالتر","هالتر","سینه بزرگ؛ ناحیه ترقوه‌ای","دلتوئید قدامی و سه‌سر بازویی"],["فلای سیم‌کش از پایین","سیم‌کش","بالاسینه","دلتوئید جلویی"],["پرس بالاسینه دستگاه","دستگاه","بالاسینه","سه‌سر بازویی"]],
@@ -218,7 +218,7 @@ const exercises={
 "glute-max":[["هیپ تراست","هالتر","سرینی بزرگ","نزدیک‌کننده بزرگ و همسترینگ (بسته به فرم و دامنه)"],["کیک‌بک سیم‌کش","سیم‌کش","سرینی بزرگ","همسترینگ"]],
 "glute-med":[["خارج ران دستگاه","دستگاه","سرینی میانی","سرینی کوچک"],["راه رفتن با کش جانبی","کش","سرینی میانی","سرینی کوچک"]],
 "hamstrings":[["پشت پا دستگاه","دستگاه","گروه عضلات همسترینگ","گاستروکنمیوس"],["ددلیفت رومانیایی","هالتر/دمبل","همسترینگ","سرینی"]],
-"calves":[["ساق ایستاده","دستگاه/وزن بدن","دوقلو","نعلی"],["ساق نشسته","دستگاه","نعلی","دوقلو"]],
+"calves":[["ساق ایستاده","دستگاه/وزن بدن","دوقلو","نعلی"],["ساق نشسته","دستگاه","نعلی","دوقلو"]],"tibialis":[["بالا آوردن پنجه پا به سمت ساق","دستگاه/کش","تیبیالیس قدامی","عضلات جلوی ساق"]],"serratus":[["پوش‌آپ پلاس","وزن بدن","دندانه‌ای قدامی","سینه و سه‌سر بازویی"],["پرس پانچ سیم‌کش","سیم‌کش","دندانه‌ای قدامی","عضلات مرکزی"],["اسلاید دیواری ساعد","وزن بدن","دندانه‌ای قدامی","تراپز و عضلات شانه"]],
 "forearm-flexors":[["مچ دمبل نشسته کف دست بالا","دمبل","خم‌کننده‌های ساعد","جلو بازو"],["مچ هالتر کف دست بالا","هالتر","خم‌کننده‌های ساعد","عضلات دست"]], "forearm-extensors":[["مچ دمبل نشسته کف دست پایین","دمبل","بازکننده‌های ساعد","عضلات دست"],["مچ هالتر کف دست پایین","هالتر","بازکننده‌های ساعد","عضلات دست"]]};
 // Expanded sample movement catalog: additional standard variations for the prototype.
 const extraExercises={
@@ -246,7 +246,7 @@ const extraExercises={
 "glute-max":[["اسکوات عمیق","هالتر/دمبل","سرینی بزرگ","چهارسر و همسترینگ"],["لانج راه‌رفتنی","دمبل","سرینی بزرگ","چهارسر و همسترینگ"],["پشت پا و لگن کیک‌بک","دستگاه","سرینی بزرگ","همسترینگ"]],
 "glute-med":[["صدف با کش","کش","سرینی میانی","سرینی کوچک"],["استپ‌آپ جانبی","وزن بدن/دمبل","سرینی میانی","چهارسر"]],
 "hamstrings":[["پشت پا نشسته","دستگاه","گروه عضلات همسترینگ","گاستروکنمیوس"],["پشت پا تک‌پا","دستگاه","همسترینگ","سرینی"],["گودمورنینگ","هالتر","همسترینگ","فیله و سرینی"]],
-"calves":[["ساق پرس پا","دستگاه","ساق","نعلی"],["ساق تک‌پا ایستاده","وزن بدن/دمبل","دوقلو","نعلی"],["ساق دانکی","دستگاه/وزن بدن","دوقلو","نعلی"]]};
+"calves":[["ساق پرس پا","دستگاه","ساق","نعلی"],["ساق تک‌پا ایستاده","وزن بدن/دمبل","دوقلو","نعلی"],["ساق دانکی","دستگاه/وزن بدن","دوقلو","نعلی"]],"tibialis":[["تیبیالیس رِیز ایستاده","وزن بدن/دستگاه","تیبیالیس قدامی","عضلات جلوی ساق"]],"serratus":[["پوش‌آپ پلاس روی زانو","وزن بدن","دندانه‌ای قدامی","سینه و سه‌سر بازویی"],["پانچ دمبل خوابیده","دمبل","دندانه‌ای قدامی","عضلات مرکزی"]]};
 Object.entries(extraExercises).forEach(([g,items])=>{exercises[g]=[...(exercises[g]||[]),...items];});
 let selectedGroup=null,view="front",plan=[],bank="global";let staged=[],customBank={};const $=s=>document.querySelector(s);
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -256,10 +256,10 @@ const muscleTerms={
 "upper-chest":["بالاسینه","ناحیه ترقوه","سینه بالایی"],"mid-chest":["سینه میانی","سینه بزرگ"],"lower-chest":["زیرسینه","سینه پایینی","بخش جناغی"],
 "front-delts":["دلتوئید قدامی","سرشانه جلویی","سرشانه جلو"],"side-delts":["دلتوئید میانی","سرشانه میانی"],"rear-delts":["دلتوئید خلفی","سرشانه خلفی"],
 "biceps-long":["سر بلند جلو بازو","تأکید نسبی بر سر بلند"],"biceps-short":["سر کوتاه جلو بازو","تأکید نسبی بر سر کوتاه"],"brachialis":["براکیالیس","براکیورادیالیس"],
-"triceps-long":["سر بلند سه سر","سر بلند سه‌سر","سر بلند سه"],"triceps-lateral":["سر خارجی سه سر","سر خارجی سه‌سر","سر خارجی سه"],"upper-abs":["راست شکمی بالا","بخش بالایی راست شکمی"],"lower-abs":["راست شکمی پایین","بخش پایینی راست شکمی"],"obliques":["مایل شکمی","پهلو"],
+"triceps-long":["سر بلند سه سر","سر بلند سه‌سر","سر بلند سه"],"triceps-lateral":["سر خارجی سه سر","سر خارجی سه‌سر","سر خارجی سه"],"upper-abs":["راست شکمی بالا","بخش بالایی راست شکمی"],"lower-abs":["راست شکمی پایین","بخش پایینی راست شکمی"],"obliques":["مایل شکمی","پهلو"],"serratus":["دندانه‌ای قدامی","سراتوس قدامی"],
 "quads":["چهارسر ران","چهارسر"],"adductors":["نزدیک کننده ران","نزدیک‌کننده ران","نزدیک‌کننده‌های ران","داخل ران"],"abductors":["خم‌کننده ران","خم‌کننده‌های ران","فلکسور ران"],
 "traps":["تراپز","ذوزنقه"],"lats":["پشتی بزرگ","زیربغل"],"mid-back":["میانه پشت","رومبوئید","تراپز میانی"],"lower-back":["راست کننده ستون فقرات","راست کننده های ستون فقرات","راست‌کننده ستون فقرات","فیله","اکستانسورهای ستون فقرات"],
-"glute-max":["سرینی بزرگ","باسن بزرگ"],"glute-med":["سرینی میانی","سرینی کوچک","باسن میانی"],"hamstrings":["همسترینگ","پشت ران"],"calves":["ساق","گاستروکنمیوس","نعلی","دوقلو"],
+"glute-max":["سرینی بزرگ","باسن بزرگ"],"glute-med":["سرینی میانی","سرینی کوچک","باسن میانی"],"hamstrings":["همسترینگ","پشت ران"],"calves":["ساق","گاستروکنمیوس","نعلی","دوقلو"],"tibialis":["تیبیالیس قدامی","جلوی ساق"],
 "forearm-flexors":["خم کننده ساعد","خم‌کننده ساعد","خم‌کننده‌های ساعد"],"forearm-extensors":["بازکننده ساعد","بازکننده‌های ساعد","اکستانسور ساعد"]
 };
 function labelMatchesGroup(label,id){const text=normalizeExerciseName(label);if(id==="mid-chest"&&(text.includes("ترقوه")||text.includes("بخش جناغی")||text.includes("سینه پایینی")))return false;if(id==="upper-chest"&&text.includes("بخش جناغی"))return false;return (muscleTerms[id]||[]).some(term=>text.includes(normalizeExerciseName(term)));}
@@ -290,11 +290,11 @@ function syncLibrarySelection(){
   "front-delts":["shoulder-front-"],"side-delts":["shoulder-side-"],"rear-delts":["deltoid-rear-"],
   "biceps-long":["biceps-"],"biceps-short":["biceps-"],"brachialis":["biceps-"],
   "triceps-long":["triceps-long-"],"triceps-lateral":["triceps-lateral-"],
-  "upper-abs":["abs-upper-"],"lower-abs":["abs-lower-"],"obliques":["obliques-"],
+  "upper-abs":["abs-upper-"],"lower-abs":["abs-lower-"],"obliques":["obliques-"],"serratus":["serratus-anterior-"],
   "quads":["quads-"],"adductors":["adductors-"],"abductors":["hip-flexor-"],"traps":["traps-"],
   "lats":["lats-"],"mid-back":["traps-mid-","lats-mid-"],"lower-back":["lower-back-"],
   "glute-max":["gluteus-maximus-"],"glute-med":["gluteus-medius-"],
-  "hamstrings":["hamstrings-"],"calves":["calves-"],
+  "hamstrings":["hamstrings-"],"calves":["calves-"],"tibialis":["tibialis-anterior-"],
   "forearm-flexors":["forearm-flexors-","forearm-"],"forearm-extensors":["forearm-extensors-"]
  };
  const prefixes=regionPrefixes[selectedGroup]||[];
@@ -310,7 +310,7 @@ function syncLibrarySelection(){
   "lower-back-erectors-left","lower-back-erectors-right","lower-back-ql-left","lower-back-ql-right",
   "gluteus-maximus-left","gluteus-maximus-right","gluteus-medius-left","gluteus-medius-right",
   "hamstrings-medial-left","hamstrings-medial-right","hamstrings-lateral-left","hamstrings-lateral-right",
-  "calves-gastroc-medial-left","calves-gastroc-medial-right","calves-gastroc-lateral-left","calves-gastroc-lateral-right","calves-soleus-left","calves-soleus-right",
+  "calves-gastroc-medial-left","calves-gastroc-medial-right","calves-gastroc-lateral-left","calves-gastroc-lateral-right","calves-soleus-left","calves-soleus-right","tibialis-anterior-left","tibialis-anterior-right",
   "forearm-left","forearm-right","forearm-flexors-left","forearm-flexors-right","forearm-extensors-left","forearm-extensors-right","hip-flexor-left","hip-flexor-right"
  ];
  if(selectedGroup&&prefixes.length){
