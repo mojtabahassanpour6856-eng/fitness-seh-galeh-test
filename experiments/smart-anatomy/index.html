@@ -260,7 +260,7 @@ const muscleTerms={
 "quads":["چهارسر ران","چهارسر"],"adductors":["نزدیک کننده ران","نزدیک‌کننده ران","نزدیک‌کننده‌های ران","داخل ران"],"abductors":["خم‌کننده ران","خم‌کننده‌های ران","فلکسور ران"],
 "traps":["تراپز","ذوزنقه"],"lats":["پشتی بزرگ","زیربغل"],"mid-back":["میانه پشت","رومبوئید","تراپز میانی"],"lower-back":["راست کننده ستون فقرات","راست کننده های ستون فقرات","راست‌کننده ستون فقرات","فیله","اکستانسورهای ستون فقرات"],
 "glute-max":["سرینی بزرگ","باسن بزرگ"],"glute-med":["سرینی میانی","سرینی کوچک","باسن میانی"],"hamstrings":["همسترینگ","پشت ران"],"calves":["ساق","گاستروکنمیوس","نعلی","دوقلو"],"tibialis":["تیبیالیس قدامی","جلوی ساق"],
-"forearm-flexors":["خم کننده ساعد","خم‌کننده ساعد","خم‌کننده‌های ساعد","براکیورادیالیس"],"forearm-extensors":["بازکننده ساعد","بازکننده‌های ساعد","اکستانسور ساعد"]
+"forearm-flexors":["خم کننده ساعد","خم‌کننده ساعد","خم‌کننده‌های ساعد"],"forearm-extensors":["بازکننده ساعد","بازکننده‌های ساعد","اکستانسور ساعد"]
 };
 function labelMatchesGroup(label,id){const text=normalizeExerciseName(label);if(id==="traps"&&(text.includes("تراپز میانی")||text.includes("میانه پشت")))return false;if(id==="mid-chest"&&(text.includes("ترقوه")||text.includes("بخش جناغی")||text.includes("سینه پایینی")))return false;if(id==="upper-chest"&&text.includes("بخش جناغی"))return false;return (muscleTerms[id]||[]).some(term=>text.includes(normalizeExerciseName(term)));}
 function labelMatchesAnyOtherGroup(label,id){return groups.some(g=>g.id!==id&&labelMatchesGroup(label,g.id));}
