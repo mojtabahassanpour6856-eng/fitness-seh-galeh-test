@@ -215,7 +215,7 @@ function getList(){
  const combined=[];
  if(bank!=="coach"){
   Object.entries(exercises).forEach(([bucket,items])=>items.forEach(e=>{
-   const primary=labelMatchesGroup(e[2],selectedGroup)||(bucket===selectedGroup&&!labelMatchesGroup(e[2],selectedGroup));
+   const primary=labelMatchesGroup(e[2],selectedGroup);
    const secondary=labelMatchesGroup(e[3],selectedGroup);
    if((role==="primary"&&primary)||(role==="secondary"&&secondary&&!primary)||(role==="both"&&(primary||secondary)))combined.push({...e,source:"global",relation:primary?"اصلی":"کمکی"});
   }));
