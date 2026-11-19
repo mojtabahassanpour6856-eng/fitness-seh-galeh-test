@@ -395,19 +395,3 @@ function validateStagedGroups(items){const groupSystems=["سوپرست","تری�
 $("#addBtn").addEventListener("click",()=>{if(!staged.length)return;const groupSystems=["سوپرست","تری‌ست","جاینت‌ست"];const groupError=validateStagedGroups(staged);if(groupError){alert(groupError);return;}const sets=new Map();staged.filter(x=>groupSystems.includes(x.system)).forEach(x=>{const k=x.session+"::"+x.groupLabel.trim().toLowerCase();if(!sets.has(k))sets.set(k,[]);sets.get(k).push(x);});for(const members of sets.values()){const targets=members.map(x=>normalizeExerciseName(x.exercise[2]));if(new Set(targets).size<members.length&&!confirm("چند حرکت این گروه عضله اصلی مشابه دارند؛ حجم و خستگی را بررسی کنید. ادامه می‌دهید؟"))return;}const fresh=staged.filter(x=>!plan.some(p=>p.session===x.session&&normalizeExerciseName(p.name)===normalizeExerciseName(x.exercise[0])));if(fresh.length!==staged.length)alert("حرکات تکراری در همان جلسه به برنامه اضافه نشدند.");if(!fresh.length)return;fresh.forEach(x=>plan.push({name:x.exercise[0],group:x.groupName,session:x.session,details:x.exercise,system:x.system||"عادی",groupLabel:x.groupLabel||"",sets:x.sets||3,reps:x.reps||"10-12",rest:x.rest??60}));renderPlan();staged=[];renderExercises();renderStaged();});
 renderGroups();renderStaged();renderPlan();
 </script></body></html>
-
-/* Final anatomy palette: neutral grayscale at rest, one selected muscle family in red. */
-.anatomy-wrap{background:#f4f4f4!important;border-color:#dedede!important}
-.anatomy-wrap svg{filter:none!important}
-.anatomy-wrap svg .muscle,
-.anatomy-wrap svg .muscle:nth-of-type(3n),
-.anatomy-wrap svg .muscle:nth-of-type(4n){fill:#c9c9c9!important;stroke:#858585!important;filter:none!important;opacity:1!important}
-.anatomy-wrap svg .muscle:hover{fill:#b8b8b8!important;stroke:#666!important;stroke-width:2!important}
-.anatomy-wrap svg .muscle.selected,
-.anatomy-wrap svg .muscle.selected:hover{fill:#df3434!important;stroke:#941f1f!important;stroke-width:2!important;filter:none!important;opacity:1!important}
-.anatomy-wrap svg .anatomy-detail{opacity:.85!important}
-.anatomy-wrap svg .anatomy-detail path{stroke:#888!important}
-.anatomy-wrap svg .bone{fill:#e5e5e5!important;stroke:#aaa!important}
-.anatomy-wrap svg .bodyline{stroke:#aaa!important}
-.muscle-btn.active{background:#fbe9e9!important;border-color:#df9a9a!important;color:#a32222!important}
-.tab.active{background:#ededed!important;border-color:#bdbdbd!important;color:#444!important}
