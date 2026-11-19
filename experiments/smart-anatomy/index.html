@@ -91,6 +91,21 @@ main{max-width:1500px}
 .tab.active{background:#e9e9e9!important;border:1px solid #bfc2c4!important;color:#333!important;box-shadow:none!important}
 @media(max-width:600px){.anatomy-wrap{min-height:420px}.anatomy-wrap svg{height:395px;max-width:100%}}
 
+
+/* Prototype line-art test: white canvas, outline-only muscles, red selection */
+body{background:#fff!important}
+.anatomy-card{background:#fff!important}
+.anatomy-wrap{background:#fff!important;border-color:#eee!important}
+.anatomy-wrap svg{filter:none!important;drop-shadow:none!important}
+.anatomy-wrap svg .muscle,
+.anatomy-wrap svg .muscle:nth-of-type(3n),
+.anatomy-wrap svg .muscle:nth-of-type(4n){fill:transparent!important;stroke:#222!important;stroke-width:1.5!important;filter:none!important;opacity:1!important}
+.anatomy-wrap svg .muscle:hover{fill:transparent!important;stroke:#111!important;stroke-width:2!important}
+.anatomy-wrap svg .muscle.selected,
+.anatomy-wrap svg .muscle.selected:hover{fill:#e43d3d!important;stroke:#9c1e1e!important;stroke-width:2!important;filter:none!important}
+.anatomy-wrap svg .bone{fill:#fff!important;stroke:#222!important}
+.anatomy-wrap svg .anatomy-detail path{stroke:#222!important;opacity:.9!important;filter:none!important}
+.anatomy-wrap svg .bodyline{stroke:#222!important}
 </style>
 </head>
 <body>
