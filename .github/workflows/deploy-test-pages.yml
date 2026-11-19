@@ -1,7 +1,7 @@
 name: Deploy isolated TEST app to GitHub Pages
 on:
   push:
-    branches: ["integration/full-app-mirror-20261115", "fix/anatomy-grayscale-single-selection-20261119"]
+    branches: ["integration/full-app-mirror-20261115"]
   workflow_dispatch:
 permissions:
   contents: read
