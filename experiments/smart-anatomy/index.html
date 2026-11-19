@@ -209,7 +209,8 @@ const muscleTerms={
 "glute-max":["سرینی بزرگ","باسن بزرگ"],"glute-med":["سرینی میانی","سرینی کوچک","باسن میانی"],"hamstrings":["همسترینگ","پشت ران"],"calves":["ساق","گاستروکنمیوس","نعلی"],
 "forearm-flexors":["خم کننده ساعد","خم‌کننده ساعد"],"forearm-extensors":["بازکننده ساعد","اکستانسور ساعد"]
 };
-function labelMatchesGroup(label,id){const text=normalizeExerciseName(label);return (muscleTerms[id]||[]).some(term=>text.includes(normalizeExerciseName(term)));}\nfunction labelMatchesAnyOtherGroup(label,id){return groups.some(g=>g.id!==id&&labelMatchesGroup(label,g.id));}
+function labelMatchesGroup(label,id){const text=normalizeExerciseName(label);return (muscleTerms[id]||[]).some(term=>text.includes(normalizeExerciseName(term)));}
+function labelMatchesAnyOtherGroup(label,id){return groups.some(g=>g.id!==id&&labelMatchesGroup(label,g.id));}
 function getList(){
  const eq=$("#equipmentFilter")?.value||"all",q=normalizeExerciseName($("#exerciseSearch")?.value||""),role=$("#muscleRoleFilter")?.value||"primary";
  const combined=[];
