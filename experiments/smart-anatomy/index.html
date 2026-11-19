@@ -38,11 +38,13 @@ main{max-width:1500px}
 .anatomy-card{background:linear-gradient(160deg,#fffdf9,#f8f1e8);border-color:#e8d7b7}
 .anatomy-wrap{min-height:640px;background:radial-gradient(ellipse at 50% 40%,#fff 0,#fffaf2 54%,#f2e9dc 100%);border:1px solid #ead9b8}
 .anatomy-wrap svg{height:590px;max-width:100%;width:auto;filter:drop-shadow(0 12px 12px #76644a22)}
+.anatomy-detail{opacity:.9}.anatomy-detail path{vector-effect:non-scaling-stroke}.muscle{vector-effect:non-scaling-stroke}
 .muscle{fill:url(#muscleBase);stroke:#875f51;stroke-width:1.35;opacity:.96;transition:fill .18s,filter .18s,opacity .18s}
 .muscle:nth-of-type(3n){fill:url(#muscleShade)}.muscle:nth-of-type(4n){fill:url(#muscleBack)}
 .muscle.selected{fill:#d94b43;stroke:#8f2927;stroke-width:2.4;filter:drop-shadow(0 0 7px #e74b4280);opacity:1}
 .muscle:hover{fill:#e6a04b;stroke:#8c552b;stroke-width:2.2;opacity:1}
 .muscle.selected{fill:#e74b42;stroke:#a92e2b;filter:drop-shadow(0 0 5px #e74b4266)}
+.muscle:focus-visible{outline:none;stroke:#d6a844;stroke-width:3.5}.anatomy-wrap svg{overflow:visible}
 .muscle-btn{padding:12px 8px;border-radius:13px;font-weight:600}
 .muscle-btn.active{background:linear-gradient(120deg,#fff0e9,#fbe0d8);box-shadow:inset 0 0 0 1px #e7a19a}
 .tabs{background:#f5eee2;padding:4px;border-radius:14px}
@@ -127,6 +129,31 @@ main{max-width:1500px}
  <path class="muscle" data-id="abductors" d="M209 289 Q225 278 240 286 L246 310 Q250 334 241 354 Q227 367 217 347Z"/>
  <path class="muscle" data-id="adductors" d="M151 294 Q162 304 176 300 L170 373 Q160 381 153 365Z"/>
  <path class="muscle" data-id="adductors" d="M209 294 Q198 304 184 300 L190 373 Q200 381 207 365Z"/>
+<g class="anatomy-detail" pointer-events="none" fill="none" stroke="#815d50" stroke-linecap="round" stroke-linejoin="round">
+ <!-- clavicles, sternum and pectoral fiber direction -->
+ <path d="M132 111 Q153 105 178 119 M228 111 Q207 105 182 119" stroke="#8c6859" stroke-width="2" opacity=".55"/>
+ <path d="M180 119 L180 205" stroke="#8e6658" stroke-width="1.6" opacity=".42"/>
+ <path d="M133 132 Q151 143 174 145 M227 132 Q209 143 186 145" stroke="#f4d9c6" stroke-width="2.2" opacity=".8"/>
+ <path d="M138 164 Q155 177 173 178 M222 164 Q205 177 187 178" stroke="#f1d2bd" stroke-width="2" opacity=".75"/>
+ <!-- deltoid separations -->
+ <path d="M109 119 Q124 126 132 151 M251 119 Q236 126 228 151" stroke="#f3d7c4" stroke-width="2" opacity=".8"/>
+ <path d="M119 111 Q132 119 141 133 M241 111 Q228 119 219 133" stroke="#8d6658" opacity=".5"/>
+ <!-- biceps contour and brachialis groove -->
+ <path d="M98 162 Q105 179 101 207 M262 162 Q255 179 259 207" stroke="#f0d0bd" stroke-width="2" opacity=".8"/>
+ <path d="M111 171 Q116 190 108 213 M249 171 Q244 190 252 213" stroke="#8b6255" opacity=".55"/>
+ <!-- serratus slips and external oblique fibers -->
+ <path d="M132 194 l10 8 M137 207 l10 8 M142 220 l9 7 M228 194 l-10 8 M223 207 l-10 8 M218 220 l-9 7" stroke="#f1d2bd" stroke-width="2" opacity=".85"/>
+ <path d="M130 231 Q139 239 145 242 M230 231 Q221 239 215 242" stroke="#855d50" opacity=".55"/>
+ <!-- abdominal tendinous intersections / linea alba -->
+ <path d="M180 207 L180 271 M154 231 Q180 235 206 231 M154 251 Q180 255 206 251" stroke="#875f52" stroke-width="1.6" opacity=".58"/>
+ <path d="M157 232 Q166 234 176 232 M184 232 Q194 234 203 232 M157 252 Q166 254 176 252 M184 252 Q194 254 203 252" stroke="#f4d9c6" stroke-width="1.8" opacity=".8"/>
+ <!-- quadriceps: rectus femoris, vastus lateralis and medialis contours -->
+ <path d="M163 294 Q168 321 161 354 Q157 368 153 373 M197 294 Q192 321 199 354 Q203 368 207 373" stroke="#f2d3bf" stroke-width="2.2" opacity=".8"/>
+ <path d="M145 309 Q137 337 145 361 M215 309 Q223 337 215 361" stroke="#855d50" stroke-width="1.7" opacity=".55"/>
+ <path d="M151 365 Q163 378 173 369 M209 365 Q197 378 187 369" stroke="#8d6253" opacity=".55"/>
+ <!-- forearm muscle tendons -->
+ <path d="M86 244 Q91 262 88 282 M274 244 Q269 262 272 282" stroke="#f1d4c2" stroke-width="1.8" opacity=".75"/>
+</g>
 </g>
 <g id="backMuscles" style="display:none">
  <path class="muscle" data-id="traps" d="M151 99 Q180 83 209 99 L226 142 Q208 163 180 171 Q152 163 134 142Z"/>
@@ -151,6 +178,29 @@ main{max-width:1500px}
  <path class="muscle" data-id="hamstrings" d="M234 369 Q212 379 187 370 L194 463 Q207 478 221 461 Q234 427 234 369Z"/>
  <path class="muscle" data-id="calves" d="M132 470 Q149 461 164 475 L151 559 Q140 574 126 559Z"/>
  <path class="muscle" data-id="calves" d="M228 470 Q211 461 196 475 L209 559 Q220 574 234 559Z"/>
+<g class="anatomy-detail" pointer-events="none" fill="none" stroke-linecap="round" stroke-linejoin="round">
+ <!-- trapezius and scapular borders -->
+ <path d="M180 99 Q163 126 143 145 M180 99 Q197 126 217 145" stroke="#f0cdb8" stroke-width="2.3" opacity=".8"/>
+ <path d="M145 143 Q160 155 177 162 M215 143 Q200 155 183 162" stroke="#81594e" stroke-width="1.7" opacity=".55"/>
+ <!-- posterior deltoid and triceps separations -->
+ <path d="M111 117 Q128 124 136 149 M249 117 Q232 124 224 149" stroke="#f1d2bd" stroke-width="2" opacity=".8"/>
+ <path d="M101 166 Q111 181 105 210 M259 166 Q249 181 255 210" stroke="#f1d2bd" stroke-width="2" opacity=".8"/>
+ <!-- latissimus fibers toward waist -->
+ <path d="M139 157 Q148 190 160 238 M221 157 Q212 190 200 238" stroke="#f0cdb8" stroke-width="2.2" opacity=".75"/>
+ <path d="M151 174 Q157 207 166 248 M209 174 Q203 207 194 248" stroke="#80594e" stroke-width="1.4" opacity=".5"/>
+ <!-- rhomboids / spinal erectors -->
+ <path d="M180 164 L180 270 M165 177 Q173 191 176 211 M195 177 Q187 191 184 211" stroke="#f3d4c0" stroke-width="1.8" opacity=".75"/>
+ <path d="M170 224 Q180 230 190 224 M171 244 Q180 250 189 244" stroke="#80594e" stroke-width="1.4" opacity=".55"/>
+ <!-- gluteal contours -->
+ <path d="M130 316 Q148 331 173 326 M230 316 Q212 331 187 326" stroke="#f1d0bd" stroke-width="2.2" opacity=".8"/>
+ <path d="M151 310 Q145 337 154 360 M209 310 Q215 337 206 360" stroke="#80594e" stroke-width="1.5" opacity=".55"/>
+ <!-- hamstring heads -->
+ <path d="M145 380 Q151 413 148 454 M215 380 Q209 413 212 454" stroke="#f0d0bc" stroke-width="2" opacity=".8"/>
+ <path d="M164 378 Q170 416 160 462 M196 378 Q190 416 200 462" stroke="#80594e" stroke-width="1.5" opacity=".5"/>
+ <!-- gastrocnemius heads and soleus -->
+ <path d="M141 477 Q153 498 145 527 M219 477 Q207 498 215 527" stroke="#f1d1bd" stroke-width="2.2" opacity=".8"/>
+ <path d="M155 484 Q160 510 151 545 M205 484 Q200 510 209 545" stroke="#80594e" stroke-width="1.5" opacity=".5"/>
+</g>
 </g>
 </svg></div><div class="legend"><span><i class="dot"></i>ناحیه انتخاب‌شده</span><span>برای تغییر ناحیه روی عضله بزنید</span></div>
 </section>
