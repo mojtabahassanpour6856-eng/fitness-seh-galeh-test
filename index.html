@@ -15041,6 +15041,8 @@ window.sehNutritionBuilderBridge={
  function sec(){return Array.from(crypto.getRandomValues(new Uint8Array(32))).map(x=>x.toString(16).padStart(2,'0')).join('');}
  function msg(t,ok){const e=$('sehOtpStatus');if(e){e.textContent=t;e.style.color=ok?'#167342':'#a35b12';}}
  function render(){
+  // TEST AUTH RESTORE: keep original password-based trainee login when connected redesign is active.
+  if(window.__sehAuthRedesignConnected)return;
   const box=$('traineeLoginBox');if(!box||box.dataset.sehOtpV2==='1')return;
   box.dataset.sehOtpV2='1';
   box.innerHTML=`
