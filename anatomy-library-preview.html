@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>آزمایش کتابخانه آماده آناتومی | فیتنس سه‌قلعه</title>
+<style>
+:root{--bg:#f7f3e9;--card:#fffdf8;--gold:#b18a43;--ink:#342f27;--muted:#777064;--line:#e8dfcc;--red:#d65b45}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif}
+main{max-width:1080px;margin:24px auto;padding:16px}.top{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:0 8px 26px #6b542014}
+h1{font-size:20px;margin:0 0 8px;color:#80612d}.sub{font-size:13px;color:var(--muted);line-height:1.9}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;margin-top:16px}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:10px;cursor:pointer;font:inherit;font-size:13px}.btn.active{background:#8c6c35;color:white;border-color:#8c6c35}
+#body-map{width:100%;min-height:500px;display:flex;justify-content:center;align-items:flex-start;overflow:hidden}#body-map svg{max-width:100%;height:auto}
+h2{font-size:16px;margin:2px 0 12px}.hint{font-size:12px;color:var(--muted);line-height:1.9;margin-bottom:12px}
+#muscle-list{display:grid;gap:7px}.muscle{display:flex;align-items:center;gap:9px;padding:9px;border:1px solid var(--line);border-radius:10px;font-size:13px;background:white}.muscle input{accent-color:var(--gold);width:17px;height:17px}
+.status{margin-top:14px;background:#f6f0e3;border-radius:10px;padding:11px;font-size:12px;line-height:1.8;color:#67532f;white-space:pre-wrap}
+.foot{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.8}
+@media(max-width:760px){main{margin:8px auto;padding:9px}.grid{grid-template-columns:1fr}.panel{padding:12px}#body-map{min-height:390px}}
+</style>
+</head>
+<body><main>
+<header class="top"><h1>آزمایش کتابخانه آماده آناتومی</h1><div class="sub">این صفحه کاملاً آزمایشی است و فقط کتابخانه مستقل Body Muscles را نمایش می‌دهد. هیچ فایلی از اپ اصلی تغییر نکرده و اطلاعات شاگردان درگیر این آزمایش نیستند.<br>هدف فعلی: بررسی هم‌ترازی واقعی مسیر عضلات سینه و انتخاب مستقل نواحی آن.</div></header>
+<div class="grid">
+<section class="panel">
+<div class="toolbar"><button class="btn active" id="front">نمای جلو</button><button class="btn" id="back">نمای پشت</button><button class="btn" id="clear">پاک‌کردن انتخاب‌ها</button></div>
+<div id="body-map" aria-label="نقشه تعاملی عضلات بدن"></div>
+<div class="foot">برای انتخاب، روی خود عضله در تصویر یا نام آن در فهرست سمت مقابل بزن. رنگ انتخاب از مسیرهای SVG خود کتابخانه می‌آید، نه از مختصات‌گذاری دستی ما.</div>
+</section>
+<aside class="panel"><h2>عضلات سینه</h2><div class="hint">فهرست دقیق نواحی سینه مستقیماً از شناسه‌های خود کتابخانه ساخته می‌شود. هر گزینه را جداگانه انتخاب یا غیرفعال کن.</div><div id="muscle-list">در حال بارگذاری کتابخانه…</div><div class="status" id="status">در انتظار بارگذاری…</div></aside>
+</div>
+<div class="foot">منبع کتابخانه: @vulovix/body-muscles · مجوز Apache-2.0 · نسخه آزمایشی مستقل</div>
+</main>
+<script type="module">
+const statusEl=document.getElementById('status'), listEl=document.getElementById('muscle-list');
+try{
+ const lib=await import('https://esm.sh/body-muscles@1.0.0');
+ const {BodyChart,ViewSide,MUSCLE_MAP}=lib;
+ const state={};
+ const entries=Object.entries(MUSCLE_MAP||{}).filter(([id])=>id.toLowerCase().includes('chest'));
+ const labels=new Map(entries.map(([id,def])=>[id,def.label||def.name||id]));
+ const chart=new BodyChart(document.getElementById('body-map'),{
+  view:ViewSide.FRONT,bodyState:state,showViewLabel:true,
+  onMuscleClick:(id,name)=>{const old=state[id]||{intensity:0,selected:false};state[id]={intensity:old.intensity||8,selected:!old.selected};chart.update({bodyState:{...state}});renderList();updateStatus(name||labels.get(id)||id);}
+ });
+ function renderList(){
+  listEl.innerHTML='';
+  if(!entries.length){listEl.textContent='شناسه‌ای با نام chest در نسخه بارگذاری‌شده پیدا نشد.';return;}
+  entries.forEach(([id,def])=>{
+   const label=def.label||def.name||id;const row=document.createElement('label');row.className='muscle';
+   const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!state[id]?.selected;
+   cb.addEventListener('change',()=>{state[id]={intensity:8,selected:cb.checked};chart.update({bodyState:{...state}});updateStatus(label);});
+   const span=document.createElement('span');span.textContent=label+' · '+id;row.append(cb,span);listEl.append(row);
+  });
+ }
+ function updateStatus(last){const selected=Object.keys(state).filter(k=>state[k]?.selected);statusEl.textContent='آخرین انتخاب: '+(last||'—')+'\nتعداد نواحی انتخاب‌شده سینه: '+selected.filter(k=>k.includes('chest')).length+'\nشناسه‌ها: '+selected.join('، ');}
+ document.getElementById('front').onclick=()=>{chart.update({view:ViewSide.FRONT});document.getElementById('front').classList.add('active');document.getElementById('back').classList.remove('active');};
+ document.getElementById('back').onclick=()=>{chart.update({view:ViewSide.BACK});document.getElementById('back').classList.add('active');document.getElementById('front').classList.remove('active');};
+ document.getElementById('clear').onclick=()=>{Object.keys(state).forEach(k=>delete state[k]);chart.update({bodyState:{}});renderList();updateStatus('همه انتخاب‌ها پاک شد');};
+ renderList();updateStatus('آماده آزمایش');
+}catch(error){statusEl.textContent='بارگذاری کتابخانه ناموفق بود.\n'+String(error)+'\nاگر اینترنت یا CDN مسدود باشد، نسخه محلی کتابخانه را در مرحله بعد داخل مخزن قرار می‌دهیم.';listEl.textContent='کتابخانه بارگذاری نشد.';}
+</script></body></html>
