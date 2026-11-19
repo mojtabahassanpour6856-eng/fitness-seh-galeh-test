@@ -129,7 +129,7 @@ main{max-width:1500px}
  <path class="muscle" data-id="abductors" d="M209 289 Q225 278 240 286 L246 310 Q250 334 241 354 Q227 367 217 347Z"/>
  <path class="muscle" data-id="adductors" d="M151 294 Q162 304 176 300 L170 373 Q160 381 153 365Z"/>
  <path class="muscle" data-id="adductors" d="M209 294 Q198 304 184 300 L190 373 Q200 381 207 365Z"/>
-<g class="anatomy-detail" pointer-events="none" fill="none" stroke="#815d50" stroke-linecap="round" stroke-linejoin="round">
+<g id="frontDetail" class="anatomy-detail" pointer-events="none" fill="none" stroke="#815d50" stroke-linecap="round" stroke-linejoin="round">
  <!-- clavicles, sternum and pectoral fiber direction -->
  <path d="M132 111 Q153 105 178 119 M228 111 Q207 105 182 119" stroke="#8c6859" stroke-width="2" opacity=".55"/>
  <path d="M180 119 L180 205" stroke="#8e6658" stroke-width="1.6" opacity=".42"/>
@@ -178,7 +178,7 @@ main{max-width:1500px}
  <path class="muscle" data-id="hamstrings" d="M234 369 Q212 379 187 370 L194 463 Q207 478 221 461 Q234 427 234 369Z"/>
  <path class="muscle" data-id="calves" d="M132 470 Q149 461 164 475 L151 559 Q140 574 126 559Z"/>
  <path class="muscle" data-id="calves" d="M228 470 Q211 461 196 475 L209 559 Q220 574 234 559Z"/>
-<g class="anatomy-detail" pointer-events="none" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<g id="backDetail" class="anatomy-detail" style="display:none" pointer-events="none" fill="none" stroke-linecap="round" stroke-linejoin="round">
  <!-- trapezius and scapular borders -->
  <path d="M180 99 Q163 126 143 145 M180 99 Q197 126 217 145" stroke="#f0cdb8" stroke-width="2.3" opacity=".8"/>
  <path d="M145 143 Q160 155 177 162 M215 143 Q200 155 183 162" stroke="#81594e" stroke-width="1.7" opacity=".55"/>
@@ -311,7 +311,7 @@ function getList(){
 }
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'">'+g.name+'</button>').join("");}
 function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(g.view!==view)setView(g.view);renderGroups();document.querySelectorAll(".muscle").forEach(el=>{const mid=el.dataset.id;el.classList.toggle("selected",mid===id||mid===parentMap[id]||parentMap[mid]===id);});$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
-function setView(v){view=v;$("#frontMuscles").style.display=v==="front"?"":"none";$("#backMuscles").style.display=v==="back"?"":"none";document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));}
+function setView(v){view=v;$("#frontMuscles").style.display=v==="front"?"":"none";$("#backMuscles").style.display=v==="back"?"":"none";$("#frontDetail").style.display=v==="front"?"":"none";$("#backDetail").style.display=v==="back"?"":"none";document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));}
 function keyFor(g,e,source,session){return normalizeExerciseName(e[0])+"::"+(source||e.source||"global")+"::"+String(g||"")+"::"+String(session||"");}
 function renderExercises(){const list=getList();$("#exerciseCount").textContent=list.length+" حرکت قابل نمایش · "+staged.length+" حرکت انتخاب‌شده · "+(($("#muscleRoleFilter")?.value||"primary")==="primary"?"عضله اصلی":($("#muscleRoleFilter")?.value==="secondary"?"عضله کمکی":"اصلی و کمکی"));$("#exerciseList").innerHTML=list.map((e,i)=>'<button class="exercise '+(staged.some(x=>x.key===keyFor(selectedGroup,e,e.source,$("#sessionSelect").value))?"active":"")+'" data-ex="'+i+'"><b>'+escapeHtml(e[0])+'</b><small>تجهیزات: '+escapeHtml(e[1])+' · '+escapeHtml(e.relation||'عضله اصلی')+': '+escapeHtml(e[2])+'<br>'+(e.source==="coach"||bank==="coach"?"بانک اختصاصی مربی · نمونه":"بانک جامع سیستم · نمونه")+'</small></button>').join("")||'<p class="sub">برای این فیلتر حرکتی یافت نشد.</p>';}
 function chooseExercise(i){const e=getList()[i];if(!e)return;const session=$("#sessionSelect").value,k=keyFor(selectedGroup,e,e.source||bank,session),existing=staged.findIndex(x=>x.key===k);if(existing>=0)staged.splice(existing,1);else staged.push({key:k,group:selectedGroup,groupName:groups.find(x=>x.id===selectedGroup)?.name||selectedGroup,exercise:e,bank:e.source||bank,session,system:"عادی",groupLabel:"",sets:3,reps:"10-12",rest:60});renderExercises();renderStaged();$("#exerciseDetail").innerHTML='<h3>'+escapeHtml(e[0])+'</h3><p class="sub">تجهیزات: '+escapeHtml(e[1])+'</p><div class="tags"><span class="tag">عضله اصلی: '+escapeHtml(e[2])+'</span><span class="tag secondary">عضلات کمکی: '+escapeHtml(e[3])+'</span><span class="tag secondary">'+(e.source==="coach"||bank==="coach"?"بانک اختصاصی مربی":"بانک جامع سیستم")+'</span></div><p class="sub">نوع حرکت: '+ escapeHtml(e[5]||"عمومی") +'</p><p class="sub">'+ escapeHtml(e[4]||"توضیحی ثبت نشده") +'</p><p class="sub">کارت حرکت را برای افزودن یا حذف از فهرست انتخاب‌ها لمس کنید.</p>';}
