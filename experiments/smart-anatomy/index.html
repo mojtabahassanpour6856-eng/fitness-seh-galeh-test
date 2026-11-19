@@ -124,9 +124,9 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 .anatomy-wrap svg .bodyline{stroke:#222!important}
 
 .photo-anatomy{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#fff;overflow:hidden}
-.photo-anatomy img{width:auto;height:100%;max-width:100%;max-height:100%;object-fit:contain;position:absolute;inset:0;margin:auto;object-position:center center}
+.photo-anatomy #muscleHotspots{width:auto;height:100%;max-width:100%;max-height:100%;position:relative;inset:auto;margin:auto;display:block;flex:none;overflow:visible}
 .anatomy-wrap>svg:not(#muscleHotspots){display:none!important}
-#muscleHotspots{display:block!important;position:absolute;width:auto;height:100%;max-width:100%;max-height:100%;inset:0;margin:auto;pointer-events:none;filter:none!important;object-fit:contain;object-position:center center}
+#muscleHotspots{display:block!important;position:relative;width:auto;height:100%;max-width:100%;max-height:100%;inset:auto;margin:auto;pointer-events:none;filter:none!important;flex:none;overflow:visible}
 #muscleHotspots .hotspot{pointer-events:auto;cursor:pointer}
 #muscleHotspots .hotspot path{fill:transparent;stroke:transparent;stroke-width:2;transition:fill .15s,stroke .15s}
 #muscleHotspots .hotspot.selected path{fill:#e43d3d88;stroke:#b52424;stroke-width:2.3}
@@ -145,7 +145,7 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 </section>
 <section class="card anatomy-card">
 <h2>نقشه عضلات بدن</h2><div class="tabs"><button class="tab active" data-view="front">نمای جلو</button><button class="tab" data-view="back">نمای پشت</button></div>
-<div class="anatomy-wrap"><div class="photo-anatomy" id="photoAnatomy"><img id="anatomyPhoto" src="images/images/front.jpg" alt="آناتومی نمای جلو"/><svg id="muscleHotspots" viewBox="0 0 683 1024" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+<div class="anatomy-wrap"><div class="photo-anatomy" id="photoAnatomy"><svg id="muscleHotspots" viewBox="0 0 683 1024" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><image id="anatomyPhotoSvg" x="0" y="0" width="683" height="1024" href="images/images/front.jpg" preserveAspectRatio="none"/>
 <!-- FRONT: separate, non-overlapping regions traced to the supplied front reference -->
 <g class="hotspot" data-muscle="upper-chest"><path d="M202 224 C215 211 235 207 255 211 C282 216 311 230 338 246 L338 276 C314 276 288 269 265 258 C239 246 218 236 202 224Z"/><path d="M481 224 C468 211 448 207 428 211 C401 216 372 230 345 246 L345 276 C369 276 395 269 418 258 C444 246 465 236 481 224Z"/></g>
 <g class="hotspot" data-muscle="mid-chest"><path d="M205 239 C224 253 249 268 276 278 C298 287 320 291 338 290 L338 313 C308 313 279 305 254 293 C231 282 214 265 205 239Z"/><path d="M478 239 C459 253 434 268 407 278 C385 287 363 291 345 290 L345 313 C375 313 404 305 429 293 C452 282 469 265 478 239Z"/></g>
@@ -459,6 +459,6 @@ function validateStagedGroups(items){const groupSystems=["سوپرست","تری�
 $("#addBtn").addEventListener("click",()=>{if(!staged.length)return;const groupSystems=["سوپرست","تری‌ست","جاینت‌ست"];const groupError=validateStagedGroups(staged);if(groupError){alert(groupError);return;}const sets=new Map();staged.filter(x=>groupSystems.includes(x.system)).forEach(x=>{const k=x.session+"::"+x.groupLabel.trim().toLowerCase();if(!sets.has(k))sets.set(k,[]);sets.get(k).push(x);});for(const members of sets.values()){const targets=members.map(x=>normalizeExerciseName(x.exercise[2]));if(new Set(targets).size<members.length&&!confirm("چند حرکت این گروه عضله اصلی مشابه دارند؛ حجم و خستگی را بررسی کنید. ادامه می‌دهید؟"))return;}const fresh=staged.filter(x=>!plan.some(p=>p.session===x.session&&normalizeExerciseName(p.name)===normalizeExerciseName(x.exercise[0])));if(fresh.length!==staged.length)alert("حرکات تکراری در همان جلسه به برنامه اضافه نشدند.");if(!fresh.length)return;fresh.forEach(x=>plan.push({name:x.exercise[0],group:x.groupName,session:x.session,details:x.exercise,system:x.system||"عادی",groupLabel:x.groupLabel||"",sets:x.sets||3,reps:x.reps||"10-12",rest:x.rest??60}));renderPlan();staged=[];renderExercises();renderStaged();});
 const photoFront="images/images/front.jpg",photoBack="images/images/back.jpg";
 renderGroups();renderStaged();renderPlan();refreshPhotoAnatomy();
-function refreshPhotoAnatomy(){const photo=$("#anatomyPhoto"),overlay=$("#muscleHotspots"),layer=$("#photoAnatomy");if(!photo||!overlay||!layer)return;photo.src=view==="front"?photoFront:photoBack;photo.alt=view==="front"?"آناتومی نمای جلو":"آناتومی نمای پشت";layer.style.display="flex";const visible=new Set(groups.filter(g=>g.view===view).map(g=>g.id));overlay.querySelectorAll(".hotspot").forEach(h=>{h.style.display=visible.has(h.dataset.muscle)?"":"none";h.classList.toggle("selected",h.dataset.muscle===selectedGroup);});}
+function refreshPhotoAnatomy(){const photo=$("#anatomyPhotoSvg"),overlay=$("#muscleHotspots"),layer=$("#photoAnatomy");if(!overlay||!layer)return;if(photo)photo.setAttribute("href",view==="front"?photoFront:photoBack);layer.style.display="flex";const visible=new Set(groups.filter(g=>g.view===view).map(g=>g.id));overlay.querySelectorAll(".hotspot").forEach(h=>{h.style.display=visible.has(h.dataset.muscle)?"":"none";h.classList.toggle("selected",h.dataset.muscle===selectedGroup);});}
 document.querySelectorAll("#muscleHotspots .hotspot").forEach(h=>h.addEventListener("click",()=>chooseGroup(h.dataset.muscle)));
 </script></body></html>
