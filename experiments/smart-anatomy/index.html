@@ -167,19 +167,21 @@ const libraryState={};
 const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
  view:ViewSide.FRONT,bodyState:libraryState,ariaLabel:"نقشه عضلات بدن",
  onMuscleClick:(id,name)=>{
-  const groupId=id.startsWith("chest-upper-")?"upper-chest":id.startsWith("chest-lower-")?"mid-chest":
-   id.startsWith("shoulder-front-")?"front-delts":id.startsWith("shoulder-side-")?"side-delts":
-   id.startsWith("deltoid-rear-")?"rear-delts":
-   id.startsWith("biceps-")?"biceps-long":
-   id.startsWith("triceps-long-")?"triceps-long":id.startsWith("triceps-lateral-")?"triceps-lateral":
-   id.startsWith("abs-upper-")?"upper-abs":id.startsWith("abs-lower-")?"lower-abs":id.startsWith("obliques-")?"obliques":
-   id.startsWith("quads-")?"quads":id.startsWith("adductors-")?"adductors":
-   id.startsWith("traps-")?"traps":id.startsWith("lats-")?"lats":
-   id.startsWith("lower-back-")?"lower-back":id.startsWith("gluteus-maximus-")?"glute-max":
-   id.startsWith("gluteus-medius-")?"glute-med":id.startsWith("hamstrings-")?"hamstrings":
-   id.startsWith("calves-")?"calves":id.startsWith("forearm-flexors-")?"forearm-flexors":
-   id.startsWith("forearm-extensors-")?"forearm-extensors":id;
-  if(groups.some(g=>g.id===groupId))chooseGroup(groupId);
+  const rules=[
+   [/^chest-upper-/,"upper-chest"],[/^chest-lower-/,"mid-chest"],
+   [/^shoulder-front-/,"front-delts"],[/^shoulder-side-/,"side-delts"],[/^deltoid-rear-/,"rear-delts"],
+   [/^biceps-/,"biceps-long"],[/^triceps-long-/,"triceps-long"],[/^triceps-lateral-/,"triceps-lateral"],
+   [/^abs-upper-/,"upper-abs"],[/^abs-lower-/,"lower-abs"],[/^obliques-/,"obliques"],
+   [/^serratus-anterior-/,"obliques"],[/^quads-/,"quads"],[/^adductors-/,"adductors"],
+   [/^hip-flexor-/,"abductors"],[/^traps-/,"traps"],[/^lats-/,"lats"],
+   [/^lower-back-/,"lower-back"],[/^gluteus-maximus-/,"glute-max"],[/^gluteus-medius-/,"glute-med"],
+   [/^hamstrings-/,"hamstrings"],[/^calves-/,"calves"],
+   [/^forearm-flexors-/,"forearm-flexors"],[/^forearm-extensors-/,"forearm-extensors"],
+   [/^forearm-/,"forearm-flexors"]
+  ];
+  const match=rules.find(([pattern])=>pattern.test(id));
+  const groupId=match?.[1];
+  if(groupId&&groups.some(g=>g.id===groupId))chooseGroup(groupId);
  }
 });
 const groups=[
@@ -187,7 +189,7 @@ const groups=[
 {id:"front-delts",name:"سرشانه جلو",view:"front"},{id:"side-delts",name:"سرشانه میانی",view:"front"},{id:"rear-delts",name:"سرشانه خلفی",view:"back"},
 {id:"biceps-long",name:"جلو بازو (تأکید نسبی بر سر بلند)",view:"front"},{id:"biceps-short",name:"جلو بازو (تأکید نسبی بر سر کوتاه)",view:"front"},{id:"brachialis",name:"براکیالیس",view:"front"},{id:"triceps-long",name:"پشت بازو (سر بلند)",view:"back"},{id:"triceps-lateral",name:"پشت بازو (سر خارجی)",view:"back"},
 {id:"upper-abs",name:"راست شکمی (تأکید بر خم‌کردن تنه)",view:"front"},{id:"lower-abs",name:"راست شکمی (تأکید بر چرخش خلفی لگن)",view:"front"},{id:"obliques",name:"پهلو",view:"front"},
-{id:"quads",name:"چهارسر ران",view:"front"},{id:"adductors",name:"داخل ران",view:"front"},{id:"abductors",name:"خارج ران",view:"front"},
+{id:"quads",name:"چهارسر ران",view:"front"},{id:"adductors",name:"داخل ران",view:"front"},{id:"abductors",name:"خم‌کننده ران",view:"front"},
 {id:"traps",name:"کول",view:"back"},{id:"lats",name:"زیربغل",view:"back"},{id:"mid-back",name:"میانه پشت",view:"back"},{id:"lower-back",name:"فیله کمر",view:"back"},
 {id:"glute-max",name:"باسن بزرگ",view:"back"},{id:"glute-med",name:"باسن میانی",view:"back"},{id:"hamstrings",name:"همسترینگ",view:"back"},{id:"calves",name:"ساق پا",view:"back"},{id:"forearm-flexors",name:"ساعد (خم‌کننده)",view:"front"},{id:"forearm-extensors",name:"ساعد (بازکننده)",view:"back"}];
 const parentMap={"upper-chest":"chest","mid-chest":"chest","lower-chest":"chest","front-delts":"shoulders","side-delts":"shoulders","rear-delts":"shoulders","biceps-long":"biceps","biceps-short":"biceps","brachialis":"biceps","triceps-long":"triceps","triceps-lateral":"triceps","upper-abs":"abs","lower-abs":"abs","obliques":"abs","glute-max":"glutes","glute-med":"glutes"};
@@ -293,7 +295,7 @@ function syncLibrarySelection(){
   "lats":["lats-"],"mid-back":["traps-mid-","lats-mid-"],"lower-back":["lower-back-"],
   "glute-max":["gluteus-maximus-"],"glute-med":["gluteus-medius-"],
   "hamstrings":["hamstrings-"],"calves":["calves-"],
-  "forearm-flexors":["forearm-flexors-"],"forearm-extensors":["forearm-extensors-"]
+  "forearm-flexors":["forearm-flexors-","forearm-"],"forearm-extensors":["forearm-extensors-"]
  };
  const prefixes=regionPrefixes[selectedGroup]||[];
  const allRegionIds=[
@@ -326,7 +328,7 @@ $("#muscleButtons").addEventListener("click",e=>{const b=e.target.closest("[data
 
 
 $("#exerciseList").addEventListener("click",e=>{const b=e.target.closest("[data-ex]");if(b)chooseExercise(+b.dataset.ex);});
-document.querySelectorAll(".tab[data-view]").forEach(t=>t.addEventListener("click",()=>{setView(t.dataset.view);selectedGroup=null;document.querySelectorAll(".muscle").forEach(m=>{m.classList.remove("selected");m.setAttribute("aria-pressed","false");});renderGroups();$("#selectedLabel").textContent="ابتدا یک عضله انتخاب کنید";$("#exerciseList").innerHTML="";}));
+document.querySelectorAll(".tab[data-view]").forEach(t=>t.addEventListener("click",()=>{setView(t.dataset.view);selectedGroup=null;syncLibrarySelection();renderGroups();$("#selectedLabel").textContent="ابتدا یک عضله انتخاب کنید";$("#exerciseList").innerHTML="";$("#exerciseCount").textContent="";$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class=\"sub\">برای مشاهده حرکات، یک گروه عضلانی را انتخاب کنید.</p>";}));
 document.querySelectorAll(".tab[data-bank]").forEach(t=>t.addEventListener("click",()=>{bank=t.dataset.bank;document.querySelectorAll(".tab[data-bank]").forEach(b=>b.classList.toggle("active",b===t));$("#customForm").style.display=bank==="coach"?"":"none";$("#bankNote").textContent=bank==="both"?"حرکات بانک جامع و اختصاصی کنار هم نمایش داده می‌شوند؛ بانک مربی در این نمونه فقط داخل مرورگر ذخیره می‌شود.":bank==="coach"?"حرکات اختصاصی مربی فقط در این نمونه مرورگر ذخیره می‌شوند و به سامانه واقعی متصل نیستند.":"حرکات استاندارد از بانک جامع (نمونه) نمایش داده می‌شود.";renderExercises();}));$("#equipmentFilter").addEventListener("change",renderExercises);$("#muscleRoleFilter").addEventListener("change",renderExercises);$("#exerciseSearch").addEventListener("input",renderExercises);
 $("#saveCustom").addEventListener("click",()=>{if(!selectedGroup){alert("ابتدا عضله هدف را انتخاب کنید.");return;}const name=$("#customName").value.trim();if(!name){alert("نام حرکت را وارد کنید.");return;}const item=[name,$("#customEquipment").value.trim()||"نامشخص",groups.find(x=>x.id===selectedGroup)?.name||selectedGroup,$("#customAssist").value.trim()||"—",$("#customNote").value.trim(),$("#customCategory").value.trim()||"عمومی"];customBank[selectedGroup]=customBank[selectedGroup]||[];customBank[selectedGroup].push(item);$("#customName").value="";$("#customEquipment").value="";$("#customAssist").value="";$("#customCategory").value="";$("#customNote").value="";renderExercises();alert("حرکت در بانک اختصاصی نمونه اضافه شد.");});
 $("#stagedList").addEventListener("click",e=>{const b=e.target.closest("[data-remove]");if(b){staged.splice(+b.dataset.remove,1);renderExercises();renderStaged();}});$("#stagedList").addEventListener("change",e=>{const el=e.target.closest("[data-field]");if(!el)return;const x=staged[+el.dataset.index];if(!x)return;const field=el.dataset.field;if(field==="sets"){const value=Math.min(20,Math.max(1,Number.parseInt(el.value,10)||1));x.sets=value;el.value=value;}else if(field==="rest"){const value=Math.min(600,Math.max(0,Number.parseInt(el.value,10)||0));x.rest=value;el.value=value;}else if(field==="reps"){x.reps=String(el.value).trim().slice(0,24);el.value=x.reps;}else{x[field]=el.value;}});$("#stagedList").addEventListener("change",e=>{const el=e.target.closest("[data-field=\"system\"]");if(el){const x=staged[+el.dataset.index];if(x){x.system=el.value;const needsGroup=["سوپرست","تری‌ست","جاینت‌ست"].includes(x.system);if(needsGroup&&!x.groupLabel)x.groupLabel="A";renderStaged();}}});$("#stagedList").addEventListener("input",e=>{const el=e.target.closest("[data-field]");if(!el)return;const x=staged[+el.dataset.index];if(x)x[el.dataset.field]=el.value;});
