@@ -9,6 +9,7 @@ on:
       - 'sw.js'
       - 'icon.svg'
       - 'tests/offline-preview-static.test.mjs'
+      - 'tests/auth-entry-static.test.mjs'
       - '.github/workflows/test-offline-preview.yml'
 permissions:
   contents: read
@@ -20,4 +21,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node --test tests/offline-preview-static.test.mjs
+      - run: node --test tests/offline-preview-static.test.mjs tests/auth-entry-static.test.mjs
