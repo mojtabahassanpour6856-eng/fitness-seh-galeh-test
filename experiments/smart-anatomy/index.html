@@ -106,6 +106,22 @@ body{background:#fff!important}
 .anatomy-wrap svg .bone{fill:#fff!important;stroke:#222!important}
 .anatomy-wrap svg .anatomy-detail path{stroke:#222!important;opacity:.9!important;filter:none!important}
 .anatomy-wrap svg .bodyline{stroke:#222!important}
+
+/* Clean final line-art layer (kept inside the document style block) */
+body,.anatomy-card,.anatomy-wrap{background:#fff!important}
+.anatomy-wrap{border-color:#eee!important}
+.anatomy-wrap svg{filter:none!important;max-width:100%;touch-action:manipulation}
+.anatomy-wrap svg .muscle,
+.anatomy-wrap svg .muscle:nth-of-type(3n),
+.anatomy-wrap svg .muscle:nth-of-type(4n){
+ fill:none!important;stroke:#222!important;stroke-width:1.45!important;opacity:1!important;filter:none!important;
+}
+.anatomy-wrap svg .muscle:hover{fill:none!important;stroke:#111!important;stroke-width:1.9!important}
+.anatomy-wrap svg .muscle.selected,
+.anatomy-wrap svg .muscle.selected:hover{fill:#e43d3d!important;stroke:#991f1f!important;stroke-width:1.9!important;filter:none!important}
+.anatomy-wrap svg .bone{fill:#fff!important;stroke:#222!important;stroke-width:1.5!important}
+.anatomy-wrap svg .anatomy-detail path{stroke:#333!important;opacity:.85!important;filter:none!important}
+.anatomy-wrap svg .bodyline{stroke:#222!important}
 </style>
 </head>
 <body>
