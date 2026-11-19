@@ -344,7 +344,7 @@ function getList(){
  const seen=new Set();return filtered.filter(e=>{const key=normalizeExerciseName(e[0])+"::"+e.source;if(seen.has(key))return false;seen.add(key);return true;});
 }
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'">'+g.name+'</button>').join("");}
-function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(g.view!==view)setView(g.view);renderGroups();document.querySelectorAll(".muscle").forEach(el=>{const mid=el.dataset.id;el.classList.toggle("selected",mid===id||mid===parentMap[id]||parentMap[mid]===id);});$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
+function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();const family=parentMap[id]||id;document.querySelectorAll(".muscle").forEach(el=>{const mid=el.dataset.id;el.classList.toggle("selected",mid===id||(parentMap[mid]||mid)===family);});$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
 function setView(v){view=v;$("#frontMuscles").style.display=v==="front"?"":"none";$("#backMuscles").style.display=v==="back"?"":"none";$("#frontDetail").style.display=v==="front"?"":"none";$("#backDetail").style.display=v==="back"?"":"none";document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));}
 function keyFor(g,e,source,session){return normalizeExerciseName(e[0])+"::"+(source||e.source||"global")+"::"+String(g||"")+"::"+String(session||"");}
 function renderExercises(){const list=getList();$("#exerciseCount").textContent=list.length+" حرکت قابل نمایش · "+staged.length+" حرکت انتخاب‌شده · "+(($("#muscleRoleFilter")?.value||"primary")==="primary"?"عضله اصلی":($("#muscleRoleFilter")?.value==="secondary"?"عضله کمکی":"اصلی و کمکی"));$("#exerciseList").innerHTML=list.map((e,i)=>'<button class="exercise '+(staged.some(x=>x.key===keyFor(selectedGroup,e,e.source,$("#sessionSelect").value))?"active":"")+'" data-ex="'+i+'"><b>'+escapeHtml(e[0])+'</b><small>تجهیزات: '+escapeHtml(e[1])+' · '+escapeHtml(e.relation||'عضله اصلی')+': '+escapeHtml(e[2])+'<br>'+(e.source==="coach"||bank==="coach"?"بانک اختصاصی مربی · نمونه":"بانک جامع سیستم · نمونه")+'</small></button>').join("")||'<p class="sub">برای این فیلتر حرکتی یافت نشد.</p>';}
@@ -362,3 +362,19 @@ function validateStagedGroups(items){const groupSystems=["سوپرست","تری�
 $("#addBtn").addEventListener("click",()=>{if(!staged.length)return;const groupSystems=["سوپرست","تری‌ست","جاینت‌ست"];const groupError=validateStagedGroups(staged);if(groupError){alert(groupError);return;}const sets=new Map();staged.filter(x=>groupSystems.includes(x.system)).forEach(x=>{const k=x.session+"::"+x.groupLabel.trim().toLowerCase();if(!sets.has(k))sets.set(k,[]);sets.get(k).push(x);});for(const members of sets.values()){const targets=members.map(x=>normalizeExerciseName(x.exercise[2]));if(new Set(targets).size<members.length&&!confirm("چند حرکت این گروه عضله اصلی مشابه دارند؛ حجم و خستگی را بررسی کنید. ادامه می‌دهید؟"))return;}const fresh=staged.filter(x=>!plan.some(p=>p.session===x.session&&normalizeExerciseName(p.name)===normalizeExerciseName(x.exercise[0])));if(fresh.length!==staged.length)alert("حرکات تکراری در همان جلسه به برنامه اضافه نشدند.");if(!fresh.length)return;fresh.forEach(x=>plan.push({name:x.exercise[0],group:x.groupName,session:x.session,details:x.exercise,system:x.system||"عادی",groupLabel:x.groupLabel||"",sets:x.sets||3,reps:x.reps||"10-12",rest:x.rest??60}));renderPlan();staged=[];renderExercises();renderStaged();});
 renderGroups();renderStaged();renderPlan();
 </script></body></html>
+
+/* Final anatomy palette: neutral grayscale at rest, one selected muscle family in red. */
+.anatomy-wrap{background:#f4f4f4!important;border-color:#dedede!important}
+.anatomy-wrap svg{filter:none!important}
+.anatomy-wrap svg .muscle,
+.anatomy-wrap svg .muscle:nth-of-type(3n),
+.anatomy-wrap svg .muscle:nth-of-type(4n){fill:#c9c9c9!important;stroke:#858585!important;filter:none!important;opacity:1!important}
+.anatomy-wrap svg .muscle:hover{fill:#b8b8b8!important;stroke:#666!important;stroke-width:2!important}
+.anatomy-wrap svg .muscle.selected,
+.anatomy-wrap svg .muscle.selected:hover{fill:#df3434!important;stroke:#941f1f!important;stroke-width:2!important;filter:none!important;opacity:1!important}
+.anatomy-wrap svg .anatomy-detail{opacity:.85!important}
+.anatomy-wrap svg .anatomy-detail path{stroke:#888!important}
+.anatomy-wrap svg .bone{fill:#e5e5e5!important;stroke:#aaa!important}
+.anatomy-wrap svg .bodyline{stroke:#aaa!important}
+.muscle-btn.active{background:#fbe9e9!important;border-color:#df9a9a!important;color:#a32222!important}
+.tab.active{background:#ededed!important;border-color:#bdbdbd!important;color:#444!important}
