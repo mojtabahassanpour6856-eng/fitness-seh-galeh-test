@@ -12,7 +12,7 @@ test('anatomy page contains front and back interactive views', () => {
 });
 
 test('all inline JavaScript parses', () => {
-  const scripts = [...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+  const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.ok(scripts.length > 0, 'inline script exists');
   for (const [, source] of scripts) assert.doesNotThrow(() => new Function(source));
 });
