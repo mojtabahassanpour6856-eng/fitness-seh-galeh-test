@@ -169,7 +169,16 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
  onMuscleClick:(id,name)=>{
   const groupId=id.startsWith("chest-upper-")?"upper-chest":id.startsWith("chest-lower-")?"mid-chest":
    id.startsWith("shoulder-front-")?"front-delts":id.startsWith("shoulder-side-")?"side-delts":
-   id.startsWith("biceps-")?"biceps-long":id.startsWith("triceps-")?"triceps-long":id;
+   id.startsWith("deltoid-rear-")?"rear-delts":
+   id.startsWith("biceps-")?"biceps-long":
+   id.startsWith("triceps-long-")?"triceps-long":id.startsWith("triceps-lateral-")?"triceps-lateral":
+   id.startsWith("abs-upper-")?"upper-abs":id.startsWith("abs-lower-")?"lower-abs":id.startsWith("obliques-")?"obliques":
+   id.startsWith("quads-")?"quads":id.startsWith("adductors-")?"adductors":
+   id.startsWith("traps-")?"traps":id.startsWith("lats-")?"lats":
+   id.startsWith("lower-back-")?"lower-back":id.startsWith("gluteus-maximus-")?"glute-max":
+   id.startsWith("gluteus-medius-")?"glute-med":id.startsWith("hamstrings-")?"hamstrings":
+   id.startsWith("calves-")?"calves":id.startsWith("forearm-flexors-")?"forearm-flexors":
+   id.startsWith("forearm-extensors-")?"forearm-extensors":id;
   if(groups.some(g=>g.id===groupId))chooseGroup(groupId);
  }
 });
@@ -274,16 +283,36 @@ function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!
 function setView(v){view=v;libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));}
 function syncLibrarySelection(){
  Object.keys(libraryState).forEach(k=>delete libraryState[k]);
- if(selectedGroup){
-  let prefixes=[];
-  if(selectedGroup==="upper-chest")prefixes=["chest-upper-"];
-  else if(["mid-chest","lower-chest"].includes(selectedGroup))prefixes=["chest-lower-"];
-  else if(selectedGroup==="front-delts")prefixes=["shoulder-front-"];
-  else if(selectedGroup==="side-delts")prefixes=["shoulder-side-"];
-  else if(["biceps-long","biceps-short","brachialis"].includes(selectedGroup))prefixes=["biceps-"];
-  else if(["triceps-long","triceps-lateral"].includes(selectedGroup))prefixes=["triceps-"];
-  const ids=["chest-upper-left","chest-upper-right","chest-lower-left","chest-lower-right","shoulder-front-left","shoulder-front-right","shoulder-side-left","shoulder-side-right","biceps-left","biceps-right"];
-  ids.filter(id=>prefixes.some(p=>id.startsWith(p))).forEach(id=>libraryState[id]={intensity:8,selected:true});
+ const regionPrefixes={
+  "upper-chest":["chest-upper-"],"mid-chest":["chest-lower-"],"lower-chest":["chest-lower-"],
+  "front-delts":["shoulder-front-"],"side-delts":["shoulder-side-"],"rear-delts":["deltoid-rear-"],
+  "biceps-long":["biceps-"],"biceps-short":["biceps-"],"brachialis":["biceps-"],
+  "triceps-long":["triceps-long-"],"triceps-lateral":["triceps-lateral-"],
+  "upper-abs":["abs-upper-"],"lower-abs":["abs-lower-"],"obliques":["obliques-"],
+  "quads":["quads-"],"adductors":["adductors-"],"traps":["traps-"],
+  "lats":["lats-"],"mid-back":["traps-mid-","lats-mid-"],"lower-back":["lower-back-"],
+  "glute-max":["gluteus-maximus-"],"glute-med":["gluteus-medius-"],
+  "hamstrings":["hamstrings-"],"calves":["calves-"],
+  "forearm-flexors":["forearm-flexors-"],"forearm-extensors":["forearm-extensors-"]
+ };
+ const prefixes=regionPrefixes[selectedGroup]||[];
+ const allRegionIds=[
+  "chest-upper-left","chest-upper-right","chest-lower-left","chest-lower-right",
+  "shoulder-front-left","shoulder-front-right","shoulder-side-left","shoulder-side-right",
+  "deltoid-rear-left","deltoid-rear-right","biceps-left","biceps-right",
+  "triceps-long-left","triceps-long-right","triceps-lateral-left","triceps-lateral-right",
+  "abs-upper-left","abs-upper-right","abs-lower-left","abs-lower-right","obliques-left","obliques-right",
+  "quads-left","quads-right","adductors-left","adductors-right",
+  "traps-upper-left","traps-upper-right","traps-mid-left","traps-mid-right","traps-lower-left","traps-lower-right",
+  "lats-upper-left","lats-upper-right","lats-mid-left","lats-mid-right","lats-lower-left","lats-lower-right",
+  "lower-back-erectors-left","lower-back-erectors-right","lower-back-ql-left","lower-back-ql-right",
+  "gluteus-maximus-left","gluteus-maximus-right","gluteus-medius-left","gluteus-medius-right",
+  "hamstrings-medial-left","hamstrings-medial-right","hamstrings-lateral-left","hamstrings-lateral-right",
+  "calves-gastroc-medial-left","calves-gastroc-medial-right","calves-gastroc-lateral-left","calves-gastroc-lateral-right","calves-soleus-left","calves-soleus-right",
+  "forearm-flexors-left","forearm-flexors-right","forearm-extensors-left","forearm-extensors-right"
+ ];
+ if(selectedGroup&&prefixes.length){
+  allRegionIds.filter(id=>prefixes.some(prefix=>id.startsWith(prefix))).forEach(id=>libraryState[id]={intensity:8,selected:true});
  }
  libraryChart.update({bodyState:{...libraryState}});
 }
