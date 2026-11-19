@@ -38,13 +38,13 @@ main{max-width:1500px}
 .anatomy-card{background:linear-gradient(160deg,#fffdf9,#f8f1e8);border-color:#e8d7b7}
 .anatomy-wrap{min-height:640px;background:radial-gradient(ellipse at 50% 40%,#fff 0,#fffaf2 54%,#f2e9dc 100%);border:1px solid #ead9b8}
 .anatomy-wrap svg{height:590px;max-width:100%;width:auto;filter:drop-shadow(0 12px 12px #76644a22)}
-.anatomy-detail{opacity:.9}.anatomy-detail path{vector-effect:non-scaling-stroke}.muscle{vector-effect:non-scaling-stroke}
-.muscle{fill:url(#muscleBase);stroke:#875f51;stroke-width:1.35;opacity:.96;transition:fill .18s,filter .18s,opacity .18s}
+.anatomy-detail{opacity:.94}.anatomy-detail path{stroke-width:1.7}.anatomy-detail path[stroke="#f4d9c6"],.anatomy-detail path[stroke="#f1d2bd"],.anatomy-detail path[stroke="#f0cdb8"]{filter:drop-shadow(0 1px 1px #76513b35)}.anatomy-detail path{vector-effect:non-scaling-stroke}.muscle{vector-effect:non-scaling-stroke}
+.muscle{fill:url(#muscleVolume);stroke:#875f51;stroke-width:1.25;opacity:.98;filter:url(#muscleLift);transition:fill .18s,filter .18s,opacity .18s}
 .muscle:nth-of-type(3n){fill:url(#muscleShade)}.muscle:nth-of-type(4n){fill:url(#muscleBack)}
 .muscle.selected{fill:#d94b43;stroke:#8f2927;stroke-width:2.4;filter:drop-shadow(0 0 7px #e74b4280);opacity:1}
 .muscle:hover{fill:#e6a04b;stroke:#8c552b;stroke-width:2.2;opacity:1}
 .muscle.selected{fill:#e74b42;stroke:#a92e2b;filter:drop-shadow(0 0 5px #e74b4266)}
-.muscle:focus-visible{outline:none;stroke:#d6a844;stroke-width:3.5}.anatomy-wrap svg{overflow:visible}
+.muscle:focus-visible{outline:none;stroke:#d6a844;stroke-width:3.5}.anatomy-wrap svg{overflow:visible;isolation:isolate}.anatomy-wrap svg .anatomy-detail{mix-blend-mode:multiply}.anatomy-wrap svg .muscle{paint-order:stroke fill;stroke-linejoin:round}
 .muscle-btn{padding:12px 8px;border-radius:13px;font-weight:600}
 .muscle-btn.active{background:linear-gradient(120deg,#fff0e9,#fbe0d8);box-shadow:inset 0 0 0 1px #e7a19a}
 .tabs{background:#f5eee2;padding:4px;border-radius:14px}
@@ -80,12 +80,15 @@ main{max-width:1500px}
  <linearGradient id="muscleBase" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e8c9b3"/><stop offset=".45" stop-color="#c9947d"/><stop offset="1" stop-color="#9f6b5b"/></linearGradient>
  <linearGradient id="muscleShade" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#9e6a5b"/><stop offset=".5" stop-color="#e1b7a0"/><stop offset="1" stop-color="#a87363"/></linearGradient>
  <linearGradient id="muscleBack" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dcb49d"/><stop offset=".5" stop-color="#b77f6d"/><stop offset="1" stop-color="#895b50"/></linearGradient>
+ <radialGradient id="muscleVolume" cx="38%" cy="28%" r="78%"><stop stop-color="#f2d8c5"/><stop offset=".38" stop-color="#d3a28a"/><stop offset=".76" stop-color="#ae7969"/><stop offset="1" stop-color="#805448"/></radialGradient>
+ <linearGradient id="skinVolume" x1="0" y1="0" x2="1" y2=".15"><stop stop-color="#b99578"/><stop offset=".22" stop-color="#ead6c0"/><stop offset=".52" stop-color="#f3e2cf"/><stop offset=".8" stop-color="#d1b69b"/><stop offset="1" stop-color="#a98a70"/></linearGradient>
+ <filter id="muscleLift" x="-25%" y="-25%" width="150%" height="155%"><feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="blur"/><feOffset dy="2" result="offset"/><feComponentTransfer><feFuncA type="linear" slope=".18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
  <filter id="bodyShadow" x="-30%" y="-20%" width="160%" height="150%"><feGaussianBlur stdDeviation="5"/></filter>
 </defs>
 <ellipse cx="180" cy="614" rx="91" ry="9" fill="#9c866c" opacity=".16" filter="url(#bodyShadow)"/>
 <!-- anatomically proportioned athletic male silhouette -->
-<g fill="url(#skinBase)" stroke="#987c66" stroke-width="1.6" stroke-linejoin="round">
- <path d="M158 67 Q180 59 202 67 L205 91 Q218 99 239 106 Q266 111 278 138 L295 211 Q300 231 287 239 Q275 245 268 229 L248 166 Q245 194 240 218 Q237 239 242 264 L251 310 Q256 334 247 354 L237 402 Q231 424 235 451 L249 554 Q253 576 239 581 Q222 586 216 565 L188 470 L180 430 L172 470 L144 565 Q138 586 121 581 Q107 576 111 554 L125 451 Q129 424 123 402 L113 354 Q104 334 109 310 L118 264 Q123 239 120 218 Q115 194 112 166 L92 229 Q85 245 73 239 Q60 231 65 211 L82 138 Q94 111 121 106 Q142 99 155 91Z"/>
+<g fill="url(#skinVolume)" stroke="#987c66" stroke-width="1.6" stroke-linejoin="round">
+ <path d="M158 67 Q180 59 202 67 L205 91 Q218 96 244 104 Q270 110 281 138 L295 211 Q302 231 289 240 Q276 246 269 229 L248 166 Q247 194 242 218 Q239 239 244 264 L252 310 Q256 334 247 354 L238 402 Q232 424 236 451 L249 554 Q253 576 239 581 Q222 586 216 565 L188 470 L180 430 L172 470 L144 565 Q138 586 121 581 Q107 576 111 554 L124 451 Q128 424 122 402 L112 354 Q103 334 108 310 L117 264 Q123 239 120 218 Q115 194 112 166 L92 229 Q85 245 73 239 Q60 231 65 211 L82 138 Q94 111 121 106 Q142 96 155 91Z"/>
  <path d="M155 87 Q180 96 205 87 L213 119 Q210 146 180 155 Q150 146 147 119Z" />
  <path d="M145 144 Q180 158 215 144 L224 224 Q220 251 208 268 L152 268 Q140 251 136 224Z"/>
  <path d="M145 263 Q180 273 215 263 L211 316 Q205 337 180 343 Q155 337 149 316Z"/>
