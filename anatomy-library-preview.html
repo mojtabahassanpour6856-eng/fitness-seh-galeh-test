@@ -36,8 +36,8 @@ try{
  const lib=await import('https://esm.sh/body-muscles@1.0.0');
  const {BodyChart,ViewSide,MUSCLE_MAP}=lib;
  const state={};
- const entries=Object.entries(MUSCLE_MAP||{}).filter(([id])=>id.toLowerCase().includes('chest'));
- const labels=new Map(entries.map(([id,def])=>[id,def.label||def.name||id]));
+ const entries=(MUSCLE_MAP||[]).filter(def=>String(def.id).toLowerCase().startsWith('chest')).map(def=>[def.id,def]);
+ const labels=new Map(entries.map(([id,def])=>[id,def.name||id]));
  const chart=new BodyChart(document.getElementById('body-map'),{
   view:ViewSide.FRONT,bodyState:state,showViewLabel:true,
   onMuscleClick:(id,name)=>{const old=state[id]||{intensity:0,selected:false};state[id]={intensity:old.intensity||8,selected:!old.selected};chart.update({bodyState:{...state}});renderList();updateStatus(name||labels.get(id)||id);}
@@ -46,7 +46,7 @@ try{
   listEl.innerHTML='';
   if(!entries.length){listEl.textContent='شناسه‌ای با نام chest در نسخه بارگذاری‌شده پیدا نشد.';return;}
   entries.forEach(([id,def])=>{
-   const label=def.label||def.name||id;const row=document.createElement('label');row.className='muscle';
+   const label=def.name||id;const row=document.createElement('label');row.className='muscle';
    const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!state[id]?.selected;
    cb.addEventListener('change',()=>{state[id]={intensity:8,selected:cb.checked};chart.update({bodyState:{...state}});updateStatus(label);});
    const span=document.createElement('span');span.textContent=label+' · '+id;row.append(cb,span);listEl.append(row);
