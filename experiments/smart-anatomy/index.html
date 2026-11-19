@@ -124,9 +124,9 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 .anatomy-wrap svg .bodyline{stroke:#222!important}
 
 .photo-anatomy{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#fff;overflow:hidden}
-.photo-anatomy img{width:100%;height:100%;object-fit:contain;position:absolute;inset:0}
+.photo-anatomy img{width:100%;height:100%;object-fit:contain;position:absolute;inset:0;object-position:center center}
 .anatomy-wrap>svg:not(#muscleHotspots){display:none!important}
-#muscleHotspots{display:block!important;position:absolute;width:100%;height:100%;inset:0;pointer-events:none;filter:none!important;max-width:none!important}
+#muscleHotspots{display:block!important;position:absolute;width:100%;height:100%;inset:0;pointer-events:none;filter:none!important;max-width:none!important;object-fit:contain;object-position:center center}
 #muscleHotspots .hotspot{pointer-events:auto;cursor:pointer}
 #muscleHotspots .hotspot path{fill:transparent;stroke:transparent;stroke-width:2;transition:fill .15s,stroke .15s}
 #muscleHotspots .hotspot.selected path{fill:#e43d3d88;stroke:#b52424;stroke-width:2.3}
@@ -147,9 +147,9 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 <h2>نقشه عضلات بدن</h2><div class="tabs"><button class="tab active" data-view="front">نمای جلو</button><button class="tab" data-view="back">نمای پشت</button></div>
 <div class="anatomy-wrap"><div class="photo-anatomy" id="photoAnatomy"><img id="anatomyPhoto" src="images/images/front.jpg" alt="آناتومی نمای جلو"/><svg id="muscleHotspots" viewBox="0 0 683 1024" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
 <!-- FRONT: separate, non-overlapping regions traced to the supplied front reference -->
-<g class="hotspot" data-muscle="upper-chest"><path d="M205 210 C228 185 285 183 339 218 L339 286 C300 294 246 272 215 246Z"/><path d="M478 210 C455 185 398 183 344 218 L344 286 C383 294 437 272 468 246Z"/></g>
-<g class="hotspot" data-muscle="mid-chest"><path d="M214 247 C250 275 294 292 339 290 L339 321 C294 323 248 302 220 275Z"/><path d="M469 247 C433 275 389 292 344 290 L344 321 C389 323 435 302 463 275Z"/></g>
-<g class="hotspot" data-muscle="lower-chest"><path d="M220 278 C255 306 299 324 339 324 L337 347 C298 347 257 333 229 310Z"/><path d="M463 278 C428 306 384 324 344 324 L346 347 C385 347 426 333 455 310Z"/></g>
+<g class="hotspot" data-muscle="upper-chest"><path d="M202 224 C215 211 235 207 255 211 C282 216 311 230 338 246 L338 276 C314 276 288 269 265 258 C239 246 218 236 202 224Z"/><path d="M481 224 C468 211 448 207 428 211 C401 216 372 230 345 246 L345 276 C369 276 395 269 418 258 C444 246 465 236 481 224Z"/></g>
+<g class="hotspot" data-muscle="mid-chest"><path d="M205 239 C224 253 249 268 276 278 C298 287 320 291 338 290 L338 313 C308 313 279 305 254 293 C231 282 214 265 205 239Z"/><path d="M478 239 C459 253 434 268 407 278 C385 287 363 291 345 290 L345 313 C375 313 404 305 429 293 C452 282 469 265 478 239Z"/></g>
+<g class="hotspot" data-muscle="lower-chest"><path d="M238 286 C264 302 298 315 338 313 L338 331 C303 334 267 323 242 306 C235 301 231 294 228 286Z"/><path d="M445 286 C419 302 385 315 345 313 L345 331 C380 334 416 323 441 306 C448 301 452 294 455 286Z"/></g>
 <g class="hotspot" data-muscle="front-delts"><path d="M190 205 C205 181 247 178 273 207 C280 235 266 274 244 294 C217 286 197 251 190 205Z"/><path d="M493 205 C478 181 436 178 410 207 C403 235 417 274 439 294 C466 286 486 251 493 205Z"/></g>
 <g class="hotspot" data-muscle="side-delts"><path d="M184 226 C197 207 216 211 231 232 L222 286 C210 309 190 299 180 272Z"/><path d="M499 226 C486 207 467 211 452 232 L461 286 C473 309 493 299 503 272Z"/></g>
 <g class="hotspot" data-muscle="biceps-long">
@@ -172,10 +172,10 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 <g class="hotspot" data-muscle="upper-abs"><path d="M290 328 C306 336 323 338 339 337 L339 408 C321 411 304 405 290 397Z"/><path d="M393 328 C377 336 360 338 344 337 L344 408 C362 411 379 405 393 397Z"/></g>
 <g class="hotspot" data-muscle="lower-abs"><path d="M290 401 C306 409 323 413 339 412 L339 474 C321 477 304 469 290 458Z"/><path d="M393 401 C377 409 360 413 344 412 L344 474 C362 477 379 469 393 458Z"/></g>
 <g class="hotspot" data-muscle="abductors"><path d="M226 522 C251 505 282 512 303 540 L292 623 C271 641 243 621 228 590Z"/><path d="M457 522 C432 505 401 512 380 540 L391 623 C412 641 440 621 455 590Z"/></g>
-<g class="hotspot" data-muscle="quads"><path d="M270 548 C292 535 321 540 339 556 L331 704 C321 741 292 757 270 723 C251 674 253 597 270 548Z"/><path d="M413 548 C391 535 362 540 344 556 L352 704 C362 741 391 757 413 723 C432 674 430 597 413 548Z"/></g>
+<g class="hotspot" data-muscle="quads"><path d="M257 548 C271 536 291 535 310 544 C324 551 333 562 337 579 L330 681 C326 711 310 736 289 744 C269 735 254 711 248 677 C241 631 244 579 257 548Z"/><path d="M426 548 C412 536 392 535 373 544 C359 551 350 562 346 579 L353 681 C357 711 373 736 394 744 C414 735 429 711 435 677 C442 631 439 579 426 548Z"/></g>
 <g class="hotspot" data-muscle="adductors"><path d="M307 559 C320 551 332 557 339 572 L331 687 C319 710 303 697 296 672Z"/><path d="M376 559 C363 551 351 557 344 572 L352 687 C364 710 380 697 383 672Z"/></g>
 
-<!-- BACK: posterior muscle groups -->
+<!-- BACK: posterior muscle groups; traced calibration regions follow the visible reference anatomy. -->
 <g class="hotspot" data-muscle="traps"><path d="M269 176 C295 158 322 160 341 187 C360 160 387 158 413 176 L449 265 C415 292 380 319 341 348 C302 319 267 292 233 265Z"/></g>
 <g class="hotspot" data-muscle="rear-delts">
  <path d="M187 211 C207 188 240 191 260 218 C259 246 243 269 219 282 C199 270 187 244 187 211Z"/>
@@ -193,11 +193,11 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
  <path d="M132 405 C151 420 172 429 193 416 L179 518 C169 540 150 541 137 522 C126 484 125 444 132 405Z"/>
  <path d="M551 405 C532 420 511 429 490 416 L504 518 C514 540 533 541 546 522 C557 484 558 444 551 405Z"/>
 </g>
-<g class="hotspot" data-muscle="lats"><path d="M249 263 C280 278 310 300 337 331 L326 480 C301 503 269 485 247 447 C228 395 230 322 249 263Z"/><path d="M434 263 C403 278 373 300 346 331 L357 480 C382 503 414 485 436 447 C455 395 453 322 434 263Z"/></g>
+<g class="hotspot" data-muscle="lats"><path d="M255 285 C278 296 307 315 334 340 L329 443 C324 468 307 484 282 486 C256 470 239 438 232 401 C226 357 235 314 255 285Z"/><path d="M428 285 C405 296 376 315 349 340 L354 443 C359 468 376 484 401 486 C427 470 444 438 451 401 C457 357 448 314 428 285Z"/></g>
 <g class="hotspot" data-muscle="mid-back"><path d="M300 278 C318 291 331 311 339 334 L333 445 C316 431 300 405 291 375Z"/><path d="M383 278 C365 291 352 311 344 334 L350 445 C367 431 383 405 392 375Z"/></g>
 <g class="hotspot" data-muscle="lower-back"><path d="M310 425 C322 438 333 445 341 447 C349 445 360 438 372 425 L380 522 C366 545 352 557 341 560 C330 557 316 545 302 522Z"/></g>
 <g class="hotspot" data-muscle="glute-med"><path d="M235 518 C267 494 306 505 338 526 L337 589 C307 610 270 602 241 575Z"/><path d="M448 518 C416 494 377 505 345 526 L346 589 C376 610 413 602 442 575Z"/></g>
-<g class="hotspot" data-muscle="glute-max"><path d="M241 574 C270 598 307 609 337 590 L334 686 C308 711 274 700 249 670Z"/><path d="M442 574 C413 598 376 609 346 590 L349 686 C375 711 409 700 434 670Z"/></g>
+<!-- glute-max hotspot intentionally omitted: the supplied rear reference has shorts covering the muscle, so a red overlay here would be fabricated rather than anatomically aligned. -->
 <g class="hotspot" data-muscle="hamstrings"><path d="M241 682 C269 698 306 704 333 688 L326 835 C311 868 281 879 258 843 C238 795 231 735 241 682Z"/><path d="M442 682 C414 698 377 704 350 688 L357 835 C372 868 402 879 425 843 C445 795 452 735 442 682Z"/></g>
 <g class="hotspot" data-muscle="calves"><path d="M253 824 C278 808 308 817 326 839 L319 933 C308 967 283 978 266 949 C248 909 244 864 253 824Z"/><path d="M430 824 C405 808 375 817 357 839 L364 933 C375 967 400 978 417 949 C435 909 439 864 430 824Z"/></g>
 </svg></div><svg viewBox="0 0 360 640" role="img" aria-label="مدل برداری عضلات بدن‌سازی، نمای جلو و پشت" xmlns="http://www.w3.org/2000/svg">
