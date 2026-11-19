@@ -19,6 +19,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Prevent old login screen flash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          page = Path('index.html')
+          html = page.read_text(encoding='utf-8')
+          guard = '''<style id="seh-auth-first-paint">#authScreen{visibility:hidden!important}</style><script>window.setTimeout(function(){var e=document.getElementById('authScreen');if(e&&!e.dataset.sehReady)e.style.visibility='visible'},5000)</script>'''
+          if 'seh-auth-first-paint' not in html:
+              if '<head>' not in html:
+                  raise SystemExit('index.html has no opening head tag')
+              html = html.replace('<head>', '<head>' + guard, 1)
+              page.write_text(html, encoding='utf-8')
+          PY
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
