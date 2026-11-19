@@ -203,13 +203,13 @@ const muscleTerms={
 "upper-chest":["بالاسینه","ناحیه ترقوه","سینه بالایی"],"mid-chest":["سینه میانی","سینه بزرگ"],"lower-chest":["زیرسینه","سینه پایینی","بخش جناغی"],
 "front-delts":["دلتوئید قدامی","سرشانه جلویی","سرشانه جلو"],"side-delts":["دلتوئید میانی","سرشانه میانی"],"rear-delts":["دلتوئید خلفی","سرشانه خلفی"],
 "biceps-long":["سر بلند جلو بازو","تأکید نسبی بر سر بلند"],"biceps-short":["سر کوتاه جلو بازو","تأکید نسبی بر سر کوتاه"],"brachialis":["براکیالیس","براکیورادیالیس"],
-"triceps-long":["سر بلند سه سر","سر بلند سه‌سر","سر بلند سه"],"triceps-lateral":["سر خارجی سه سر","سر خارجی سه‌سر","سر خارجی سه"],"upper-abs":["راست شکمی بالا","بخش بالایی راست شکمی","راست شکمی"],"lower-abs":["راست شکمی پایین","بخش پایینی راست شکمی","راست شکمی"],"obliques":["مایل شکمی","پهلو"],
+"triceps-long":["سر بلند سه سر","سر بلند سه‌سر","سر بلند سه"],"triceps-lateral":["سر خارجی سه سر","سر خارجی سه‌سر","سر خارجی سه"],"upper-abs":["راست شکمی بالا","بخش بالایی راست شکمی"],"lower-abs":["راست شکمی پایین","بخش پایینی راست شکمی"],"obliques":["مایل شکمی","پهلو"],
 "quads":["چهارسر ران","چهارسر"],"adductors":["نزدیک کننده ران","نزدیک‌کننده ران","نزدیک‌کننده‌های ران","داخل ران"],"abductors":["دورکننده ران","دور کننده ران","دورکننده‌های ران","خارج ران"],
 "traps":["تراپز","ذوزنقه"],"lats":["پشتی بزرگ","زیربغل"],"mid-back":["میانه پشت","رومبوئید","تراپز میانی"],"lower-back":["راست کننده ستون فقرات","راست کننده های ستون فقرات","راست‌کننده ستون فقرات","فیله","اکستانسورهای ستون فقرات"],
 "glute-max":["سرینی بزرگ","باسن بزرگ"],"glute-med":["سرینی میانی","سرینی کوچک","باسن میانی"],"hamstrings":["همسترینگ","پشت ران"],"calves":["ساق","گاستروکنمیوس","نعلی","دوقلو"],
 "forearm-flexors":["خم کننده ساعد","خم‌کننده ساعد","خم‌کننده‌های ساعد"],"forearm-extensors":["بازکننده ساعد","بازکننده‌های ساعد","اکستانسور ساعد"]
 };
-function labelMatchesGroup(label,id){const text=normalizeExerciseName(label);return (muscleTerms[id]||[]).some(term=>text.includes(normalizeExerciseName(term)));}
+function labelMatchesGroup(label,id){const text=normalizeExerciseName(label);if(id==="mid-chest"&&(text.includes("ترقوه")||text.includes("بخش جناغی")||text.includes("سینه پایینی")))return false;if(id==="upper-chest"&&text.includes("بخش جناغی"))return false;return (muscleTerms[id]||[]).some(term=>text.includes(normalizeExerciseName(term)));}
 function labelMatchesAnyOtherGroup(label,id){return groups.some(g=>g.id!==id&&labelMatchesGroup(label,g.id));}
 function getList(){
  const eq=$("#equipmentFilter")?.value||"all",q=normalizeExerciseName($("#exerciseSearch")?.value||""),role=$("#muscleRoleFilter")?.value||"primary";
