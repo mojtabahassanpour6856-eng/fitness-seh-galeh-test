@@ -134,37 +134,37 @@ main{max-width:1500px}
 const groups=[
 {id:"upper-chest",name:"بالاسینه",view:"front"},{id:"mid-chest",name:"سینه میانی",view:"front"},{id:"lower-chest",name:"زیرسینه",view:"front"},
 {id:"front-delts",name:"سرشانه جلو",view:"front"},{id:"side-delts",name:"سرشانه میانی",view:"front"},{id:"rear-delts",name:"سرشانه خلفی",view:"back"},
-{id:"biceps-long",name:"جلو بازو (سر بلند)",view:"front"},{id:"biceps-short",name:"جلو بازو (سر کوتاه)",view:"front"},{id:"brachialis",name:"براکیالیس",view:"front"},{id:"triceps-long",name:"پشت بازو (سر بلند)",view:"back"},{id:"triceps-lateral",name:"پشت بازو (سر خارجی)",view:"back"},
-{id:"upper-abs",name:"شکم بالا",view:"front"},{id:"lower-abs",name:"شکم پایین",view:"front"},{id:"obliques",name:"پهلو",view:"front"},
+{id:"biceps-long",name:"جلو بازو (تأکید نسبی بر سر بلند)",view:"front"},{id:"biceps-short",name:"جلو بازو (تأکید نسبی بر سر کوتاه)",view:"front"},{id:"brachialis",name:"براکیالیس",view:"front"},{id:"triceps-long",name:"پشت بازو (سر بلند)",view:"back"},{id:"triceps-lateral",name:"پشت بازو (سر خارجی)",view:"back"},
+{id:"upper-abs",name:"راست شکمی (تأکید بر خم‌کردن تنه)",view:"front"},{id:"lower-abs",name:"راست شکمی (تأکید بر چرخش خلفی لگن)",view:"front"},{id:"obliques",name:"پهلو",view:"front"},
 {id:"quads",name:"چهارسر ران",view:"front"},{id:"adductors",name:"داخل ران",view:"front"},{id:"abductors",name:"خارج ران",view:"front"},
 {id:"traps",name:"کول",view:"back"},{id:"lats",name:"زیربغل",view:"back"},{id:"mid-back",name:"میانه پشت",view:"back"},{id:"lower-back",name:"فیله کمر",view:"back"},
 {id:"glute-max",name:"باسن بزرگ",view:"back"},{id:"glute-med",name:"باسن میانی",view:"back"},{id:"hamstrings",name:"همسترینگ",view:"back"},{id:"calves",name:"ساق پا",view:"back"},{id:"forearm-flexors",name:"ساعد (خم‌کننده)",view:"front"},{id:"forearm-extensors",name:"ساعد (بازکننده)",view:"back"}];
 const parentMap={"upper-chest":"chest","mid-chest":"chest","lower-chest":"chest","front-delts":"shoulders","side-delts":"shoulders","rear-delts":"shoulders","biceps-long":"biceps","biceps-short":"biceps","brachialis":"biceps","triceps-long":"triceps","triceps-lateral":"triceps","upper-abs":"abs","lower-abs":"abs","obliques":"abs","glute-max":"glutes","glute-med":"glutes"};
 const exercises={
-"upper-chest":[["پرس بالاسینه دمبل","دمبل","بالاسینه","سرشانه جلویی و پشت بازو"],["پرس بالاسینه هالتر","هالتر","بالاسینه","سرشانه جلویی و پشت بازو"],["فلای سیم‌کش از پایین","سیم‌کش","بالاسینه","دلتوئید جلویی"],["پرس بالاسینه دستگاه","دستگاه","بالاسینه","سه‌سر بازویی"]],
-"mid-chest":[["پرس سینه دمبل","دمبل","سینه میانی","سه‌سر بازویی و سرشانه جلویی"],["پرس سینه هالتر","هالتر","سینه میانی","سه‌سر بازویی"],["قفسه دمبل","دمبل","سینه میانی","سرشانه جلویی"],["پرس سینه دستگاه","دستگاه","سینه میانی","سه‌سر بازویی"]],
-"lower-chest":[["دیپ سینه","وزن بدن","سینه پایینی","سه‌سر بازویی"],["کراس‌اور از بالا به پایین","سیم‌کش","سینه پایینی","دلتوئید جلویی"]],
+"upper-chest":[["پرس بالاسینه دمبل","دمبل","سینه بزرگ؛ ناحیه ترقوه‌ای","دلتوئید قدامی و سه‌سر بازویی"],["پرس بالاسینه هالتر","هالتر","سینه بزرگ؛ ناحیه ترقوه‌ای","دلتوئید قدامی و سه‌سر بازویی"],["فلای سیم‌کش از پایین","سیم‌کش","بالاسینه","دلتوئید جلویی"],["پرس بالاسینه دستگاه","دستگاه","بالاسینه","سه‌سر بازویی"]],
+"mid-chest":[["پرس سینه دمبل","دمبل","سینه بزرگ","سه‌سر بازویی و دلتوئید قدامی"],["پرس سینه هالتر","هالتر","سینه بزرگ","سه‌سر بازویی و دلتوئید قدامی"],["قفسه دمبل","دمبل","سینه میانی","سرشانه جلویی"],["پرس سینه دستگاه","دستگاه","سینه میانی","سه‌سر بازویی"]],
+"lower-chest":[["دیپ با تأکید بر سینه","وزن بدن","سینه بزرگ؛ با تأکید نسبی بر بخش جناغی","سه‌سر بازویی و دلتوئید قدامی"],["کراس‌اور از بالا به پایین","سیم‌کش","سینه پایینی","دلتوئید جلویی"]],
 "front-delts":[["پرس سرشانه دمبل","دمبل","دلتوئید قدامی","سه‌سر بازویی"],["فرانت رِیز دمبل","دمبل","دلتوئید قدامی","بخش بالایی سینه"]],
-"side-delts":[["نشر جانب دمبل","دمبل","دلتوئید میانی","تراپز"],["نشر جانب سیم‌کش","سیم‌کش","دلتوئید میانی","تراپز"]],
+"side-delts":[["نشر جانب دمبل","دمبل","دلتوئید میانی","سوپرااسپیناتوس و بخش بالایی تراپز"],["نشر جانب سیم‌کش","سیم‌کش","دلتوئید میانی","تراپز"]],
 "rear-delts":[["نشر خم دمبل","دمبل","دلتوئید خلفی","میانه پشت"],["فلای معکوس دستگاه","دستگاه","دلتوئید خلفی","تراپز و رومبوئید"]],
-"biceps-long":[["جلو بازو دمبل روی میز شیب‌دار","دمبل","سر بلند جلو بازو","براکیالیس"],["جلو بازو چکشی","دمبل","براکیالیس","جلو بازو و ساعد"]],
-"biceps-short":[["جلو بازو لاری","هالتر EZ/دمبل","سر کوتاه جلو بازو","براکیالیس"],["جلو بازو هالتر دست باز","هالتر","سر کوتاه جلو بازو","ساعد"]],
+"biceps-long":[["جلو بازو دمبل روی میز شیب‌دار","دمبل","عضله دوسر بازویی؛ تأکید نسبی بر سر بلند","براکیالیس و براکیورادیالیس"],["جلو بازو چکشی","دمبل","براکیالیس و براکیورادیالیس","عضله دوسر بازویی"]],
+"biceps-short":[["جلو بازو لاری","هالتر EZ/دمبل","عضله دوسر بازویی؛ تأکید نسبی بر سر کوتاه","براکیالیس و براکیورادیالیس"],["جلو بازو هالتر دست باز","هالتر","سر کوتاه جلو بازو","ساعد"]],
 "brachialis":[["جلو بازو چکشی","دمبل","براکیالیس","جلو بازو و ساعد"],["جلو بازو چکشی کراس‌بادی","دمبل","براکیالیس","ساعد"]],
 "triceps-long":[["پشت بازو بالای سر دمبل","دمبل","سر بلند سه‌سر","عضلات مرکزی"],["پشت بازو بالای سر سیم‌کش","سیم‌کش","سر بلند سه‌سر","عضلات مرکزی"]],
 "triceps-lateral":[["پشت بازو سیم‌کش","سیم‌کش","سر خارجی سه‌سر","سر داخلی سه‌سر"],["پشت بازو طناب","سیم‌کش","سر خارجی سه‌سر","سر داخلی سه‌سر"]],
-"upper-abs":[["کرانچ","وزن بدن","راست شکمی (بخش بالایی)","مایل شکمی"],["کرانچ سیم‌کش","سیم‌کش","راست شکمی","مایل شکمی"]],
-"lower-abs":[["بالا آوردن پا خوابیده","وزن بدن","راست شکمی (بخش پایینی)","خم‌کننده‌های ران"],["بالا آوردن زانو آویزان","بارفیکس","راست شکمی","خم‌کننده‌های ران"]],
+"upper-abs":[["کرانچ","وزن بدن","راست شکمی","مایل‌های شکمی"],["کرانچ سیم‌کش","سیم‌کش","راست شکمی","مایل شکمی"]],
+"lower-abs":[["بالا آوردن پا خوابیده با جمع‌کردن لگن","وزن بدن","راست شکمی؛ در صورت چرخش خلفی لگن","خم‌کننده‌های ران"],["بالا آوردن زانو آویزان","بارفیکس","راست شکمی","خم‌کننده‌های ران"]],
 "obliques":[["کرانچ روسی","وزن بدن/وزنه","مایل شکمی","راست شکمی"],["پلانک پهلو","وزن بدن","مایل شکمی","عضلات مرکزی"]],
-"quads":[["اسکوات","هالتر","چهارسر ران","سرینی و همسترینگ"],["جلو پا دستگاه","دستگاه","چهارسر ران","—"],["پرس پا","دستگاه","چهارسر ران","سرینی"]],
+"quads":[["اسکوات","هالتر","چهارسر ران و سرینی بزرگ","نزدیک‌کننده بزرگ، همسترینگ و عضلات مرکزی"],["جلو پا دستگاه","دستگاه","چهارسر ران","—"],["پرس پا","دستگاه","چهارسر ران","سرینی"]],
 "adductors":[["داخل ران دستگاه","دستگاه","نزدیک‌کننده‌های ران","عضلات مرکزی"],["اسکوات سومو","هالتر/دمبل","داخل ران","سرینی و چهارسر"]],
 "abductors":[["خارج ران دستگاه","دستگاه","دورکننده‌های ران","سرینی میانی"],["راه رفتن با کش جانبی","کش","سرینی میانی","سرینی کوچک"]],
 "traps":[["شراگ دمبل","دمبل","تراپز","ساعد"],["شراگ هالتر","هالتر","تراپز","ساعد"]],
-"lats":[["لت سیم‌کش از جلو","سیم‌کش","پشتی بزرگ","جلو بازو"],["بارفیکس","وزن بدن","پشتی بزرگ","جلو بازو و ساعد"],["پارویی دمبل تک‌دست","دمبل","پشتی بزرگ","جلو بازو"]],
-"mid-back":[["قایقی سیم‌کش","سیم‌کش","میانه پشت","جلو بازو"],["پارویی دستگاه","دستگاه","رومبوئید و تراپز میانی","جلو بازو"]],
-"lower-back":[["بک اکستنشن","دستگاه/وزن بدن","راست‌کننده‌های ستون فقرات","سرینی و همسترینگ"],["ددلیفت رومانیایی","هالتر/دمبل","فیله و همسترینگ","سرینی"]],
-"glute-max":[["هیپ تراست","هالتر","سرینی بزرگ","همسترینگ"],["کیک‌بک سیم‌کش","سیم‌کش","سرینی بزرگ","همسترینگ"]],
+"lats":[["لت سیم‌کش از جلو","سیم‌کش","پشتی بزرگ","جلو بازو"],["بارفیکس","وزن بدن","پشتی بزرگ","جلو بازو و ساعد"],["پارویی دمبل تک‌دست","دمبل","پشتی بزرگ و عضلات میانه پشت","جلو بازو و دلتوئید خلفی"]],
+"mid-back":[["قایقی سیم‌کش","سیم‌کش","میانه پشت؛ رومبوئید و تراپز میانی","پشتی بزرگ و جلو بازو"],["پارویی دستگاه","دستگاه","رومبوئید و تراپز میانی","جلو بازو"]],
+"lower-back":[["بک اکستنشن","دستگاه/وزن بدن","راست‌کننده‌های ستون فقرات","سرینی و همسترینگ"],["ددلیفت رومانیایی","هالتر/دمبل","همسترینگ و سرینی بزرگ","راست‌کننده‌های ستون فقرات و عضلات مرکزی (تثبیت‌کننده)"]],
+"glute-max":[["هیپ تراست","هالتر","سرینی بزرگ","نزدیک‌کننده بزرگ و همسترینگ (بسته به فرم و دامنه)"],["کیک‌بک سیم‌کش","سیم‌کش","سرینی بزرگ","همسترینگ"]],
 "glute-med":[["خارج ران دستگاه","دستگاه","سرینی میانی","سرینی کوچک"],["راه رفتن با کش جانبی","کش","سرینی میانی","سرینی کوچک"]],
-"hamstrings":[["پشت پا دستگاه","دستگاه","همسترینگ","ساق پا"],["ددلیفت رومانیایی","هالتر/دمبل","همسترینگ","سرینی"]],
+"hamstrings":[["پشت پا دستگاه","دستگاه","گروه عضلات همسترینگ","گاستروکنمیوس"],["ددلیفت رومانیایی","هالتر/دمبل","همسترینگ","سرینی"]],
 "calves":[["ساق ایستاده","دستگاه/وزن بدن","دوقلو","نعلی"],["ساق نشسته","دستگاه","نعلی","دوقلو"]],
 "forearm-flexors":[["مچ دمبل نشسته کف دست بالا","دمبل","خم‌کننده‌های ساعد","جلو بازو"],["مچ هالتر کف دست بالا","هالتر","خم‌کننده‌های ساعد","عضلات دست"]], "forearm-extensors":[["مچ دمبل نشسته کف دست پایین","دمبل","بازکننده‌های ساعد","عضلات دست"],["مچ هالتر کف دست پایین","هالتر","بازکننده‌های ساعد","عضلات دست"]]};
 // Expanded sample movement catalog: additional standard variations for the prototype.
@@ -201,7 +201,7 @@ function normalizeExerciseName(value){return String(value||"").normalize("NFKC")
 function equipmentMatches(equipment,filter){if(filter==="all")return true;const value=normalizeExerciseName(equipment);const target=normalizeExerciseName(filter);const aliases={"سیم کش":["سیم کش","کابل"],"دستگاه":["دستگاه","اسمیت"],"بارفیکس":["بارفیکس","میله بارفیکس"],"وزن بدن":["وزن بدن","بدون وسیله"]};return (aliases[target]||[target]).some(token=>value.includes(token));}
 function getList(){const globalList=(exercises[selectedGroup]||exercises[parentMap[selectedGroup]]||[]).map(e=>({...e,source:"global"}));const coachList=(customBank[selectedGroup]||[]).map(e=>({...e,source:"coach"}));let combined=bank==="global"?globalList:bank==="coach"?coachList:[...coachList,...globalList];const eq=$("#equipmentFilter")?.value||"all";const q=normalizeExerciseName($("#exerciseSearch")?.value||"");const filtered=combined.filter(e=>equipmentMatches(e[1],eq)&&(!q||normalizeExerciseName(e.join(" ")).includes(q)));const seen=new Set();return filtered.filter(e=>{const key=normalizeExerciseName(e[0]);if(seen.has(key))return false;seen.add(key);return true;});}
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'">'+g.name+'</button>').join("");}
-function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(g.view!==view)setView(g.view);renderGroups();document.querySelectorAll(".muscle").forEach(el=>{const mid=el.dataset.id;el.classList.toggle("selected",mid===id||mid===parentMap[id]||parentMap[mid]===id);});$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد.</p>";}
+function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(g.view!==view)setView(g.view);renderGroups();document.querySelectorAll(".muscle").forEach(el=>{const mid=el.dataset.id;el.classList.toggle("selected",mid===id||mid===parentMap[id]||parentMap[mid]===id);});$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
 function setView(v){view=v;$("#frontMuscles").style.display=v==="front"?"":"none";$("#backMuscles").style.display=v==="back"?"":"none";document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));}
 function keyFor(g,e,source){return normalizeExerciseName(e[0])+"::"+(source||e.source||"global");}
 function renderExercises(){const list=getList();$("#exerciseCount").textContent=list.length+" حرکت قابل نمایش · "+staged.length+" حرکت انتخاب‌شده";$("#exerciseList").innerHTML=list.map((e,i)=>'<button class="exercise '+(staged.some(x=>x.key===keyFor(selectedGroup,e,e.source))?"active":"")+'" data-ex="'+i+'"><b>'+escapeHtml(e[0])+'</b><small>تجهیزات: '+escapeHtml(e[1])+' · عضله اصلی: '+escapeHtml(e[2])+'<br>'+(e.source==="coach"||bank==="coach"?"بانک اختصاصی مربی · نمونه":"بانک جامع سیستم · نمونه")+'</small></button>').join("")||'<p class="sub">برای این فیلتر حرکتی یافت نشد.</p>';}
