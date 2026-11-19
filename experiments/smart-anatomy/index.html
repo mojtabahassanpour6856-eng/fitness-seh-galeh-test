@@ -36,9 +36,12 @@ main{max-width:1500px}
 .layout{grid-template-columns:minmax(210px,.72fr) minmax(390px,1.25fr) minmax(300px,.95fr);gap:14px}
 .card{border-radius:22px;padding:20px}
 .anatomy-card{background:linear-gradient(160deg,#fffdf9,#f8f1e8);border-color:#e8d7b7}
-.anatomy-wrap{min-height:520px;background:radial-gradient(ellipse at 50% 40%,#fff 0,#fffaf2 54%,#f2e9dc 100%);border:1px solid #ead9b8}
-.anatomy-wrap svg{height:475px;filter:drop-shadow(0 8px 7px #76644a16)}
-.muscle{stroke-width:1.8}
+.anatomy-wrap{min-height:640px;background:radial-gradient(ellipse at 50% 40%,#fff 0,#fffaf2 54%,#f2e9dc 100%);border:1px solid #ead9b8}
+.anatomy-wrap svg{height:590px;max-width:100%;width:auto;filter:drop-shadow(0 12px 12px #76644a22)}
+.muscle{fill:url(#muscleBase);stroke:#875f51;stroke-width:1.35;opacity:.96;transition:fill .18s,filter .18s,opacity .18s}
+.muscle:nth-of-type(3n){fill:url(#muscleShade)}.muscle:nth-of-type(4n){fill:url(#muscleBack)}
+.muscle.selected{fill:#d94b43;stroke:#8f2927;stroke-width:2.4;filter:drop-shadow(0 0 7px #e74b4280);opacity:1}
+.muscle:hover{fill:#e6a04b;stroke:#8c552b;stroke-width:2.2;opacity:1}
 .muscle.selected{fill:#e74b42;stroke:#a92e2b;filter:drop-shadow(0 0 5px #e74b4266)}
 .muscle-btn{padding:12px 8px;border-radius:13px;font-weight:600}
 .muscle-btn.active{background:linear-gradient(120deg,#fff0e9,#fbe0d8);box-shadow:inset 0 0 0 1px #e7a19a}
@@ -52,8 +55,8 @@ main{max-width:1500px}
 .detail{background:linear-gradient(130deg,#fbf5e9,#fffdf8);border-color:#ead9b8;border-radius:16px}
 .add{background:linear-gradient(110deg,#d6a844,#a97622);box-shadow:0 5px 13px #a9762230}
 .plan{border-color:#e8d7b7}
-@media(max-width:950px){.layout{grid-template-columns:1fr 1fr}.anatomy-wrap{min-height:440px}.anatomy-wrap svg{height:410px}}
-@media(max-width:600px){.layout{grid-template-columns:1fr}.anatomy-wrap{min-height:390px}.anatomy-wrap svg{height:370px}.card{padding:15px}}
+@media(max-width:950px){.layout{grid-template-columns:1fr 1fr}.anatomy-wrap{min-height:560px}.anatomy-wrap svg{height:520px}}
+@media(max-width:600px){.layout{grid-template-columns:1fr}.anatomy-wrap{min-height:510px}.anatomy-wrap svg{height:485px}.card{padding:15px}}
 
 </style>
 </head>
@@ -69,58 +72,87 @@ main{max-width:1500px}
 </section>
 <section class="card anatomy-card">
 <h2>نقشه عضلات بدن</h2><div class="tabs"><button class="tab active" data-view="front">نمای جلو</button><button class="tab" data-view="back">نمای پشت</button></div>
-<div class="anatomy-wrap"><svg viewBox="0 0 300 510" role="img" aria-label="تصویر شماتیک عضلات بدن">
-<circle class="bone" cx="150" cy="43" r="28"/><path class="bone" d="M133 72 L167 72 174 91 126 91Z"/>
-<path class="bone" d="M118 92 Q150 80 182 92 L204 190 Q190 216 184 265 L116 265 Q110 216 96 190Z"/>
-<path class="bone" d="M116 95 Q88 99 76 125 L55 222 Q53 239 66 242 Q79 244 84 226 L111 158Z"/>
-<path class="bone" d="M184 95 Q212 99 224 125 L245 222 Q247 239 234 242 Q221 244 216 226 L189 158Z"/>
-<path class="bone" d="M119 263 L181 263 174 365 160 365 150 290 140 365 126 365Z"/>
-<path class="bone" d="M126 365 L140 365 133 485 Q123 495 116 484Z M160 365 L174 365 184 484 Q177 495 167 485Z"/>
+<div class="anatomy-wrap"><svg viewBox="0 0 360 640" role="img" aria-label="مدل برداری عضلات بدن‌سازی، نمای جلو و پشت" xmlns="http://www.w3.org/2000/svg">
+<defs>
+ <linearGradient id="skinBase" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5e6d4"/><stop offset=".48" stop-color="#d9c2a8"/><stop offset="1" stop-color="#b99e82"/></linearGradient>
+ <linearGradient id="muscleBase" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e8c9b3"/><stop offset=".45" stop-color="#c9947d"/><stop offset="1" stop-color="#9f6b5b"/></linearGradient>
+ <linearGradient id="muscleShade" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#9e6a5b"/><stop offset=".5" stop-color="#e1b7a0"/><stop offset="1" stop-color="#a87363"/></linearGradient>
+ <linearGradient id="muscleBack" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dcb49d"/><stop offset=".5" stop-color="#b77f6d"/><stop offset="1" stop-color="#895b50"/></linearGradient>
+ <filter id="bodyShadow" x="-30%" y="-20%" width="160%" height="150%"><feGaussianBlur stdDeviation="5"/></filter>
+</defs>
+<ellipse cx="180" cy="614" rx="91" ry="9" fill="#9c866c" opacity=".16" filter="url(#bodyShadow)"/>
+<!-- anatomically proportioned athletic male silhouette -->
+<g fill="url(#skinBase)" stroke="#987c66" stroke-width="1.6" stroke-linejoin="round">
+ <path d="M158 67 Q180 59 202 67 L205 91 Q218 99 239 106 Q266 111 278 138 L295 211 Q300 231 287 239 Q275 245 268 229 L248 166 Q245 194 240 218 Q237 239 242 264 L251 310 Q256 334 247 354 L237 402 Q231 424 235 451 L249 554 Q253 576 239 581 Q222 586 216 565 L188 470 L180 430 L172 470 L144 565 Q138 586 121 581 Q107 576 111 554 L125 451 Q129 424 123 402 L113 354 Q104 334 109 310 L118 264 Q123 239 120 218 Q115 194 112 166 L92 229 Q85 245 73 239 Q60 231 65 211 L82 138 Q94 111 121 106 Q142 99 155 91Z"/>
+ <path d="M155 87 Q180 96 205 87 L213 119 Q210 146 180 155 Q150 146 147 119Z" />
+ <path d="M145 144 Q180 158 215 144 L224 224 Q220 251 208 268 L152 268 Q140 251 136 224Z"/>
+ <path d="M145 263 Q180 273 215 263 L211 316 Q205 337 180 343 Q155 337 149 316Z"/>
+</g>
+<!-- head and neck -->
+<path class="bone" d="M160 61 Q180 51 200 61 L198 88 Q180 99 162 88Z" fill="url(#skinBase)" stroke="#987c66" stroke-width="1.5"/>
+<path d="M165 17 Q180 7 195 17 Q207 28 202 51 Q198 68 180 70 Q162 68 158 51 Q153 28 165 17Z" fill="url(#skinBase)" stroke="#987c66" stroke-width="1.5"/>
 <g id="frontMuscles">
-<path class="muscle" data-id="upper-chest" d="M112 112 Q130 94 148 112 L146 142 Q126 145 112 128Z"/>
-<path class="muscle" data-id="upper-chest" d="M188 112 Q170 94 152 112 L154 142 Q174 145 188 128Z"/>
-<path class="muscle" data-id="chest" d="M110 132 Q130 144 148 145 L146 174 Q119 174 108 153Z"/>
-<path class="muscle" data-id="chest" d="M190 132 Q170 144 152 145 L154 174 Q181 174 192 153Z"/>
-<path class="muscle" data-id="lower-chest" d="M110 155 Q128 177 146 174 L145 190 Q121 187 108 169Z"/>
-<path class="muscle" data-id="lower-chest" d="M190 155 Q172 177 154 174 L155 190 Q179 187 192 169Z"/>
-<path class="muscle" data-id="shoulders" d="M99 102 Q112 92 123 105 L112 139 Q94 137 91 120Z"/>
-<path class="muscle" data-id="shoulders" d="M201 102 Q188 92 177 105 L188 139 Q206 137 209 120Z"/>
-<path class="muscle" data-id="biceps" d="M83 143 Q97 141 101 158 L91 206 Q78 207 77 190Z"/>
-<path class="muscle" data-id="biceps" d="M217 143 Q203 141 199 158 L209 206 Q222 207 223 190Z"/>
-<path class="muscle" data-id="abs" d="M132 190 L148 190 147 251 132 251Z"/>
-<path class="muscle" data-id="abs" d="M152 190 L168 190 168 251 153 251Z"/>
-<path class="muscle" data-id="quads" d="M119 270 L146 270 137 352 119 358Z"/>
-<path class="muscle" data-id="quads" d="M154 270 L181 270 181 358 163 352Z"/>
-<path class="muscle" data-id="mid-chest" d="M112 130 Q130 143 146 145 L145 166 Q124 166 112 150Z"/><path class="muscle" data-id="mid-chest" d="M188 130 Q170 143 154 145 L155 166 Q176 166 188 150Z"/>
-<path class="muscle" data-id="front-delts" d="M95 106 Q108 98 119 109 L112 131 Q97 132 92 119Z"/><path class="muscle" data-id="front-delts" d="M205 106 Q192 98 181 109 L188 131 Q203 132 208 119Z"/>
-<path class="muscle" data-id="side-delts" d="M89 111 Q94 104 101 107 L98 128 Q90 128 86 121Z"/><path class="muscle" data-id="side-delts" d="M211 111 Q206 104 199 107 L202 128 Q210 128 214 121Z"/>
-<path class="muscle" data-id="biceps-long" d="M82 149 Q91 144 95 160 L90 184 Q82 187 79 178Z"/><path class="muscle" data-id="biceps-long" d="M218 149 Q209 144 205 160 L210 184 Q218 187 221 178Z"/>
-<path class="muscle" data-id="biceps-short" d="M89 163 L97 164 L93 194 L85 194Z"/><path class="muscle" data-id="biceps-short" d="M211 163 L203 164 L207 194 L215 194Z"/>
-<path class="muscle" data-id="brachialis" d="M78 185 L87 187 L85 204 L77 202Z"/><path class="muscle" data-id="brachialis" d="M222 185 L213 187 L215 204 L223 202Z"/>
-<path class="muscle" data-id="upper-abs" d="M132 192 L147 192 L147 218 L132 218Z"/><path class="muscle" data-id="upper-abs" d="M153 192 L168 192 L168 218 L153 218Z"/>
-<path class="muscle" data-id="lower-abs" d="M132 221 L147 221 L147 250 L132 250Z"/><path class="muscle" data-id="lower-abs" d="M153 221 L168 221 L168 250 L153 250Z"/>
-<path class="muscle" data-id="obliques" d="M116 189 L130 195 L128 239 L117 230Z"/><path class="muscle" data-id="obliques" d="M184 189 L170 195 L172 239 L183 230Z"/>
-<path class="muscle" data-id="adductors" d="M143 270 L150 270 L146 347 L139 345Z"/><path class="muscle" data-id="adductors" d="M157 270 L150 270 L154 347 L161 345Z"/>
-<path class="muscle" data-id="abductors" d="M116 271 L130 274 L123 339 L115 345Z"/><path class="muscle" data-id="abductors" d="M184 271 L170 274 L177 339 L185 345Z"/><path class="muscle" data-id="forearm-flexors" d="M77 204 Q83 204 88 208 L82 232 Q75 235 72 229Z"/><path class="muscle" data-id="forearm-flexors" d="M223 204 Q217 204 212 208 L218 232 Q225 235 228 229Z"/>
+ <!-- chest: clavicular, sternal and lower fibers -->
+ <path class="muscle" data-id="upper-chest" d="M126 125 Q144 105 177 119 L176 158 Q150 159 129 146 Q122 138 126 125Z"/>
+ <path class="muscle" data-id="upper-chest" d="M234 125 Q216 105 183 119 L184 158 Q210 159 231 146 Q238 138 234 125Z"/>
+ <path class="muscle" data-id="mid-chest" d="M127 148 Q151 161 177 160 L176 192 Q148 195 126 174 Q121 161 127 148Z"/>
+ <path class="muscle" data-id="mid-chest" d="M233 148 Q209 161 183 160 L184 192 Q212 195 234 174 Q239 161 233 148Z"/>
+ <path class="muscle" data-id="lower-chest" d="M128 177 Q151 197 176 194 L174 211 Q147 211 130 195Z"/>
+ <path class="muscle" data-id="lower-chest" d="M232 177 Q209 197 184 194 L186 211 Q213 211 230 195Z"/>
+ <!-- deltoid heads -->
+ <path class="muscle" data-id="front-delts" d="M111 112 Q125 98 145 111 Q148 132 132 153 Q115 151 105 135Z"/>
+ <path class="muscle" data-id="front-delts" d="M249 112 Q235 98 215 111 Q212 132 228 153 Q245 151 255 135Z"/>
+ <path class="muscle" data-id="side-delts" d="M103 119 Q111 105 122 108 L119 151 Q108 159 98 146Z"/>
+ <path class="muscle" data-id="side-delts" d="M257 119 Q249 105 238 108 L241 151 Q252 159 262 146Z"/>
+ <!-- biceps and forearms -->
+ <path class="muscle" data-id="biceps-long" d="M91 157 Q104 148 116 160 L111 210 Q105 224 94 216 Q84 204 87 181Z"/>
+ <path class="muscle" data-id="biceps-long" d="M269 157 Q256 148 244 160 L249 210 Q255 224 266 216 Q276 204 273 181Z"/>
+ <path class="muscle" data-id="biceps-short" d="M105 165 Q116 160 121 174 L116 207 Q111 218 103 211Z"/>
+ <path class="muscle" data-id="biceps-short" d="M255 165 Q244 160 239 174 L244 207 Q249 218 257 211Z"/>
+ <path class="muscle" data-id="brachialis" d="M91 207 Q101 214 111 211 L106 232 Q98 239 89 229Z"/>
+ <path class="muscle" data-id="brachialis" d="M269 207 Q259 214 249 211 L254 232 Q262 239 271 229Z"/>
+ <path class="muscle" data-id="forearm-flexors" d="M83 231 Q95 238 107 231 L99 286 Q91 297 81 287 Q75 274 78 255Z"/>
+ <path class="muscle" data-id="forearm-flexors" d="M277 231 Q265 238 253 231 L261 286 Q269 297 279 287 Q285 274 282 255Z"/>
+ <!-- serratus and obliques -->
+ <path class="muscle" data-id="obliques" d="M128 193 Q140 205 151 212 L145 260 Q132 255 122 235Z"/>
+ <path class="muscle" data-id="obliques" d="M232 193 Q220 205 209 212 L215 260 Q228 255 238 235Z"/>
+ <path class="muscle" data-id="abs" d="M155 207 Q166 202 177 207 L176 270 Q165 276 154 270Z"/>
+ <path class="muscle" data-id="abs" d="M183 207 Q194 202 205 207 L206 270 Q195 276 184 270Z"/>
+ <path class="muscle" data-id="upper-abs" d="M157 210 L177 210 L177 231 L157 231Z"/><path class="muscle" data-id="upper-abs" d="M183 210 L203 210 L203 231 L183 231Z"/>
+ <path class="muscle" data-id="lower-abs" d="M157 235 L177 235 L177 268 L157 268Z"/><path class="muscle" data-id="lower-abs" d="M183 235 L203 235 L203 268 L183 268Z"/>
+ <!-- quadriceps and adductors -->
+ <path class="muscle" data-id="abductors" d="M120 286 Q135 278 151 289 L143 347 Q133 367 119 354 Q110 334 114 310Z"/>
+ <path class="muscle" data-id="quads" d="M151 285 Q165 281 176 290 L171 373 Q162 389 148 374 Q141 351 145 321Z"/>
+ <path class="muscle" data-id="quads" d="M184 290 Q195 281 209 285 L215 321 Q219 351 212 374 Q198 389 189 373Z"/>
+ <path class="muscle" data-id="abductors" d="M209 289 Q225 278 240 286 L246 310 Q250 334 241 354 Q227 367 217 347Z"/>
+ <path class="muscle" data-id="adductors" d="M151 294 Q162 304 176 300 L170 373 Q160 381 153 365Z"/>
+ <path class="muscle" data-id="adductors" d="M209 294 Q198 304 184 300 L190 373 Q200 381 207 365Z"/>
 </g>
 <g id="backMuscles" style="display:none">
-<path class="muscle" data-id="traps" d="M119 93 L150 83 181 93 174 137 150 154 126 137Z"/>
-<path class="muscle" data-id="lats" d="M119 139 L145 153 139 220 111 196 103 160Z"/>
-<path class="muscle" data-id="lats" d="M181 139 L155 153 161 220 189 196 197 160Z"/>
-<path class="muscle" data-id="triceps" d="M82 143 L99 145 94 204 78 207Z"/>
-<path class="muscle" data-id="triceps" d="M218 143 L201 145 206 204 222 207Z"/>
-<path class="muscle" data-id="glutes" d="M116 224 Q150 213 184 224 L180 267 120 267Z"/>
-<path class="muscle" data-id="hamstrings" d="M119 270 L147 270 139 353 118 358Z"/>
-<path class="muscle" data-id="hamstrings" d="M153 270 L181 270 182 358 161 353Z"/>
-<path class="muscle" data-id="calves" d="M119 370 L138 370 132 470 116 482Z"/>
-<path class="muscle" data-id="calves" d="M162 370 L181 370 184 482 168 470Z"/>
-<path class="muscle" data-id="rear-delts" d="M91 106 Q104 97 117 109 L110 133 Q95 132 88 119Z"/><path class="muscle" data-id="rear-delts" d="M209 106 Q196 97 183 109 L190 133 Q205 132 212 119Z"/>
-<path class="muscle" data-id="triceps-long" d="M79 146 L90 146 L91 178 L80 180Z"/><path class="muscle" data-id="triceps-long" d="M221 146 L210 146 L209 178 L220 180Z"/>
-<path class="muscle" data-id="triceps-lateral" d="M89 170 L96 172 L93 203 L85 204Z"/><path class="muscle" data-id="triceps-lateral" d="M211 170 L204 172 L207 203 L215 204Z"/>
-<path class="muscle" data-id="mid-back" d="M133 134 L147 151 L143 193 L132 187Z"/><path class="muscle" data-id="mid-back" d="M167 134 L153 151 L157 193 L168 187Z"/>
-<path class="muscle" data-id="lower-back" d="M139 193 L150 193 L150 221 L139 221Z"/><path class="muscle" data-id="lower-back" d="M161 193 L150 193 L150 221 L161 221Z"/>
-<path class="muscle" data-id="glute-med" d="M119 224 Q133 217 148 226 L143 243 L122 243Z"/><path class="muscle" data-id="glute-med" d="M181 224 Q167 217 152 226 L157 243 L178 243Z"/>
-<path class="muscle" data-id="glute-max" d="M121 243 Q149 236 179 243 L178 266 L122 266Z"/><path class="muscle" data-id="forearm-extensors" d="M77 204 Q84 205 89 209 L84 232 Q76 234 73 228Z"/><path class="muscle" data-id="forearm-extensors" d="M223 204 Q216 205 211 209 L216 232 Q224 234 227 228Z"/></g></svg></div><div class="legend"><span><i class="dot"></i>ناحیه انتخاب‌شده</span><span>برای تغییر ناحیه روی عضله بزنید</span></div>
+ <path class="muscle" data-id="traps" d="M151 99 Q180 83 209 99 L226 142 Q208 163 180 171 Q152 163 134 142Z"/>
+ <path class="muscle" data-id="rear-delts" d="M108 113 Q124 99 145 113 L137 151 Q119 158 104 140Z"/>
+ <path class="muscle" data-id="rear-delts" d="M252 113 Q236 99 215 113 L223 151 Q241 158 256 140Z"/>
+ <path class="muscle" data-id="triceps-long" d="M91 157 Q104 151 117 163 L111 210 Q103 222 92 214 Q84 199 87 180Z"/>
+ <path class="muscle" data-id="triceps-long" d="M269 157 Q256 151 243 163 L249 210 Q257 222 268 214 Q276 199 273 180Z"/>
+ <path class="muscle" data-id="triceps-lateral" d="M106 169 Q117 164 121 180 L115 211 L104 213Z"/>
+ <path class="muscle" data-id="triceps-lateral" d="M254 169 Q243 164 239 180 L245 211 L256 213Z"/>
+ <path class="muscle" data-id="forearm-extensors" d="M83 231 Q95 238 107 231 L99 286 Q91 297 81 287 Q75 274 78 255Z"/>
+ <path class="muscle" data-id="forearm-extensors" d="M277 231 Q265 238 253 231 L261 286 Q269 297 279 287 Q285 274 282 255Z"/>
+ <path class="muscle" data-id="lats" d="M132 147 Q151 155 175 171 L169 250 Q149 258 125 225 Q115 190 132 147Z"/>
+ <path class="muscle" data-id="lats" d="M228 147 Q209 155 185 171 L191 250 Q211 258 235 225 Q245 190 228 147Z"/>
+ <path class="muscle" data-id="mid-back" d="M158 151 Q170 162 177 174 L173 220 L157 211Z"/>
+ <path class="muscle" data-id="mid-back" d="M202 151 Q190 162 183 174 L187 220 L203 211Z"/>
+ <path class="muscle" data-id="lower-back" d="M164 218 Q180 226 196 218 L191 273 Q180 283 169 273Z"/>
+ <path class="muscle" data-id="glute-med" d="M122 273 Q144 261 176 277 L174 307 Q151 318 126 303Z"/>
+ <path class="muscle" data-id="glute-med" d="M238 273 Q216 261 184 277 L186 307 Q209 318 234 303Z"/>
+ <path class="muscle" data-id="glute-max" d="M126 304 Q151 312 176 307 L174 363 Q151 379 128 357Z"/>
+ <path class="muscle" data-id="glute-max" d="M234 304 Q209 312 184 307 L186 363 Q209 379 232 357Z"/>
+ <path class="muscle" data-id="hamstrings" d="M126 369 Q148 379 173 370 L166 463 Q153 478 139 461 Q126 427 126 369Z"/>
+ <path class="muscle" data-id="hamstrings" d="M234 369 Q212 379 187 370 L194 463 Q207 478 221 461 Q234 427 234 369Z"/>
+ <path class="muscle" data-id="calves" d="M132 470 Q149 461 164 475 L151 559 Q140 574 126 559Z"/>
+ <path class="muscle" data-id="calves" d="M228 470 Q211 461 196 475 L209 559 Q220 574 234 559Z"/>
+</g>
+</svg></div><div class="legend"><span><i class="dot"></i>ناحیه انتخاب‌شده</span><span>برای تغییر ناحیه روی عضله بزنید</span></div>
 </section>
 <section class="card">
 <h2>حرکات پیشنهادی</h2><div class="sub" id="selectedLabel">ابتدا یک عضله انتخاب کنید</div><label class="sub" style="display:block;margin-top:12px">جلسه تمرینی<select id="sessionSelect" style="display:block;width:100%;padding:10px;margin:8px 0;border:1px solid var(--line);border-radius:10px"><option>جلسه ۱</option><option>جلسه ۲</option><option>جلسه ۳</option><option>جلسه ۴</option><option>جلسه ۵</option><option>جلسه ۶</option></select></label><input id="exerciseSearch" type="search" placeholder="جستجوی نام حرکت یا تجهیزات..." style="width:100%;padding:11px;border:1px solid var(--line);border-radius:11px;margin-top:12px"><div class="sub" id="exerciseCount" style="margin:6px 0"></div><div class="exercise-list" id="exerciseList" style="margin-top:14px"></div><div class="detail" style="margin-top:12px"><h3>بانک حرکات</h3><div class="tabs"><button class="tab active" data-bank="both">هر دو بانک</button><button class="tab" data-bank="global">بانک جامع</button><button class="tab" data-bank="coach">بانک مربی</button></div><label class="sub" style="display:block;margin:8px 0">فیلتر تجهیزات<select id="equipmentFilter" style="display:block;width:100%;padding:10px;margin:6px 0;border:1px solid var(--line);border-radius:10px"><option value="all">همه تجهیزات</option><option value="دمبل">دمبل</option><option value="هالتر">هالتر</option><option value="سیم‌کش">سیم‌کش</option><option value="دستگاه">دستگاه</option><option value="وزن بدن">وزن بدن</option><option value="کش">کش</option><option value="توپ">توپ</option><option value="بارفیکس">بارفیکس</option></select></label><label class="sub" style="display:block;margin:8px 0">نقش عضله در حرکت<select id="muscleRoleFilter" style="display:block;width:100%;padding:10px;margin:6px 0;border:1px solid var(--line);border-radius:10px"><option value="primary">عضله اصلی</option><option value="secondary">عضله کمکی</option><option value="both">اصلی و کمکی</option></select></label><p class="sub" id="bankNote">حرکات استاندارد از بانک جامع (نمونه) نمایش داده می‌شود.</p><div id="customForm" style="display:none"><input id="customName" placeholder="نام حرکت جدید" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:4px 0"><input id="customEquipment" placeholder="تجهیزات (مثلاً دمبل، کش، دستگاه)" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:4px 0"><input id="customAssist" placeholder="عضلات کمکی (اختیاری)" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:4px 0"><input id="customCategory" placeholder="نوع حرکت (مثلاً تک‌مفصلی، چندمفصلی، کششی)" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:4px 0"><textarea id="customNote" placeholder="نکته اجرا یا توضیح حرکت (اختیاری)" rows="2" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:4px 0;font:inherit"></textarea><button id="saveCustom" type="button" class="add" style="margin-top:6px">＋ ثبت در بانک اختصاصی (نمونه)</button></div><div id="stagedPanel" class="detail" style="margin-top:12px"><h3>حرکات انتخاب‌شده برای انتقال</h3><div id="stagedList" class="sub">هنوز حرکتی انتخاب نشده است.</div></div>
