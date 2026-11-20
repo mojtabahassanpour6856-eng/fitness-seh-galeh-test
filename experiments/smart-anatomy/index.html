@@ -250,23 +250,22 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
 requestAnimationFrame(installFacialDetails);
 
 /* Experimental posterior-deltoid contour correction.
-   Keep the library muscle IDs/interaction intact; enlarge only the undersized
-   rear-deltoid paths into a shoulder-cap region, stopping above the triceps
-   and lateral to the upper trapezius. */
+   Reapply after every chart view render: BodyChart rebuilds/resets SVG paths
+   when switching views, so a one-time dataset guard is not reliable. */
 function installRearDeltoidContours(){
- const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");if(!svg)return;
+ const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");if(!svg||view!=="back")return;
  const contours={
   "Left Rear Deltoid":"M 43.64,15.42 C 44.05,15.66 44.48,16.20 44.55,16.86 C 44.64,17.72 44.40,18.78 44.12,19.66 C 43.92,20.34 43.56,20.94 43.12,21.26 C 42.30,20.95 41.26,20.54 40.22,20.12 C 39.92,20.00 39.78,19.72 39.92,19.38 C 40.36,18.25 41.08,17.18 41.90,16.42 C 42.45,15.92 43.06,15.56 43.64,15.42 Z",
   "Right Rear Deltoid":"M 61.42,15.52 C 61.01,15.76 60.57,16.30 60.50,16.96 C 60.41,17.82 60.65,18.88 60.93,19.76 C 61.13,20.44 61.49,21.04 61.93,21.36 C 62.75,21.05 63.79,20.64 64.83,20.22 C 65.13,20.10 65.27,19.82 65.13,19.48 C 64.69,18.35 63.97,17.28 63.15,16.52 C 62.60,16.02 61.99,15.66 61.42,15.52 Z"
  };
  for(const [label,d] of Object.entries(contours)){
   const p=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].find(el=>(el.getAttribute("aria-label")||"").includes(label));
-  if(p&&!p.dataset.rearContourAdjusted){p.setAttribute("d",d);p.dataset.rearContourAdjusted="1";}
+  if(p&&p.getAttribute("d")!==d)p.setAttribute("d",d);
  }
 }
 const rearContourObserver=new MutationObserver(()=>requestAnimationFrame(installRearDeltoidContours));
 rearContourObserver.observe(document.getElementById("libraryBodyChart"),{childList:true,subtree:true});
-requestAnimationFrame(installRearDeltoidContours);
+requestAnimationFrame(()=>requestAnimationFrame(installRearDeltoidContours));
 
 
 // Chest-only subdivision overlay: reuse the library's exact chest contours,
@@ -430,7 +429,7 @@ function getList(){
 }
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button type="button" class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'" aria-pressed="'+(g.id===selectedGroup?'true':'false')+'">'+g.name+'</button>').join("");}
 function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();syncLibrarySelection();syncChestSubdivisionSelection();const family=parentMap[id]||id;$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
-function setView(v){view=v;document.getElementById("libraryBodyChart")?.classList.remove("shoulder-inspect","chest-inspect");shoulderInspectToggle?.setAttribute("aria-pressed","false");chestInspectToggle?.setAttribute("aria-pressed","false");if(shoulderInspectToggle)shoulderInspectToggle.textContent="نمای بررسی محدوده سرشانه";if(chestInspectToggle)chestInspectToggle.textContent="نمای بررسی محدوده سینه";libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));if(v==="front")requestAnimationFrame(()=>{installFacialDetails();installChestSubdivision();syncChestSubdivisionSelection();});}
+function setView(v){view=v;document.getElementById("libraryBodyChart")?.classList.remove("shoulder-inspect","chest-inspect");shoulderInspectToggle?.setAttribute("aria-pressed","false");chestInspectToggle?.setAttribute("aria-pressed","false");if(shoulderInspectToggle)shoulderInspectToggle.textContent="نمای بررسی محدوده سرشانه";if(chestInspectToggle)chestInspectToggle.textContent="نمای بررسی محدوده سینه";libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});if(v==="back")requestAnimationFrame(()=>requestAnimationFrame(installRearDeltoidContours));syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));if(v==="front")requestAnimationFrame(()=>{installFacialDetails();installChestSubdivision();syncChestSubdivisionSelection();});}
 function syncLibrarySelection(){
  Object.keys(libraryState).forEach(k=>delete libraryState[k]);
  const regionPrefixes={
