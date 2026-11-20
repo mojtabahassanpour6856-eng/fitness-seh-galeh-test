@@ -202,7 +202,8 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 #libraryBodyChart .musclemap-muscle:focus-visible{outline:none!important;stroke:#111!important}
 
 /* Hard override: anatomy preview is SVG-only, with no colored raster body image. */
-#libraryBodyChart img.musclemap-photo-html,#libraryBodyChart img.musclemap-photo{display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important}
+/* FIX: keep embedded body photo visible beneath white muscle overlays */
+#libraryBodyChart img.musclemap-photo-html{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:100%!important}
 #libraryBodyChart svg.musclemap-svg .musclemap-muscles .musclemap-muscle,
 #libraryBodyChart svg.musclemap-svg .musclemap-muscles .musclemap-muscle:hover,
 #libraryBodyChart svg.musclemap-svg .musclemap-muscles .musclemap-muscle.selected,
