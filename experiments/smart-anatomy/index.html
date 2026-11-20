@@ -137,6 +137,12 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 #libraryBodyChart .chest-zone-group:focus{outline:none}#libraryBodyChart .chest-zone-group:focus .chest-zone{stroke:#202020!important;stroke-width:.32!important;stroke-dasharray:.55 .28}
 #libraryBodyChart .body-chart-svg{width:auto!important;height:625px!important;max-height:82vh!important;max-width:100%!important;filter:none!important;overflow:visible}
 #libraryBodyChart .body-chart-muscle{cursor:pointer;vector-effect:non-scaling-stroke}
+/* Make the chart larger on phones while preserving its original SVG geometry. */
+@media(max-width:600px){
+ .anatomy-wrap{min-height:610px!important;overflow:visible!important}
+ #libraryBodyChart,#libraryBodyChart .body-chart-container{min-height:590px!important}
+ #libraryBodyChart .body-chart-svg{height:560px!important;max-height:none!important;width:auto!important;max-width:none!important}
+}
 /* Larger tap corridor for the rear deltoid: visual contour stays unchanged. */
 #libraryBodyChart .body-chart-muscle[aria-label*="Rear Deltoid"]{pointer-events:stroke!important;stroke:transparent!important;stroke-width:1.05!important;}
 #libraryBodyChart.chest-inspect .body-chart-muscle{opacity:.16!important;fill:#cbd5e1!important;stroke:#64748b!important;stroke-width:.12!important;filter:none!important}
@@ -195,6 +201,32 @@ shoulderInspectToggle?.addEventListener("click",()=>{
  shoulderInspectToggle.setAttribute("aria-pressed",String(enabled));
  shoulderInspectToggle.textContent=enabled?"خروج از بررسی محدوده سرشانه":"نمای بررسی محدوده سرشانه";
 });
+// Add subtle facial landmarks to the existing front-view head silhouette.
+function installFacialDetails(){
+ const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");
+ if(!svg || view!=="front" || svg.querySelector("#anatomy-face-details"))return;
+ const ns="http://www.w3.org/2000/svg";
+ const g=document.createElementNS(ns,"g");
+ g.setAttribute("id","anatomy-face-details");
+ g.setAttribute("aria-hidden","true");
+ g.setAttribute("pointer-events","none");
+ const add=(tag,attrs)=>{
+  const el=document.createElementNS(ns,tag);
+  Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+  g.appendChild(el);
+ };
+ // Coordinates are in the library's original 0–35 front-view SVG viewBox.
+ add("path",{d:"M 13.35 6.25 Q 14.05 5.92 14.75 6.25 M 17.05 6.25 Q 17.75 5.92 18.45 6.25",fill:"none",stroke:"#5b5149","stroke-width":".16","stroke-linecap":"round"});
+ add("ellipse",{cx:"14.05",cy:"6.62",rx:".48",ry:".25",fill:"#fff","fill-opacity":".9"});
+ add("ellipse",{cx:"17.75",cy:"6.62",rx:".48",ry:".25",fill:"#fff","fill-opacity":".9"});
+ add("ellipse",{cx:"14.08",cy:"6.62",rx:".16",ry:".22",fill:"#4b4038"});
+ add("ellipse",{cx:"17.72",cy:"6.62",rx:".16",ry:".22",fill:"#4b4038"});
+ add("circle",{cx:"14.12",cy:"6.56",r:".055",fill:"#fff"});
+ add("circle",{cx:"17.76",cy:"6.56",r:".055",fill:"#fff"});
+ add("path",{d:"M 15.88 6.72 Q 15.55 7.45 15.85 7.55",fill:"none",stroke:"#8b7568","stroke-width":".12","stroke-linecap":"round"});
+ add("path",{d:"M 14.95 8.18 Q 15.85 8.52 16.75 8.18",fill:"none",stroke:"#8d514b","stroke-width":".16","stroke-linecap":"round"});
+ svg.appendChild(g);
+}
 const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
  view:ViewSide.FRONT,bodyState:libraryState,ariaLabel:"نقشه عضلات بدن",
  onMuscleClick:(id,name)=>{
@@ -215,6 +247,7 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
   if(groupId&&groups.some(g=>g.id===groupId))chooseGroup(groupId);
  }
 });
+requestAnimationFrame(installFacialDetails);
 
 // Chest-only subdivision overlay: reuse the library's exact chest contours,
 // then divide each sternal contour into two independently selectable zones.
@@ -377,7 +410,7 @@ function getList(){
 }
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button type="button" class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'" aria-pressed="'+(g.id===selectedGroup?'true':'false')+'">'+g.name+'</button>').join("");}
 function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();syncLibrarySelection();syncChestSubdivisionSelection();const family=parentMap[id]||id;$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
-function setView(v){view=v;document.getElementById("libraryBodyChart")?.classList.remove("shoulder-inspect","chest-inspect");shoulderInspectToggle?.setAttribute("aria-pressed","false");chestInspectToggle?.setAttribute("aria-pressed","false");if(shoulderInspectToggle)shoulderInspectToggle.textContent="نمای بررسی محدوده سرشانه";if(chestInspectToggle)chestInspectToggle.textContent="نمای بررسی محدوده سینه";libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));if(v==="front")requestAnimationFrame(()=>{installChestSubdivision();syncChestSubdivisionSelection();});}
+function setView(v){view=v;document.getElementById("libraryBodyChart")?.classList.remove("shoulder-inspect","chest-inspect");shoulderInspectToggle?.setAttribute("aria-pressed","false");chestInspectToggle?.setAttribute("aria-pressed","false");if(shoulderInspectToggle)shoulderInspectToggle.textContent="نمای بررسی محدوده سرشانه";if(chestInspectToggle)chestInspectToggle.textContent="نمای بررسی محدوده سینه";libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));if(v==="front")requestAnimationFrame(()=>{installFacialDetails();installChestSubdivision();syncChestSubdivisionSelection();});}
 function syncLibrarySelection(){
  Object.keys(libraryState).forEach(k=>delete libraryState[k]);
  const regionPrefixes={
