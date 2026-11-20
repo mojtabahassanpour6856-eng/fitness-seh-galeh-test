@@ -128,10 +128,15 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 .photo-anatomy>#muscleHotspots{display:block!important;position:relative;width:auto;height:100%;max-width:100%;max-height:100%;inset:auto;margin:auto;flex:none;overflow:visible;pointer-events:none;filter:none!important;touch-action:manipulation}
 #anatomyPhotoSvg{image-rendering:auto}
 .anatomy-wrap>svg:not(#muscleHotspots){display:none!important}
-#muscleHotspots .hotspot{pointer-events:auto;cursor:pointer}
-#muscleHotspots .hotspot path{fill:transparent;stroke:transparent;stroke-width:2;transition:fill .15s,stroke .15s}
-#muscleHotspots .hotspot.selected path{fill:#e43d3d88;stroke:#b52424;stroke-width:2.3}
-#muscleHotspots .hotspot:hover path{stroke:#777;fill:transparent}#muscleHotspots .hotspot.selected:hover path{fill:#e43d3d88;stroke:#b52424;stroke-width:2.3}
+#muscleHotspots{pointer-events:none;user-select:none;-webkit-user-select:none}
+#muscleHotspots #anatomyPhotoSvg{pointer-events:none}
+#muscleHotspots .hotspot{pointer-events:all;cursor:pointer;touch-action:manipulation}
+#muscleHotspots .hotspot path{fill:transparent;fill-opacity:0;stroke:transparent;stroke-width:1.5;pointer-events:all;transition:fill .14s,fill-opacity .14s,stroke .14s}
+#muscleHotspots .hotspot.selected path{fill:#e53935;fill-opacity:.62;stroke:#8f1717;stroke-width:2.6;stroke-linejoin:round}
+#muscleHotspots .hotspot:hover path{stroke:#b87935;stroke-width:2;fill:#e6a04b;fill-opacity:.16}
+#muscleHotspots .hotspot.selected:hover path{fill:#e53935;fill-opacity:.62;stroke:#8f1717;stroke-width:2.6}
+#muscleHotspots .hotspot:focus-visible path{stroke:#b87935;stroke-width:3;outline:none}
+#muscleHotspots .hotspot.selected:focus-visible path{stroke:#761313;stroke-width:3.2}
 </style>
 </head>
 <body>
@@ -149,9 +154,19 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 <div class="anatomy-wrap"><div class="photo-anatomy" id="photoAnatomy"><svg id="muscleHotspots" viewBox="0 0 683 1024" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><image id="anatomyPhotoSvg" x="0" y="0" width="683" height="1024" href="images/images/front.jpg" preserveAspectRatio="none"/>
 <g id="hotspotCoordinateLayer">
 <!-- FRONT: separate, non-overlapping regions traced to the supplied front reference -->
-<g class="hotspot" data-muscle="upper-chest"><path d="M207 211 C222 197 253 190 282 197 C306 202 326 215 339 229 L339 270 C311 270 283 260 258 247 C235 236 218 225 207 211Z"/><path d="M476 211 C461 197 430 190 401 197 C377 202 357 215 344 229 L344 270 C372 270 400 260 425 247 C448 236 465 225 476 211Z"/></g>
-<g class="hotspot" data-muscle="mid-chest"><path d="M210 226 C229 241 254 253 280 265 C301 275 321 280 339 280 L339 302 C310 301 281 291 254 278 C232 267 216 251 210 226Z"/><path d="M473 226 C454 241 429 253 403 265 C382 275 362 280 344 280 L344 302 C373 301 402 291 429 278 C451 267 467 251 473 226Z"/></g>
-<g class="hotspot" data-muscle="lower-chest"><path d="M228 265 C254 283 286 296 314 302 C324 304 332 305 339 305 L339 316 C302 316 265 302 237 284Z"/><path d="M455 265 C429 283 397 296 369 302 C359 304 351 305 344 305 L344 316 C381 316 418 302 446 284Z"/></g>
+<!-- Three separate chest zones; boundaries do not overlap, so touch selection stays unambiguous. -->
+<g class="hotspot chest-zone" data-muscle="upper-chest" aria-label="بالاسینه">
+ <path d="M207 207 C225 195 253 190 282 197 C306 202 326 213 339 226 L339 241 C311 239 283 230 258 220 C235 214 218 210 207 207Z"/>
+ <path d="M476 207 C458 195 430 190 401 197 C377 202 357 213 344 226 L344 241 C372 239 400 230 425 220 C448 214 465 210 476 207Z"/>
+</g>
+<g class="hotspot chest-zone" data-muscle="mid-chest" aria-label="سینه میانی">
+ <path d="M211 218 C231 229 255 239 280 244 C302 250 322 252 339 252 L339 281 C317 280 295 273 273 264 C246 254 224 239 211 218Z"/>
+ <path d="M472 218 C452 229 428 239 403 244 C381 250 361 252 344 252 L344 281 C366 280 388 273 410 264 C437 254 459 239 472 218Z"/>
+</g>
+<g class="hotspot chest-zone" data-muscle="lower-chest" aria-label="زیرسینه">
+ <path d="M226 253 C250 269 280 282 307 288 C319 291 330 292 339 292 L339 312 C306 311 273 300 245 282 C236 274 230 264 226 253Z"/>
+ <path d="M457 253 C433 269 403 282 376 288 C364 291 353 292 344 292 L344 312 C377 311 410 300 438 282 C447 274 453 264 457 253Z"/>
+</g>
 <g class="hotspot" data-muscle="front-delts"><path d="M190 205 C205 181 247 178 273 207 C280 235 266 274 244 294 C217 286 197 251 190 205Z"/><path d="M493 205 C478 181 436 178 410 207 C403 235 417 274 439 294 C466 286 486 251 493 205Z"/></g>
 <g class="hotspot" data-muscle="side-delts"><path d="M202 190 C222 179 251 183 270 203 C281 219 279 247 267 269 C257 286 240 293 224 281 C209 267 198 244 197 221 C197 208 199 198 202 190Z"/><path d="M481 190 C461 179 432 183 413 203 C402 219 404 247 416 269 C426 286 443 293 459 281 C474 267 485 244 486 221 C486 208 484 198 481 190Z"/></g>
 <g class="hotspot" data-muscle="biceps-long">
@@ -442,7 +457,21 @@ function getList(){
  const seen=new Set();return filtered.filter(e=>{const key=normalizeExerciseName(e[0])+"::"+e.source;if(seen.has(key))return false;seen.add(key);return true;});
 }
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button type="button" class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'" aria-pressed="'+(g.id===selectedGroup?'true':'false')+'">'+g.name+'</button>').join("");}
-function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();refreshPhotoAnatomy();const family=parentMap[id]||id;document.querySelectorAll(".muscle").forEach(el=>{const mid=el.dataset.id,active=mid===id||(parentMap[mid]||mid)===family;el.classList.toggle("selected",active);el.setAttribute("aria-pressed",active?"true":"false");});$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
+function chooseGroup(id){
+ const g=groups.find(x=>x.id===id);if(!g)return;
+ if(g.view!==view){view=g.view;$("#frontMuscles").style.display=view==="front"?"":"none";$("#backMuscles").style.display=view==="back"?"":"none";$("#frontDetail").style.display=view==="front"?"":"none";$("#backDetail").style.display=view==="back"?"":"none";document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===view));}
+ selectedGroup=id;renderGroups();refreshPhotoAnatomy();
+ // The photo overlay is authoritative: only the exact selected region is highlighted.
+ document.querySelectorAll("#muscleHotspots .hotspot").forEach(el=>{
+   const active=el.dataset.muscle===id;el.classList.toggle("selected",active);el.setAttribute("aria-pressed",active?"true":"false");
+ });
+ // Keep the hidden legacy vector model in sync, without highlighting the whole muscle family.
+ document.querySelectorAll(".muscle").forEach(el=>{
+   const active=el.dataset.id===id;el.classList.toggle("selected",active);el.setAttribute("aria-pressed",active?"true":"false");
+ });
+ $("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();
+ $("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";
+}
 function setView(v){view=v;refreshPhotoAnatomy();$("#frontMuscles").style.display=v==="front"?"":"none";$("#backMuscles").style.display=v==="back"?"":"none";$("#frontDetail").style.display=v==="front"?"":"none";$("#backDetail").style.display=v==="back"?"":"none";document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));}
 function keyFor(g,e,source,session){return normalizeExerciseName(e[0])+"::"+(source||e.source||"global")+"::"+String(g||"")+"::"+String(session||"");}
 function renderExercises(){const list=getList();$("#exerciseCount").textContent=list.length+" حرکت قابل نمایش · "+staged.length+" حرکت انتخاب‌شده · "+(($("#muscleRoleFilter")?.value||"primary")==="primary"?"عضله اصلی":($("#muscleRoleFilter")?.value==="secondary"?"عضله کمکی":"اصلی و کمکی"));$("#exerciseList").innerHTML=list.map((e,i)=>'<button class="exercise '+(staged.some(x=>x.key===keyFor(selectedGroup,e,e.source,$("#sessionSelect").value))?"active":"")+'" data-ex="'+i+'"><b>'+escapeHtml(e[0])+'</b><small>تجهیزات: '+escapeHtml(e[1])+' · '+escapeHtml(e.relation||'عضله اصلی')+': '+escapeHtml(e[2])+'<br>'+(e.source==="coach"||bank==="coach"?"بانک اختصاصی مربی · نمونه":"بانک جامع سیستم · نمونه")+'</small></button>').join("")||'<p class="sub">برای این فیلتر حرکتی یافت نشد.</p>';}
@@ -462,6 +491,23 @@ function validateStagedGroups(items){const groupSystems=["سوپرست","تری�
 $("#addBtn").addEventListener("click",()=>{if(!staged.length)return;const groupSystems=["سوپرست","تری‌ست","جاینت‌ست"];const groupError=validateStagedGroups(staged);if(groupError){alert(groupError);return;}const sets=new Map();staged.filter(x=>groupSystems.includes(x.system)).forEach(x=>{const k=x.session+"::"+x.groupLabel.trim().toLowerCase();if(!sets.has(k))sets.set(k,[]);sets.get(k).push(x);});for(const members of sets.values()){const targets=members.map(x=>normalizeExerciseName(x.exercise[2]));if(new Set(targets).size<members.length&&!confirm("چند حرکت این گروه عضله اصلی مشابه دارند؛ حجم و خستگی را بررسی کنید. ادامه می‌دهید؟"))return;}const fresh=staged.filter(x=>!plan.some(p=>p.session===x.session&&normalizeExerciseName(p.name)===normalizeExerciseName(x.exercise[0])));if(fresh.length!==staged.length)alert("حرکات تکراری در همان جلسه به برنامه اضافه نشدند.");if(!fresh.length)return;fresh.forEach(x=>plan.push({name:x.exercise[0],group:x.groupName,session:x.session,details:x.exercise,system:x.system||"عادی",groupLabel:x.groupLabel||"",sets:x.sets||3,reps:x.reps||"10-12",rest:x.rest??60}));renderPlan();staged=[];renderExercises();renderStaged();});
 const photoFront="images/images/front.jpg",photoBack="images/images/back.jpg";
 renderGroups();renderStaged();renderPlan();refreshPhotoAnatomy();
-function refreshPhotoAnatomy(){const photo=$("#anatomyPhotoSvg"),overlay=$("#muscleHotspots"),coords=$("#hotspotCoordinateLayer"),layer=$("#photoAnatomy");if(!overlay||!layer||!photo||!coords)return;const isBack=view==="back",nativeWidth=isBack?780:683;overlay.setAttribute("viewBox",`0 0 ${nativeWidth} 1024`);photo.setAttribute("href",isBack?photoBack:photoFront);photo.setAttribute("width",String(nativeWidth));photo.setAttribute("height","1024");photo.setAttribute("preserveAspectRatio","none");coords.setAttribute("transform",isBack?`scale(${(780/683).toFixed(8)} 1)`:"");photo.setAttribute("aria-label",isBack?"تصویر آناتومی نمای پشت":"تصویر آناتومی نمای جلو");layer.style.display="flex";const visible=new Set(groups.filter(g=>g.view===view).map(g=>g.id));overlay.querySelectorAll(".hotspot").forEach(h=>{const active=h.dataset.muscle===selectedGroup;h.style.display=visible.has(h.dataset.muscle)?"":"none";h.classList.toggle("selected",active);h.setAttribute("tabindex",visible.has(h.dataset.muscle)?"0":"-1");h.setAttribute("role","button");h.setAttribute("aria-label",groups.find(g=>g.id===h.dataset.muscle)?.name||h.dataset.muscle);h.setAttribute("aria-pressed",active?"true":"false");});}
-document.querySelectorAll("#muscleHotspots .hotspot").forEach(h=>{h.addEventListener("click",()=>chooseGroup(h.dataset.muscle));h.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();chooseGroup(h.dataset.muscle);}});});
+function refreshPhotoAnatomy(){
+ const photo=$("#anatomyPhotoSvg"),overlay=$("#muscleHotspots"),coords=$("#hotspotCoordinateLayer"),layer=$("#photoAnatomy");
+ if(!overlay||!layer||!photo||!coords)return;
+ const isBack=view==="back",nativeWidth=isBack?780:683;
+ overlay.setAttribute("viewBox",`0 0 ${nativeWidth} 1024`);overlay.setAttribute("preserveAspectRatio","xMidYMid meet");
+ photo.setAttribute("href",isBack?photoBack:photoFront);photo.setAttribute("width",String(nativeWidth));photo.setAttribute("height","1024");photo.setAttribute("preserveAspectRatio","none");
+ coords.setAttribute("transform",isBack?`scale(${(780/683).toFixed(8)} 1)`:"");
+ photo.setAttribute("aria-label",isBack?"تصویر آناتومی نمای پشت":"تصویر آناتومی نمای جلو");layer.style.display="flex";
+ const visible=new Set(groups.filter(g=>g.view===view).map(g=>g.id));
+ overlay.querySelectorAll(".hotspot").forEach(h=>{
+   const shown=visible.has(h.dataset.muscle),active=shown&&h.dataset.muscle===selectedGroup;
+   h.style.display=shown?"":"none";h.classList.toggle("selected",active);h.setAttribute("tabindex",shown?"0":"-1");
+   h.setAttribute("role","button");h.setAttribute("aria-label",groups.find(g=>g.id===h.dataset.muscle)?.name||h.dataset.muscle);h.setAttribute("aria-pressed",active?"true":"false");
+ });
+}
+document.querySelectorAll("#muscleHotspots .hotspot").forEach(h=>{
+ h.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();chooseGroup(h.dataset.muscle);});
+ h.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();chooseGroup(h.dataset.muscle);}});
+});
 </script></body></html>
