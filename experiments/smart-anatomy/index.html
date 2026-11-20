@@ -438,7 +438,7 @@ function syncRearDeltoidIsolation(){
  if(!rear||!lat)return;
  let defs=svg.querySelector("defs");if(!defs){defs=document.createElementNS(NS,"defs");svg.insertBefore(defs,svg.firstChild);}
  let mask=defs.querySelector("#"+maskId);
- if(selectedGroup==="rear-delts"){
+ if(selectedGroup==="rear-delts"||selectedGroup==="lats"){
   if(!mask){
    mask=document.createElementNS(NS,"mask");mask.id=maskId;mask.setAttribute("maskUnits","userSpaceOnUse");mask.setAttribute("x","37");mask.setAttribute("y","0");mask.setAttribute("width","35");mask.setAttribute("height","93");mask.setAttribute("mask-type","luminance");
    const bg=document.createElementNS(NS,"rect");bg.setAttribute("x","37");bg.setAttribute("y","0");bg.setAttribute("width","35");bg.setAttribute("height","93");bg.setAttribute("fill","white");
@@ -446,7 +446,8 @@ function syncRearDeltoidIsolation(){
   }
   const cut=mask.querySelector("path");cut.setAttribute("d",rear.getAttribute("d")||"");
   lat.setAttribute("mask","url(#"+maskId+")");
-  if(rear!==svg.lastElementChild)svg.appendChild(rear);
+  // Keep the rear-deltoid contour above the lat only when it is the active target.
+  if(selectedGroup==="rear-delts"&&rear!==svg.lastElementChild)svg.appendChild(rear);
  }else{
   lat.removeAttribute("mask");
   mask?.remove();
