@@ -430,18 +430,26 @@ function getList(){
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button type="button" class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'" aria-pressed="'+(g.id===selectedGroup?'true':'false')+'">'+g.name+'</button>').join("");}
 function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();syncLibrarySelection();syncChestSubdivisionSelection();const family=parentMap[id]||id;$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
 function setView(v){view=v;document.getElementById("libraryBodyChart")?.classList.remove("shoulder-inspect","chest-inspect");shoulderInspectToggle?.setAttribute("aria-pressed","false");chestInspectToggle?.setAttribute("aria-pressed","false");if(shoulderInspectToggle)shoulderInspectToggle.textContent="نمای بررسی محدوده سرشانه";if(chestInspectToggle)chestInspectToggle.textContent="نمای بررسی محدوده سینه";libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});if(v==="back")requestAnimationFrame(()=>requestAnimationFrame(installRearDeltoidContours));syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));if(v==="front")requestAnimationFrame(()=>{installFacialDetails();installChestSubdivision();syncChestSubdivisionSelection();});}
-function syncRearDeltoidLayer(){
+function syncRearDeltoidIsolation(){
  const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");if(!svg)return;
- const pairs=[["Left Rear Deltoid","Left Lats (Upper)"],["Right Rear Deltoid","Right Lats (Upper)"]];
- for(const [rearLabel,latLabel] of pairs){
-  const rear=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].find(p=>(p.getAttribute("aria-label")||"").includes(rearLabel));
-  const lat=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].find(p=>(p.getAttribute("aria-label")||"").includes(latLabel));
-  if(!rear||!lat)continue;
-  if(selectedGroup==="rear-delts"){
-   if(rear!==svg.lastElementChild)svg.appendChild(rear);
-  }else if(rear.nextElementSibling!==lat){
-   svg.insertBefore(rear,lat);
+ const NS="http://www.w3.org/2000/svg",maskId="rear-deltoid-right-isolation-mask";
+ const rear=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].find(p=>(p.getAttribute("aria-label")||"").includes("Right Rear Deltoid"));
+ const lat=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].find(p=>(p.getAttribute("aria-label")||"").includes("Right Lats (Upper)"));
+ if(!rear||!lat)return;
+ let defs=svg.querySelector("defs");if(!defs){defs=document.createElementNS(NS,"defs");svg.insertBefore(defs,svg.firstChild);}
+ let mask=defs.querySelector("#"+maskId);
+ if(selectedGroup==="rear-delts"){
+  if(!mask){
+   mask=document.createElementNS(NS,"mask");mask.id=maskId;mask.setAttribute("maskUnits","userSpaceOnUse");mask.setAttribute("x","37");mask.setAttribute("y","0");mask.setAttribute("width","35");mask.setAttribute("height","93");mask.setAttribute("mask-type","luminance");
+   const bg=document.createElementNS(NS,"rect");bg.setAttribute("x","37");bg.setAttribute("y","0");bg.setAttribute("width","35");bg.setAttribute("height","93");bg.setAttribute("fill","white");
+   const cut=document.createElementNS(NS,"path");cut.setAttribute("fill","black");cut.setAttribute("fill-rule","evenodd");mask.append(bg,cut);defs.appendChild(mask);
   }
+  const cut=mask.querySelector("path");cut.setAttribute("d",rear.getAttribute("d")||"");
+  lat.setAttribute("mask","url(#"+maskId+")");
+  if(rear!==svg.lastElementChild)svg.appendChild(rear);
+ }else{
+  lat.removeAttribute("mask");
+  mask?.remove();
  }
 }
 function syncLibrarySelection(){
@@ -481,6 +489,7 @@ function syncLibrarySelection(){
  }
  libraryChart.update({bodyState:{...libraryState}});
  syncRearDeltoidLayer();
+ syncRearDeltoidIsolation();
 }
 function keyFor(g,e,source,session){return normalizeExerciseName(e[0])+"::"+(source||e.source||"global")+"::"+String(g||"")+"::"+String(session||"");}
 function renderExercises(){const list=getList();$("#exerciseCount").textContent=list.length+" حرکت قابل نمایش · "+staged.length+" حرکت انتخاب‌شده · "+(($("#muscleRoleFilter")?.value||"primary")==="primary"?"عضله اصلی":($("#muscleRoleFilter")?.value==="secondary"?"عضله کمکی":"اصلی و کمکی"));$("#exerciseList").innerHTML=list.map((e,i)=>'<button class="exercise '+(staged.some(x=>x.key===keyFor(selectedGroup,e,e.source,$("#sessionSelect").value))?"active":"")+'" data-ex="'+i+'"><b>'+escapeHtml(e[0])+'</b><small>تجهیزات: '+escapeHtml(e[1])+' · '+escapeHtml(e.relation||'عضله اصلی')+': '+escapeHtml(e[2])+'<br>'+(e.source==="coach"||bank==="coach"?"بانک اختصاصی مربی · نمونه":"بانک جامع سیستم · نمونه")+'</small></button>').join("")||'<p class="sub">برای این فیلتر حرکتی یافت نشد.</p>';}
