@@ -249,10 +249,33 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
 });
 requestAnimationFrame(installFacialDetails);
 
+/* Bodybuilder proportion pass.
+   This changes only the rendered muscle-path proportions; muscle IDs,
+   selection callbacks and the source exercise data remain untouched. */
+function installBodybuilderProportions(){
+ const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");
+ if(!svg)return;
+ const center=view==="back"?54.5:17.5;
+ const paths=svg.querySelectorAll(".body-chart-muscle[aria-label]");
+ paths.forEach(path=>{
+  const label=path.getAttribute("aria-label")||"";
+  let scale=1;
+  if(/Rear Deltoid|Shoulder \((Front|Side)\)|Lats \(Upper\)|Trapezius \(Upper\)/i.test(label))scale=1.19;
+  else if(/Lats \(Mid\)|Biceps|Triceps|Chest|Trapezius \(Mid\)/i.test(label))scale=1.12;
+  else if(/Lats \(Lower\)|Trapezius \(Lower\)/i.test(label))scale=1.06;
+  else if(/Abs|Oblique|Lower Back|Erectors|Quadratus Lumborum/i.test(label))scale=.94;
+  else if(/Quadriceps|Hamstrings|Glute|Calves|Adductors/i.test(label))scale=1.07;
+  else return;
+  const transform="translate("+center+" 0) scale("+scale+" 1) translate("+(-center)+" 0)";
+  if(path.getAttribute("transform")!==transform)path.setAttribute("transform",transform);
+ });
+}
+
 /* Experimental posterior-deltoid contour correction.
    Reapply after every chart view render: BodyChart rebuilds/resets SVG paths
    when switching views, so a one-time dataset guard is not reliable. */
 function installRearDeltoidContours(){
+ installBodybuilderProportions();
  const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");if(!svg||view!=="back")return;
  const contours={
   "Left Rear Deltoid":"M 43.64,15.42 C 44.05,15.66 44.48,16.20 44.55,16.86 C 44.64,17.72 44.40,18.78 44.12,19.66 C 43.92,20.34 43.56,20.94 43.12,21.26 C 42.30,20.95 41.26,20.54 40.22,20.12 C 39.92,20.00 39.78,19.72 39.92,19.38 C 40.36,18.25 41.08,17.18 41.90,16.42 C 42.45,15.92 43.06,15.56 43.64,15.42 Z",
