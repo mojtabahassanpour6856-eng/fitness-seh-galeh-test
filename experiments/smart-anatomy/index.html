@@ -158,6 +158,35 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 #libraryBodyChart.shoulder-inspect .body-chart-muscle[aria-label*="Shoulder (Front)"],
 #libraryBodyChart.shoulder-inspect .body-chart-muscle[aria-label*="Shoulder (Side)"],
 #libraryBodyChart.shoulder-inspect .body-chart-muscle[aria-label*="Rear Deltoid"]{opacity:1!important;fill:#e3a04b!important;stroke:#8a531c!important;stroke-width:.32!important}
+/* Visible bodybuilder silhouette pass: CSS transforms are applied directly
+   to the rendered SVG muscle shapes, independent of BodyChart path refreshes. */
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Shoulder"] ,
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Rear Deltoid"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Lats (Upper)"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Trapezius (Upper)"]{
+ transform-box:fill-box!important;transform-origin:center!important;transform:scale(1.24,1.06)!important;
+}
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Biceps"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Triceps"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Chest"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Lats (Mid)"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Trapezius (Mid)"]{
+ transform-box:fill-box!important;transform-origin:center!important;transform:scale(1.16,1.04)!important;
+}
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Abs"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Oblique"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Erector"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Quadratus Lumborum"]{
+ transform-box:fill-box!important;transform-origin:center!important;transform:scale(.91,1)!important;
+}
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Quadriceps"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Hamstring"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Glute"],
+#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Calf"]{
+ transform-box:fill-box!important;transform-origin:center!important;transform:scale(1.10,1.04)!important;
+}
+
+
 </style>
 </head>
 <body>
@@ -248,34 +277,6 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
  }
 });
 requestAnimationFrame(installFacialDetails);
-
-/* Visible bodybuilder silhouette pass: CSS transforms are applied directly
-   to the rendered SVG muscle shapes, independent of BodyChart path refreshes. */
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Shoulder"] ,
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Rear Deltoid"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Lats (Upper)"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Trapezius (Upper)"]{
- transform-box:fill-box!important;transform-origin:center!important;transform:scale(1.24,1.06)!important;
-}
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Biceps"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Triceps"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Chest"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Lats (Mid)"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Trapezius (Mid)"]{
- transform-box:fill-box!important;transform-origin:center!important;transform:scale(1.16,1.04)!important;
-}
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Abs"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Oblique"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Erector"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Quadratus Lumborum"]{
- transform-box:fill-box!important;transform-origin:center!important;transform:scale(.91,1)!important;
-}
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Quadriceps"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Hamstring"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Glute"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Calf"]{
- transform-box:fill-box!important;transform-origin:center!important;transform:scale(1.10,1.04)!important;
-}
 
 /* Bodybuilder proportion pass.
    This changes only the rendered muscle-path proportions; muscle IDs,
