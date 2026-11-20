@@ -204,6 +204,7 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
 // then divide each sternal contour into two independently selectable zones.
 // Chest subdivision: split the library's actual lower-chest contours.
 function installChestSubdivision(){
+ if(view!=="front")return;
  const host=document.getElementById("libraryBodyChart"),svg=host?.querySelector("svg.body-chart-svg");if(!svg||svg.querySelector("#chest-subdivision-overlay"))return;
  const lower=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].filter(p=>/Lower Chest/i.test(p.getAttribute("aria-label")||""));
  // Install only when both native chest halves are present and have valid geometry.
@@ -353,7 +354,7 @@ function getList(){
 }
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button type="button" class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'" aria-pressed="'+(g.id===selectedGroup?'true':'false')+'">'+g.name+'</button>').join("");}
 function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();syncLibrarySelection();syncChestSubdivisionSelection();const family=parentMap[id]||id;$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
-function setView(v){view=v;libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));}
+function setView(v){view=v;libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));if(v==="front")requestAnimationFrame(()=>{installChestSubdivision();syncChestSubdivisionSelection();});}
 function syncLibrarySelection(){
  Object.keys(libraryState).forEach(k=>delete libraryState[k]);
  const regionPrefixes={
