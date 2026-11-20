@@ -202,8 +202,7 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
 // then divide each sternal contour into two independently selectable zones.
 // Chest subdivision: split the library's actual lower-chest contours.
 function installChestSubdivision(){
- const host=document.getElementById("libraryBodyChart"),svg=host?.querySelector("svg.body-chart-svg");if(!svg)return;
- svg.querySelector("#chest-subdivision-overlay")?.remove();svg.querySelector("#chest-subdivision-defs")?.remove();
+ const host=document.getElementById("libraryBodyChart"),svg=host?.querySelector("svg.body-chart-svg");if(!svg||svg.querySelector("#chest-subdivision-overlay"))return;
  const lower=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].filter(p=>/Lower Chest/i.test(p.getAttribute("aria-label")||""));
  if(lower.length!==2)return;
  const NS="http://www.w3.org/2000/svg",defs=document.createElementNS(NS,"defs"),overlay=document.createElementNS(NS,"g");
