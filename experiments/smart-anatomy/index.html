@@ -176,6 +176,31 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 #libraryBodyChart .musclemap-muscle:focus-visible{outline:none;stroke:#d2a13f!important;stroke-width:4!important}
 @media(max-width:950px){#libraryBodyChart .musclemap-stage{height:550px;max-height:82vh}}
 @media(max-width:600px){.anatomy-wrap{min-height:500px!important;overflow:hidden!important}#libraryBodyChart,#libraryBodyChart .body-chart-container{min-height:490px!important}#libraryBodyChart .musclemap-stage{height:465px;max-height:78vh;width:min(100%,310px)}}
+
+/* Requested library anatomy: remove all original body colors; keep only white surfaces and black anatomical contours */
+#libraryBodyChart .musclemap-photo-html,
+#libraryBodyChart .musclemap-photo{display:none!important;opacity:0!important}
+#libraryBodyChart .musclemap-stage{background:#fff!important}
+#libraryBodyChart .musclemap-svg{background:#fff!important}
+#libraryBodyChart .musclemap-muscle,
+#libraryBodyChart .musclemap-muscle:hover,
+#libraryBodyChart .musclemap-muscle.selected,
+#libraryBodyChart .musclemap-muscle.selected:hover{
+  fill:#fff!important;
+  fill-opacity:1!important;
+  stroke:#111!important;
+  stroke-opacity:1!important;
+  stroke-width:1.7!important;
+  filter:none!important;
+}
+#libraryBodyChart .musclemap-outline path{
+  fill:none!important;
+  stroke:#111!important;
+  stroke-opacity:1!important;
+  stroke-width:2.2!important;
+}
+#libraryBodyChart .musclemap-muscle:focus-visible{outline:none!important;stroke:#111!important}
+
 </style>
 </head>
 <body>
