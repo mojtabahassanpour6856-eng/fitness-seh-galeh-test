@@ -144,6 +144,12 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 
 @media(max-width:950px){#libraryBodyChart,#libraryBodyChart .body-chart-container{min-height:540px}#libraryBodyChart .body-chart-svg{height:510px!important}}
 @media(max-width:600px){.anatomy-wrap{min-height:440px!important}#libraryBodyChart,#libraryBodyChart .body-chart-container{min-height:430px}#libraryBodyChart .body-chart-svg{height:410px!important;max-height:68vh!important}}
+
+/* Shoulder inspection: highlight only the library's native deltoid regions; no guessed geometry. */
+#libraryBodyChart.shoulder-inspect .body-chart-muscle{opacity:.14!important;fill:#d1d5db!important;stroke:#64748b!important;stroke-width:.12!important;filter:none!important}
+#libraryBodyChart.shoulder-inspect .body-chart-muscle[id^="shoulder-front-"],
+#libraryBodyChart.shoulder-inspect .body-chart-muscle[id^="shoulder-side-"],
+#libraryBodyChart.shoulder-inspect .body-chart-muscle[id^="deltoid-rear-"]{opacity:1!important;fill:#e3a04b!important;stroke:#8a531c!important;stroke-width:.32!important}
 </style>
 </head>
 <body>
@@ -158,7 +164,7 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 </section>
 <section class="card anatomy-card">
 <h2>نقشه عضلات بدن</h2><div class="tabs"><button class="tab active" data-view="front">نمای جلو</button><button class="tab" data-view="back">نمای پشت</button></div>
-<div style="text-align:center;margin:8px 0"><button type="button" class="tab" id="chestInspectToggle" aria-pressed="false">نمای بررسی محدوده سینه</button></div>
+<div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:8px 0"><button type="button" class="tab" id="chestInspectToggle" aria-pressed="false">نمای بررسی محدوده سینه</button><button type="button" class="tab" id="shoulderInspectToggle" aria-pressed="false">نمای بررسی محدوده سرشانه</button></div>
 <div class="anatomy-wrap"><div id="libraryBodyChart" aria-label="نقشه آناتومی آماده بدن"></div></div><div class="legend"><span><i class="dot"></i>ناحیه انتخاب‌شده</span><span>برای تغییر ناحیه روی عضله بزنید</span></div><p class="sub" style="text-align:center;margin:8px 4px 0">تفکیک آزمایشی نواحی سینه؛ مرز میانی و پایینی، ناحیه تمرکزی تمرین است و به معنی عضلات مستقل نیست.</p>
 </section>
 <section class="card">
@@ -178,6 +184,14 @@ chestInspectToggle?.addEventListener("click",()=>{
  const enabled=chart.classList.toggle("chest-inspect");
  chestInspectToggle.setAttribute("aria-pressed",String(enabled));
  chestInspectToggle.textContent=enabled?"خروج از بررسی محدوده سینه":"نمای بررسی محدوده سینه";
+});
+const shoulderInspectToggle=document.getElementById("shoulderInspectToggle");
+shoulderInspectToggle?.addEventListener("click",()=>{
+ const chart=document.getElementById("libraryBodyChart");
+ const enabled=chart.classList.toggle("shoulder-inspect");
+ if(enabled){chart.classList.remove("chest-inspect");chestInspectToggle?.setAttribute("aria-pressed","false");if(chestInspectToggle)chestInspectToggle.textContent="نمای بررسی محدوده سینه";}
+ shoulderInspectToggle.setAttribute("aria-pressed",String(enabled));
+ shoulderInspectToggle.textContent=enabled?"خروج از بررسی محدوده سرشانه":"نمای بررسی محدوده سرشانه";
 });
 const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
  view:ViewSide.FRONT,bodyState:libraryState,ariaLabel:"نقشه عضلات بدن",
@@ -361,7 +375,7 @@ function getList(){
 }
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button type="button" class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'" aria-pressed="'+(g.id===selectedGroup?'true':'false')+'">'+g.name+'</button>').join("");}
 function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();syncLibrarySelection();syncChestSubdivisionSelection();const family=parentMap[id]||id;$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
-function setView(v){view=v;libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));if(v==="front")requestAnimationFrame(()=>{installChestSubdivision();syncChestSubdivisionSelection();});}
+function setView(v){view=v;document.getElementById("libraryBodyChart")?.classList.remove("shoulder-inspect","chest-inspect");shoulderInspectToggle?.setAttribute("aria-pressed","false");chestInspectToggle?.setAttribute("aria-pressed","false");if(shoulderInspectToggle)shoulderInspectToggle.textContent="نمای بررسی محدوده سرشانه";if(chestInspectToggle)chestInspectToggle.textContent="نمای بررسی محدوده سینه";libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));if(v==="front")requestAnimationFrame(()=>{installChestSubdivision();syncChestSubdivisionSelection();});}
 function syncLibrarySelection(){
  Object.keys(libraryState).forEach(k=>delete libraryState[k]);
  const regionPrefixes={
