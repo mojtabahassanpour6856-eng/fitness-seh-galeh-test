@@ -262,6 +262,9 @@ function installRearDeltoidContours(){
   const p=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].find(el=>(el.getAttribute("aria-label")||"").includes(label));
   if(p&&p.getAttribute("d")!==d)p.setAttribute("d",d);
  }
+ // The contour is corrected asynchronously after the chart renders.
+ // Refresh the lats cutout only after the final rear-deltoid paths are in place.
+ if(typeof syncRearDeltoidIsolation==="function")syncRearDeltoidIsolation();
 }
 const rearContourObserver=new MutationObserver(()=>requestAnimationFrame(installRearDeltoidContours));
 rearContourObserver.observe(document.getElementById("libraryBodyChart"),{childList:true,subtree:true});
