@@ -157,7 +157,7 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 <section class="card anatomy-card">
 <h2>نقشه عضلات بدن</h2><div class="tabs"><button class="tab active" data-view="front">نمای جلو</button><button class="tab" data-view="back">نمای پشت</button></div>
 <div style="text-align:center;margin:8px 0"><button type="button" class="tab" id="chestInspectToggle" aria-pressed="false">نمای بررسی محدوده سینه</button></div>
-<div class="anatomy-wrap"><div id="libraryBodyChart" aria-label="نقشه آناتومی آماده بدن"></div></div><div class="legend"><span><i class="dot"></i>ناحیه انتخاب‌شده</span><span>برای تغییر ناحیه روی عضله بزنید</span></div><p class="sub" style="text-align:center;margin:8px 4px 0">نکته دقت آناتومی: کتابخانه، سینه میانی و بخش پایینی سینه را در یک ناحیه مشترک نمایش می‌دهد؛ بنابراین تفکیک مستقل این دو در تصویر ممکن نیست.</p>
+<div class="anatomy-wrap"><div id="libraryBodyChart" aria-label="نقشه آناتومی آماده بدن"></div></div><div class="legend"><span><i class="dot"></i>ناحیه انتخاب‌شده</span><span>برای تغییر ناحیه روی عضله بزنید</span></div><p class="sub" style="text-align:center;margin:8px 4px 0">تفکیک آزمایشی نواحی سینه؛ مرز میانی و پایینی، ناحیه تمرکزی تمرین است و به معنی عضلات مستقل نیست.</p>
 </section>
 <section class="card">
 <h2>حرکات پیشنهادی</h2><div class="sub" id="selectedLabel">ابتدا یک عضله انتخاب کنید</div><label class="sub" style="display:block;margin-top:12px">جلسه تمرینی<select id="sessionSelect" style="display:block;width:100%;padding:10px;margin:8px 0;border:1px solid var(--line);border-radius:10px"><option>جلسه ۱</option><option>جلسه ۲</option><option>جلسه ۳</option><option>جلسه ۴</option><option>جلسه ۵</option><option>جلسه ۶</option></select></label><input id="exerciseSearch" type="search" placeholder="جستجوی نام حرکت یا تجهیزات..." style="width:100%;padding:11px;border:1px solid var(--line);border-radius:11px;margin-top:12px"><div class="sub" id="exerciseCount" style="margin:6px 0"></div><div class="exercise-list" id="exerciseList" style="margin-top:14px"></div><div class="detail" style="margin-top:12px"><h3>بانک حرکات</h3><div class="tabs"><button class="tab active" data-bank="both">هر دو بانک</button><button class="tab" data-bank="global">بانک جامع</button><button class="tab" data-bank="coach">بانک مربی</button></div><label class="sub" style="display:block;margin:8px 0">فیلتر تجهیزات<select id="equipmentFilter" style="display:block;width:100%;padding:10px;margin:6px 0;border:1px solid var(--line);border-radius:10px"><option value="all">همه تجهیزات</option><option value="دمبل">دمبل</option><option value="هالتر">هالتر</option><option value="سیم‌کش">سیم‌کش</option><option value="دستگاه">دستگاه</option><option value="وزن بدن">وزن بدن</option><option value="کش">کش</option><option value="توپ">توپ</option><option value="بارفیکس">بارفیکس</option></select></label><label class="sub" style="display:block;margin:8px 0">نقش عضله در حرکت<select id="muscleRoleFilter" style="display:block;width:100%;padding:10px;margin:6px 0;border:1px solid var(--line);border-radius:10px"><option value="primary">عضله اصلی</option><option value="secondary">عضله کمکی</option><option value="both">اصلی و کمکی</option></select></label><p class="sub" id="bankNote">حرکات استاندارد از بانک جامع (نمونه) نمایش داده می‌شود.</p><div id="customForm" style="display:none"><input id="customName" placeholder="نام حرکت جدید" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:4px 0"><input id="customEquipment" placeholder="تجهیزات (مثلاً دمبل، کش، دستگاه)" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:4px 0"><input id="customAssist" placeholder="عضلات کمکی (اختیاری)" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:4px 0"><input id="customCategory" placeholder="نوع حرکت (مثلاً تک‌مفصلی، چندمفصلی، کششی)" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:4px 0"><textarea id="customNote" placeholder="نکته اجرا یا توضیح حرکت (اختیاری)" rows="2" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:4px 0;font:inherit"></textarea><button id="saveCustom" type="button" class="add" style="margin-top:6px">＋ ثبت در بانک اختصاصی (نمونه)</button></div><div id="stagedPanel" class="detail" style="margin-top:12px"><h3>حرکات انتخاب‌شده برای انتقال</h3><div id="stagedList" class="sub">هنوز حرکتی انتخاب نشده است.</div></div>
@@ -197,8 +197,58 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
   if(groupId&&groups.some(g=>g.id===groupId))chooseGroup(groupId);
  }
 });
+
+// Chest-only subdivision overlay: reuse the library's exact chest contours,
+// then divide each sternal contour into two independently selectable zones.
+function installChestSubdivision(){
+ const host=document.getElementById("libraryBodyChart");
+ const svg=host?.querySelector("svg");
+ if(!svg || svg.querySelector("#chest-subdivision-overlay")) return;
+ const lower=[...svg.querySelectorAll('.body-chart-muscle[aria-label*="Lower Chest"]')];
+ if(lower.length!==2) return;
+ const NS="http://www.w3.org/2000/svg";
+ const defs=document.createElementNS(NS,"defs");
+ const overlay=document.createElementNS(NS,"g");
+ overlay.setAttribute("id","chest-subdivision-overlay");
+ const zones=[
+  {id:"mid-chest",clip:"chest-mid-clip",y:21.25,h:2.05},
+  {id:"lower-chest",clip:"chest-low-clip",y:23.30,h:2.65}
+ ];
+ zones.forEach(z=>{
+  const cp=document.createElementNS(NS,"clipPath");cp.setAttribute("id",z.clip);cp.setAttribute("clipPathUnits","userSpaceOnUse");
+  const rect=document.createElementNS(NS,"rect");rect.setAttribute("x","7");rect.setAttribute("y",String(z.y));rect.setAttribute("width","17");rect.setAttribute("height",String(z.h));cp.appendChild(rect);defs.appendChild(cp);
+ });
+ lower.forEach(source=>{
+  const d=source.getAttribute("d"); if(!d) return;
+  source.style.setProperty("opacity","0","important");
+  source.style.setProperty("pointer-events","none","important");
+  zones.forEach(z=>{
+   const p=document.createElementNS(NS,"path");p.setAttribute("d",d);p.setAttribute("class","body-chart-muscle chest-zone");p.dataset.group=z.id;
+   p.setAttribute("clip-path","url(#"+z.clip+")");p.setAttribute("fill","transparent");p.setAttribute("stroke","#222");p.setAttribute("stroke-width","0.12");p.setAttribute("vector-effect","non-scaling-stroke");
+   p.style.cursor="pointer";
+   p.addEventListener("click",()=>chooseGroup(z.id));
+   overlay.appendChild(p);
+  });
+ });
+ svg.insertBefore(defs,svg.firstChild);svg.appendChild(overlay);
+ syncChestSubdivisionSelection();
+}
+function syncChestSubdivisionSelection(){
+ const svg=document.querySelector("#libraryBodyChart svg");if(!svg)return;
+ svg.querySelectorAll(".chest-zone").forEach(p=>{
+  const active=p.dataset.group===selectedGroup;
+  p.setAttribute("fill",active?"#e43d3d":"transparent");
+  p.setAttribute("fill-opacity",active?".9":"0");
+  p.setAttribute("stroke",active?"#991f1f":"#222");
+  p.setAttribute("stroke-width",active?".16":".12");
+ });
+}
+const chestObserver=new MutationObserver(()=>installChestSubdivision());
+chestObserver.observe(document.getElementById("libraryBodyChart"),{childList:true,subtree:true});
+requestAnimationFrame(installChestSubdivision);
+
 const groups=[
-{id:"upper-chest",name:"سینه ترقوه‌ای (بالایی؛ ناحیه تقریبی)",view:"front"},{id:"mid-chest",name:"سینه جناغی (میانی؛ در نقشه با پایینی مشترک)",view:"front"},{id:"lower-chest",name:"سینه جناغی (پایینی؛ در نقشه با میانی مشترک)",view:"front"},
+{id:"upper-chest",name:"سینه بالایی (بخش ترقوه‌ای)",view:"front"},{id:"mid-chest",name:"سینه میانی (بخش جناغی)",view:"front"},{id:"lower-chest",name:"سینه پایینی (تأکید بر الیاف جناغی-شکمی)",view:"front"},
 {id:"front-delts",name:"سرشانه جلو",view:"front"},{id:"side-delts",name:"سرشانه میانی",view:"front"},{id:"rear-delts",name:"سرشانه خلفی",view:"back"},
 {id:"biceps-long",name:"جلو بازو (تأکید نسبی بر سر بلند)",view:"front"},{id:"biceps-short",name:"جلو بازو (تأکید نسبی بر سر کوتاه)",view:"front"},{id:"brachialis",name:"براکیالیس",view:"front"},{id:"triceps-long",name:"پشت بازو (سر بلند)",view:"back"},{id:"triceps-lateral",name:"پشت بازو (سر خارجی)",view:"back"},
 {id:"upper-abs",name:"راست شکمی (تأکید بر خم‌کردن تنه)",view:"front"},{id:"lower-abs",name:"راست شکمی (تأکید بر چرخش خلفی لگن)",view:"front"},{id:"obliques",name:"پهلو",view:"front"},{id:"serratus",name:"دندانه‌ای قدامی",view:"front"},
@@ -294,14 +344,14 @@ function getList(){
  const seen=new Set();return filtered.filter(e=>{const key=normalizeExerciseName(e[0])+"::"+e.source;if(seen.has(key))return false;seen.add(key);return true;});
 }
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button type="button" class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'" aria-pressed="'+(g.id===selectedGroup?'true':'false')+'">'+g.name+'</button>').join("");}
-function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();syncLibrarySelection();const family=parentMap[id]||id;$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
+function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();syncLibrarySelection();syncChestSubdivisionSelection();const family=parentMap[id]||id;$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
 function setView(v){view=v;libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));}
 function syncLibrarySelection(){
  Object.keys(libraryState).forEach(k=>delete libraryState[k]);
  const regionPrefixes={
   // The upstream SVG has two chest contours per side (upper and lower).
   // Mid-chest remains a training emphasis label, not a separately drawable contour.
-  "upper-chest":["chest-upper-"],"mid-chest":["chest-lower-"],"lower-chest":["chest-lower-"],
+  "upper-chest":["chest-upper-"],"mid-chest":[],"lower-chest":[],
   "front-delts":["shoulder-front-"],"side-delts":["shoulder-side-"],"rear-delts":["deltoid-rear-"],
   "biceps-long":["biceps-"],"biceps-short":["biceps-"],"brachialis":["biceps-"],
   "triceps-long":["triceps-long-"],"triceps-lateral":["triceps-lateral-"],
