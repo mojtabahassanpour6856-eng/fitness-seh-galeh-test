@@ -201,6 +201,15 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 }
 #libraryBodyChart .musclemap-muscle:focus-visible{outline:none!important;stroke:#111!important}
 
+/* Hard override: anatomy preview is SVG-only, with no colored raster body image. */
+#libraryBodyChart img.musclemap-photo-html,#libraryBodyChart img.musclemap-photo{display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important}
+#libraryBodyChart svg.musclemap-svg .musclemap-muscles .musclemap-muscle,
+#libraryBodyChart svg.musclemap-svg .musclemap-muscles .musclemap-muscle:hover,
+#libraryBodyChart svg.musclemap-svg .musclemap-muscles .musclemap-muscle.selected,
+#libraryBodyChart svg.musclemap-svg .musclemap-muscles .musclemap-muscle:focus,
+#libraryBodyChart svg.musclemap-svg .musclemap-muscles .musclemap-muscle:active{fill:#fff!important;fill-opacity:1!important;stroke:#111!important;stroke-opacity:1!important;stroke-width:1.7!important;filter:none!important}
+#libraryBodyChart svg.musclemap-svg .musclemap-outline path{fill:none!important;stroke:#111!important;stroke-opacity:1!important;stroke-width:2.2!important}
+#libraryBodyChart .musclemap-stage{background:#fff!important}
 </style>
 </head>
 <body>
@@ -284,9 +293,9 @@ function renderMuscleMap(){
  data.outline.forEach(p=>{const el=document.createElementNS(ns,"path");el.setAttribute("d",p.d);el.setAttribute("fill","none");el.setAttribute("stroke","#777d82");el.setAttribute("stroke-width","2.4");el.setAttribute("stroke-linejoin","round");outline.appendChild(el);});svg.appendChild(outline);
  const layer=document.createElementNS(ns,"g");layer.setAttribute("class","musclemap-muscles");
  data.muscles.forEach((p,i)=>{const path=document.createElementNS(ns,"path");path.setAttribute("d",p.d);path.setAttribute("class","body-chart-muscle musclemap-muscle");path.dataset.muscleId=p.id;path.dataset.muscleGroup=p.group;path.dataset.index=String(i);path.setAttribute("aria-label",p.id.replaceAll("_"," "));path.setAttribute("role","button");path.setAttribute("tabindex","0");path.setAttribute("fill","#aeb4ba");path.setAttribute("fill-opacity",".13");path.setAttribute("stroke","#626a70");path.setAttribute("stroke-opacity",".48");path.setAttribute("stroke-width","1.5");path.setAttribute("vector-effect","non-scaling-stroke");const activate=()=>{const g=/^CHEST/.test(p.id)?"mid-chest":/^BICEPS/.test(p.id)?"biceps-long":/^TRICEPS/.test(p.id)?"triceps-long":/^CORE/.test(p.id)?"upper-abs":/^FOREARM/.test(p.id)?(muscleMapView==="back"?"forearm-extensors":"forearm-flexors"):groupForMuscle(p.id);if(g&&groups.some(x=>x.id===g))chooseGroup(g);};path.addEventListener("click",activate);path.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();activate();}});layer.appendChild(path);});
- svg.appendChild(layer);stage.append(photo,svg);chartHost.replaceChildren(stage);syncMuscleMapHighlight();
+ svg.appendChild(layer);stage.appendChild(svg);chartHost.replaceChildren(stage);syncMuscleMapHighlight();
 }
-function syncMuscleMapHighlight(){const svg=chartHost.querySelector("svg.musclemap-svg");if(!svg)return;svg.querySelectorAll(".musclemap-muscle").forEach(path=>{const active=muscleMatchesSelected(path.dataset.muscleId);path.classList.toggle("selected",active);path.setAttribute("fill",active?"#ed3434":"#aeb4ba");path.setAttribute("fill-opacity",active?".68":".13");path.setAttribute("stroke",active?"#a92727":"#626a70");path.setAttribute("stroke-opacity",active?".98":".48");path.setAttribute("stroke-width",active?"3.2":"1.5");path.setAttribute("aria-pressed",active?"true":"false");});}
+function syncMuscleMapHighlight(){const svg=chartHost.querySelector("svg.musclemap-svg");if(!svg)return;svg.querySelectorAll(".musclemap-muscle").forEach(path=>{const active=muscleMatchesSelected(path.dataset.muscleId);path.classList.toggle("selected",active);path.setAttribute("fill","#fff");path.setAttribute("fill-opacity","1");path.setAttribute("stroke","#111");path.setAttribute("stroke-opacity","1");path.setAttribute("stroke-width","1.7");path.style.setProperty("fill","#fff","important");path.style.setProperty("fill-opacity","1","important");path.style.setProperty("stroke","#111","important");path.style.setProperty("stroke-opacity","1","important");path.style.setProperty("stroke-width","1.7","important");path.setAttribute("aria-pressed",active?"true":"false");});}
 const libraryChart={update({view}={}){if(view)muscleMapView=view===ViewSide.BACK||view==="back"?"back":"front";renderMuscleMap();}};
 function installFacialDetails(){}function installBodybuilderSilhouette(){}function installBodybuilderProportions(){}function installRearDeltoidContours(){}function syncRearDeltoidIsolation(){}function installChestSubdivision(){}function syncChestSubdivisionSelection(){}function syncLibrarySelection(){syncMuscleMapHighlight();}
 const groups=[
