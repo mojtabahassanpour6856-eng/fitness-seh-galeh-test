@@ -181,7 +181,7 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
  view:ViewSide.FRONT,bodyState:libraryState,ariaLabel:"نقشه عضلات بدن",
  onMuscleClick:(id,name)=>{
   const rules=[
-   [/^chest-upper-/,"upper-chest"],[/^chest-lower-/,"mid-chest"],
+   [/^chest-upper-/,"upper-chest"],[/^chest-lower-/,"lower-chest"],
    [/^shoulder-front-/,"front-delts"],[/^shoulder-side-/,"side-delts"],[/^deltoid-rear-/,"rear-delts"],
    [/^biceps-/,"biceps-long"],[/^triceps-long-/,"triceps-long"],[/^triceps-lateral-/,"triceps-lateral"],
    [/^abs-upper-/,"upper-abs"],[/^abs-lower-/,"lower-abs"],[/^obliques-/,"obliques"],
@@ -299,6 +299,8 @@ function setView(v){view=v;libraryChart.update({view:v==="front"?ViewSide.FRONT:
 function syncLibrarySelection(){
  Object.keys(libraryState).forEach(k=>delete libraryState[k]);
  const regionPrefixes={
+  // The upstream SVG has two chest contours per side (upper and lower).
+  // Mid-chest remains a training emphasis label, not a separately drawable contour.
   "upper-chest":["chest-upper-"],"mid-chest":["chest-lower-"],"lower-chest":["chest-lower-"],
   "front-delts":["shoulder-front-"],"side-delts":["shoulder-side-"],"rear-delts":["deltoid-rear-"],
   "biceps-long":["biceps-"],"biceps-short":["biceps-"],"brachialis":["biceps-"],
