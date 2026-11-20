@@ -222,9 +222,9 @@ const muscleMatchesSelected=id=>{
  if(/^CHEST_UPPER/.test(id))return selectedGroup==="upper-chest";
  if(/^CHEST_MID/.test(id))return selectedGroup==="mid-chest";
  if(/^CHEST_LOWER/.test(id))return selectedGroup==="lower-chest";
- if(/^BICEPS/.test(id))return ["biceps-long","biceps-short","brachialis"].includes(selectedGroup);
- if(/^TRICEPS/.test(id))return ["triceps-long","triceps-lateral"].includes(selectedGroup);
- if(/^CORE/.test(id))return ["upper-abs","lower-abs"].includes(selectedGroup);
+ if(/^BICEPS/.test(id))return selectedGroup==="biceps-long";
+ if(/^TRICEPS/.test(id))return selectedGroup==="triceps-long";
+ if(/^CORE/.test(id))return selectedGroup==="upper-abs";
  if(/^FOREARM/.test(id))return selectedGroup===(muscleMapView==="back"?"forearm-extensors":"forearm-flexors");
  return groupForMuscle(id)===selectedGroup;
 };
