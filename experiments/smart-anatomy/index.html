@@ -206,10 +206,12 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
 function installChestSubdivision(){
  if(view!=="front")return;
  const host=document.getElementById("libraryBodyChart"),svg=host?.querySelector("svg.body-chart-svg");if(!svg||svg.querySelector("#chest-subdivision-overlay"))return;
- const lower=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].filter(p=>/Lower Chest/i.test(p.getAttribute("aria-label")||""));
- // Install only when both native chest halves are present and have valid geometry.
- // This avoids hiding an original contour if the library is still rendering or changes its markup.
- if(lower.length!==2||lower.some(p=>!(p.getAttribute("d")||"").trim()))return;
+ const muscles=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")];
+ const lower=muscles.filter(p=>/Lower Chest/i.test(p.getAttribute("aria-label")||""));
+ const upper=muscles.filter(p=>/Upper Chest/i.test(p.getAttribute("aria-label")||""));
+ // Wait for the complete native chest anatomy before replacing only the lower contours.
+ // If the library markup is incomplete or changes, leave every original path visible.
+ if(lower.length!==2||upper.length!==2||[...lower,...upper].some(p=>!(p.getAttribute("d")||"").trim()))return;
  const NS="http://www.w3.org/2000/svg",defs=document.createElementNS(NS,"defs"),overlay=document.createElementNS(NS,"g");
  defs.id="chest-subdivision-defs";overlay.id="chest-subdivision-overlay";
  // Curved shared border gives the two lower regions a more natural anatomical transition.
