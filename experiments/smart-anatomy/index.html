@@ -209,7 +209,7 @@ function installChestSubdivision(){
  defs.id="chest-subdivision-defs";overlay.id="chest-subdivision-overlay";
  // Curved shared border gives the two lower regions a more natural anatomical transition.
  const zones=[
-  {id:"mid-chest",clip:"chest-mid-clip",shape:"M 7 20.85 C 10.2 21.12 12.9 21.45 15.2 21.62 C 18.1 21.82 21.2 22.02 24 22.18 L 24 23.52 C 20.8 23.32 18 23.12 15.2 22.98 C 12.1 22.82 9.2 22.62 7 22.48 Z",base:"#d9b86e"},
+  {id:"mid-chest",clip:"chest-mid-clip",shape:"M 7 21.72 C 9.4 21.12 12.1 20.18 15.45 19.72 C 18.3 20.16 21.1 21.08 24 21.72 L 24 23.52 C 20.8 23.32 18 23.12 15.2 22.98 C 12.1 22.82 9.2 22.62 7 22.48 Z",base:"#d9b86e"},
   {id:"lower-chest",clip:"chest-low-clip",shape:"M 7 22.48 C 9.2 22.62 12.1 22.82 15.2 22.98 C 18 23.12 20.8 23.32 24 23.52 L 24 27 L 7 27 Z",base:"#c99a73"}
  ];
  zones.forEach(z=>{const cp=document.createElementNS(NS,"clipPath");cp.id=z.clip;cp.setAttribute("clipPathUnits","userSpaceOnUse");const boundary=document.createElementNS(NS,"path");boundary.setAttribute("d",z.shape);cp.appendChild(boundary);defs.appendChild(cp);});
