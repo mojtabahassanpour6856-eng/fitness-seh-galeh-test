@@ -234,7 +234,7 @@ function renderMuscleMap(){
  stage.className="musclemap-stage";
  const svg=document.createElementNS(ns,"svg");
  svg.setAttribute("class","body-chart-svg musclemap-svg");svg.setAttribute("viewBox","0 0 1024 1536");
- svg.setAttribute("role","img");svg.setAttribute("aria-label",photo.alt);svg.setAttribute("preserveAspectRatio","none");
+ svg.setAttribute("role","img");svg.setAttribute("aria-label",muscleMapView==="front"?"نمای جلوی بدن":"نمای پشت بدن");svg.setAttribute("preserveAspectRatio","none");
  const outline=document.createElementNS(ns,"g");outline.setAttribute("class","musclemap-outline");
  data.outline.forEach(p=>{const el=document.createElementNS(ns,"path");el.setAttribute("d",p.d);el.setAttribute("fill","none");el.setAttribute("stroke","#777d82");el.setAttribute("stroke-width","2.4");el.setAttribute("stroke-linejoin","round");outline.appendChild(el);});svg.appendChild(outline);
  const layer=document.createElementNS(ns,"g");layer.setAttribute("class","musclemap-muscles");
