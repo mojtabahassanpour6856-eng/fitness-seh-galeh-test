@@ -436,8 +436,9 @@ function setView(v){view=v;document.getElementById("libraryBodyChart")?.classLis
 function syncRearDeltoidIsolation(){
  const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");if(!svg)return;
  const NS="http://www.w3.org/2000/svg";
- const oldMaskId="rear-deltoid-right-isolation-mask";
- const oldMask=svg.querySelector("#"+oldMaskId);oldMask?.remove();
+ // Remove both previous side masks before rebuilding them against the
+ // current SVG viewBox and final custom deltoid contours.
+ svg.querySelectorAll('mask[id^="rear-deltoid-"][id$="-isolation-mask"]').forEach(mask=>mask.remove());
  const rearPaths=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].filter(p=>(p.getAttribute("aria-label")||"").includes("Rear Deltoid"));
  const latPaths=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].filter(p=>(p.getAttribute("aria-label")||"").includes("Lats (Upper)"));
  if(!rearPaths.length||!latPaths.length)return;
@@ -454,6 +455,9 @@ function syncRearDeltoidIsolation(){
   if(!mask){
    mask=document.createElementNS(NS,"mask");mask.id=maskId;
    mask.setAttribute("maskUnits","userSpaceOnUse");
+   // Critical: mask children use the SVG's absolute body coordinates (37..72),
+   // not normalized 0..1 objectBoundingBox coordinates.
+   mask.setAttribute("maskContentUnits","userSpaceOnUse");
    mask.setAttribute("x","37");mask.setAttribute("y","0");
    mask.setAttribute("width","35");mask.setAttribute("height","93");
    mask.setAttribute("mask-type","luminance");
