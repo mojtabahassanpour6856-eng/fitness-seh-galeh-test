@@ -266,7 +266,12 @@ function installRearDeltoidContours(){
  // Refresh the lats cutout only after the final rear-deltoid paths are in place.
  if(typeof syncRearDeltoidIsolation==="function")syncRearDeltoidIsolation();
 }
-const rearContourObserver=new MutationObserver(()=>requestAnimationFrame(installRearDeltoidContours));
+const rearContourObserver=new MutationObserver(records=>{
+ const chartChanged=records.some(record=>[...record.addedNodes,...record.removedNodes].some(node=>
+  node.nodeType===1&&(node.matches?.("svg.body-chart-svg,.body-chart-muscle")||node.querySelector?.("svg.body-chart-svg,.body-chart-muscle"))
+ ));
+ if(chartChanged)requestAnimationFrame(installRearDeltoidContours);
+});
 rearContourObserver.observe(document.getElementById("libraryBodyChart"),{childList:true,subtree:true});
 requestAnimationFrame(()=>requestAnimationFrame(installRearDeltoidContours));
 
@@ -436,27 +441,20 @@ function setView(v){view=v;document.getElementById("libraryBodyChart")?.classLis
 function syncRearDeltoidIsolation(){
  const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");if(!svg)return;
  const NS="http://www.w3.org/2000/svg";
- // Remove both previous side masks before rebuilding them against the
- // current SVG viewBox and final custom deltoid contours.
- svg.querySelectorAll('mask[id^="rear-deltoid-"][id$="-isolation-mask"]').forEach(mask=>mask.remove());
  const rearPaths=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].filter(p=>(p.getAttribute("aria-label")||"").includes("Rear Deltoid"));
- const latPaths=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")].filter(p=>(p.getAttribute("aria-label")||"").includes("Lats (Upper)"));
- if(!rearPaths.length||!latPaths.length)return;
+ const allMuscles=[...svg.querySelectorAll(".body-chart-muscle[aria-label]")];
+ if(!rearPaths.length)return;
  const defs=svg.querySelector("defs")||(()=>{const d=document.createElementNS(NS,"defs");svg.insertBefore(d,svg.firstChild);return d;})();
- const active=selectedGroup==="rear-delts"||selectedGroup==="lats";
- latPaths.forEach((lat,index)=>{
-  if(!active){lat.removeAttribute("mask");return;}
-  const label=lat.getAttribute("aria-label")||"";
-  const side=label.includes("Right")?"right":label.includes("Left")?"left":String(index);
-  const rear=rearPaths.find(p=>{const a=p.getAttribute("aria-label")||"";return (side==="right"&&a.includes("Right"))||(side==="left"&&a.includes("Left"));});
+ const active=selectedGroup==="rear-delts";
+ const sides=["Left","Right"];
+ sides.forEach(side=>{
+  const rear=rearPaths.find(p=>(p.getAttribute("aria-label")||"").includes(side));
   if(!rear)return;
-  const maskId="rear-deltoid-"+side+"-isolation-mask";
+  const maskId="rear-deltoid-"+side.toLowerCase()+"-isolation-mask";
   let mask=defs.querySelector("#"+maskId);
   if(!mask){
    mask=document.createElementNS(NS,"mask");mask.id=maskId;
    mask.setAttribute("maskUnits","userSpaceOnUse");
-   // Critical: mask children use the SVG's absolute body coordinates (37..72),
-   // not normalized 0..1 objectBoundingBox coordinates.
    mask.setAttribute("maskContentUnits","userSpaceOnUse");
    mask.setAttribute("x","37");mask.setAttribute("y","0");
    mask.setAttribute("width","35");mask.setAttribute("height","93");
@@ -467,10 +465,18 @@ function syncRearDeltoidIsolation(){
    mask.append(bg,cut);defs.appendChild(mask);
   }
   mask.querySelector("path")?.setAttribute("d",rear.getAttribute("d")||"");
-  lat.setAttribute("mask","url(#"+maskId+")");
+  allMuscles.forEach(path=>{
+   const label=path.getAttribute("aria-label")||"";
+   if(path===rear)return;
+   if(!active){path.removeAttribute("mask");return;}
+   if(label.includes(side))path.setAttribute("mask","url(#"+maskId+")");
+  });
  });
- if(selectedGroup==="rear-delts"){
-  rearPaths.forEach(rear=>{if(rear!==svg.lastElementChild)svg.appendChild(rear);});
+ if(active){
+  // Put the selected rear-deltoid contours above every other muscle path.
+  const ordered=[...rearPaths];
+  const alreadyLast=ordered.every((p,index)=>svg.children[svg.children.length-ordered.length+index]===p);
+  if(!alreadyLast)ordered.forEach(p=>svg.appendChild(p));
  }
 }
 function syncLibrarySelection(){
