@@ -133,7 +133,7 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 #muscleHotspots .hotspot:hover path{stroke:#777;fill:transparent}#muscleHotspots .hotspot.selected:hover path{fill:#e43d3d88;stroke:#b52424;stroke-width:2.3}
 #libraryBodyChart{width:100%;height:100%;min-height:600px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 #libraryBodyChart .body-chart-container{width:100%;height:100%;min-height:600px;padding:10px!important}
-#libraryBodyChart .chest-zone{outline:none;transition:fill-opacity .14s ease,stroke-width .14s ease}\n#libraryBodyChart .chest-zone:focus{stroke:#202020!important;stroke-width:.32!important;stroke-dasharray:.55 .28}\n#libraryBodyChart .body-chart-svg{width:auto!important;height:570px!important;max-height:78vh!important;max-width:100%!important;filter:none!important;overflow:visible}
+#libraryBodyChart .chest-zone{outline:none;transition:fill-opacity .14s ease,stroke-width .14s ease}\n#libraryBodyChart .chest-zone-group:focus{outline:none}#libraryBodyChart .chest-zone-group:focus .chest-zone{stroke:#202020!important;stroke-width:.32!important;stroke-dasharray:.55 .28}\n#libraryBodyChart .body-chart-svg{width:auto!important;height:570px!important;max-height:78vh!important;max-width:100%!important;filter:none!important;overflow:visible}
 #libraryBodyChart .body-chart-muscle{cursor:pointer;vector-effect:non-scaling-stroke}
 #libraryBodyChart.chest-inspect .body-chart-muscle{opacity:.16!important;fill:#cbd5e1!important;stroke:#64748b!important;stroke-width:.12!important;filter:none!important}
 #libraryBodyChart.chest-inspect .body-chart-muscle[aria-label*="Chest"]{transition:opacity .15s,fill .15s,stroke .15s}
@@ -215,12 +215,39 @@ function installChestSubdivision(){
   {id:"lower-chest",clip:"chest-low-clip",shape:"M 7.35 22.5 C 10.1 22.72 12.9 22.98 15.85 23.05 C 18.8 22.98 21.6 22.72 24.35 22.5 L 24.35 27 L 7.35 27 Z",base:"#c99a73"}
  ];
  zones.forEach(z=>{const cp=document.createElementNS(NS,"clipPath");cp.id=z.clip;cp.setAttribute("clipPathUnits","userSpaceOnUse");const boundary=document.createElementNS(NS,"path");boundary.setAttribute("d",z.shape);cp.appendChild(boundary);defs.appendChild(cp);});
- lower.forEach(src=>{const d=src.getAttribute("d");if(!d)return;src.style.setProperty("opacity","0","important");src.style.setProperty("pointer-events","none","important");src.setAttribute("aria-hidden","true");src.setAttribute("tabindex","-1");zones.forEach(z=>{const p=document.createElementNS(NS,"path");p.setAttribute("d",d);p.setAttribute("class","chest-zone");p.dataset.group=z.id;p.setAttribute("clip-path","url(#"+z.clip+")");p.setAttribute("fill",z.base);p.setAttribute("fill-opacity",".38");p.setAttribute("stroke","#765b36");p.setAttribute("stroke-width",".16");p.setAttribute("vector-effect","non-scaling-stroke");p.setAttribute("role","button");p.setAttribute("tabindex","0");p.setAttribute("aria-pressed","false");p.setAttribute("focusable","true");p.setAttribute("pointer-events","visiblePainted");p.setAttribute("aria-label",z.id==="mid-chest"?"سینه میانی":"سینه پایینی");const title=document.createElementNS(NS,"title");title.textContent=z.id==="mid-chest"?"سینه میانی":"سینه پایینی";p.appendChild(title);p.style.cursor="pointer";p.addEventListener("click",()=>chooseGroup(z.id));p.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();chooseGroup(z.id);}});overlay.appendChild(p);});});
+ zones.forEach(z=>{
+  const zoneGroup=document.createElementNS(NS,"g");
+  zoneGroup.setAttribute("class","chest-zone-group");
+  zoneGroup.dataset.group=z.id;
+  zoneGroup.setAttribute("role","button");
+  zoneGroup.setAttribute("tabindex","0");
+  zoneGroup.setAttribute("focusable","true");
+  zoneGroup.setAttribute("aria-pressed","false");
+  zoneGroup.setAttribute("aria-label",z.id==="mid-chest"?"سینه میانی":"سینه پایینی");
+  const title=document.createElementNS(NS,"title");
+  title.textContent=z.id==="mid-chest"?"سینه میانی":"سینه پایینی";
+  zoneGroup.appendChild(title);
+  lower.forEach(src=>{
+   const p=document.createElementNS(NS,"path"),d=src.getAttribute("d");
+   p.setAttribute("d",d);p.setAttribute("class","chest-zone");
+   p.dataset.group=z.id;p.setAttribute("clip-path","url(#"+z.clip+")");
+   p.setAttribute("fill",z.base);p.setAttribute("fill-opacity",".38");
+   p.setAttribute("stroke","#765b36");p.setAttribute("stroke-width",".16");
+   p.setAttribute("vector-effect","non-scaling-stroke");
+   p.setAttribute("pointer-events","none");
+   zoneGroup.appendChild(p);
+  });
+  zoneGroup.style.cursor="pointer";
+  zoneGroup.addEventListener("click",()=>chooseGroup(z.id));
+  zoneGroup.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();chooseGroup(z.id);}});
+  overlay.appendChild(zoneGroup);
+ });
+ lower.forEach(src=>{src.style.setProperty("opacity","0","important");src.style.setProperty("pointer-events","none","important");src.setAttribute("aria-hidden","true");src.setAttribute("tabindex","-1");src.setAttribute("focusable","false");});
  svg.insertBefore(defs,svg.firstChild);svg.appendChild(overlay);syncChestSubdivisionSelection();
 }
 function syncChestSubdivisionSelection(){
  const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");if(!svg)return;
- svg.querySelectorAll(".chest-zone").forEach(p=>{const active=p.dataset.group===selectedGroup,base=p.dataset.group==="mid-chest"?"#d9b86e":"#c99a73";p.setAttribute("fill",active?"#e43d3d":base);p.setAttribute("fill-opacity",active?".92":".38");p.setAttribute("stroke",active?"#991f1f":"#765b36");p.setAttribute("stroke-width",active?".22":".16");p.setAttribute("aria-pressed",active?"true":"false");});
+ svg.querySelectorAll(".chest-zone-group").forEach(group=>{const active=group.dataset.group===selectedGroup;group.setAttribute("aria-pressed",active?"true":"false");const base=group.dataset.group==="mid-chest"?"#d9b86e":"#c99a73";group.querySelectorAll(".chest-zone").forEach(p=>{p.setAttribute("fill",active?"#e43d3d":base);p.setAttribute("fill-opacity",active?".92":".38");p.setAttribute("stroke",active?"#991f1f":"#765b36");p.setAttribute("stroke-width",active?".22":".16");});});
 }
 const chestObserver=new MutationObserver(()=>installChestSubdivision());
 chestObserver.observe(document.getElementById("libraryBodyChart"),{childList:true,subtree:true});
