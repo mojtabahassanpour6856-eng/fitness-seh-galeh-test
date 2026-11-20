@@ -27,6 +27,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Diagnose preview files and Pages configuration
+        run: |
+          echo "Branch: $GITHUB_REF_NAME"
+          echo "Commit: $GITHUB_SHA"
+          test -d experiments/smart-anatomy && echo "Preview folder exists" || echo "Preview folder missing"
+          find experiments/smart-anatomy -maxdepth 2 -type f -print
+          test -f experiments/smart-anatomy/index.html && echo "Index exists" || echo "Index missing"
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload preview site
