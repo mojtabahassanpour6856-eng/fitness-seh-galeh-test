@@ -505,7 +505,7 @@ function syncLibrarySelection(){
   allRegionIds.filter(id=>prefixes.some(prefix=>id.startsWith(prefix))).forEach(id=>libraryState[id]={intensity:8,selected:true});
  }
  libraryChart.update({bodyState:{...libraryState}});
- syncRearDeltoidLayer();
+ // No separate layer-sync helper exists; do not call an undefined function.
  syncRearDeltoidIsolation();
 }
 function keyFor(g,e,source,session){return normalizeExerciseName(e[0])+"::"+(source||e.source||"global")+"::"+String(g||"")+"::"+String(session||"");}
