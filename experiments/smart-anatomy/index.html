@@ -158,35 +158,12 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 #libraryBodyChart.shoulder-inspect .body-chart-muscle[aria-label*="Shoulder (Front)"],
 #libraryBodyChart.shoulder-inspect .body-chart-muscle[aria-label*="Shoulder (Side)"],
 #libraryBodyChart.shoulder-inspect .body-chart-muscle[aria-label*="Rear Deltoid"]{opacity:1!important;fill:#e3a04b!important;stroke:#8a531c!important;stroke-width:.32!important}
-/* Visible bodybuilder silhouette pass: CSS transforms are applied directly
-   to the rendered SVG muscle shapes, independent of BodyChart path refreshes. */
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Shoulder"] ,
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Rear Deltoid"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Lats (Upper)"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Trapezius (Upper)"]{
- transform-box:fill-box!important;transform-origin:center!important;transform:scale(1.24,1.06)!important;
+/* Proportion test: widen the complete SVG as one unit.
+   Silhouette and muscle paths stay registered; no individual muscle is stretched. */
+#libraryBodyChart svg.body-chart-svg{
+ transform:scaleX(1.10)!important;
+ transform-origin:50% 50%!important;
 }
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Biceps"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Triceps"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Chest"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Lats (Mid)"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Trapezius (Mid)"]{
- transform-box:fill-box!important;transform-origin:center!important;transform:scale(1.16,1.04)!important;
-}
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Abs"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Oblique"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Erector"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Quadratus Lumborum"]{
- transform-box:fill-box!important;transform-origin:center!important;transform:scale(.91,1)!important;
-}
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Quadriceps"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Hamstring"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Glute"],
-#libraryBodyChart svg.body-chart-svg .body-chart-muscle[aria-label*="Calf"]{
- transform-box:fill-box!important;transform-origin:center!important;transform:scale(1.10,1.04)!important;
-}
-
-
 </style>
 </head>
 <body>
@@ -284,20 +261,8 @@ requestAnimationFrame(installFacialDetails);
 function installBodybuilderProportions(){
  const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");
  if(!svg)return;
- const center=view==="back"?54.5:17.5;
- const paths=svg.querySelectorAll(".body-chart-muscle[aria-label]");
- paths.forEach(path=>{
-  const label=path.getAttribute("aria-label")||"";
-  let scale=1;
-  if(/Rear Deltoid|Shoulder \((Front|Side)\)|Lats \(Upper\)|Trapezius \(Upper\)/i.test(label))scale=1.19;
-  else if(/Lats \(Mid\)|Biceps|Triceps|Chest|Trapezius \(Mid\)/i.test(label))scale=1.12;
-  else if(/Lats \(Lower\)|Trapezius \(Lower\)/i.test(label))scale=1.06;
-  else if(/Abs|Oblique|Lower Back|Erectors|Quadratus Lumborum/i.test(label))scale=.94;
-  else if(/Quadriceps|Hamstrings|Glute|Calves|Adductors/i.test(label))scale=1.07;
-  else return;
-  const transform="translate("+center+" 0) scale("+scale+" 1) translate("+(-center)+" 0)";
-  if(path.getAttribute("transform")!==transform)path.setAttribute("transform",transform);
- });
+ // The entire diagram is widened together by CSS, preserving exact overlay alignment.
+ svg.style.transformOrigin="50% 50%";
 }
 
 /* Experimental posterior-deltoid contour correction.
