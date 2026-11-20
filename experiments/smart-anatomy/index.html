@@ -158,11 +158,14 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 #libraryBodyChart.shoulder-inspect .body-chart-muscle[aria-label*="Shoulder (Front)"],
 #libraryBodyChart.shoulder-inspect .body-chart-muscle[aria-label*="Shoulder (Side)"],
 #libraryBodyChart.shoulder-inspect .body-chart-muscle[aria-label*="Rear Deltoid"]{opacity:1!important;fill:#e3a04b!important;stroke:#8a531c!important;stroke-width:.32!important}
-/* Proportion test: widen the complete SVG as one unit.
-   Silhouette and muscle paths stay registered; no individual muscle is stretched. */
-#libraryBodyChart svg.body-chart-svg{
- transform:scaleX(1.10)!important;
- transform-origin:50% 50%!important;
+/* Experimental bodybuilder silhouette: expand only the neutral background union.
+   Interactive muscle paths retain their original coordinates and hit areas. */
+#libraryBodyChart .body-chart-background{
+ opacity:.22!important;
+ filter:url(#bodybuilder-silhouette-dilate)!important;
+ transform:scaleX(1.12);
+ transform-box:fill-box;
+ transform-origin:center;
 }
 </style>
 </head>
@@ -254,6 +257,28 @@ const libraryChart=new BodyChart(document.getElementById("libraryBodyChart"),{
  }
 });
 requestAnimationFrame(installFacialDetails);
+function installBodybuilderSilhouette(){
+ const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");
+ const bg=svg?.querySelector(".body-chart-background");
+ const defs=svg?.querySelector("defs");
+ if(!svg||!bg||!defs)return;
+ let filter=defs.querySelector("#bodybuilder-silhouette-dilate");
+ if(!filter){
+  filter=document.createElementNS("http://www.w3.org/2000/svg","filter");
+  filter.setAttribute("id","bodybuilder-silhouette-dilate");
+  filter.setAttribute("x","-18%");filter.setAttribute("y","-8%");
+  filter.setAttribute("width","136%");filter.setAttribute("height","116%");
+  const morph=document.createElementNS("http://www.w3.org/2000/svg","feMorphology");
+  morph.setAttribute("in","SourceGraphic");
+  morph.setAttribute("operator","dilate");
+  morph.setAttribute("radius","0.20");
+  filter.appendChild(morph);defs.appendChild(filter);
+ }
+ bg.setAttribute("aria-hidden","true");
+ bg.style.pointerEvents="none";
+}
+
+requestAnimationFrame(installBodybuilderSilhouette);
 
 /* Bodybuilder proportion pass.
    This changes only the rendered muscle-path proportions; muscle IDs,
@@ -454,7 +479,7 @@ function getList(){
 }
 function renderGroups(){$("#muscleButtons").innerHTML=groups.map(g=>'<button type="button" class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'" aria-pressed="'+(g.id===selectedGroup?'true':'false')+'">'+g.name+'</button>').join("");}
 function chooseGroup(id){selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();syncLibrarySelection();syncChestSubdivisionSelection();const family=parentMap[id]||id;$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
-function setView(v){view=v;document.getElementById("libraryBodyChart")?.classList.remove("shoulder-inspect","chest-inspect");shoulderInspectToggle?.setAttribute("aria-pressed","false");chestInspectToggle?.setAttribute("aria-pressed","false");if(shoulderInspectToggle)shoulderInspectToggle.textContent="نمای بررسی محدوده سرشانه";if(chestInspectToggle)chestInspectToggle.textContent="نمای بررسی محدوده سینه";libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});if(v==="back")requestAnimationFrame(()=>requestAnimationFrame(installRearDeltoidContours));syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));if(v==="front")requestAnimationFrame(()=>{installFacialDetails();installChestSubdivision();syncChestSubdivisionSelection();});}
+function setView(v){view=v;document.getElementById("libraryBodyChart")?.classList.remove("shoulder-inspect","chest-inspect");shoulderInspectToggle?.setAttribute("aria-pressed","false");chestInspectToggle?.setAttribute("aria-pressed","false");if(shoulderInspectToggle)shoulderInspectToggle.textContent="نمای بررسی محدوده سرشانه";if(chestInspectToggle)chestInspectToggle.textContent="نمای بررسی محدوده سینه";libraryChart.update({view:v==="front"?ViewSide.FRONT:ViewSide.BACK});requestAnimationFrame(installBodybuilderSilhouette);if(v==="back")requestAnimationFrame(()=>requestAnimationFrame(installRearDeltoidContours));syncLibrarySelection();document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));if(v==="front")requestAnimationFrame(()=>{installFacialDetails();installChestSubdivision();syncChestSubdivisionSelection();});}
 function syncRearDeltoidIsolation(){
  const svg=document.querySelector("#libraryBodyChart svg.body-chart-svg");if(!svg)return;
  const NS="http://www.w3.org/2000/svg";
