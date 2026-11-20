@@ -132,6 +132,19 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 #muscleHotspots .hotspot path{fill:transparent;stroke:transparent;stroke-width:2;transition:fill .15s,stroke .15s}
 #muscleHotspots .hotspot.selected path{fill:#e43d3d88;stroke:#b52424;stroke-width:2.3}
 #muscleHotspots .hotspot:hover path{stroke:#e45b5b66;fill:#e43d3d22}
+
+/* Pure monochrome anatomy: white muscle regions with black outlines only */
+#muscleHotspots .hotspot path,
+#muscleHotspots .hotspot.selected path,
+#muscleHotspots .hotspot:hover path{
+  fill:#fff!important;
+  stroke:#111!important;
+  stroke-width:2.1!important;
+  opacity:1!important;
+  filter:none!important;
+}
+#muscleHotspots .hotspot.selected path{fill:#fff!important;stroke:#111!important}
+
 </style>
 </head>
 <body>
