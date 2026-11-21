@@ -38,7 +38,7 @@ test('new registration validates and sends the personal password',()=>{
   const handler=html.slice(start,end);
   assert.ok(handler.includes('passwordConfirm'));
   assert.ok(handler.includes('password!==passwordConfirm'));
-  assert.ok(handler.includes('training_time, password'));
+  assert.ok(handler.includes('training_days,training_time,password'));
 });
 
 test('Supabase session persistence and restoration remain in place',()=>{
