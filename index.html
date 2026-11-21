@@ -2867,11 +2867,15 @@ window.loadDashboard = loadDashboard;
     const weekly_sessions=Number($id('traineeRegSessions')?.value||0);
     const training_days=($id('traineeRegDays')?.value||'').trim();
     const training_time=$id('traineeRegTime')?.value||'';
+    const password=$id('traineeRegPassword')?.value||'';
+    const passwordConfirm=$id('traineeRegPasswordConfirm')?.value||'';
     if(name.length<2){showAuthError('نام و نام خانوادگی را وارد کنید.');return;}
     if(!/^\+989\d{9}$/.test(phone)){showAuthError('شماره موبایل معتبر نیست؛ مانند 09121234567 وارد کنید.');return;}
     if(!Number.isInteger(weekly_sessions)||weekly_sessions<1||weekly_sessions>7){showAuthError('تعداد جلسات تمرین در هفته را انتخاب کنید.');return;}
     if(!training_days){showAuthError('روزهای تمرین را وارد کنید.');return;}
     if(!training_time){showAuthError('ساعت تمرین را انتخاب کنید.');return;}
+    if(password.length<8||password.length>128){showAuthError('رمز شخصی باید حداقل ۸ کاراکتر باشد.');return;}
+    if(password!==passwordConfirm){showAuthError('تکرار رمز با رمز شخصی یکسان نیست.');return;}
     const btn=$id('traineeLoginBox')?.querySelector('.trainee-auth-block button');
     if(btn){btn.disabled=true;btn.textContent='⏳ در حال ارسال درخواست…';}
     try{
@@ -2879,7 +2883,7 @@ window.loadDashboard = loadDashboard;
       if(error)throw error;
       if(data?.error)throw new Error(data.error);
       showAuthError('✅ درخواست ثبت‌نام بدون رمز برای مربی ارسال شد. پس از تأیید مربی، فعلاً از روش ورود فعلی استفاده کنید.');
-      $id('traineeRegName').value='';$id('traineeRegPhone').value='';$id('traineeRegSessions').value='';$id('traineeRegDays').value='';$id('traineeRegTime').value='';
+      $id('traineeRegName').value='';$id('traineeRegPhone').value='';$id('traineeRegSessions').value='';$id('traineeRegDays').value='';$id('traineeRegTime').value='';$id('traineeRegPassword').value='';$id('traineeRegPasswordConfirm').value='';
     }catch(e){console.error('trainee registration request failed',e);showAuthError('❌ ارسال درخواست انجام نشد. '+(e?.message||String(e)));}
     finally{window.sehResetTurnstile?.(btn);if(btn){btn.disabled=false;btn.textContent='📨 ارسال درخواست ثبت‌نام';}}
   };
@@ -3102,6 +3106,83 @@ window.loadDashboard = loadDashboard;
 
 
 
+<script id="SEH_AUTH_ENTRY_REDESIGN_V1">
+(function(){
+'use strict';
+if(window.__sehAuthEntryRedesignV1)return;
+window.__sehAuthEntryRedesignV1=true;
+var screen=document.getElementById('authScreen'),card=screen&&screen.querySelector('.auth-card');
+if(!screen||!card)return;
+var markup=`
+<div class="seh-auth-brand"><div class="seh-auth-mark">🏋️</div><h2>باشگاه فیتنس سه‌قلعه</h2><p>مربی من | همراه شما در مسیر تناسب اندام</p></div>
+<section id="sehAuthHome" class="seh-auth-view">
+<div class="seh-auth-intro"><span>به خانواده فیتنس سه‌قلعه خوش آمدید</span><h3>برای ادامه، مسیر خود را انتخاب کنید</h3><p>ورود اعضای فعلی و درخواست عضویت جدید از هم جدا شده‌اند.</p></div>
+<div class="seh-auth-actions">
+<button type="button" class="seh-auth-choice seh-auth-primary" onclick="window.sehAuthShow('student')"><img class="seh-auth-photo seh-auth-photo-student" src="./file_0000000024d081f5a11a26b3ba2ef112.png" alt="تصویر ورود شاگردان" loading="eager"><span><b>ورود شاگردان</b><small>برای اعضایی که قبلاً ثبت‌نام و تأیید شده‌اند</small></span><i>‹</i></button>
+<button type="button" class="seh-auth-choice" onclick="window.sehAuthShow('coach')"><img class="seh-auth-photo seh-auth-photo-coach" src="./file_0000000013c481f5aed2f9fe5db313ca.png" alt="تصویر ورود مربی" loading="eager"><span><b>ورود مربیان</b><small>ورود به پنل مدیریت و برنامه‌ریزی مربی</small></span><i>‹</i></button>
+</div>
+<div class="seh-auth-register"><small>هنوز عضو باشگاه نیستید؟</small><button type="button" onclick="window.sehAuthShow('register')">درخواست عضویت شاگرد جدید</button></div>
+</section>
+<section id="coachLoginBox" class="seh-auth-view hide">
+<button type="button" class="seh-auth-back" onclick="window.sehAuthShow('home')">→ بازگشت</button>
+<div class="seh-auth-intro"><span>ورود مربیان</span><h3>ورود به حساب مربی</h3><p>با ایمیل و رمز عبور حساب مربی وارد شوید.</p></div>
+<div class="seh-auth-form"><label for="loginEmail">ایمیل مربی</label><input id="loginEmail" type="email" autocomplete="username" placeholder="ایمیل حساب مربی"><label for="loginPassword">رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button type="button" class="seh-auth-submit" onclick="window.loginApp()">ورود مربی</button></div>
+</section>
+<section id="traineeLoginBox" class="seh-auth-view hide">
+<button type="button" class="seh-auth-back" onclick="window.sehAuthShow('home')">→ بازگشت</button>
+<div class="seh-auth-intro"><span>ورود شاگردان</span><h3>خوش آمدید</h3><p>اگر قبلاً عضو باشگاه شده‌اید، فقط شماره موبایل و رمز شخصی خود را وارد کنید.</p></div>
+<div class="trainee-auth-block" id="sehRegistrationBlock" style="display:none">
+<h3>درخواست عضویت جدید</h3>
+<label for="traineeRegName">نام و نام خانوادگی</label><input id="traineeRegName" autocomplete="name" placeholder="نام کامل">
+<label for="traineeRegPhone">شماره موبایل</label><input id="traineeRegPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09121234567">
+<label for="traineeRegSessions">تعداد جلسات تمرین در هفته</label><select id="traineeRegSessions"><option value="">انتخاب کنید</option><option value="1">۱ جلسه</option><option value="2">۲ جلسه</option><option value="3">۳ جلسه</option><option value="4">۴ جلسه</option><option value="5">۵ جلسه</option><option value="6">۶ جلسه</option><option value="7">۷ جلسه</option></select>
+<label for="traineeRegDays">روزهای تمرین</label><input id="traineeRegDays" placeholder="مثلاً شنبه، دوشنبه، چهارشنبه">
+<label for="traineeRegTime">ساعت تمرین</label><input id="traineeRegTime" type="time">
+<label for="traineeRegPassword">رمز شخصی (حداقل ۸ کاراکتر)</label><input id="traineeRegPassword" type="password" autocomplete="new-password" minlength="8" placeholder="رمز دلخواه">
+<label for="traineeRegPasswordConfirm">تکرار رمز شخصی</label><input id="traineeRegPasswordConfirm" type="password" autocomplete="new-password" minlength="8" placeholder="رمز را دوباره وارد کنید">
+<button type="button" class="seh-auth-submit" onclick="window.registerTraineePhone()">ارسال درخواست عضویت</button>
+</div>
+<div class="trainee-auth-block" id="sehStudentLoginBlock">
+<h3>ورود به حساب قبلی</h3>
+<label for="traineePhoneLogin">شماره موبایل</label><input id="traineePhoneLogin" type="tel" inputmode="tel" autocomplete="username" placeholder="09121234567">
+<label for="traineeLoginPassword">رمز عبور</label><input id="traineeLoginPassword" type="password" autocomplete="current-password" placeholder="رمز شخصی شما">
+<button type="button" id="sehPhonePasswordLogin" class="seh-auth-submit" onclick="window.loginTraineePhone()">ورود به حساب من</button>
+<button type="button" class="seh-auth-link" onclick="window.sehAuthRecoveryInfo()">رمز عبور را فراموش کرده‌ام</button>
+<p class="seh-auth-note">این مسیر فقط برای اعضای قبلی است؛ برای عضویت تازه، از گزینه درخواست عضویت استفاده کنید.</p>
+</div>
+</section>
+<div id="authError" class="auth-error" role="alert" aria-live="polite"></div>
+<div class="seh-auth-footer">FITNESS SEH GALEH</div>`;
+var style=document.createElement('style');style.id='seh-auth-entry-redesign-style';style.textContent=`
+#authScreen .auth-card{width:min(100%,460px)!important;max-width:460px!important;padding:22px!important;border:1px solid #29394a!important;border-radius:22px!important;background:linear-gradient(145deg,#111d29,#0a111a)!important;box-shadow:0 22px 65px #0009!important;color:#f7f8fa!important}
+#authScreen .seh-auth-brand{text-align:center;margin:0 0 25px}#authScreen .seh-auth-mark{width:62px;height:62px;margin:0 auto 12px;border-radius:19px;display:grid;place-items:center;background:linear-gradient(145deg,#ffcf4d,#d99500);color:#17120a;font-size:28px;font-weight:900;box-shadow:0 9px 28px #ffbd1626}
+#authScreen .seh-auth-brand h2{font-size:22px;margin:0;color:#fff}#authScreen .seh-auth-brand p{font-size:11px;color:#aeb9c5;margin:8px 0 0}
+#authScreen .seh-auth-intro{margin:0 0 17px}#authScreen .seh-auth-intro span{font-size:11px;font-weight:bold;color:#ffbd16}#authScreen .seh-auth-intro h3{font-size:19px;margin:7px 0;color:#fff}#authScreen .seh-auth-intro p{font-size:11px;line-height:1.9;color:#aeb9c5;margin:0}
+#authScreen .seh-auth-actions{display:grid;gap:11px}#authScreen .seh-auth-choice{display:flex;align-items:center;gap:12px;width:100%;padding:15px;text-align:right;border:1px solid #2c4052;border-radius:16px;background:linear-gradient(115deg,#152332,#101923);color:#f7f8fa;cursor:pointer}
+#authScreen .seh-auth-choice.seh-auth-primary{border-color:#b88614;background:linear-gradient(115deg,#252313,#141b22);box-shadow:inset 0 0 0 1px #ffbd1618}
+#authScreen .seh-auth-icon{width:45px;height:45px;flex:0 0 45px;border-radius:13px;display:grid;place-items:center;background:#ffbd161a;color:#ffbd16;font-size:22px}#authScreen .seh-auth-primary .seh-auth-icon{background:#ffbd16;color:#17120a}
+#authScreen .seh-auth-photo{width:64px;height:64px;flex:0 0 64px;display:block;object-fit:cover;object-position:center;border-radius:13px;border:1px solid #c99a28;box-shadow:0 3px 12px #0006;background:#182432}#authScreen .seh-auth-photo-student{object-position:center 35%}#authScreen .seh-auth-photo-coach{object-position:center 25%}
+#authScreen .seh-auth-choice span:nth-child(2){flex:1;min-width:0}#authScreen .seh-auth-choice b{display:block;font-size:14px;margin-bottom:5px}#authScreen .seh-auth-choice small{display:block;font-size:10px;line-height:1.7;color:#aeb9c5}#authScreen .seh-auth-choice i{font-style:normal;font-size:22px;color:#d7b34d}
+#authScreen .seh-auth-register{margin-top:19px;padding:13px 10px;text-align:center;border:1px dashed #35485a;border-radius:13px;background:#0c141e}#authScreen .seh-auth-register small{display:block;color:#aeb9c5;font-size:10px;margin-bottom:5px}#authScreen .seh-auth-register button,#authScreen .seh-auth-link{border:0;background:none;color:#ffca3a;font-size:12px;font-weight:bold;padding:7px;cursor:pointer}
+#authScreen .seh-auth-back{border:1px solid #2b3e50;border-radius:10px;background:#142130;color:#e4e9ee;padding:8px 12px;font-size:11px;margin-bottom:18px;cursor:pointer}
+#authScreen .seh-auth-form,#authScreen .trainee-auth-block{padding:16px;border:1px solid #29394a;border-radius:16px;background:#0d1722;text-align:right}
+#authScreen .seh-auth-form label,#authScreen .trainee-auth-block label{display:block;font-size:11px;font-weight:bold;color:#e5e9ed;margin:11px 0 7px}
+#authScreen .seh-auth-form input,#authScreen .trainee-auth-block input,#authScreen .trainee-auth-block select{box-sizing:border-box;width:100%;min-height:43px;padding:11px 12px;border:1px solid #34495d;border-radius:10px;background:#09131d;color:#fff;font-size:13px;outline:none}
+#authScreen .seh-auth-form input:focus,#authScreen .trainee-auth-block input:focus,#authScreen .trainee-auth-block select:focus{border-color:#ffbd16;box-shadow:0 0 0 3px #ffbd161c}
+#authScreen .seh-auth-submit{width:100%;min-height:45px;margin-top:15px;border:0;border-radius:11px;background:linear-gradient(100deg,#ffd04b,#ffb900);color:#17120a;font-size:13px;font-weight:900;cursor:pointer}
+#authScreen .seh-auth-link{display:block;margin:10px auto 0}#authScreen .seh-auth-note{font-size:10px;line-height:1.8;color:#aeb9c5;margin:10px 0 0}
+#authScreen .seh-auth-footer{text-align:center;color:#718091;font-size:9px;letter-spacing:1.4px;margin-top:20px}#authScreen .auth-error{margin-top:13px;white-space:pre-wrap;font-size:11px;line-height:1.8}#authScreen .hide{display:none!important}
+@media(max-width:480px){#authScreen .auth-card{padding:19px!important;margin:12px!important;width:calc(100% - 24px)!important}}
+`;document.head.appendChild(style);
+function install(){if(!card.querySelector('#sehAuthHome'))card.innerHTML=markup;}
+function clearError(){var e=document.getElementById('authError');if(e){e.textContent='';e.style.display='none';}}
+function show(view){install();clearError();var home=document.getElementById('sehAuthHome'),coach=document.getElementById('coachLoginBox'),trainee=document.getElementById('traineeLoginBox'),reg=document.getElementById('sehRegistrationBlock'),login=document.getElementById('sehStudentLoginBlock');if(home)home.classList.toggle('hide',view!=='home');if(coach)coach.classList.toggle('hide',view!=='coach');if(trainee)trainee.classList.toggle('hide',view!=='student'&&view!=='register');if(reg)reg.style.display=view==='register'?'block':'none';if(login)login.style.display=view==='student'?'block':'none';if(view==='student')document.getElementById('traineePhoneLogin')?.focus({preventScroll:true});if(view==='coach')document.getElementById('loginEmail')?.focus({preventScroll:true});}
+window.sehAuthShow=show;window.authMode=function(mode){show(mode==='coach'?'coach':'student');};
+window.sehAuthRecoveryInfo=function(){var e=document.getElementById('authError');if(e){e.textContent='بازیابی امن رمز در حال آماده‌سازی است. فعلاً برای دریافت راهنمایی با مربی باشگاه هماهنگ کنید.';e.style.display='block';}};
+install();show('home');new MutationObserver(function(){if(!card.querySelector('#sehAuthHome'))install();}).observe(card,{childList:true});
+window.addEventListener('pageshow',function(){if(document.body.classList.contains('locked'))show('home');});
+})();
+</script>
 </body></html>`;
     const w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}
   };
