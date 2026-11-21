@@ -22,6 +22,13 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Optimize login images for web
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y webp
+          cwebp -quiet -q 78 -m 6 -resize 640 640 assets/auth/coach-entry.png -o assets/auth/coach-entry.webp
+          cwebp -quiet -q 78 -m 6 -resize 640 640 assets/auth/trainee-entry.png -o assets/auth/trainee-entry.webp
+          ls -lh assets/auth/*.webp
       - name: Upload TEST app artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -65,7 +72,7 @@ jobs:
           grep -Fq 'sehAuthHome' "$auth_js"
           grep -Fq 'sehAuthCoach' "$auth_js"
           grep -Fq 'sehAuthTrainee' "$auth_js"
-          for asset in assets/auth/trainee-entry.png assets/auth/coach-entry.png; do
+          for asset in assets/auth/trainee-entry.webp assets/auth/coach-entry.webp; do
             asset_status="$(curl --silent --show-error --location --max-time 30 --output /dev/null --write-out '%{http_code}' "${PAGES_URL}${asset}" || true)"
             if [ "$asset_status" != "200" ]; then
               echo "::error::Login role image $asset failed to load (HTTP ${asset_status:-no response})"
