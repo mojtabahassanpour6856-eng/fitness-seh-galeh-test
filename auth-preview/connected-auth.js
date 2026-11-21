@@ -111,6 +111,31 @@ const registration=trainee.querySelector('.seh-reg-block');if(registration){docu
 function moveRecovery(){const p=document.getElementById('sehRecoveryStudentPanel'),m=document.getElementById('sehRecoveryMount');if(p&&m&&p.parentElement!==m)m.appendChild(p);}
 window.sehAuthNavigate=function(v){root.dataset.sehView=v;if(v==='recovery'&&!document.getElementById('sehRecoveryStudentPanel')){root.dataset.sehView='trainee';error.textContent='بخش بازیابی رمز هنوز بارگذاری نشده است؛ چند لحظه بعد دوباره تلاش کنید.';error.style.display='block';}else{error.style.display='none';}moveRecovery();};
 root.dataset.sehView='home';
+
+/* Fallback pull-to-refresh for mobile webviews where native overscroll refresh is unavailable. */
+(function(){
+  let startY=0,startX=0,armed=false;
+  const threshold=105;
+  const scrollTop=()=>Math.max(window.scrollY||0,document.documentElement.scrollTop||0,document.body.scrollTop||0,root.scrollTop||0);
+  root.addEventListener('touchstart',function(e){
+    if(!e.touches||e.touches.length!==1){armed=false;return;}
+    const target=e.target;
+    if(target&&target.closest&&target.closest('input,textarea,select,button,[contenteditable="true"]')){armed=false;return;}
+    startY=e.touches[0].clientY;startX=e.touches[0].clientX;
+    armed=scrollTop()<=2;
+  },{passive:true});
+  root.addEventListener('touchend',function(e){
+    if(!armed||!e.changedTouches||!e.changedTouches.length){armed=false;return;}
+    const dy=e.changedTouches[0].clientY-startY;
+    const dx=Math.abs(e.changedTouches[0].clientX-startX);
+    armed=false;
+    if(dy>=threshold&&dx<70&&scrollTop()<=2){
+      window.location.reload();
+    }
+  },{passive:true});
+  root.addEventListener('touchcancel',function(){armed=false;},{passive:true});
+})();
+
 // Recovery is injected asynchronously into the original trainee form; watch the document, not the moved form.
 new MutationObserver(moveRecovery).observe(document.body,{childList:true,subtree:true});
 document.addEventListener('DOMContentLoaded',moveRecovery,{once:true});setTimeout(moveRecovery,900);
