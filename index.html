@@ -3201,7 +3201,7 @@ function buildMembershipCard(){const sec=$id('client');if(!sec||$id('membershipC
 window.copyMembershipCard=function(){const v=$id('cardNumber')?.value||'';if(!v)return alert('شماره کارت ثبت نشده است.');if(!navigator.clipboard?.writeText){alert(v);return;}navigator.clipboard.writeText(v).then(()=>alert('شماره کارت کپی شد.')).catch(()=>alert(v));};const prevSelectClient=window.selectClient;window.selectClient=async function(id){await prevSelectClient(id);if(currentClient){if($id('trainingDaysEdit'))$id('trainingDaysEdit').value=currentClient.training_days||'';if($id('trainingTimeEdit'))$id('trainingTimeEdit').value=currentClient.training_time||'';await loadGoal();await loadMembershipCard();await loadWaterGoal();await loadWeeklyWaterLogs();}};
 
   buildAuthTabs();addRegistrationFields();buildGoalBox();addLibraryGoalField();addWaterGoal();addStyle();buildDashboard();buildMembershipCard();addNavDashboard();buildWorkoutControls();addScheduleUI();addPrintButtons();fixLibraryUse();
-  AUTH_SUPABASE.auth.getSession().then(({data})=>{if(data?.session)window.finishLogin(data.session.user);}).catch(e=>console.error(e));
+  // Session restoration is handled once by SEH_FINAL_FETCH_AND_SESSION_RECOVERY after all wrappers are installed.
 })();
 
 </script>
