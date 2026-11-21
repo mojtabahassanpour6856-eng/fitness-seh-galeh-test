@@ -915,7 +915,7 @@ body.locked{overflow:hidden!important}
 </div>
 </section>
 
-<div class="card" id="activityDailyPanel">
+<div class="card" id="activityDailyPanel" style="visibility:hidden">
 <h2>🔥 فعالیت و کالری روزانه من</h2>
 <button type="button" id="sehActivityBackDashboard" onclick="window.sehReturnToDashboard()" style="width:100%;margin:0 0 12px;background:linear-gradient(135deg,#fff3c4,#d8b04b);color:#35270b;border:1px solid #b58a24;border-radius:10px;font-weight:800">🏠 بازگشت به داشبورد شاگرد</button>
 <div class="grid2">
@@ -2456,6 +2456,7 @@ if($("prDate"))$("prDate").value=today();if($("anDate"))$("anDate").value=today(
       else document.body.appendChild(section);
     }
     if(panel.parentElement!==section)section.appendChild(panel);
+    panel.style.removeProperty('visibility');
   }
   function normalizeTraineeProfileCards(root){
     const grid=root&&root.querySelector('.v4-dashboard');
