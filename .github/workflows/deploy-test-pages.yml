@@ -1,7 +1,7 @@
 name: Deploy isolated TEST app to GitHub Pages
 on:
   push:
-    branches: ["integration/full-app-mirror-20261115"]
+    branches: ["integration/full-app-mirror-20261115", "restore/auth-entry-photos-20261121"]
   workflow_dispatch:
 permissions:
   contents: read
