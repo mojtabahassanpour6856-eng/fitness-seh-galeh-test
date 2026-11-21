@@ -427,6 +427,57 @@ body.locked{overflow:hidden!important}
 .seh-touch-choice-select{display:block;box-sizing:border-box;width:100%;min-width:0;max-width:100%;height:34px;margin:3px 0 5px;padding:4px 24px 4px 8px;border:1px solid #b99543;border-radius:8px;background:#fffaf0;color:#463515;font-size:14px;font-weight:700;line-height:1.2}
 .seh-touch-choice-hidden-source{display:none!important}
 </style>
+
+<style id="seh-auth-role-photo-cards-v1">
+/* Role selection cards for the full mirrored app; existing auth handlers and IDs stay intact. */
+#authScreen #authTabs{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:18px 0 16px;
+}
+#authScreen #authTabs>button{
+  display:flex!important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-width:0;
+  min-height:174px;
+  padding:10px;
+  border:1px solid #b99543;
+  border-radius:16px;
+  background:linear-gradient(155deg,#172433,#0b121c);
+  color:#fff;
+  font-size:15px;
+  font-weight:800;
+  line-height:1.35;
+  box-shadow:0 8px 22px rgba(0,0,0,.22);
+}
+#authScreen #authTabs>button.active{
+  border:2px solid #f0c65b;
+  background:linear-gradient(155deg,#26384a,#111b27);
+  box-shadow:0 0 0 2px rgba(240,198,91,.14),0 10px 25px rgba(0,0,0,.28);
+}
+#authScreen #authTabs .seh-auth-role-photo{
+  display:block;
+  width:100%;
+  height:126px;
+  object-fit:cover;
+  object-position:center;
+  border-radius:11px;
+  background:#182330;
+}
+#authScreen #authTabs>button span{display:block;text-align:center}
+@media(max-width:420px){
+  #authScreen{padding:10px}
+  #authScreen .auth-card{padding:16px}
+  #authScreen #authTabs{gap:8px}
+  #authScreen #authTabs>button{min-height:145px;padding:8px;font-size:13px;gap:7px}
+  #authScreen #authTabs .seh-auth-role-photo{height:104px}
+}
+</style>
+
 </head>
 <body class="locked">
 <div id="authScreen">
@@ -435,8 +486,8 @@ body.locked{overflow:hidden!important}
     <h2>باشگاه فیتنس سه‌قلعه</h2>
     <p class="muted" style="text-align:center">ورود به سامانه مربی من</p>
     <div id="authTabs" class="meal-tabs">
-      <button type="button" class="active" id="authCoachTab" onclick="if(window.authMode){window.authMode('coach')}else{document.getElementById('coachLoginBox').classList.remove('hide');document.getElementById('traineeLoginBox').classList.add('hide');document.getElementById('authCoachTab').classList.add('active');document.getElementById('authTraineeTab').classList.remove('active');document.getElementById('authError').style.display='none'}">👨‍🏫 مربی</button>
-      <button type="button" id="authTraineeTab" onclick="if(window.authMode){window.authMode('trainee')}else{document.getElementById('coachLoginBox').classList.add('hide');document.getElementById('traineeLoginBox').classList.remove('hide');document.getElementById('authCoachTab').classList.remove('active');document.getElementById('authTraineeTab').classList.add('active');document.getElementById('authError').style.display='none'}">👤 شاگرد</button>
+      <button type="button" class="active" id="authCoachTab" onclick="if(window.authMode){window.authMode('coach')}else{document.getElementById('coachLoginBox').classList.remove('hide');document.getElementById('traineeLoginBox').classList.add('hide');document.getElementById('authCoachTab').classList.add('active');document.getElementById('authTraineeTab').classList.remove('active');document.getElementById('authError').style.display='none'}"><img class="seh-auth-role-photo" src="./assets/auth/coach-entry.png" alt="تصویر ورود مربی" loading="eager"><span>ورود مربی</span></button>
+      <button type="button" id="authTraineeTab" onclick="if(window.authMode){window.authMode('trainee')}else{document.getElementById('coachLoginBox').classList.add('hide');document.getElementById('traineeLoginBox').classList.remove('hide');document.getElementById('authCoachTab').classList.remove('active');document.getElementById('authTraineeTab').classList.add('active');document.getElementById('authError').style.display='none'}"><img class="seh-auth-role-photo" src="./assets/auth/trainee-entry.png" alt="تصویر ورود شاگردان" loading="eager"><span>ورود شاگردان</span></button>
     </div>
     <div id="coachLoginBox">
       <label>ایمیل</label><input id="loginEmail" type="email" autocomplete="username" placeholder="ایمیل مربی">
