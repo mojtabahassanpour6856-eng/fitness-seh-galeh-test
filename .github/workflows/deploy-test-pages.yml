@@ -53,6 +53,17 @@ jobs:
           fi
           grep -Fq '<title>فیتنس سه‌قلعه</title>' "$body"
           grep -Fq 'FITNESS SEH GALEH' "$body"
+          grep -Fq 'auth-preview/connected-auth.js' "$body"
+          auth_js="$(mktemp)"
+          trap 'rm -f "$body" "$auth_js"' EXIT
+          auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js" || true)"
+          if [ "$auth_status" != "200" ]; then
+            echo "::error::Connected login redesign JS failed to load (HTTP ${auth_status:-no response})"
+            exit 1
+          fi
+          grep -Fq 'sehAuthHome' "$auth_js"
+          grep -Fq 'sehAuthCoach' "$auth_js"
+          grep -Fq 'sehAuthTrainee' "$auth_js"
           grep -Fq 'udptdznbvewkublvzmtm.supabase.co' "$body"
           if grep -Fq 'qfakyudgidsumeuoqoot' "$body"; then
             echo "::error::Production Supabase ref was found in the deployed TEST HTML"
