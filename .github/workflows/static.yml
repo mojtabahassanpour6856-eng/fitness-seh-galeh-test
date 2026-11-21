@@ -2,7 +2,7 @@
 name: Deploy isolated preview to GitHub Pages
 on:
   push:
-    branches: ["main", "experiment/nutrition-builder-isolated-20261105"]
+    branches: ["main", "experiment/nutrition-builder-isolated-20261105", "fix/approved-login-images-safe-20261121"]
   workflow_dispatch:
 permissions:
   contents: read
