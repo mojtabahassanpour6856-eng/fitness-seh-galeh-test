@@ -1,3 +1,4 @@
+# Approved permanent preview baseline: 4bca42e70cbf3abd519054736ded6017ee61e599
 name: Deploy isolated preview to GitHub Pages
 on:
   push:
