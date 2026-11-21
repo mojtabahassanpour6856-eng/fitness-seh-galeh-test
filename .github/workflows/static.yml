@@ -1,8 +1,7 @@
-# Approved permanent preview baseline: 4bca42e70cbf3abd519054736ded6017ee61e599
-name: Deploy isolated preview to GitHub Pages
+name: Deploy isolated TEST app to GitHub Pages
 on:
   push:
-    branches: ["main", "experiment/nutrition-builder-isolated-20261105", "fix/approved-login-images-safe-20261121"]
+    branches: ["main", "experiment/nutrition-builder-isolated-20261105", "integration/full-app-mirror-20261115", "fix/approved-login-images-safe-20261121"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,14 +17,63 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout TEST branch
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Upload artifact
+      - name: Upload TEST app artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-      - name: Deploy to GitHub Pages
+          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Deploy TEST app to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+        with:
+          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Verify published TEST site
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          body="$(mktemp)"
+          trap 'rm -f "$body"' EXIT
+          status=""
+          for attempt in $(seq 1 18); do
+            status="$(curl --silent --show-error --location --max-time 30 --output "$body" --write-out '%{http_code}' "$PAGES_URL" || true)"
+            if [ "$status" = "200" ]; then
+              break
+            fi
+            echo "Pages response not ready (attempt $attempt, HTTP ${status:-no response}); waiting..."
+            sleep 5
+          done
+          if [ "$status" != "200" ]; then
+            echo "::error::TEST Pages URL did not return HTTP 200 (last status: ${status:-no response})"
+            exit 1
+          fi
+          grep -Fq '<title>فیتنس سه‌قلعه</title>' "$body"
+          grep -Fq 'FITNESS SEH GALEH' "$body"
+          grep -Fq 'auth-preview/connected-auth.js' "$body"
+          auth_js="$(mktemp)"
+          trap 'rm -f "$body" "$auth_js"' EXIT
+          auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js" || true)"
+          if [ "$auth_status" != "200" ]; then
+            echo "::error::Connected login redesign JS failed to load (HTTP ${auth_status:-no response})"
+            exit 1
+          fi
+          grep -Fq 'sehAuthHome' "$auth_js"
+          grep -Fq 'sehAuthCoach' "$auth_js"
+          grep -Fq 'sehAuthTrainee' "$auth_js"
+          for asset in assets/auth/trainee-entry.png assets/auth/coach-entry.png; do
+            asset_status="$(curl --silent --show-error --location --max-time 30 --output /dev/null --write-out '%{http_code}' "${PAGES_URL}${asset}" || true)"
+            if [ "$asset_status" != "200" ]; then
+              echo "::error::Login role image $asset failed to load (HTTP ${asset_status:-no response})"
+              exit 1
+            fi
+          done
+          grep -Fq 'udptdznbvewkublvzmtm.supabase.co' "$body"
+          if grep -Fq 'qfakyudgidsumeuoqoot' "$body"; then
+            echo "::error::Production Supabase ref was found in the deployed TEST HTML"
+            exit 1
+          fi
+          echo "PASS: deployed TEST app returned HTTP 200 and contains TEST-only branding and Supabase reference."
