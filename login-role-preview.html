@@ -1,22 +1,68 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>پیش‌نمایش ورود فیتنس سه‌قلعه</title>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#242424,#090909 65%);color:#f8f5ed;font-family:Tahoma,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:24px}
-.wrap{width:min(100%,1000px);text-align:center}.brand{color:#d9b66a;font-size:clamp(22px,4vw,34px);font-weight:800;letter-spacing:.5px}.subtitle{color:#c9c3b7;margin:10px 0 26px}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.card{position:relative;overflow:hidden;border:1px solid #b38b43;border-radius:18px;min-height:430px;background:#111;box-shadow:0 12px 35px #0008;display:flex;align-items:flex-end;text-decoration:none;color:white}
-.card img{position:absolute;width:100%;height:100%;inset:0;object-fit:cover;object-position:center;transition:transform .35s}.card:hover img{transform:scale(1.035)}
-.card:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.94),rgba(0,0,0,.08) 65%,rgba(0,0,0,.15))}
-.caption{position:relative;z-index:1;padding:25px;width:100%;text-align:right}.caption h2{margin:0 0 8px;color:#e5c47c;font-size:26px}.caption p{margin:0;color:#f0e9dc;font-size:14px}.button{display:inline-block;margin-top:16px;border:1px solid #d3ae62;border-radius:30px;padding:10px 22px;background:linear-gradient(120deg,#9e762e,#e2c47d);color:#15120b;font-weight:bold}
-.note{font-size:12px;color:#9e9789;margin-top:16px}
-@media(max-width:650px){.cards{grid-template-columns:1fr}.card{min-height:380px}.wrap{max-width:460px}}
-</style></head><body><main class="wrap">
-<div class="brand">فیتنس سه‌قلعه</div><div class="subtitle">همراه شما در مسیر تناسب اندام</div>
+:root{--bg:#080b10;--gold:#d8ae49;--gold2:#f2cf72;--text:#f3f5f7;--muted:#aeb7c1;--blue:#152332;--border:#344353}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -12%,#202b35 0,transparent 45%),#080b10;color:var(--text);font-family:Tahoma,Arial,sans-serif;padding:22px 16px 30px}
+main{width:min(100%,650px);margin:auto}
+header{text-align:center;margin:0 auto 28px}
+.logo{width:100px;height:86px;margin:0 auto 14px;border:3px solid #dcae39;border-radius:0 0 30px 30px;display:grid;place-items:center;background:linear-gradient(145deg,#161b21,#070a0e);box-shadow:0 12px 28px #d6a83216;overflow:hidden}.logo img{width:100%;height:100%;object-fit:contain}
+.brand{font-size:clamp(25px,6vw,34px);font-weight:bold;margin:0 0 10px}
+.subtitle{color:var(--muted);font-size:14px}
+.welcome{margin:36px 0 26px;text-align:right}
+.eyebrow{color:var(--gold);font-size:12px;font-weight:bold}
+h1{font-size:clamp(23px,5vw,30px);margin:12px 0 15px}
+.welcome p{color:var(--muted);line-height:2;font-size:14px;margin:0}
+.cards{display:grid;gap:18px}
+.card{position:relative;display:flex;align-items:center;min-height:255px;border:1px solid #9d7d3b;border-radius:25px;overflow:hidden;text-decoration:none;color:var(--text);background:#12181e}
+.card.coach{border-color:#354d60;background:#111c27}
+.photo{position:absolute;right:20px;left:auto;top:50%;transform:translateY(-50%);width:31%;height:145px;max-height:calc(100% - 40px);border-radius:20px;overflow:hidden;border:1px solid #7e6a3b;background:#151c22}
+
+.card:after{content:"";position:absolute;inset:0;background:linear-gradient(270deg,transparent 25%,rgba(9,12,17,.2) 42%,rgba(9,12,17,.92) 72%);pointer-events:none}
+.coach:after{background:linear-gradient(270deg,transparent 25%,rgba(13,20,29,.35) 42%,rgba(13,20,29,.92) 72%)}
+.caption{position:absolute;z-index:1;text-align:right;left:24px;right:auto;width:57%;padding:18px 0}
+.caption h2{font-size:22px;margin:0 0 10px;color:var(--gold2)}
+.coach h2{color:#e4edf5}
+.caption p{font-size:12px;color:#d0d5dc;line-height:1.9;margin:0}
+.arrow{color:var(--gold);font-size:23px;margin-top:16px;display:block}
+.card.coach .arrow{color:#9bb5ce}
+.membership{margin-top:22px;border:1px dashed #3a4959;border-radius:22px;padding:22px 18px;text-align:center;background:#0c141e}
+.membership p{color:var(--muted);font-size:13px;margin:0 0 12px}
+.link{border:0;background:transparent;color:var(--gold2);font:inherit;padding:10px;cursor:pointer}
+footer{text-align:center;color:#75808c;font-size:12px;line-height:2.1;margin:40px 0 8px}
+.view{display:none}.view.active{display:block}
+.back{background:#142130;border:1px solid #314456;border-radius:12px;color:#e3eaf0;padding:10px 15px;cursor:pointer;margin-bottom:22px}
+.panel{border:1px solid var(--border);border-radius:22px;background:linear-gradient(145deg,#131e29,#0d141c);padding:22px}
+.panel.gold{border-color:#8d6c30;background:linear-gradient(145deg,#211f15,#111820)}
+.panel h2{margin:4px 0 10px;font-size:22px}
+.panel p{font-size:13px;line-height:2;color:var(--muted);margin:0 0 18px}
+label{display:block;font-size:13px;margin:14px 0 8px;font-weight:bold}
+input,textarea{width:100%;padding:14px;border:1px solid #394b5c;border-radius:12px;background:#09121b;color:white;font:inherit;outline:none}
+input:focus,textarea:focus{border-color:var(--gold)}
+.primary{display:block;width:100%;border:0;border-radius:13px;padding:14px;margin-top:18px;background:linear-gradient(100deg,#d6a635,#f1cb68);color:#17120a;font-weight:bold;font:inherit;cursor:pointer}
+.secondary{display:block;width:100%;border:1px solid #364858;border-radius:13px;padding:12px;margin-top:10px;background:#142130;color:#e7edf2;font:inherit;cursor:pointer}
+.notice{display:none;margin-top:14px;padding:12px;border:1px solid #735d2c;border-radius:12px;color:#f2d78c;background:#201c11;font-size:12px;line-height:1.9}
+.notice.show{display:block}
+@media(max-width:480px){body{padding:14px 12px}.card{min-height:225px}.photo{right:12px;left:auto;top:50%;bottom:auto;transform:translateY(-50%);width:31%;height:125px}.caption{left:14px;right:auto;width:58%;padding:0}.caption h2{font-size:19px}.caption p{font-size:11px}.panel{padding:18px}}
+</style></head>
+<body><main>
+<header><div class="logo"><img src="./icon.svg" alt="لوگوی فیتنس سه‌قلعه"></div><h2 class="brand">باشگاه فیتنس سه‌قلعه</h2><div class="subtitle">مربی من | همراه شما در مسیر تناسب اندام</div></header>
+<section id="home" class="view active"><div class="welcome"><span class="eyebrow">به جمع فیتنس سه‌قلعه خوش آمدید</span><h1>برای ادامه، مسیر خود را انتخاب کنید</h1><p>ورود اعضای فعلی و درخواست عضویت جدید در مسیرهای جداگانه انجام می‌شود.</p></div>
 <div class="cards">
-<a class="card" href="#" aria-label="ورود شاگرد"><img src="./file_0000000024d081f5a11a26b3ba2ef112.png" alt="گروه شاگردان"><div class="caption"><h2>ورود شاگرد</h2><p>برای مشاهده برنامه تمرینی و تغذیه خود وارد شوید</p><span class="button">ورود شاگردان</span></div></a>
-<a class="card" href="#" aria-label="ورود مربی"><img src="./file_0000000013c481f5aed2f9fe5db313ca.png" alt="تصویر مربی"><div class="caption"><h2>ورود مربی</h2><p>مدیریت شاگردان و برنامه‌های تمرینی</p><span class="button">ورود مربی</span></div></a>
-</div><div class="note">پیش‌نمایش رابط ورود — دکمه‌ها هنوز به سامانه ورود متصل نشده‌اند.</div>
-</main></body></html>
+<a href="#" class="card" onclick="showView('trainee');return false" aria-label="ورود شاگرد"><div class="photo" aria-label="جای خالی تصویر شاگرد"></div><div class="caption"><h2>ورود شاگردان</h2><p>برای اعضایی که قبلاً ثبت‌نام کرده‌اند</p><span class="arrow">‹</span></div></a>
+<a href="#" class="card coach" onclick="showView('coach');return false" aria-label="ورود مربی"><div class="photo" aria-label="جای خالی تصویر مربی"></div><div class="caption"><h2>ورود مربیان</h2><p>ورود به پنل مدیریت و برنامه‌ریزی</p><span class="arrow">‹</span></div></a>
+</div><div class="membership"><p>هنوز عضو باشگاه نیستید؟</p><button class="link" onclick="showView('register')">درخواست عضویت شاگرد جدید ←</button></div></section>
+<section id="trainee" class="view"><button class="back" onclick="showView('home')">→ بازگشت</button><div class="panel gold"><span class="eyebrow">حساب اعضای فعلی</span><h2>ورود به حساب شاگرد</h2><p>شماره موبایل ثبت‌شده و رمز شخصی خود را وارد کنید. پس از خروج، فقط همین صفحه ورود نمایش داده می‌شود.</p><form onsubmit="previewSubmit(event,'trainee')"><label>شماره موبایل</label><input type="tel" inputmode="numeric" placeholder="09xxxxxxxxx" required><label>رمز عبور</label><input type="password" placeholder="رمز عبور خود را وارد کنید" required><button class="primary">ورود به اپلیکیشن</button></form><button class="link" onclick="showView('recovery')">رمز عبور را فراموش کرده‌ام</button><button class="secondary" onclick="showView('register')">درخواست عضویت جدید</button><div id="traineeNotice" class="notice"></div></div></section>
+<section id="coach" class="view"><button class="back" onclick="showView('home')">→ بازگشت</button><div class="panel"><span class="eyebrow">دسترسی مدیریت</span><h2>ورود مربیان</h2><p>برای ورود به پنل مربی، ایمیل و رمز عبور خود را وارد کنید.</p><form onsubmit="previewSubmit(event,'coach')"><label>ایمیل</label><input type="email" placeholder="ایمیل مربی" required><label>رمز عبور</label><input type="password" placeholder="رمز عبور" required><button class="primary">ورود به پنل مربی</button></form><div id="coachNotice" class="notice"></div></div></section>
+<section id="register" class="view"><button class="back" onclick="showView('home')">→ بازگشت</button><div class="panel"><span class="eyebrow">شروع مسیر ورزشی</span><h2>درخواست عضویت جدید</h2><p>فرم عضویت فقط با انتخاب این مسیر باز می‌شود و در صفحه ورود اعضای فعلی نمایش داده نخواهد شد.</p><form onsubmit="previewSubmit(event,'register')"><label>نام و نام خانوادگی</label><input placeholder="نام شما" required><label>شماره موبایل</label><input type="tel" placeholder="09xxxxxxxxx" required><label>توضیحات (اختیاری)</label><textarea rows="3" placeholder="..."></textarea><button class="primary">ارسال درخواست عضویت</button></form><div id="registerNotice" class="notice"></div></div></section>
+<section id="recovery" class="view"><button class="back" onclick="showView('trainee')">→ بازگشت به ورود شاگرد</button><div class="panel"><span class="eyebrow">بازیابی دسترسی</span><h2>فراموشی رمز عبور</h2><p>این بخش در پیش‌نمایش صرفاً نمایشی است.</p><label>شماره موبایل</label><input type="tel" placeholder="09xxxxxxxxx"><button class="primary" onclick="notice('recoveryNotice','این پیش‌نمایش به سامانه بازیابی واقعی متصل نیست.')">ادامه بازیابی</button><div id="recoveryNotice" class="notice"></div></div></section>
+<footer>FITNESS SEH GALEH<br>همراه شما در مسیر تناسب اندام</footer></main>
+<script>
+function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));const el=document.getElementById(v);if(el)el.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function notice(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;el.classList.add('show')}}
+function previewSubmit(e,kind){e.preventDefault();const id=kind+'Notice';notice(id,'این صفحه پیش‌نمایش طراحی است؛ ورود و ارسال فرم هنوز به سامانه واقعی متصل نشده است.')}
+</script></body></html>
