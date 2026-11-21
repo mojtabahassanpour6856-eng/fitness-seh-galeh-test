@@ -64,6 +64,13 @@ jobs:
           grep -Fq 'sehAuthHome' "$auth_js"
           grep -Fq 'sehAuthCoach' "$auth_js"
           grep -Fq 'sehAuthTrainee' "$auth_js"
+          for asset in assets/auth/trainee-entry.png assets/auth/coach-entry.png; do
+            asset_status="$(curl --silent --show-error --location --max-time 30 --output /dev/null --write-out '%{http_code}' "${PAGES_URL}${asset}" || true)"
+            if [ "$asset_status" != "200" ]; then
+              echo "::error::Login role image $asset failed to load (HTTP ${asset_status:-no response})"
+              exit 1
+            fi
+          done
           grep -Fq 'udptdznbvewkublvzmtm.supabase.co' "$body"
           if grep -Fq 'qfakyudgidsumeuoqoot' "$body"; then
             echo "::error::Production Supabase ref was found in the deployed TEST HTML"
