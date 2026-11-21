@@ -7,6 +7,60 @@ const coach=document.getElementById('coachLoginBox'),trainee=document.getElement
 if(!root||!card||!coach||!trainee||!error)return;
 const st=document.createElement('style');st.id='seh-auth-redesign-connected-style';
 st.textContent='#authScreen{position:fixed!important;inset:0!important;z-index:99999!important;overflow-y:auto!important;background:radial-gradient(ellipse at 50% -15%,#1a2b3b 0,transparent 48%),#070b11!important;padding:0!important}#authScreen .auth-card{width:min(100%,480px)!important;min-height:100vh!important;margin:0 auto!important;padding:clamp(16px,4vw,26px)!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;display:flex!important;flex-direction:column!important}#authScreen .seh-top{display:flex;justify-content:space-between;align-items:center;color:#aeb9c5;font-size:11px;margin-bottom:25px}#authScreen .seh-tag{border:1px solid #66501b;color:#ffd46a;border-radius:30px;padding:6px 10px}#authScreen .seh-brand{text-align:center;margin:4px 0 28px}#authScreen .seh-mark{width:82px;height:82px;margin:0 auto 13px;border-radius:23px;display:grid;place-items:center;background:linear-gradient(145deg,#ffcf4d,#d99500);padding:7px;box-shadow:0 9px 30px #ffbd1626;overflow:hidden}#authScreen .seh-mark img{display:block;width:100%;height:100%;object-fit:contain;border-radius:17px}#authScreen .seh-choice{position:relative;overflow:hidden;min-height:116px;padding:14px 13px}#authScreen .seh-choice:after{content:"";position:absolute;width:120px;height:120px;left:-22px;bottom:-55px;border-radius:50%;background:radial-gradient(circle,#ffbd1622,transparent 68%);pointer-events:none}#authScreen .seh-art{width:88px;height:88px;flex:0 0 88px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(145deg,#1d3041,#101a25);border:1px solid #34495a;overflow:hidden}#authScreen .seh-art svg{width:100%;height:100%;display:block}#authScreen .seh-art{width:112px;height:112px;flex-basis:112px;border-radius:17px;box-shadow:0 9px 22px #0005}#authScreen .seh-art svg{filter:drop-shadow(0 5px 5px #0005)}#authScreen[data-seh-view=register] #sehRegisterMount .seh-reg-block{display:block!important}#authScreen .seh-choice.primary .seh-art{background:linear-gradient(145deg,#3a3016,#18202a);border-color:#9c771f}#authScreen .seh-choice .seh-ico{display:none}#authScreen .seh-copy{position:relative;z-index:1}#authScreen .seh-arrow{position:relative;z-index:1}#authScreen .seh-brand h2{font-size:23px!important;margin:0!important;color:#f7f8fa}#authScreen .seh-brand p{margin:8px 0 0!important;color:#aeb9c5;font-size:12px;line-height:1.8;text-align:center}#authScreen .seh-view{display:none}#authScreen[data-seh-view=home] #sehAuthHome,#authScreen[data-seh-view=trainee] #sehAuthTrainee,#authScreen[data-seh-view=coach] #sehAuthCoach,#authScreen[data-seh-view=register] #sehAuthRegister,#authScreen[data-seh-view=recovery] #sehAuthRecovery{display:block}#authScreen .seh-welcome{margin-bottom:19px}#authScreen .seh-eyebrow{color:#ffbd16;font-size:11px;font-weight:bold}#authScreen .seh-welcome h3,#authScreen .seh-heading h3{font-size:21px;margin:8px 0 7px;color:#f7f8fa}#authScreen .seh-welcome p,#authScreen .seh-heading p{font-size:12px;line-height:1.9;color:#aeb9c5;margin:0}#authScreen .seh-choices{display:grid;gap:12px}#authScreen .seh-choice{display:flex;align-items:center;gap:14px;width:100%;padding:17px 15px;text-align:right;background:linear-gradient(115deg,#152332,#101923);border:1px solid #2c4052;border-radius:17px;color:#f7f8fa;cursor:pointer}#authScreen .seh-choice.primary{border-color:#b88614;background:linear-gradient(115deg,#252313,#141b22)}#authScreen .seh-ico{width:48px;height:48px;flex:0 0 48px;border-radius:14px;display:grid;place-items:center;background:#ffbd161a;color:#ffbd16;font-size:23px}#authScreen .seh-choice.primary .seh-ico{background:#ffbd16;color:#17120a}#authScreen .seh-copy{flex:1}#authScreen .seh-copy b{display:block;font-size:15px;margin-bottom:6px}#authScreen .seh-copy small{display:block;color:#aeb9c5;font-size:11px;line-height:1.8}#authScreen .seh-arrow{font-size:22px;color:#c6a24a}#authScreen .seh-register{margin-top:22px;text-align:center;padding:14px 10px;border:1px dashed #35485a;border-radius:14px;background:#0c141e}#authScreen .seh-register p{margin:0 0 5px;color:#aeb9c5;font-size:11px}#authScreen .seh-link{border:0;background:none;color:#d7b34d;padding:8px;font-size:12px;cursor:pointer}#authScreen .seh-back{border:1px solid #2b3e50;border-radius:11px;background:#142130;color:#dce3e9;padding:9px 13px;font-size:12px;margin-bottom:20px;cursor:pointer}#authScreen .seh-form{padding:18px;border:1px solid #29394a;border-radius:18px;background:linear-gradient(145deg,#111d29,#0c141e);box-shadow:0 14px 35px #0004}#authScreen .seh-form label{display:block;font-size:12px;font-weight:bold;margin:0 0 8px;color:#e5e9ed}#authScreen .seh-form input,#authScreen .seh-form select{width:100%;border:1px solid #34495d;border-radius:11px;background:#0a131d;color:white;padding:13px;outline:none;font-size:14px;margin:0 0 15px;min-height:45px}#authScreen .seh-form button:not(.seh-back){width:100%;min-height:46px;border:0;border-radius:12px;background:linear-gradient(100deg,#ffd04b,#ffb900);color:#17120a;font-weight:900;cursor:pointer}#authScreen #coachLoginBox,#authScreen #traineeLoginBox{display:block!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important}#authScreen #authTabs{display:none!important}#authScreen #traineeLoginBox .seh-login-block,#authScreen #traineeLoginBox .seh-reg-block{padding:0!important;margin:0!important;border:0!important;background:transparent!important}#authScreen[data-seh-view=trainee] #traineeLoginBox .seh-reg-block,#authScreen[data-seh-view=register] #traineeLoginBox .seh-login-block{display:none!important}#authScreen[data-seh-view=trainee] #traineeLoginBox .seh-login-block,#authScreen[data-seh-view=register] #traineeLoginBox .seh-reg-block{display:block!important}#authScreen #sehRecoveryStudentPanel{display:none!important;margin-top:12px!important;padding:15px!important;border:1px solid #29394a!important;border-radius:15px!important;background:#101923!important}#authScreen[data-seh-view=recovery] #sehRecoveryStudentPanel{display:block!important}#authScreen #authError{margin-top:12px;white-space:pre-wrap;line-height:1.8}#authScreen .seh-foot{margin-top:auto;padding-top:26px;text-align:center;color:#718091;font-size:10px;line-height:2}';
+
+/* FIT-TO-VIEWPORT: compact only the initial entry screen; preserve all content and behavior. */
+st.textContent += `
+@media (min-height:620px) and (max-height:900px){
+  #authScreen[data-seh-view=home]{overflow-y:hidden!important}
+  #authScreen[data-seh-view=home] .auth-card{
+    flex:1 1 auto!important;height:100%!important;min-height:0!important;
+    padding:clamp(6px,1.2vh,12px) clamp(12px,3vw,20px)!important;
+  }
+  #authScreen[data-seh-view=home] .auth-card>div:first-child{
+    display:flex!important;flex:1 1 auto!important;flex-direction:column!important;min-height:0!important;
+  }
+  #authScreen[data-seh-view=home] .seh-top{margin-bottom:clamp(5px,1vh,10px)!important}
+  #authScreen[data-seh-view=home] .seh-brand{margin:0 0 clamp(7px,1.3vh,12px)!important}
+  #authScreen[data-seh-view=home] .seh-mark{
+    width:clamp(52px,8vh,72px)!important;height:clamp(52px,8vh,72px)!important;
+    margin-bottom:clamp(5px,.9vh,8px)!important;border-radius:18px!important;
+  }
+  #authScreen[data-seh-view=home] .seh-brand h2{font-size:clamp(18px,2.5vh,21px)!important}
+  #authScreen[data-seh-view=home] .seh-brand p{margin-top:4px!important;line-height:1.5!important}
+  #authScreen[data-seh-view=home] .seh-welcome{margin-bottom:clamp(7px,1.3vh,12px)!important}
+  #authScreen[data-seh-view=home] .seh-welcome h3{font-size:clamp(17px,2.5vh,20px)!important;margin:5px 0!important}
+  #authScreen[data-seh-view=home] .seh-welcome p{line-height:1.55!important}
+  #authScreen[data-seh-view=home] .seh-choices{gap:clamp(6px,.9vh,9px)!important}
+  #authScreen[data-seh-view=home] .seh-choice{
+    min-height:clamp(76px,11vh,92px)!important;padding:clamp(8px,1.3vh,12px)!important;gap:10px!important;
+  }
+  #authScreen[data-seh-view=home] .seh-art{
+    width:clamp(66px,9vh,82px)!important;height:clamp(66px,9vh,82px)!important;
+    flex:0 0 clamp(66px,9vh,82px)!important;
+  }
+  #authScreen[data-seh-view=home] .seh-copy b{font-size:14px!important;margin-bottom:4px!important}
+  #authScreen[data-seh-view=home] .seh-copy small{line-height:1.55!important}
+  #authScreen[data-seh-view=home] .seh-register{
+    margin-top:clamp(9px,1.4vh,14px)!important;padding:clamp(8px,1.1vh,10px)!important;
+  }
+  #authScreen[data-seh-view=home] .seh-foot{padding-top:clamp(5px,.9vh,9px)!important;line-height:1.5!important}
+}
+@media (min-height:620px) and (max-height:680px){
+  #authScreen[data-seh-view=home] .auth-card{padding:5px 12px!important}
+  #authScreen[data-seh-view=home] .seh-top{font-size:9px!important}
+  #authScreen[data-seh-view=home] .seh-brand{margin-bottom:6px!important}
+  #authScreen[data-seh-view=home] .seh-mark{width:48px!important;height:48px!important;margin-bottom:4px!important}
+  #authScreen[data-seh-view=home] .seh-brand h2{font-size:17px!important}
+  #authScreen[data-seh-view=home] .seh-welcome{margin-bottom:6px!important}
+  #authScreen[data-seh-view=home] .seh-welcome h3{font-size:16px!important;margin:3px 0!important}
+  #authScreen[data-seh-view=home] .seh-welcome p{font-size:11px!important}
+  #authScreen[data-seh-view=home] .seh-choice{min-height:68px!important;padding:6px 9px!important}
+  #authScreen[data-seh-view=home] .seh-art{width:60px!important;height:60px!important;flex-basis:60px!important}
+  #authScreen[data-seh-view=home] .seh-register{margin-top:7px!important;padding:6px!important}
+  #authScreen[data-seh-view=home] .seh-foot{font-size:8px!important;padding-top:3px!important}
+}
+`;
+
 document.head.appendChild(st);
 const shell=document.createElement('div');
 shell.innerHTML='<div class="seh-top"><span>FITNESS SEH GALEH</span><span class="seh-tag">ورود امن اعضا</span></div><div class="seh-brand"><div class="seh-mark"><img src="./icon.svg" alt="نشان فیتنس سه‌قلعه"></div><h2>باشگاه فیتنس سه‌قلعه</h2><p>مربی من | همراه شما در مسیر تناسب اندام</p></div>'+
