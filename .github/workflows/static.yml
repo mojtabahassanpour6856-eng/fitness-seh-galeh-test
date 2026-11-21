@@ -8,6 +8,7 @@ permissions:
   pages: write
   id-token: write
 concurrency:
+  # Keep TEST Pages deployments serialized to avoid artifact/deployment races.
   group: "pages"
   cancel-in-progress: false
 jobs:
