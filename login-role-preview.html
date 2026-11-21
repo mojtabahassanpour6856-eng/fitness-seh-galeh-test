@@ -48,6 +48,16 @@ input:focus,textarea:focus{border-color:var(--gold)}
 .notice{display:none;margin-top:14px;padding:12px;border:1px solid #735d2c;border-radius:12px;color:#f2d78c;background:#201c11;font-size:12px;line-height:1.9}
 .notice.show{display:block}
 @media(max-width:480px){body{padding:8px 12px 9px}main{width:100%;max-width:430px}header{margin-bottom:8px}.logo{width:68px;height:68px;border-radius:22px;margin-bottom:7px}.brand{font-size:22px;margin-bottom:4px}.subtitle{font-size:10px}.welcome{margin:10px 0 9px}.eyebrow{font-size:10px}h1{font-size:18px;margin:5px 0}.welcome p{font-size:10px;line-height:1.55}.cards{gap:8px}.card{min-height:130px;border-radius:19px}.photo{right:11px;left:auto;top:50%;bottom:auto;transform:translateY(-50%);width:29%;height:100px;border-radius:14px}.caption{left:12px;right:auto;width:59%;padding:0}.caption h2{font-size:17px;margin-bottom:5px}.caption p{font-size:10px;line-height:1.55}.arrow{font-size:19px;margin-top:3px}.membership{margin-top:9px;padding:8px 10px;border-radius:14px}.membership p{font-size:10px}.link{font-size:11px;padding:5px}footer{font-size:9px;line-height:1.4;margin:8px 0 0}.panel{padding:18px}}@media(max-height:700px) and (max-width:480px){body{padding-top:5px;padding-bottom:5px}.logo{width:58px;height:58px;border-radius:18px;margin-bottom:5px}header{margin-bottom:5px}.brand{font-size:20px}.welcome{margin:7px 0}.card{min-height:116px}.photo{height:88px}.membership{margin-top:7px;padding:6px 8px}footer{margin-top:5px}}
+
+/* Premium background ornamentation: visual-only, no layout or scroll impact */
+body::before,body::after{content:"";position:fixed;pointer-events:none;z-index:0;width:150px;height:150px;opacity:.42}
+body::before{top:0;left:0;background:radial-gradient(circle at 0 0,#d8ae4920,transparent 65%),linear-gradient(135deg,transparent 48%,#d8ae4930 49%,transparent 50%),linear-gradient(45deg,transparent 48%,#d8ae4920 49%,transparent 50%);border-top:1px solid #d8ae4930;border-left:1px solid #d8ae4930;border-radius:0 0 100% 0}
+body::after{right:0;bottom:0;background:radial-gradient(circle at 100% 100%,#d8ae4918,transparent 68%),linear-gradient(135deg,transparent 48%,#d8ae4925 49%,transparent 50%),linear-gradient(45deg,transparent 48%,#d8ae4918 49%,transparent 50%);border-bottom:1px solid #d8ae4928;border-right:1px solid #d8ae4928;border-radius:100% 0 0 0}
+main{position:relative;z-index:1}
+footer{position:relative;padding-top:9px}
+footer::before{content:"";display:block;width:min(180px,48%);height:1px;margin:0 auto 8px;background:linear-gradient(90deg,transparent,#d8ae4960,#f2cf7240,transparent)}
+footer::after{content:"✦";display:block;color:#b9943d;opacity:.55;font-size:10px;line-height:1;margin-top:5px}
+@media(max-width:480px){body::before,body::after{width:105px;height:105px;opacity:.35}footer{padding-top:6px}footer::before{margin-bottom:5px}}
 </style></head>
 <body><main>
 <header><div class="logo"><img src="./icon.svg" alt="لوگوی فیتنس سه‌قلعه"></div><h2 class="brand">باشگاه فیتنس سه‌قلعه</h2><div class="subtitle">مربی من | همراه شما در مسیر تناسب اندام</div></header>
