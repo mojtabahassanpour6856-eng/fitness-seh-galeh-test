@@ -112,28 +112,47 @@ function moveRecovery(){const p=document.getElementById('sehRecoveryStudentPanel
 window.sehAuthNavigate=function(v){root.dataset.sehView=v;if(v==='recovery'&&!document.getElementById('sehRecoveryStudentPanel')){root.dataset.sehView='trainee';error.textContent='بخش بازیابی رمز هنوز بارگذاری نشده است؛ چند لحظه بعد دوباره تلاش کنید.';error.style.display='block';}else{error.style.display='none';}moveRecovery();};
 root.dataset.sehView='home';
 
-/* Fallback pull-to-refresh for mobile webviews where native overscroll refresh is unavailable. */
+/* Pull-to-refresh with a lightweight gold arc indicator; keeps the existing reload trigger. */
 (function(){
-  let startY=0,startX=0,armed=false;
+  let startY=0,startX=0,armed=false,drag=0;
   const threshold=105;
   const scrollTop=()=>Math.max(window.scrollY||0,document.documentElement.scrollTop||0,document.body.scrollTop||0,root.scrollTop||0);
+  const indicator=document.createElement('div');
+  indicator.id='sehPullRefreshIndicator';
+  indicator.setAttribute('aria-hidden','true');
+  indicator.innerHTML='<svg viewBox="0 0 36 36"><circle class="seh-pull-track" cx="18" cy="18" r="14"></circle><circle class="seh-pull-arc" cx="18" cy="18" r="14"></circle></svg>';
+  const style=document.createElement('style');
+  style.textContent='#sehPullRefreshIndicator{position:fixed;z-index:100001;top:calc(env(safe-area-inset-top,0px) + 9px);left:50%;width:38px;height:38px;margin-left:-19px;display:grid;place-items:center;border:1px solid #80631f66;border-radius:50%;background:#111923ed;box-shadow:0 4px 16px #0005;opacity:0;transform:translateY(-52px) scale(.82);pointer-events:none;transition:opacity .16s,transform .16s}#sehPullRefreshIndicator svg{width:27px;height:27px;transform:rotate(-90deg)}#sehPullRefreshIndicator circle{fill:none;stroke-width:3}#sehPullRefreshIndicator .seh-pull-track{stroke:#bda45c33}#sehPullRefreshIndicator .seh-pull-arc{stroke:#f4c64e;stroke-linecap:round;stroke-dasharray:88;stroke-dashoffset:88}#sehPullRefreshIndicator.seh-pull-visible{opacity:1;transform:translateY(0) scale(1)}#sehPullRefreshIndicator.seh-pull-ready{background:#302713;border-color:#e4b63d}#sehPullRefreshIndicator.seh-pull-spin svg{animation:sehPullSpin .7s linear infinite}#sehPullRefreshIndicator.seh-pull-spin .seh-pull-arc{stroke-dashoffset:24}@keyframes sehPullSpin{to{transform:rotate(270deg)}}';
+  document.head.appendChild(style);document.body.appendChild(indicator);
+  const arc=indicator.querySelector('.seh-pull-arc');
+  function reset(){drag=0;indicator.classList.remove('seh-pull-visible','seh-pull-ready','seh-pull-spin');arc.style.strokeDashoffset='88';}
   root.addEventListener('touchstart',function(e){
-    if(!e.touches||e.touches.length!==1){armed=false;return;}
+    if(!e.touches||e.touches.length!==1){armed=false;reset();return;}
     const target=e.target;
-    if(target&&target.closest&&target.closest('input,textarea,select,button,[contenteditable="true"]')){armed=false;return;}
+    if(target&&target.closest&&target.closest('input,textarea,select,button,[contenteditable="true"]')){armed=false;reset();return;}
     startY=e.touches[0].clientY;startX=e.touches[0].clientX;
     armed=scrollTop()<=2;
   },{passive:true});
+  root.addEventListener('touchmove',function(e){
+    if(!armed||!e.touches||e.touches.length!==1)return;
+    const dy=e.touches[0].clientY-startY,dx=Math.abs(e.touches[0].clientX-startX);
+    if(dy<=0||dx>70){reset();return;}
+    drag=Math.min(1,dy/threshold);
+    indicator.classList.add('seh-pull-visible');
+    indicator.classList.toggle('seh-pull-ready',drag>=1);
+    arc.style.strokeDashoffset=String(88-(88*drag));
+  },{passive:true});
   root.addEventListener('touchend',function(e){
-    if(!armed||!e.changedTouches||!e.changedTouches.length){armed=false;return;}
+    if(!armed||!e.changedTouches||!e.changedTouches.length){armed=false;reset();return;}
     const dy=e.changedTouches[0].clientY-startY;
     const dx=Math.abs(e.changedTouches[0].clientX-startX);
     armed=false;
     if(dy>=threshold&&dx<70&&scrollTop()<=2){
-      window.location.reload();
-    }
+      indicator.classList.add('seh-pull-visible','seh-pull-ready','seh-pull-spin');
+      setTimeout(()=>window.location.reload(),220);
+    }else reset();
   },{passive:true});
-  root.addEventListener('touchcancel',function(){armed=false;},{passive:true});
+  root.addEventListener('touchcancel',function(){armed=false;reset();},{passive:true});
 })();
 
 // Recovery is injected asynchronously into the original trainee form; watch the document, not the moved form.
