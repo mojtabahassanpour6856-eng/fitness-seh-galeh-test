@@ -62,6 +62,36 @@ st.textContent += `
 }
 `;
 
+
+/* Restore native page scrolling so Android browser pull-to-refresh can work. */
+st.textContent += `
+#authScreen{
+  position:relative!important;
+  inset:auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:100vh!important;
+  overflow:visible!important;
+  overscroll-behavior-y:auto!important;
+}
+#authScreen .auth-card{
+  height:auto!important;
+  min-height:100vh!important;
+  overflow:visible!important;
+}
+#authScreen[data-seh-view=home]{overflow:visible!important}
+#authScreen[data-seh-view=home] .auth-card{
+  height:auto!important;
+  min-height:100vh!important;
+  flex:initial!important;
+}
+#authScreen[data-seh-view=home] .auth-card>div:first-child{
+  flex:initial!important;
+  min-height:0!important;
+}
+html,body{min-height:100%!important;overscroll-behavior-y:auto!important}
+`;
+
 document.head.appendChild(st);
 const shell=document.createElement('div');
 shell.innerHTML='<div class="seh-top"><span>FITNESS SEH GALEH</span><span class="seh-tag">ورود امن اعضا</span></div><div class="seh-brand"><div class="seh-mark"><img src="./icon.svg" alt="نشان فیتنس سه‌قلعه"></div><h2>باشگاه فیتنس سه‌قلعه</h2><p>مربی من | همراه شما در مسیر تناسب اندام</p></div>'+
