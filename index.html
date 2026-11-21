@@ -441,10 +441,10 @@ body.locked{overflow:hidden!important}
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:10px;
+  gap:8px;
   min-width:0;
-  min-height:174px;
-  padding:10px;
+  min-height:124px;
+  padding:9px;
   border:1px solid #b99543;
   border-radius:16px;
   background:linear-gradient(155deg,#172433,#0b121c);
@@ -461,20 +461,22 @@ body.locked{overflow:hidden!important}
 }
 #authScreen #authTabs .seh-auth-role-photo{
   display:block;
-  width:100%;
-  height:126px;
+  width:72px;
+  height:72px;
+  max-width:72px;
   object-fit:cover;
   object-position:center;
-  border-radius:11px;
+  border-radius:12px;
   background:#182330;
+  border:1px solid rgba(240,198,91,.55);
 }
 #authScreen #authTabs>button span{display:block;text-align:center}
 @media(max-width:420px){
   #authScreen{padding:10px}
   #authScreen .auth-card{padding:16px}
   #authScreen #authTabs{gap:8px}
-  #authScreen #authTabs>button{min-height:145px;padding:8px;font-size:13px;gap:7px}
-  #authScreen #authTabs .seh-auth-role-photo{height:104px}
+  #authScreen #authTabs>button{min-height:112px;padding:8px;font-size:13px;gap:6px}
+  #authScreen #authTabs .seh-auth-role-photo{width:64px;height:64px;max-width:64px}
 }
 </style>
 
