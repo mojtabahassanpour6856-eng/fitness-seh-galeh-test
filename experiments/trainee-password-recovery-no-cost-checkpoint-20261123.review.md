@@ -37,3 +37,12 @@ The Mediana API contract audit also found that the published Pattern SMS example
 **CI candidate checks: PASS. Live TEST integration: NOT RUN. Limited-user release: NOT APPROVED.**
 
 Keep PR #15 Draft/unmerged and keep Edge Function v10 unchanged until the provider/UI mismatch and the remaining security gates are resolved. No paid infrastructure is required for further source review and disposable CI work.
+
+
+## Additional CI hardening added after this checkpoint
+
+- Added `experiments/ci/recovery-postgres-security-assertions.sql`.
+- Updated `.github/workflows/recovery-sql-compile.yml` to run it after all six RPC drafts compile and before lifecycle smoke tests.
+- The new assertion fails unless exactly six expected RPCs exist and each is owned by `postgres`, is `SECURITY DEFINER`, pins `search_path=""`, grants EXECUTE to `service_role`, denies it to `anon` and `authenticated`, and has no PUBLIC EXECUTE grant.
+- Workflow change commit: `7f7f377857029fac85b403472d707bc9260dee5a`.
+- The workflow run for this new commit has not yet been observed through the available run lookup. Therefore this added gate is **committed but not yet verified as passing**. Earlier run `45003962097` predates this new assertion and cannot be used as evidence for it.
