@@ -28,10 +28,11 @@ for i in $(seq 1 "$parallelism"); do
   psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT outcome FROM public.create_trainee_recovery_request('10000000-0000-4000-8000-000000000003','+989121234569')" > "$tmp/create.$i" &
 done
 wait
-created="$(grep -hxc 'created' "$tmp"/create.* || true)"
-already="$(grep -hxc 'already_open' "$tmp"/create.* || true)"
-if [[ "$created" -ne 1 || "$already" -ne $((parallelism-1)) ]]; then
-  echo "C01 failed: created=$created already_open=$already"
+created="$(awk '$0 == "created" { n++ } END { print n+0 }' "$tmp"/create.*)"
+already="$(awk '$0 == "already_open" { n++ } END { print n+0 }' "$tmp"/create.*)"
+create_results="$(cat "$tmp"/create.* | wc -l | tr -d ' ')"
+if [[ "$created" -ne 1 || "$already" -ne $((parallelism-1)) || "$create_results" -ne "$parallelism" ]]; then
+  echo "C01 failed: created=$created already_open=$already result_lines=$create_results"
   exit 1
 fi
 open_count="$(psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT count(*) FROM public.trainee_password_recovery_requests WHERE trainee_id='10000000-0000-4000-8000-000000000003' AND status IN ('pending','approved','processing')")"
@@ -53,10 +54,11 @@ for i in $(seq 1 "$parallelism"); do
   psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT accepted::text FROM public.record_trainee_recovery_failed_attempt('$wrong_request','$hash')" > "$tmp/wrong.$i" &
 done
 wait
-accepted="$(grep -hxc 'true' "$tmp"/wrong.* || true)"
-rejected="$(grep -hxc 'false' "$tmp"/wrong.* || true)"
-if [[ "$accepted" -ne 5 || "$rejected" -ne $((parallelism-5)) ]]; then
-  echo "C04 failed: accepted=$accepted rejected=$rejected"
+accepted="$(awk '$0 == "true" { n++ } END { print n+0 }' "$tmp"/wrong.*)"
+rejected="$(awk '$0 == "false" { n++ } END { print n+0 }' "$tmp"/wrong.*)"
+wrong_results="$(cat "$tmp"/wrong.* | wc -l | tr -d ' ')"
+if [[ "$accepted" -ne 5 || "$rejected" -ne $((parallelism-5)) || "$wrong_results" -ne "$parallelism" ]]; then
+  echo "C04 failed: accepted=$accepted rejected=$rejected result_lines=$wrong_results"
   exit 1
 fi
 wrong_state="$(psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT status || ':' || token_attempts::text || ':' || (token_hash IS NULL)::text || ':' || (token_expires_at IS NULL)::text FROM public.trainee_password_recovery_requests WHERE id='$wrong_request'")"
@@ -78,10 +80,11 @@ for i in $(seq 1 "$parallelism"); do
   psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT COALESCE((SELECT claimed::text FROM public.claim_trainee_recovery_code('$claim_request','$hash')), 'false')" > "$tmp/claim.$i" &
 done
 wait
-winners="$(grep -hxc 'true' "$tmp"/claim.* || true)"
-losers="$(grep -hxc 'false' "$tmp"/claim.* || true)"
-if [[ "$winners" -ne 1 || "$losers" -ne $((parallelism-1)) ]]; then
-  echo "C05 failed: winners=$winners losers=$losers"
+winners="$(awk '$0 == "true" { n++ } END { print n+0 }' "$tmp"/claim.*)"
+losers="$(awk '$0 == "false" { n++ } END { print n+0 }' "$tmp"/claim.*)"
+claim_results="$(cat "$tmp"/claim.* | wc -l | tr -d ' ')"
+if [[ "$winners" -ne 1 || "$losers" -ne $((parallelism-1)) || "$claim_results" -ne "$parallelism" ]]; then
+  echo "C05 failed: winners=$winners losers=$losers result_lines=$claim_results"
   exit 1
 fi
 claim_state="$(psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT status FROM public.trainee_password_recovery_requests WHERE id='$claim_request'")"
