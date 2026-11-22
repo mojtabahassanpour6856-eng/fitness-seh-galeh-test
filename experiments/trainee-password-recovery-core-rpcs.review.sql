@@ -15,6 +15,7 @@ SET search_path = ''
 AS $function$
 DECLARE
   v_active boolean;
+  v_changed_id uuid;
 BEGIN
   IF p_trainee_id IS NULL OR p_phone_normalized IS NULL OR p_phone_normalized !~ '^\+989[0-9]{9}$' THEN
     RETURN QUERY SELECT 'invalid'::text;
@@ -45,15 +46,24 @@ BEGIN
     RETURN;
   END IF;
 
+  -- Infer only the intended lifecycle unique index. This predicate must match
+  -- the widened TEST index (pending, approved, processing) before this RPC is enabled.
+  -- Avoid a broad unique_violation handler, which could mislabel an unrelated
+  -- constraint failure as an already-open request.
   INSERT INTO public.trainee_password_recovery_requests
     (trainee_id, phone_normalized, status)
-  VALUES (p_trainee_id, p_phone_normalized, 'pending');
+  VALUES (p_trainee_id, p_phone_normalized, 'pending')
+  ON CONFLICT (trainee_id)
+    WHERE status IN ('pending','approved','processing')
+  DO NOTHING
+  RETURNING id INTO v_changed_id;
+
+  IF v_changed_id IS NULL THEN
+    RETURN QUERY SELECT 'already_open'::text;
+    RETURN;
+  END IF;
 
   RETURN QUERY SELECT 'created'::text;
-EXCEPTION
-  WHEN unique_violation THEN
-    -- The partial unique index is the final invariant if a writer bypasses the lock convention.
-    RETURN QUERY SELECT 'already_open'::text;
 END;
 $function$;
 
@@ -170,7 +180,7 @@ GRANT EXECUTE ON FUNCTION public.claim_trainee_recovery_code(uuid, text) TO serv
 
 -- IMPORTANT REVIEW NOTES:
 -- 1. This is a draft, not parser-tested or database-tested. All lifecycle RPCs must preserve advisory-lock-then-row-lock ordering.
--- 2. Before use, review PL/pgSQL variable/column ambiguity and compile in an isolated local PostgreSQL instance. The approve RPC re-checks active status, auth_user_id, phone match, and coach ownership.
+-- 2. Before use, review PL/pgSQL variable/column ambiguity and compile in an isolated local PostgreSQL instance. The approve RPC re-checks active status, auth_user_id, phone match, and coach ownership. The create RPC now uses a targeted ON CONFLICT inference clause and requires the widened partial unique index to exist first.
 -- 3. Ensure the unique index covers pending, approved, processing before enabling these RPCs.
 -- 4. Approve RPC must not trust coach ID from client JSON; Edge Function supplies only auth.getUser() identity.
 -- 5. `claim` returns zero rows on failure; Edge Function must treat this as denied/reused/expired without leaking details.
