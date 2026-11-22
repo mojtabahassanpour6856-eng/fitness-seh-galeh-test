@@ -40,6 +40,7 @@ jobs:
       PGUSER: postgres
       PGPASSWORD: ci-only-password
       PGDATABASE: recovery_ci
+      PGOPTIONS: '-c plpgsql.extra_warnings=all -c plpgsql.extra_errors=all'
     steps:
       - uses: actions/checkout@v4
       - name: Initialize disposable fixture
