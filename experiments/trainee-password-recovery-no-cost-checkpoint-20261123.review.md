@@ -62,3 +62,17 @@ Cases asserted by the script:
 These are synthetic fixture results against disposable PostgreSQL only. They do not establish behavior of the currently deployed TEST Edge Function v10 or live Supabase schema.
 
 Current gate status: CI SQL/crypto/security/lifecycle/concurrency checks pass. Still outstanding: exact live TEST schema compatibility review, approved SMS provider contract and adapter, separate v11 Edge handler integration, HTTP/CORS/coach-auth tests in an isolated deployment, Auth ambiguity reconciliation, browser/device acceptance, and explicit approval before any TEST DB migration or Edge deployment.
+
+
+## Coach reassignment race fix and CI evidence — 2026-11-23
+
+Static review found a race in the draft approval RPC: it checked current coach ownership in an UPDATE join, but did not lock the trainee row. A coach reassignment could therefore race the approval statement's snapshot. The draft now locks the trainee row after the per-trainee advisory lock and before locking the recovery request, establishing lock order: advisory key -> trainee row -> recovery row. The ownership predicate is then evaluated in a subsequent SQL statement after any reassignment lock has resolved.
+
+Added C08 to the independent-session test script:
+- Session A locks the trainee row, waits, and reassigns the trainee to a different coach.
+- Session B concurrently attempts approval using the former coach identity.
+- Expected: approval waits for reassignment, then returns `not_pending_or_not_owned`; request remains pending and no delivery state is set.
+
+Workflow run `45068923073` (run #59), commit `b59cd602bf562d92d96e4d6f71969cba2e0cd88a`: **completed / success**. Both jobs passed; SQL compile, service-role ACL check, SECURITY DEFINER/search_path/owner assertions, lifecycle smoke tests, and all independent-session concurrency tests including C08 completed successfully.
+
+This validates the reviewed SQL draft against the disposable CI fixture only. It does not prove the exact live TEST schema or Edge Function integration.
