@@ -69,5 +69,7 @@ jobs:
       - name: Assert service-role-only RPC grants
         run: |
           psql -v ON_ERROR_STOP=1 -Atc "SELECT COALESCE(bool_and(has_function_privilege('service_role', p.oid, 'EXECUTE') AND NOT has_function_privilege('anon', p.oid, 'EXECUTE') AND NOT has_function_privilege('authenticated', p.oid, 'EXECUTE')), false) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND p.proname IN ('create_trainee_recovery_request','approve_and_queue_trainee_recovery','claim_trainee_recovery_code','record_trainee_recovery_failed_attempt','record_trainee_recovery_delivery_result','finish_trainee_recovery')" | grep -qx t
+      - name: Assert recovery RPC ownership, fixed search_path, and least-privilege ACLs
+        run: psql -v ON_ERROR_STOP=1 -f experiments/ci/recovery-postgres-security-assertions.sql
       - name: Run lifecycle smoke tests in disposable database
         run: psql -v ON_ERROR_STOP=1 -f experiments/ci/recovery-postgres-smoke-tests.sql
