@@ -59,6 +59,7 @@ begin
         and r.status = 'approved'
         and r.token_hash = p_expected_token_hash
         and r.token_expires_at > pg_catalog.clock_timestamp()
+        and r.delivery_state = 'sent'
         and r.token_attempts < 5
       returning r.token_attempts, r.status
     )
@@ -77,7 +78,7 @@ grant execute on function public.record_trainee_recovery_failed_attempt(uuid, te
   to service_role;
 
 -- Required Edge Function follow-up (not applied here):
--- 1. After a submitted code hash mismatches, call this RPC.
+-- 1. After a submitted code HMAC mismatches, call this RPC with the STORED expected HMAC fetched for this request (not the submitted wrong-code HMAC); the RPC is service_role-only and the expected hash guards against a stale token rotation.
 -- 2. If the RPC errors, return a safe 503; never fall back to a TypeScript counter.
 -- 3. If accepted=false, report the code as expired/invalid without disclosing state.
 -- 4. Change the correct-code claim predicate from token_attempts < 10 to < 5.
