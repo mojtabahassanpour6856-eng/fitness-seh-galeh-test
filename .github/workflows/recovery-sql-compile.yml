@@ -73,3 +73,5 @@ jobs:
         run: psql -v ON_ERROR_STOP=1 -f experiments/ci/recovery-postgres-security-assertions.sql
       - name: Run lifecycle smoke tests in disposable database
         run: psql -v ON_ERROR_STOP=1 -f experiments/ci/recovery-postgres-smoke-tests.sql
+      - name: Run independent-session concurrency tests (20 contenders)
+        run: bash experiments/ci/recovery-postgres-concurrency-tests.sh
