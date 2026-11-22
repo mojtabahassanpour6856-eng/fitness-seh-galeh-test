@@ -12,7 +12,7 @@ This checkpoint uses only the existing mirror repository and its existing Supaba
 - Recovery table aggregate status query returned one row in status `expired`; no request identifiers, phone numbers, or token hashes were selected.
 - The recovery table currently has the legacy columns only; the v11 delivery metadata columns are not present.
 - No Supabase development branches exist for this TEST project.
-- Mirror PR #15 remains open, Draft, and unmerged. Head: `e0ce88bd93fd374944f854543cb43eedfc5bd381`; base: `integration/full-app-mirror-20261115`.
+- Mirror PR #15 remains open, Draft, and unmerged. UI/source review was performed against head `e0ce88bd93fd374944f854543cb43eedfc5bd381`; this checkpoint was then committed as `a38a29cb49e39404f78c020452b782efd55df5fb` on the same PR branch. Base: `integration/full-app-mirror-20261115`.
 - Recovery SQL compile workflow run `45003962097` completed successfully. Both jobs passed: disposable PostgreSQL SQL compile/lifecycle smoke tests and isolated Deno crypto tests. This validates only the CI fixture, not the live TEST schema or deployed function.
 
 ## Critical product/provider mismatch
