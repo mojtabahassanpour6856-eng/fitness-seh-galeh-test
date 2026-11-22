@@ -19,6 +19,17 @@ permissions:
   contents: read
 
 jobs:
+  unit-test-recovery-crypto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Test isolated recovery v11 crypto primitives
+        run: deno test --no-check experiments/trainee-password-recovery-v11-security-primitives.review.test.ts
+
   compile-recovery-sql:
     runs-on: ubuntu-latest
     timeout-minutes: 15
