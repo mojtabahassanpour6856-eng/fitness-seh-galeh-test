@@ -96,7 +96,7 @@ BEGIN
 
   SELECT claimed INTO v_claimed
   FROM public.claim_trainee_recovery_code(v_request,v_hash);
-  IF v_claimed IS DISTINCT FROM false THEN RAISE EXCEPTION 'replayed claim unexpectedly succeeded'; END IF;
+  IF v_claimed IS NOT DISTINCT FROM true THEN RAISE EXCEPTION 'replayed claim unexpectedly succeeded'; END IF;
 
   SELECT completed INTO v_completed
   FROM public.finish_trainee_recovery(v_request,v_hash);
@@ -107,5 +107,5 @@ BEGIN
 
   SELECT completed INTO v_completed
   FROM public.finish_trainee_recovery(v_request,v_hash);
-  IF v_completed IS DISTINCT FROM false THEN RAISE EXCEPTION 'replayed finish unexpectedly succeeded'; END IF;
+  IF v_completed IS NOT DISTINCT FROM true THEN RAISE EXCEPTION 'replayed finish unexpectedly succeeded'; END IF;
 END $;
