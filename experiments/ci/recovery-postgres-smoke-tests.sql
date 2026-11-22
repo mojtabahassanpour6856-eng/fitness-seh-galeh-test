@@ -48,7 +48,7 @@ BEGIN
   FROM public.record_trainee_recovery_delivery_result(
     v_request,'20000000-0000-4000-8000-000000000099','failed'
   );
-  IF v_claimed IS DISTINCT FROM NULL THEN
+  IF v_claimed IS TRUE THEN
     RAISE EXCEPTION 'stale delivery attempt unexpectedly updated row';
   END IF;
 
@@ -96,7 +96,7 @@ BEGIN
 
   SELECT claimed INTO v_claimed
   FROM public.claim_trainee_recovery_code(v_request,v_hash);
-  IF v_claimed IS NOT DISTINCT FROM true THEN RAISE EXCEPTION 'replayed claim unexpectedly succeeded'; END IF;
+  IF v_claimed IS TRUE THEN RAISE EXCEPTION 'replayed claim unexpectedly succeeded'; END IF;
 
   SELECT completed INTO v_completed
   FROM public.finish_trainee_recovery(v_request,v_hash);
@@ -107,5 +107,5 @@ BEGIN
 
   SELECT completed INTO v_completed
   FROM public.finish_trainee_recovery(v_request,v_hash);
-  IF v_completed IS NOT DISTINCT FROM true THEN RAISE EXCEPTION 'replayed finish unexpectedly succeeded'; END IF;
-END $;
+  IF v_completed IS TRUE THEN RAISE EXCEPTION 'replayed finish unexpectedly succeeded'; END IF;
+END $$;
