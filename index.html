@@ -14348,7 +14348,7 @@ window.sehResetTurnstile=function(){};
       if(new_password!==repeat){message('sehRecoveryResetStatus','رمز جدید و تکرار آن یکسان نیستند.',false);return;}
       btn.disabled=true;btn.textContent='⏳ در حال ذخیره…';
       try{
-        const {data,error}=await client().functions.invoke('trainee-password-recovery',{body:{action:'reset',request_id,code,new_password}});
+        const {data,error}=await client().functions.invoke('trainee-password-recovery',{body:{action:'reset',request_id,phone,code,new_password}});
         if(error)throw error;if(data?.error)throw new Error(data.error);
         message('sehRecoveryResetStatus',data?.message||'رمز جدید ذخیره شد؛ اکنون وارد شوید.',true);
         $('traineePhoneLogin').value=$('sehRecoveryPhone').value;
