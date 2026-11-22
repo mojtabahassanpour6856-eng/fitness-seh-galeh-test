@@ -42,3 +42,14 @@ Missing final pieces include an explicit safe reconciliation RPC, request/reset 
 
 ## Explicit safety status
 No SQL function was created in Supabase, no migration was run, no Edge Function was deployed, no secret was read or changed, no SMS was sent, no password was changed, and no production file or database was modified.
+### F10 — Targeted ON CONFLICT is safer than a broad exception, but depends on the future index
+The create RPC was revised to use `ON CONFLICT (trainee_id) WHERE status IN ('pending','approved','processing') DO NOTHING RETURNING id`. This avoids catching unrelated unique violations as `already_open`. PostgreSQL supports inference of partial unique indexes when the conflict predicate matches the index predicate. This RPC must remain disabled until the widened partial unique index exists; against the current narrower index, a concurrent processing row is not protected by this target. See PostgreSQL INSERT documentation.
+
+### F11 — Delivery-result RPC needs stricter input/state contract review
+The delivery-result RPC uses a conditional update keyed by request ID, attempt UUID, approved status, and queued state, which prevents a late result from overwriting a later attempt. Before compile, add explicit argument validation and confirm that the table check permits only the intended values. Consider storing a provider correlation ID only after Mediana confirms its exact response field and privacy/retention requirements. Do not store full raw provider responses.
+
+### F12 — Finish RPC must not be treated as proof of Auth success
+The finish RPC itself cannot verify that Supabase Auth changed the password; it trusts the service-role Edge Function call. Keep it private to service_role and call only after a confirmed Auth success response. If the Auth result is ambiguous, do not call finish and do not reopen the request.
+
+### F13 — Request and reset rate limiting are not yet symmetric
+The v10 request path has a phone-keyed rate limit. Reset needs its own limit across phone/request and possibly source/IP dimensions, with privacy-preserving keyed hashes and generic responses. Avoid creating a new high-cardinality table or exposing registered-phone status. Confirm the intended policy and storage before implementation.
