@@ -16,7 +16,7 @@ AS $function$
 DECLARE
   v_active boolean;
 BEGIN
-  IF p_trainee_id IS NULL OR p_phone_normalized !~ '^\+989[0-9]{9}$' THEN
+  IF p_trainee_id IS NULL OR p_phone_normalized IS NULL OR p_phone_normalized !~ '^\+989[0-9]{9}$' THEN
     RETURN QUERY SELECT 'invalid'::text;
     RETURN;
   END IF;
@@ -71,8 +71,10 @@ SET search_path = ''
 AS $function$
 DECLARE
   v_trainee_id uuid;
+  v_changed_id uuid;
 BEGIN
   IF p_request_id IS NULL OR p_coach_user_id IS NULL OR p_attempt_id IS NULL
+     OR p_token_hmac IS NULL OR p_expires_at IS NULL
      OR p_token_hmac !~ '^[0-9a-f]{64}$'
      OR p_expires_at <= pg_catalog.clock_timestamp()
      OR p_expires_at > pg_catalog.clock_timestamp() + interval '20 minutes' THEN
@@ -109,9 +111,9 @@ BEGIN
     AND r.trainee_id = t.id
     AND t.coach_user_id = p_coach_user_id
     AND r.status = 'pending'
-  RETURNING r.id INTO p_request_id;
+  RETURNING r.id INTO v_changed_id;
 
-  IF p_request_id IS NULL THEN
+  IF v_changed_id IS NULL THEN
     RETURN QUERY SELECT 'not_pending_or_not_owned'::text, NULL::uuid;
     RETURN;
   END IF;
