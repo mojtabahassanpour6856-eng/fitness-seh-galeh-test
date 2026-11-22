@@ -46,3 +46,19 @@ Keep PR #15 Draft/unmerged and keep Edge Function v10 unchanged until the provid
 - The new assertion fails unless exactly six expected RPCs exist and each is owned by `postgres`, is `SECURITY DEFINER`, pins `search_path=""`, grants EXECUTE to `service_role`, denies it to `anon` and `authenticated`, and has no PUBLIC EXECUTE grant.
 - Workflow change commit: `7f7f377857029fac85b403472d707bc9260dee5a`.
 - The workflow run for this new commit has not yet been observed through the available run lookup. Therefore this added gate is **committed but not yet verified as passing**. Earlier run `45003962097` predates this new assertion and cannot be used as evidence for it.
+
+
+## Verified independent-session concurrency gate — 2026-11-23
+
+Added `experiments/ci/recovery-postgres-concurrency-tests.sh` and wired it into `.github/workflows/recovery-sql-compile.yml`. The script uses 20 independent `psql` processes per race against the disposable PostgreSQL service; it does not connect to Supabase.
+
+Workflow run `45068697240` (run #53), commit `a97b279ac34ff82688b1d45b0ba0da64488e65ff`: **completed / success**. Both jobs passed. In particular, the new concurrency step completed successfully after fixture setup, SQL compile, privilege assertions, and lifecycle smoke tests.
+
+Cases asserted by the script:
+- C01: 20 simultaneous request creations for one trainee -> exactly one `created`, 19 `already_open`, one open row.
+- C04: 20 simultaneous failed-attempt RPCs -> exactly five accepted increments, 15 rejected, final state `expired`, attempts=5, token hash and expiry cleared.
+- C05: 20 simultaneous correct-code claims -> exactly one winner, 19 losers, final state `processing`.
+
+These are synthetic fixture results against disposable PostgreSQL only. They do not establish behavior of the currently deployed TEST Edge Function v10 or live Supabase schema.
+
+Current gate status: CI SQL/crypto/security/lifecycle/concurrency checks pass. Still outstanding: exact live TEST schema compatibility review, approved SMS provider contract and adapter, separate v11 Edge handler integration, HTTP/CORS/coach-auth tests in an isolated deployment, Auth ambiguity reconciliation, browser/device acceptance, and explicit approval before any TEST DB migration or Edge deployment.
