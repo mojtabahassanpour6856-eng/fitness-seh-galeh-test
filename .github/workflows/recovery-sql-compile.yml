@@ -1,6 +1,7 @@
 name: Recovery SQL compile check
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - fix/trainee-password-recovery-ui-20261122
@@ -20,6 +21,7 @@ permissions:
 jobs:
   compile-recovery-sql:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       postgres:
         image: postgres:18
