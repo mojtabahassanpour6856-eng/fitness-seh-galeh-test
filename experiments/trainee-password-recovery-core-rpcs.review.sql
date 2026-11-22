@@ -105,7 +105,16 @@ BEGIN
 
   PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_trainee_id::text, 0));
 
-  -- Re-read and lock only after obtaining the advisory lock.
+  -- Serialize with a concurrent coach reassignment. Lock order is:
+  -- advisory trainee key -> trainee row -> recovery request row.
+  -- If reassignment commits first, the ownership check below sees the new coach;
+  -- if approval locks first, approval linearizes before the reassignment.
+  PERFORM 1
+  FROM public.trainees AS t
+  WHERE t.id = v_trainee_id
+  FOR UPDATE;
+
+  -- Re-read and lock the recovery request only after the trainee row is locked.
   SELECT r.trainee_id INTO v_trainee_id
   FROM public.trainee_password_recovery_requests AS r
   WHERE r.id = p_request_id
