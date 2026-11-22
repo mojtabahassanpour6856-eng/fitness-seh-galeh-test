@@ -27,8 +27,8 @@ Index catalog audit:
 
 - There are no current processing rows to reconcile before designing the widened invariant.
 - No duplicate open-request groups were found in this aggregate snapshot.
-- There is one approved request. Its token must be treated as potentially live; do not invalidate, inspect, or modify it as part of this audit.
-- Because one approved request exists, do not switch the Edge Function to HMAC validation until a coordinated cutover policy safely expires/reissues that outstanding token. No token mutation was performed.
+- There is one approved request, but an aggregate-only expiry check found its `token_expires_at` is already in the past. No token value, row ID, phone, or personal data was read.
+- The approved row is logically stale because its token is expired, but its status remains `approved`; the current request-creation logic may still treat it as open. A narrowly guarded reconciliation to `expired` and token clearing should be prepared as a separate TEST-only operation. No row mutation was performed.\n- HMAC cutover can be planned only after this stale row is safely reconciled; do not assume expiry timestamp alone changes status.
 - The current unique index is healthy but does not protect against a second open row while an existing request is in processing. The migration must widen its predicate only after a reviewed plan.
 
 ## Next safe step
