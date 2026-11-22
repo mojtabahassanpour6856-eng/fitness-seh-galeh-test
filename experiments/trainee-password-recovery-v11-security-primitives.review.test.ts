@@ -1,6 +1,7 @@
 import {
   equalRecoveryMac,
   generateRecoveryCode,
+  generateRecoveryCodeFrom,
   isCanonicalUuid,
   recoveryTokenHmac,
 } from "./trainee-password-recovery-v11-security-primitives.review.ts";
@@ -20,6 +21,42 @@ Deno.test("four-digit code generator preserves leading zeroes and range", () => 
     if (!/^\d{4}$/.test(code)) throw new Error(`invalid code shape: ${code}`);
     const value = Number(code);
     if (value < 0 || value > 9999) throw new Error(`out of range: ${code}`);
+  }
+});
+
+Deno.test("rejection sampling rejects the biased tail and accepts the exact boundary", () => {
+  const values = [0xffff_ffff, 4_294_960_000, 4_294_959_999];
+  let calls = 0;
+  const code = generateRecoveryCodeFrom(() => values[calls++]);
+  if (calls !== 3) throw new Error(`expected two rejected words then one accepted, got ${calls}`);
+  if (code !== "5999") throw new Error(`unexpected boundary code: ${code}`);
+
+  if (generateRecoveryCodeFrom(() => 0) !== "0000") {
+    throw new Error("zero must retain all leading zeroes");
+  }
+  let tailCalls = 0;
+  let rejected = false;
+  try {
+    generateRecoveryCodeFrom(() => {
+      tailCalls++;
+      if (tailCalls === 1) return 4_294_960_000;
+      throw new Error("tail value was rejected and another random word was requested");
+    });
+  } catch {
+    rejected = tailCalls === 2;
+  }
+  if (!rejected) throw new Error("rejection boundary was not enforced");
+});
+
+Deno.test("random source rejects values outside uint32", () => {
+  for (const invalid of [-1, 4_294_967_296, 1.5, Number.NaN]) {
+    let rejected = false;
+    try {
+      generateRecoveryCodeFrom(() => invalid);
+    } catch {
+      rejected = true;
+    }
+    if (!rejected) throw new Error(`invalid uint32 accepted: ${invalid}`);
   }
 });
 
