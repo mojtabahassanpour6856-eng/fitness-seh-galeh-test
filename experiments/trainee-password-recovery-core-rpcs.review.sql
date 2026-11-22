@@ -110,6 +110,9 @@ BEGIN
   WHERE r.id = p_request_id
     AND r.trainee_id = t.id
     AND t.coach_user_id = p_coach_user_id
+    AND t.approval_status = 'active'
+    AND t.auth_user_id IS NOT NULL
+    AND t.phone_normalized = r.phone_normalized
     AND r.status = 'pending'
   RETURNING r.id INTO v_changed_id;
 
@@ -155,7 +158,7 @@ GRANT EXECUTE ON FUNCTION public.claim_trainee_recovery_code(uuid, text) TO serv
 
 -- IMPORTANT REVIEW NOTES:
 -- 1. This is a draft, not parser-tested or database-tested.
--- 2. Before use, review PL/pgSQL variable/column ambiguity and compile in an isolated local PostgreSQL instance.
+-- 2. Before use, review PL/pgSQL variable/column ambiguity and compile in an isolated local PostgreSQL instance. The approve RPC re-checks active status, auth_user_id, phone match, and coach ownership.
 -- 3. Ensure the unique index covers pending, approved, processing before enabling these RPCs.
 -- 4. Approve RPC must not trust coach ID from client JSON; Edge Function supplies only auth.getUser() identity.
 -- 5. `claim` returns zero rows on failure; Edge Function must treat this as denied/reused/expired without leaking details.
