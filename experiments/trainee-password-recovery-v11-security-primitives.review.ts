@@ -18,17 +18,31 @@ export function isCanonicalUuid(value: unknown): value is string {
   return typeof value === "string" && UUID_RE.test(value);
 }
 
-/** Generate a uniform value in [0000, 9999], retaining leading zeroes. */
-export function generateRecoveryCode(): string {
+/**
+ * Generate from an injectable uint32 source so rejection-boundary behavior can
+ * be tested deterministically. The source is internal test plumbing; production
+ * must call generateRecoveryCode(), which supplies Web Crypto randomness.
+ */
+export function generateRecoveryCodeFrom(nextWord: () => number): string {
   const range = 0x1_0000_0000;
   const limit = Math.floor(range / 10_000) * 10_000;
-  const word = new Uint32Array(1);
   let value: number;
   do {
-    crypto.getRandomValues(word);
-    value = word[0];
+    value = nextWord();
+    if (!Number.isInteger(value) || value < 0 || value >= range) {
+      throw new Error("Random source must return an unsigned 32-bit integer");
+    }
   } while (value >= limit);
   return String(value % 10_000).padStart(4, "0");
+}
+
+/** Generate a uniform value in [0000, 9999], retaining leading zeroes. */
+export function generateRecoveryCode(): string {
+  const word = new Uint32Array(1);
+  return generateRecoveryCodeFrom(() => {
+    crypto.getRandomValues(word);
+    return word[0];
+  });
 }
 
 function decodeBase64Url(value: string): Uint8Array {
