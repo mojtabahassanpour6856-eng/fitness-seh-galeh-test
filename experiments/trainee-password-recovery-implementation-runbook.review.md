@@ -38,7 +38,7 @@ Add a durable delivery record/state without weakening existing RLS:
 - `delivery_attempt_id`: fresh UUID for each newly generated code/send attempt.
 - `delivery_started_at`, `delivery_updated_at`.
 - Optional provider request/message identifiers only after Mediana confirms the exact response contract and that pattern-send supplies usable identifiers.
-- Never store the plaintext code. Store only its hash.
+- Never store the plaintext code. Store only an HMAC-SHA-256 digest keyed by a dedicated server-side recovery pepper; the current plain SHA-256 digest of a four-digit code is not sufficient against offline brute force after database disclosure. Bind the digest to request ID and delivery attempt UUID. Keep rate-limit hashing separate.
 
 Migration must be additive and reversible. Preserve current constraints, indexes, owner, RLS policies, and service_role-only table access. Define backfill semantics explicitly; pre-existing approved rows must not be assumed delivered. Safest default is to make them ineligible for reset until reconciled or expired and reissued.
 
@@ -92,16 +92,16 @@ Implement and review the following operations as narrowly scoped database functi
 
 ## 4. Edge Function patch sequence
 
-1. Replace modulo-based code generation with rejection sampling over a uniformly distributed 0..9999 range.
-2. Keep phone normalization and generic request responses.
-3. Replace request pre-check + direct insert with `create_recovery_request`.
-4. For coach approval, call `approve_and_queue_recovery`; do not send before the durable queued state exists.
-5. Send the code only to the registered trainee number. Never return it or its hash to the coach.
-6. On a definite provider response, record sent/failed using request ID + attempt UUID. On timeout, network interruption, malformed/ambiguous response, or unknown provider result, record uncertain.
+1. Provision a dedicated TEST-only recovery pepper and replace plain recovery-code SHA-256 with HMAC-SHA-256 bound to request ID + attempt UUID; invalidate all old-format active tokens at cutover. Keep the rate-limit hash helper unchanged.\n2. Replace modulo-based code generation with rejection sampling over a uniformly distributed 0..9999 range.
+3. Keep phone normalization and generic request responses.
+4. Replace request pre-check + direct insert with `create_recovery_request`.
+5. For coach approval, call `approve_and_queue_recovery`; do not send before the durable queued state exists.
+6. Send the code only to the registered trainee number. Never return it or its hash to the coach.
+7. On a definite provider response, record sent/failed using request ID + attempt UUID. On timeout, network interruption, malformed/ambiguous response, or unknown provider result, record uncertain.
 7. Do not reset uncertain sends to pending. A later resend requires a new code/hash and new attempt UUID, with an explicit policy that invalidates the previous token and handles possible duplicate SMS.
-8. For wrong codes, call the atomic attempt RPC. For correct codes, call the atomic claim RPC and require delivery_state=sent.
-9. Update Auth password only after claim. Then finish/reconcile without allowing token reuse.
-10. Keep coach list restricted to pending requests belonging to that coach. Return no token, code, hash, or provider secrets.
+9. For wrong codes, call the atomic attempt RPC. For correct codes, call the atomic claim RPC and require delivery_state=sent.
+10. Update Auth password only after claim. Then finish/reconcile without allowing token reuse.
+11. Keep coach list restricted to pending requests belonging to that coach. Return no token, code, hash, or provider secrets.
 
 ## 5. Mediana contract gate — blocking
 
