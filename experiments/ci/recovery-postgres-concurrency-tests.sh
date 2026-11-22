@@ -13,13 +13,15 @@ psql -X -q -v ON_ERROR_STOP=1 <<'SQL'
 INSERT INTO auth.users(id) VALUES
  ('00000000-0000-4000-8000-000000000004'),
  ('00000000-0000-4000-8000-000000000005'),
- ('00000000-0000-4000-8000-000000000006')
+ ('00000000-0000-4000-8000-000000000006'),
+ ('00000000-0000-4000-8000-000000000007')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.trainees(id,approval_status,auth_user_id,phone_normalized,coach_user_id) VALUES
  ('10000000-0000-4000-8000-000000000003','active','00000000-0000-4000-8000-000000000004','+989121234569','00000000-0000-4000-8000-000000000001'),
  ('10000000-0000-4000-8000-000000000004','active','00000000-0000-4000-8000-000000000005','+989121234570','00000000-0000-4000-8000-000000000001'),
- ('10000000-0000-4000-8000-000000000005','active','00000000-0000-4000-8000-000000000006','+989121234571','00000000-0000-4000-8000-000000000001')
+ ('10000000-0000-4000-8000-000000000005','active','00000000-0000-4000-8000-000000000006','+989121234571','00000000-0000-4000-8000-000000000001'),
+ ('10000000-0000-4000-8000-000000000006','active','00000000-0000-4000-8000-000000000007','+989121234572','00000000-0000-4000-8000-000000000001')
 ON CONFLICT (id) DO NOTHING;
 SQL
 
@@ -90,3 +92,22 @@ fi
 claim_state="$(psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT status FROM public.trainee_password_recovery_requests WHERE id='$claim_request'")"
 [[ "$claim_state" == "processing" ]] || { echo "C05 failed: final state=$claim_state"; exit 1; }
 echo "C05 PASS: exactly one of $parallelism concurrent claims won"
+
+# C08: approval racing with coach reassignment must not be approved by the former coach.
+reassign_request="$(psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT outcome FROM public.create_trainee_recovery_request('10000000-0000-4000-8000-000000000006','+989121234572')")"
+[[ "$reassign_request" == "created" ]] || { echo "C08 setup failed: $reassign_request"; exit 1; }
+reassign_request="$(psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT id FROM public.trainee_password_recovery_requests WHERE trainee_id='10000000-0000-4000-8000-000000000006'")"
+reassign_attempt="20000000-0000-4000-8000-000000000005"
+
+# Session A owns the trainee row lock, then transfers the trainee to another coach.
+psql -X -qAt -v ON_ERROR_STOP=1 -c "BEGIN; SELECT id FROM public.trainees WHERE id='10000000-0000-4000-8000-000000000006' FOR UPDATE; SELECT pg_sleep(5); UPDATE public.trainees SET coach_user_id='00000000-0000-4000-8000-000000000007' WHERE id='10000000-0000-4000-8000-000000000006'; COMMIT" > "$tmp/reassignment.log" &
+reassign_pid=$!
+sleep 1
+
+# Session B attempts approval as the former coach. It must wait, then see reassignment.
+approval_outcome="$(psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT outcome FROM public.approve_and_queue_trainee_recovery('$reassign_request','$coach','$hash',clock_timestamp()+interval '10 minutes','$reassign_attempt')")"
+wait "$reassign_pid"
+[[ "$approval_outcome" == "not_pending_or_not_owned" ]] || { echo "C08 failed: former coach outcome=$approval_outcome"; exit 1; }
+reassign_state="$(psql -X -qAt -v ON_ERROR_STOP=1 -c "SELECT status || ':' || (delivery_state IS NULL)::text FROM public.trainee_password_recovery_requests WHERE id='$reassign_request'")"
+[[ "$reassign_state" == "pending:true" ]] || { echo "C08 failed: request state=$reassign_state"; exit 1; }
+echo "C08 PASS: former coach approval rejected after serialized reassignment"
