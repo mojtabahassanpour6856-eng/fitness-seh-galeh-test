@@ -29,7 +29,7 @@ Deno.test("rejection sampling rejects the biased tail and accepts the exact boun
   let calls = 0;
   const code = generateRecoveryCodeFrom(() => values[calls++]);
   if (calls !== 3) throw new Error(`expected two rejected words then one accepted, got ${calls}`);
-  if (code !== "5999") throw new Error(`unexpected boundary code: ${code}`);
+  if (code !== "9999") throw new Error(`unexpected boundary code: ${code}`);
 
   if (generateRecoveryCodeFrom(() => 0) !== "0000") {
     throw new Error("zero must retain all leading zeroes");
