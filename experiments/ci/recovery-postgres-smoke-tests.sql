@@ -23,8 +23,19 @@ BEGIN
   FROM public.create_trainee_recovery_request('10000000-0000-4000-8000-000000000001','+989121234567');
   IF v_outcome <> 'created' THEN RAISE EXCEPTION 'create expected created, got %',v_outcome; END IF;
 
+  SELECT outcome INTO v_outcome
+  FROM public.create_trainee_recovery_request('10000000-0000-4000-8000-000000000001','+989121234567');
+  IF v_outcome <> 'already_open' THEN RAISE EXCEPTION 'duplicate create expected already_open, got %',v_outcome; END IF;
+
   SELECT id INTO v_request FROM public.trainee_password_recovery_requests
   WHERE trainee_id='10000000-0000-4000-8000-000000000001';
+
+  SELECT outcome INTO v_outcome
+  FROM public.approve_and_queue_trainee_recovery(
+    v_request,'00000000-0000-4000-8000-000000000099',v_hash,
+    clock_timestamp()+interval '10 minutes',v_attempt
+  );
+  IF v_outcome <> 'not_pending_or_not_owned' THEN RAISE EXCEPTION 'wrong coach approval was not denied: %',v_outcome; END IF;
 
   SELECT outcome INTO v_outcome
   FROM public.approve_and_queue_trainee_recovery(
@@ -32,6 +43,14 @@ BEGIN
     clock_timestamp()+interval '10 minutes',v_attempt
   );
   IF v_outcome <> 'queued' THEN RAISE EXCEPTION 'approve expected queued, got %',v_outcome; END IF;
+
+  SELECT updated INTO v_claimed
+  FROM public.record_trainee_recovery_delivery_result(
+    v_request,'20000000-0000-4000-8000-000000000099','failed'
+  );
+  IF v_claimed IS NOT DISTINCT FROM NULL THEN
+    RAISE EXCEPTION 'stale delivery attempt unexpectedly updated row';
+  END IF;
 
   SELECT updated INTO v_claimed
   FROM public.record_trainee_recovery_delivery_result(v_request,v_attempt,'sent');
@@ -71,10 +90,22 @@ BEGIN
   FROM public.claim_trainee_recovery_code(v_request,v_hash);
   IF v_claimed IS DISTINCT FROM true THEN RAISE EXCEPTION 'claim failed'; END IF;
 
+  SELECT outcome INTO v_outcome
+  FROM public.create_trainee_recovery_request('10000000-0000-4000-8000-000000000002','+989121234568');
+  IF v_outcome <> 'already_open' THEN RAISE EXCEPTION 'create during processing expected already_open, got %',v_outcome; END IF;
+
+  SELECT claimed INTO v_claimed
+  FROM public.claim_trainee_recovery_code(v_request,v_hash);
+  IF v_claimed IS DISTINCT FROM false THEN RAISE EXCEPTION 'replayed claim unexpectedly succeeded'; END IF;
+
   SELECT completed INTO v_completed
   FROM public.finish_trainee_recovery(v_request,v_hash);
   IF v_completed IS DISTINCT FROM true THEN RAISE EXCEPTION 'finish failed'; END IF;
 
   IF NOT EXISTS (SELECT 1 FROM public.trainee_password_recovery_requests WHERE id=v_request AND status='completed' AND token_hash IS NULL)
   THEN RAISE EXCEPTION 'completed state not persisted'; END IF;
-END $$;
+
+  SELECT completed INTO v_completed
+  FROM public.finish_trainee_recovery(v_request,v_hash);
+  IF v_completed IS DISTINCT FROM false THEN RAISE EXCEPTION 'replayed finish unexpectedly succeeded'; END IF;
+END $;
