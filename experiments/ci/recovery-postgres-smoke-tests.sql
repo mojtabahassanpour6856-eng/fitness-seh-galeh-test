@@ -48,7 +48,7 @@ BEGIN
   FROM public.record_trainee_recovery_delivery_result(
     v_request,'20000000-0000-4000-8000-000000000099','failed'
   );
-  IF v_claimed IS NOT DISTINCT FROM NULL THEN
+  IF v_claimed IS DISTINCT FROM NULL THEN
     RAISE EXCEPTION 'stale delivery attempt unexpectedly updated row';
   END IF;
 
