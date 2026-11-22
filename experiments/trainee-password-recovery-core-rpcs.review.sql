@@ -82,6 +82,20 @@ BEGIN
     RETURN;
   END IF;
 
+  -- Read the trainee key without a row lock, then follow the global lock order:
+  -- advisory transaction lock first, row lock second.
+  SELECT r.trainee_id INTO v_trainee_id
+  FROM public.trainee_password_recovery_requests AS r
+  WHERE r.id = p_request_id;
+
+  IF v_trainee_id IS NULL THEN
+    RETURN QUERY SELECT 'not_found'::text, NULL::uuid;
+    RETURN;
+  END IF;
+
+  PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_trainee_id::text, 0));
+
+  -- Re-read and lock only after obtaining the advisory lock.
   SELECT r.trainee_id INTO v_trainee_id
   FROM public.trainee_password_recovery_requests AS r
   WHERE r.id = p_request_id
@@ -91,8 +105,6 @@ BEGIN
     RETURN QUERY SELECT 'not_found'::text, NULL::uuid;
     RETURN;
   END IF;
-
-  PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_trainee_id::text, 0));
 
   UPDATE public.trainee_password_recovery_requests AS r
   SET status = 'approved',
@@ -157,7 +169,7 @@ REVOKE ALL ON FUNCTION public.claim_trainee_recovery_code(uuid, text) FROM PUBLI
 GRANT EXECUTE ON FUNCTION public.claim_trainee_recovery_code(uuid, text) TO service_role;
 
 -- IMPORTANT REVIEW NOTES:
--- 1. This is a draft, not parser-tested or database-tested.
+-- 1. This is a draft, not parser-tested or database-tested. All lifecycle RPCs must preserve advisory-lock-then-row-lock ordering.
 -- 2. Before use, review PL/pgSQL variable/column ambiguity and compile in an isolated local PostgreSQL instance. The approve RPC re-checks active status, auth_user_id, phone match, and coach ownership.
 -- 3. Ensure the unique index covers pending, approved, processing before enabling these RPCs.
 -- 4. Approve RPC must not trust coach ID from client JSON; Edge Function supplies only auth.getUser() identity.
