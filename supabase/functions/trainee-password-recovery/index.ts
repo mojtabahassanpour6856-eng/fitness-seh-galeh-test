@@ -43,11 +43,11 @@ function randomFourDigitCode(): string {
     if (word < ceiling) return String(word % 10000).padStart(4, "0");
   }
 }
-async function hmacVerifier(code: string, requestId: string, traineeId: string): Promise<string> {
+async function hmacVerifier(code: string, requestId: string, traineeId: string, expiresAt: string): Promise<string> {
   const pepper = unb64url(requiredSecret("RECOVERY_HMAC_PEPPER_B64URL"));
   if (pepper.length < 32) throw new Error("pepper too short");
   const key = await crypto.subtle.importKey("raw", pepper, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  const signature = await crypto.subtle.sign("HMAC", key, enc.encode(["recovery-v1", requestId, traineeId, code].join("|")));
+  const signature = await crypto.subtle.sign("HMAC", key, enc.encode(["recovery-v1", requestId, traineeId, new Date(expiresAt).toISOString(), code].join("|")));
   return b64url(new Uint8Array(signature));
 }
 async function constantTimeEqual(a: string, b: string): Promise<boolean> {
@@ -90,6 +90,8 @@ function normalizeCode(value: unknown): string {
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "فقط POST مجاز است." }, 405);
+  // Explicit opt-in required even in the mirror environment. Missing flag means disabled.
+  if (Deno.env.get("RECOVERY_NO_SMS_ENABLED") !== "true") return json({ error: "این قابلیت هنوز فعال نشده است." }, 404);
   try {
     const url = Deno.env.get("SUPABASE_URL");
     const anon = Deno.env.get("SUPABASE_ANON_KEY");
@@ -161,7 +163,7 @@ Deno.serve(async (req: Request) => {
       const code = randomFourDigitCode();
       const expiresAt = new Date(Date.now() + CODE_TTL_MS).toISOString();
       const [verifier, envelope] = await Promise.all([
-        hmacVerifier(code, requestId, linked.id),
+        hmacVerifier(code, requestId, linked.id, expiresAt),
         encryptEnvelope(code, requestId, linked.id, expiresAt),
       ]);
       const { data: changed, error } = await admin.from("trainee_password_recovery_requests").update({
@@ -199,7 +201,7 @@ Deno.serve(async (req: Request) => {
       if (error || !row || row.status !== "approved" || !row.token_hash || !row.token_expires_at ||
           new Date(row.token_expires_at).getTime() <= Date.now() || Number(row.token_attempts) >= MAX_ATTEMPTS)
         return json({ error: "کد نامعتبر یا منقضی شده است." }, 400);
-      const candidate = await hmacVerifier(code, row.id, trainee.id);
+      const candidate = await hmacVerifier(code, row.id, trainee.id, row.token_expires_at);
       if (!(await constantTimeEqual(candidate, row.token_hash))) {
         const { error: attemptError } = await admin.rpc("record_trainee_recovery_failed_attempt_no_sms", {
           p_request_id: row.id, p_expected_verifier: row.token_hash,
