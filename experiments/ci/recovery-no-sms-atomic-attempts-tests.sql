@@ -57,6 +57,8 @@ BEGIN
   FROM public.record_trainee_recovery_failed_attempt_no_sms(
     '20000000-0000-4000-8000-000000000002',repeat('b',64));
   IF v_ok IS DISTINCT FROM false THEN RAISE EXCEPTION 'pending request must be rejected'; END IF;
+  DELETE FROM public.trainee_password_recovery_requests
+  WHERE id='20000000-0000-4000-8000-000000000002';
 
   INSERT INTO public.trainee_password_recovery_requests
     (id,trainee_id,phone_normalized,status,token_hash,token_expires_at,token_attempts)
@@ -70,13 +72,14 @@ BEGIN
   IF v_ok IS DISTINCT FROM false THEN RAISE EXCEPTION 'expired request must be rejected'; END IF;
 END $$;
 
-SELECT CASE WHEN
-  has_function_privilege('service_role',
-    'public.record_trainee_recovery_failed_attempt_no_sms(uuid,text)','EXECUTE')
-  AND NOT has_function_privilege('anon',
-    'public.record_trainee_recovery_failed_attempt_no_sms(uuid,text)','EXECUTE')
-  AND NOT has_function_privilege('authenticated',
-    'public.record_trainee_recovery_failed_attempt_no_sms(uuid,text)','EXECUTE')
-THEN 'PASS: service_role-only execute grant'
-ELSE pg_catalog.raise_exception('RPC execute grants are not least-privilege')
-END;
+DO $ BEGIN
+  IF NOT has_function_privilege('service_role',
+      'public.record_trainee_recovery_failed_attempt_no_sms(uuid,text)','EXECUTE')
+     OR has_function_privilege('anon',
+      'public.record_trainee_recovery_failed_attempt_no_sms(uuid,text)','EXECUTE')
+     OR has_function_privilege('authenticated',
+      'public.record_trainee_recovery_failed_attempt_no_sms(uuid,text)','EXECUTE') THEN
+    RAISE EXCEPTION 'RPC execute grants are not least-privilege';
+  END IF;
+END $;
+SELECT 'PASS: service_role-only execute grant';
