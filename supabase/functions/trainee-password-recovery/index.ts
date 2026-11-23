@@ -129,7 +129,7 @@ Deno.serve(async (req: Request) => {
 
     if (["request", "code", "reset"].includes(action)) {
       if (traineeError || !trainee) return json({ error: "حساب شاگرد فعال پیدا نشد." }, 403);
-      if (!trainee.phone_normalized || !/^\\+989[0-9]{9}$/.test(trainee.phone_normalized)) return json({ error: "شماره ثبت‌شده حساب معتبر نیست؛ با مربی تماس بگیرید." }, 409);
+      if (!trainee.phone_normalized || !/^\+989[0-9]{9}$/.test(trainee.phone_normalized)) return json({ error: "شماره ثبت‌شده حساب معتبر نیست؛ با مربی تماس بگیرید." }, 409);
     }
 
     if (action === "request") {
