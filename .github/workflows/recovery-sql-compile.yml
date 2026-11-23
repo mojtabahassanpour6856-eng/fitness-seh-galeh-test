@@ -5,11 +5,13 @@ on:
   push:
     branches:
       - fix/trainee-password-recovery-ui-20261122
+      - review/recovery-code-envelope-tests-20261123
     paths:
       - 'experiments/**'
       - '.github/workflows/recovery-sql-compile.yml'
   pull_request:
     branches:
+      - fix/trainee-password-recovery-ui-20261122
       - integration/full-app-mirror-20261115
     paths:
       - 'experiments/**'
@@ -29,6 +31,8 @@ jobs:
           deno-version: v2.x
       - name: Test isolated recovery v11 crypto primitives
         run: deno test --no-check experiments/trainee-password-recovery-v11-security-primitives.review.test.ts
+      - name: Test AES-GCM no-SMS code envelope
+        run: deno test --no-check experiments/trainee-password-recovery-code-envelope.review.test.ts
 
   compile-recovery-sql:
     runs-on: ubuntu-latest
@@ -75,3 +79,7 @@ jobs:
         run: psql -v ON_ERROR_STOP=1 -f experiments/ci/recovery-postgres-smoke-tests.sql
       - name: Run independent-session concurrency tests (20 contenders)
         run: bash experiments/ci/recovery-postgres-concurrency-tests.sh
+      - name: Compile and test no-SMS atomic attempts RPC
+        run: |
+          psql -v ON_ERROR_STOP=1 -f experiments/trainee-password-recovery-no-sms-atomic-attempts.review.sql
+          psql -v ON_ERROR_STOP=1 -f experiments/ci/recovery-no-sms-atomic-attempts-tests.sql
