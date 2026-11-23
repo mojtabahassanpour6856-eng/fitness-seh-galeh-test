@@ -2,11 +2,15 @@
 // No SMS/email/provider calls. Every action requires a valid Supabase user JWT.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
 
+const allowedOrigin = Deno.env.get("RECOVERY_ALLOWED_ORIGIN") ?? "";
 const cors = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": allowedOrigin,
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Content-Type": "application/json; charset=utf-8",
+  "Cache-Control": "no-store, max-age=0",
+  "Pragma": "no-cache",
+  "Vary": "Origin",
 };
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: cors });
@@ -82,12 +86,23 @@ async function decryptEnvelope(value: string, requestId: string, traineeId: stri
   if (!/^\d{4}$/.test(code)) throw new Error("invalid code payload");
   return code;
 }
+async function enforceRateLimit(admin: any, userId: string, action: string, windowSeconds: number, maxRequests: number): Promise<boolean> {
+  const digest = await crypto.subtle.digest("SHA-256", enc.encode(["recovery-v1", action, userId].join("|")));
+  const keyHash = hex(new Uint8Array(digest));
+  const { data, error } = await admin.rpc("consume_registration_rate_limit", {
+    p_key_hash: keyHash, p_window_seconds: windowSeconds, p_max_requests: maxRequests,
+  });
+  if (error) throw new Error("rate limit unavailable");
+  return data === true;
+}
 function normalizeCode(value: unknown): string {
   return String(value ?? "").trim()
     .replace(/[۰-۹]/g, d => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))
     .replace(/[٠-٩]/g, d => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)));
 }
 Deno.serve(async (req: Request) => {
+  const origin = req.headers.get("Origin") ?? "";
+  if (!allowedOrigin || (origin && origin !== allowedOrigin)) return new Response("origin not allowed", { status: 403, headers: { "Vary": "Origin" } });
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "فقط POST مجاز است." }, 405);
   // Explicit opt-in required even in the mirror environment. Missing flag means disabled.
@@ -177,6 +192,7 @@ Deno.serve(async (req: Request) => {
     }
 
     if (action === "code") {
+      if (!(await enforceRateLimit(admin, userId, "code", 300, 10))) return json({ error: "درخواست دریافت کد بیش از حد مجاز است." }, 429);
       const requestId = String(body?.request_id ?? "");
       if (!UUID.test(requestId)) return json({ error: "درخواست نامعتبر است." }, 400);
       const { data: row, error } = await admin.from("trainee_password_recovery_requests")
@@ -190,6 +206,7 @@ Deno.serve(async (req: Request) => {
     }
 
     if (action === "reset") {
+      if (!(await enforceRateLimit(admin, userId, "reset", 900, 5))) return json({ error: "تلاش برای تغییر رمز بیش از حد مجاز است." }, 429);
       const requestId = String(body?.request_id ?? "");
       const code = normalizeCode(body?.code);
       const password = String(body?.new_password ?? "");
