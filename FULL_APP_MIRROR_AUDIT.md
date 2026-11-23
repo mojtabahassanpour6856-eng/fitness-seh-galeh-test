@@ -55,15 +55,15 @@ Status: TEST-only integration branch; draft review; production untouched.
 - Latest integration-branch static/offline-preview workflow passed: run `43727512498` on commit `17c8bb8f314d6d93e91aa8fd20c54fc791f8b643`.
 - The test repository's current `main` Pages deployment succeeded earlier, but PR #7's full-app integration branch has not been merged or published. The existing Pages deployment is not proof that the full app mirror is live.
 
-## Secrets and provider configuration — still pending
-The Supabase connector used for this audit does not expose Edge Function secret values or a secret-inventory action. No secret values were read or printed. Source inspection shows these environment variable names are referenced:
-- Supabase runtime: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, `SUPABASE_PUBLISHABLE_KEY`.
-- Push: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`.
-- SMS: `SMSIR_API_KEY`, `SEND_SMS_HOOK_SECRET`.
-The TEST values and presence must be confirmed in the TEST project's Edge Function secrets before live SMS/push tests. Important provider mismatch to resolve: the current `send-sms` source calls `https://api.sms.ir/v1/send/verify` and expects `SMSIR_API_KEY`; verify/reconcile this with the selected FarazSMS provider before enabling SMS in TEST.
+## Secrets and provider configuration — scoped for the no-SMS release
+The current release scope explicitly excludes SMS. No SMS delivery, SMS reception, OTP flow, SMS credential setup, SMS provider alignment, or SMS-based recovery test is required for this release. Do not add or request `SMSIR_API_KEY`, `SEND_SMS_HOOK_SECRET`, FarazSMS credentials, or any other SMS secret. The old SMS function/configuration is parked for a possible future phase and must not be invoked by the current app flow.
 
-## Remaining QA gates
-1. Confirm TEST Edge Function secrets and decide the SMS provider alignment; never copy Production secret values.
-2. Run browser tests using only synthetic TEST coach/trainee accounts: registration, approval, login, password recovery, chat/push, nutrition plan save, Top Genesis upload/parse/publication, storage, and PWA install/update/offline.
-3. Reproduce registration error `42.1` with the exact browser response and matching Edge/PostgREST logs. The current TEST registration-request table is empty and no registration-request invocation appears in the recent function logs, so the failure has not yet been reproduced in this audit.
-4. Only after successful manual QA and explicit approval, consider merging PR #7 into TEST repository `main` to publish the full test mirror. Never merge this PR into the Production repository.
+The TEST Edge Function secret inventory is not readable through the connected audit tooling; no secret values were read or printed. Runtime secrets needed by the non-SMS flows still require a TEST-only presence check through the project dashboard/authorized secret inventory. Never copy Production secret values. Push secrets (`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`) are relevant only if push notifications remain in the release scope and are explicitly tested.
+
+## Remaining QA gates — no SMS
+1. Verify the TEST-only runtime secrets required for password-based login, registration, app data, storage, and any enabled push feature. Do not read, copy, or expose secret values in code or chat.
+2. Confirm the login UI is the previously approved pre-SMS design: separate coach/trainee cards, mobile number plus password, sign-in, forgot-password entry, and registration. No OTP field, SMS instruction, or send-code action should appear. Forgot-password behavior must not imply SMS delivery; keep it disabled or provide only the currently implemented safe path until a non-SMS reset method is explicitly approved.
+3. Run browser tests using only synthetic TEST coach/trainee accounts: registration, approval, password login, app session restoration, chat/push if included, nutrition plan save, Top Genesis upload/parse/publication, storage, and PWA install/update/offline.
+4. Reproduce registration error `42.1` with the exact browser response and matching Edge/PostgREST logs. The current TEST registration-request table was empty at the prior audit and no matching function invocation was seen; this remains unverified.
+5. Verify the support/contact experience and its response ownership before public release. If a ticket/report feature is intended, its exact scope and data handling must be approved before implementation.
+6. Only after successful manual QA and explicit approval, consider merging PR #7 into TEST repository `main` to publish the full test mirror. Never merge this PR into the Production repository.
