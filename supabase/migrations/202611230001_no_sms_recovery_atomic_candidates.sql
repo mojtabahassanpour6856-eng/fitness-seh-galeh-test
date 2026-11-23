@@ -15,6 +15,12 @@ alter table public.trainee_password_recovery_requests
   add constraint trainee_password_recovery_requests_token_attempts_check
   check (token_attempts >= 0 and token_attempts <= 5);
 
+// A request in processing must continue to block a second open request for this trainee.
+drop index if exists public.trainee_password_recovery_one_open_request_per_trainee;
+create unique index trainee_password_recovery_one_open_request_per_trainee
+  on public.trainee_password_recovery_requests (trainee_id)
+  where status in ('pending', 'approved', 'processing');
+
 comment on column public.trainee_password_recovery_requests.code_envelope is
   'AES-256-GCM envelope for displaying the approved recovery code only to its authenticated trainee; never expose to coach or client logs.';
 
