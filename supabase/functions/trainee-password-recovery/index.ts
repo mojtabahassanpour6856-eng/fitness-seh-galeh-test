@@ -16,6 +16,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 const CODE_TTL_MS = 24 * 60 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
 
+function hex(bytes: Uint8Array): string { return Array.from(bytes, b => b.toString(16).padStart(2, "0")).join(""); }
 function b64url(bytes: Uint8Array): string {
   let binary = "";
   for (const byte of bytes) binary += String.fromCharCode(byte);
@@ -111,10 +112,11 @@ Deno.serve(async (req: Request) => {
 
     if (["request", "code", "reset"].includes(action)) {
       if (traineeError || !trainee) return json({ error: "حساب شاگرد فعال پیدا نشد." }, 403);
+      if (!trainee.phone_normalized || !/^\\+989[0-9]{9}$/.test(trainee.phone_normalized)) return json({ error: "شماره ثبت‌شده حساب معتبر نیست؛ با مربی تماس بگیرید." }, 409);
     }
 
     if (action === "request") {
-      const rateKey = b64url(new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode("recovery-request|" + userId))));
+      const rateKey = hex(new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode("recovery-request|" + userId))));
       const { data: allowed, error: rateError } = await admin.rpc("consume_registration_rate_limit", {
         p_key_hash: rateKey, p_window_seconds: 3600, p_max_requests: 3,
       });
@@ -199,9 +201,10 @@ Deno.serve(async (req: Request) => {
         return json({ error: "کد نامعتبر یا منقضی شده است." }, 400);
       const candidate = await hmacVerifier(code, row.id, trainee.id);
       if (!(await constantTimeEqual(candidate, row.token_hash))) {
-        await admin.rpc("record_trainee_recovery_failed_attempt_no_sms", {
+        const { error: attemptError } = await admin.rpc("record_trainee_recovery_failed_attempt_no_sms", {
           p_request_id: row.id, p_expected_verifier: row.token_hash,
         });
+        if (attemptError) return json({ error: "ثبت تلاش ناموفق ممکن نشد؛ دوباره تلاش نکنید و با مربی تماس بگیرید." }, 503);
         return json({ error: "کد بازیابی نادرست است." }, 400);
       }
       const { data: claimed, error: claimError } = await admin.rpc("claim_trainee_recovery_code_no_sms", {
