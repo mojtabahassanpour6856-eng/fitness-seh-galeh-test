@@ -14963,14 +14963,17 @@ window.sehResetTurnstile=function(){};
   const CLAIM_KEY='seh_trainee_recovery_claim_v1';
   function b64url(bytes){let s='';for(const b of bytes)s+=String.fromCharCode(b);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/g,'');}
   function currentClaim(){
-    try{const x=JSON.parse(sessionStorage.getItem(CLAIM_KEY)||'null');return x&&typeof x.request_id==='string'&&typeof x.claim_token==='string'?x:null;}catch(_){return null;}
+    try{const x=JSON.parse(sessionStorage.getItem(CLAIM_KEY)||'null');return x&&typeof x.request_id==='string'&&typeof x.claim_token==='string'&&typeof x.phone==='string'?x:null;}catch(_){return null;}
   }
-  function createClaim(){
+  function createClaim(phone){
     const bytes=crypto.getRandomValues(new Uint8Array(32));
-    const claim={request_id:crypto.randomUUID(),claim_token:b64url(bytes)};
+    const claim={request_id:crypto.randomUUID(),claim_token:b64url(bytes),phone};
     sessionStorage.setItem(CLAIM_KEY,JSON.stringify(claim));return claim;
   }
-  function recoveryClaim(){return currentClaim()||createClaim();}
+  function recoveryClaim(phone){
+    const existing=currentClaim();
+    return existing&&existing.phone===phone?existing:createClaim(phone);
+  }
   function clearRecoveryClaim(){try{sessionStorage.removeItem(CLAIM_KEY);}catch(_){}}
   async function invokePreauth(body){return await client().functions.invoke('trainee-password-recovery-preauth',{body});}
   function addStudentRecovery(){
@@ -15010,7 +15013,7 @@ window.sehResetTurnstile=function(){};
       if(!client()?.functions?.invoke){message('sehRecoveryRequestStatus','ارتباط با سامانه آماده نیست؛ صفحه را تازه‌سازی کنید.',false);return;}
       btn.disabled=true;btn.textContent='⏳ در حال ارسال…';
       try{
-        const claim=recoveryClaim();
+        const claim=recoveryClaim(phone);
         const {data,error}=await invokePreauth({action:'request',phone,request_id:claim.request_id,claim_token:claim.claim_token});
         if(error)throw error;if(data?.error)throw new Error(data.error);
         message('sehRecoveryRequestStatus',data?.message||'درخواست ارسال شد. پس از بررسی مربی پیگیری کنید.',true);
