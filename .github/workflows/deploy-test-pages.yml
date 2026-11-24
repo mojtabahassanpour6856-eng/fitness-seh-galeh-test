@@ -45,7 +45,6 @@ jobs:
       - name: Deploy TEST app to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
-        with:
       - name: Verify published TEST site
         env:
           PAGES_URL: ${{ steps.deployment.outputs.page_url }}
