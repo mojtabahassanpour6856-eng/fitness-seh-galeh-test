@@ -19,10 +19,11 @@ jobs:
     steps:
       - name: Checkout TEST integration branch
         uses: actions/checkout@v4
-      - name: Hide legacy login until redesigned entry screen is ready
+      - name: Keep legacy login hidden and run redesigned entry screen last
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           page = Path('index.html')
           html = page.read_text(encoding='utf-8')
           guard = '''<style id="seh-auth-first-paint">#authScreen{visibility:hidden!important}</style><script>(function(){window.setTimeout(function(){var e=document.getElementById('authScreen');if(e&&!e.dataset.sehReady){var g=document.getElementById('seh-auth-first-paint');if(g)g.remove();e.style.visibility='visible';}},8000);})();</script>'''
@@ -30,16 +31,20 @@ jobs:
               if '<head>' not in html:
                   raise SystemExit('index.html has no opening head tag')
               html = html.replace('<head>', '<head>' + guard, 1)
-          # Run the redesigned entry screen immediately after its source DOM exists,
-          # rather than waiting until the very end of this large legacy single-page file.
-          marker = '</div>\n<div class="page">'
-          early = '<script id="seh-auth-redesign-early" src="./auth-preview/connected-auth.js?v=20261124-early1"></script>\n'
-          if 'seh-auth-redesign-early' not in html:
-              if marker not in html:
-                  raise SystemExit('Could not locate the end of the login screen for early initializer')
-              html = html.replace(marker, '</div>\n' + early + '<div class="page">', 1)
+          # The legacy app initializes/rebuilds authTabs late in its large script.
+          # Remove any earlier injected copy and move the closing tags after every
+          # legacy script, then run the redesign as the final executable script.
+          html = re.sub(r'<script\\s+id="seh-auth-redesign-(?:early|final)"[^>]*>\\s*</script>', '', html, flags=re.I)
+          closing = re.search(r'</body\\s*>\\s*</html\\s*>', html, flags=re.I)
+          if not closing:
+              raise SystemExit('Could not locate closing body/html tags')
+          html = html[:closing.start()] + html[closing.end():]
+          final_script = '<script id="seh-auth-redesign-final" src="./auth-preview/connected-auth.js?v=20261124-final2"></script>\\n'
+          html = html.rstrip() + '\\n' + final_script + '</body></html>\\n'
+          if html.rfind('seh-auth-redesign-final') < html.rfind('seh-session-accessor-terminal-override-v2'):
+              raise SystemExit('Redesigned auth script was not placed after the legacy terminal scripts')
           page.write_text(html, encoding='utf-8')
-          print('Prepared early redesigned login initializer in TEST artifact.')
+          print('Prepared final auth initializer after all legacy scripts; first-paint guard remains active.')
           PY
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -93,10 +98,26 @@ jobs:
           grep -Fq '<title>فیتنس سه‌قلعه</title>' "$body"
           grep -Fq 'FITNESS SEH GALEH' "$body"
           grep -Fq 'auth-preview/connected-auth.js' "$body"
-          grep -Fq 'seh-auth-redesign-early' "$body"
+          grep -Fq 'seh-auth-redesign-final' "$body"
+          if grep -Fq 'seh-auth-redesign-early' "$body"; then
+            echo "::error::An early auth initializer is still present"
+            exit 1
+          fi
+          python - "$body" <<'PY'
+          import sys
+          from pathlib import Path
+          html = Path(sys.argv[1]).read_text(encoding='utf-8')
+          final = html.rfind('seh-auth-redesign-final')
+          legacy = html.rfind('seh-session-accessor-terminal-override-v2')
+          if final <= legacy:
+              raise SystemExit('Final redesigned auth initializer does not follow legacy scripts')
+          if html.count('seh-auth-redesign-final') != 1:
+              raise SystemExit('Expected exactly one final auth initializer')
+          print('PASS: redesigned auth initializer is last, after all legacy scripts.')
+          PY
           auth_js="$(mktemp)"
           trap 'rm -f "$body" "$auth_js"' EXIT
-          auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js" || true)"
+          auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js?v=20261124-final2" || true)"
           if [ "$auth_status" != "200" ]; then
             echo "::error::Connected login redesign JS failed to load (HTTP ${auth_status:-no response})"
             exit 1
@@ -116,4 +137,4 @@ jobs:
             echo "::error::Production Supabase ref was found in the deployed TEST HTML"
             exit 1
           fi
-          echo "PASS: deployed TEST app returned HTTP 200 and contains TEST-only branding and Supabase reference."
+          echo "PASS: deployed TEST app returned HTTP 200, uses TEST-only Supabase, and runs redesigned auth last."
