@@ -41,7 +41,7 @@ jobs:
       - name: Test definitive versus ambiguous Auth errors
         run: deno test --no-check experiments/trainee-password-recovery-auth-error-classification.test.ts
       - name: Type-check recovery Edge Function and orchestration tests
-        run: deno check supabase/functions/trainee-password-recovery/index.ts experiments/trainee-password-recovery-auth-reconciliation.test.ts
+        run: deno check supabase/functions/trainee-password-recovery/index.ts experiments/trainee-password-recovery-auth-reconciliation.test.ts experiments/trainee-password-recovery-auth-error-classification.test.ts
 
 
   candidate-auth-reconciliation:
