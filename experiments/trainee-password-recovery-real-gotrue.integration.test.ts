@@ -41,6 +41,25 @@ Deno.test("real local GoTrue: admin password update invalidates old password and
     });
     assert(!oldLoginBefore.error && oldLoginBefore.data.user?.id === userId,
       "original disposable password must authenticate before reset");
+    await publicClient.auth.signOut();
+
+    // Exercise the real GoTrue definitive-rejection case used by the reset
+    // orchestrator: a weak password must be rejected before any mutation.
+    const weakPassword = await admin.auth.admin.updateUserById(userId, { password: "x" });
+    assert(Boolean(weakPassword.error), "real GoTrue must reject a weak password");
+    assert(weakPassword.error?.name === "AuthWeakPasswordError" &&
+      weakPassword.error?.code === "weak_password" &&
+      weakPassword.error?.status === 422,
+      "real GoTrue weak-password rejection must retain the pinned SDK's structured error contract");
+
+    const oldLoginAfterWeakRejection = await publicClient.auth.signInWithPassword({
+      email,
+      password: oldPassword,
+    });
+    assert(!oldLoginAfterWeakRejection.error &&
+      oldLoginAfterWeakRejection.data.user?.id === userId,
+      "weak-password rejection must leave the original password unchanged");
+    await publicClient.auth.signOut();
 
     const changed = await admin.auth.admin.updateUserById(userId, { password: newPassword });
     assert(!changed.error && changed.data.user?.id === userId,
