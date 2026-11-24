@@ -36,6 +36,8 @@ jobs:
         run: deno test --no-check experiments/trainee-password-recovery-v11-security-primitives.review.test.ts
       - name: Test AES-GCM no-SMS code envelope
         run: deno test --no-check experiments/trainee-password-recovery-code-envelope.review.test.ts
+      - name: Test delayed Auth completion and fail-closed retry barrier
+        run: deno test --no-check experiments/trainee-password-recovery-auth-reconciliation.test.ts
 
 
   candidate-auth-reconciliation:
