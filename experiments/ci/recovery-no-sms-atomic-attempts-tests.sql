@@ -1,5 +1,5 @@
 -- Disposable PostgreSQL functional test for the no-SMS attempt counter.
-\\set ON_ERROR_STOP on
+\set ON_ERROR_STOP on
 INSERT INTO auth.users(id) VALUES ('00000000-0000-4000-8000-000000000001');
 INSERT INTO public.trainees(id,approval_status,auth_user_id,phone_normalized,coach_user_id)
 VALUES ('10000000-0000-4000-8000-000000000001','active',
@@ -52,7 +52,7 @@ BEGIN
   VALUES
     ('20000000-0000-4000-8000-000000000002',
      '10000000-0000-4000-8000-000000000001','+989121234567','pending',
-     repeat('b',64),clock_timestamp()+interval '24 hours',0);
+     NULL,NULL,0);
   SELECT accepted INTO v_ok
   FROM public.record_trainee_recovery_failed_attempt_no_sms(
     '20000000-0000-4000-8000-000000000002',repeat('b',64));
