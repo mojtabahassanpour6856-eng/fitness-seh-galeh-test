@@ -126,6 +126,14 @@ try {
   assert(!claimExpireError, "could not prepare claim-expiry fixture");
   const expiredClaim = await post(preauthFunctionUrl, { action: "code", ...claimC });
   assert(expiredClaim.status === 400, "expired browser claim was accepted");
+  const claimD = randomClaim();
+  const requestD = await post(preauthFunctionUrl, { action: "request", phone: "+989120000012", ...claimD });
+  assert(requestD.status === 202, "fresh request after expiry was not accepted");
+  const { data: freshRow, error: freshError } = await admin.from("trainee_password_recovery_requests")
+    .select("status,claim_token_hash").eq("id", claimD.request_id).single();
+  assert(!freshError && freshRow.status === "pending" && !!freshRow.claim_token_hash,
+    "stale request was not expired and replaced");
+
 
   console.log("PASS: pre-auth no-JWT request/code/reset, account-enumeration response, browser claim isolation, coach JWT/ownership, code secrecy, real GoTrue reset, replay block, five-attempt lockout, and claim expiry.");
 } finally {
