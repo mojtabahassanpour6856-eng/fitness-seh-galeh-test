@@ -26,7 +26,7 @@ jobs:
           import re
           page = Path('index.html')
           html = page.read_text(encoding='utf-8')
-          guard = '''<style id="seh-auth-first-paint">html,body{background:#070b11!important}body:before{content:"";position:fixed;inset:0;background:#070b11;z-index:2147483647}#authScreen{visibility:hidden!important}</style><script>(function(){window.setTimeout(function(){var e=document.getElementById('authScreen');if(e&&!e.dataset.sehReady){document.documentElement.dataset.sehAuthLoadError='true';document.body.style.setProperty('--seh-auth-load-error','"صفحه ورود بارگذاری نشد؛ لطفاً دوباره تلاش کنید."');}},12000);})();</script>'''
+          guard = '''<style id="seh-auth-first-paint">html,body{background:#070b11!important}body:before{content:"";position:fixed;inset:0;background:#070b11;z-index:2147483647}#authScreen{visibility:hidden!important}html[data-seh-auth-load-error="true"] body:before{content:"صفحه ورود بارگذاری نشد؛ لطفاً صفحه را دوباره بارگذاری کنید.";display:grid;place-items:center;color:#f7f8fa;text-align:center;padding:24px;direction:rtl}</style><script>(function(){window.setTimeout(function(){var e=document.getElementById('authScreen');if(e&&!e.dataset.sehReady){document.documentElement.dataset.sehAuthLoadError='true';document.body.style.setProperty('--seh-auth-load-error','"صفحه ورود بارگذاری نشد؛ لطفاً دوباره تلاش کنید."');}},12000);})();</script>'''
           if 'seh-auth-first-paint' not in html:
               if '<head>' not in html:
                   raise SystemExit('index.html has no opening head tag')
