@@ -267,6 +267,8 @@ Deno.serve(async (req: Request) => {
         return json({ error: "نتیجه تلاش قبلی برای تغییر رمز نامشخص است؛ درخواست جدیدی ارسال نمی‌شود. با پشتیبانی باشگاه تماس بگیرید." }, 409);
       if (resetResult.kind === "invalid")
         return json({ error: "کد یا مهلت بازیابی معتبر نیست." }, 409);
+      if (resetResult.kind === "auth_rejected" && resetResult.leaseReleaseFailed)
+        return json({ error: "رمز پیشنهادی پذیرفته نشد، اما آزادسازی امن درخواست تأیید نشد؛ فعلاً دوباره تلاش نکنید و با پشتیبانی باشگاه تماس بگیرید." }, 503);
       if (resetResult.kind === "auth_rejected")
         return json({ error: "سامانه احراز هویت رمز پیشنهادی را نپذیرفت؛ رمز دیگری انتخاب کنید و دوباره تلاش کنید." }, 400);
       if (resetResult.kind === "auth_unknown")
