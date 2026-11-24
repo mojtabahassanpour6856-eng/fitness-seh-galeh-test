@@ -116,9 +116,14 @@ try {
   await post(preauthFunctionUrl, { action: "request", phone: "+989120000012", ...claimC });
   const approvalC = await post(coachFunctionUrl, { action: "review", request_id: claimC.request_id, decision: "approve" }, coachB.accessToken);
   assert(approvalC.status === 200, "third request approval failed");
-  const { error: expireError } = await admin.from("trainee_password_recovery_requests")
+  const { error: codeExpireError } = await admin.from("trainee_password_recovery_requests")
+    .update({ token_expires_at: new Date(Date.now() - 1000).toISOString() }).eq("id", claimC.request_id);
+  assert(!codeExpireError, "could not prepare code-expiry fixture");
+  const expiredCode = await post(preauthFunctionUrl, { action: "code", ...claimC });
+  assert(expiredCode.status === 404, "expired 15-minute recovery code was returned");
+  const { error: claimExpireError } = await admin.from("trainee_password_recovery_requests")
     .update({ claim_expires_at: new Date(Date.now() - 1000).toISOString() }).eq("id", claimC.request_id);
-  assert(!expireError, "could not prepare expiry fixture");
+  assert(!claimExpireError, "could not prepare claim-expiry fixture");
   const expiredClaim = await post(preauthFunctionUrl, { action: "code", ...claimC });
   assert(expiredClaim.status === 400, "expired browser claim was accepted");
 
