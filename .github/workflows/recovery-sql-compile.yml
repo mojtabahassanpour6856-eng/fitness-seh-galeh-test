@@ -129,3 +129,42 @@ jobs:
         run: |
           psql -v ON_ERROR_STOP=1 -f experiments/trainee-password-recovery-no-sms-atomic-attempts.review.sql
           psql -v ON_ERROR_STOP=1 -f experiments/ci/recovery-no-sms-atomic-attempts-tests.sql
+
+  real-local-gotrue-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Create isolated local Supabase project directory
+        run: |
+          mkdir -p "${RUNNER_TEMP}/recovery-auth-local"
+          cd "${RUNNER_TEMP}/recovery-auth-local"
+          supabase init
+      - name: Start disposable local Supabase stack (includes real GoTrue)
+        working-directory: ${{ runner.temp }}/recovery-auth-local
+        run: supabase start
+      - name: Verify local Auth endpoint and run real GoTrue password lifecycle
+        working-directory: ${{ runner.temp }}/recovery-auth-local
+        shell: bash
+        run: |
+          set -euo pipefail
+          eval "$(supabase status -o env)"
+          test -n "${API_URL:-}"
+          test -n "${ANON_KEY:-}"
+          test -n "${SERVICE_ROLE_KEY:-}"
+          export SUPABASE_URL="$API_URL"
+          export SUPABASE_ANON_KEY="$ANON_KEY"
+          export SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY"
+          deno test --no-check --allow-net --allow-env "$GITHUB_WORKSPACE/experiments/trainee-password-recovery-real-gotrue.integration.test.ts"
+      - name: Stop disposable local Supabase stack
+        if: always()
+        working-directory: ${{ runner.temp }}/recovery-auth-local
+        run: supabase stop --no-backup || true
