@@ -19,6 +19,7 @@ const enc = new TextEncoder();
 const dec = new TextDecoder();
 const MAX_ATTEMPTS = 5;
 const CODE_TTL_MS = 15 * 60 * 1000;
+const CLAIM_TTL_MS = 24 * 60 * 60 * 1000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function toBuffer(bytes: Uint8Array): ArrayBuffer {
@@ -176,7 +177,7 @@ Deno.serve(async (req: Request) => {
       }
 
       const claimHash = await hmac("claim-v1|" + claimToken);
-      const claimExpires = new Date(Date.now() + CODE_TTL_MS).toISOString();
+      const claimExpires = new Date(Date.now() + CLAIM_TTL_MS).toISOString();
       const { error: insertError } = await admin.from("trainee_password_recovery_requests").insert({
         id: requestId,
         trainee_id: trainee.id,
