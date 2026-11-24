@@ -177,3 +177,49 @@ Use a fake Auth server with explicit barriers/promises so the test controls when
 ### Release gate
 
 No migration, function deployment, feature-flag activation, real SMS, or real password update is authorized by this design work. The candidate remains blocked until the SQL state constraint/RPCs, Edge Function, deterministic fake-Auth tests, PostgreSQL integration tests, and CI all implement and prove this fail-closed policy. Production/main and the live Supabase project remain untouched.
+
+
+## Implementation checkpoint — fail-closed candidate and CI evidence (2026-11-24)
+
+The policy above has now been applied to the isolated mirror candidate branch only.
+
+### Candidate changes
+
+- Added `supabase/migrations/202611240001_recovery_auth_ambiguity_fail_closed.sql`.
+  - Adds durable `reset_reconciliation_required`.
+  - Replaces lease-resume behavior: `processing` with a live lease returns `busy`; `processing` with an expired lease is quarantined and returns `blocked_unknown_outcome`; a quarantined row can never reacquire a trainee reset lease.
+  - Adds attempt-ID-bound `mark_trainee_password_reset_reconciliation_required`.
+  - Makes finalization reject quarantined rows and expired leases.
+  - Restricts all affected RPCs to `service_role`.
+- Extracted Auth/DB orchestration to `supabase/functions/trainee-password-recovery/reset-attempt.ts`.
+  - Both returned Auth errors and thrown transport exceptions are ambiguous.
+  - Ambiguous outcomes attempt a durable quarantine marker.
+  - If the marker write fails, the expired-`processing` path still quarantines on the next call.
+  - Completion-marker failure never invites another password submission.
+- Updated `supabase/functions/trainee-password-recovery/index.ts` to use the orchestrator, reject quarantined requests, and never tell trainees to retry after an ambiguous result.
+- Added deterministic barrier test `experiments/trainee-password-recovery-auth-reconciliation.test.ts`.
+- Added disposable PostgreSQL test `experiments/ci/recovery-auth-ambiguity-fail-closed-tests.sql`.
+- Added a dedicated `candidate-auth-reconciliation` CI job and full Edge Function type-check.
+
+### Verified CI evidence
+
+GitHub Actions run **#117**, commit `7989dccfb0b482d42a27e738e5b8670c91681da7`, completed successfully:
+- Candidate migration compilation against disposable PostgreSQL: passed.
+- Expired lease → durable quarantine → subsequent callers blocked: passed.
+- Late completion from the original attempt cannot finalize after quarantine: passed.
+- Barrier-controlled fake Auth request delayed beyond lease expiry: passed; exactly one Auth dispatch.
+- Thrown transport exception after dispatch: passed; quarantine persisted and later attempt blocked.
+- Existing recovery SQL/atomic-attempt suite: passed.
+- Deno type-check of the full recovery Edge Function and orchestration tests: passed.
+
+Run evidence: https://github.com/mojtabahassanpour6856-eng/fitness-seh-galeh-test/actions/runs/45349354001
+
+### Remaining limits — not release approval
+
+- The fake Auth is a deterministic test double, not a live Supabase Auth endpoint.
+- The SQL test uses a disposable PostgreSQL fixture; it is not proof of full schema parity with the live Supabase mirror.
+- No real Auth update, trainee account, SMS, Supabase migration, Edge deployment, feature-flag activation, PR merge, or production/main change has occurred.
+- A provider response allow-list for proven no-side-effect rejections is still not approved. Until documented provider guarantees and tests exist, all Auth errors remain ambiguous and are quarantined.
+- The audited operator reconciliation procedure/UI and full end-to-end JWT + fake Auth integration remain release gates.
+
+Current status: **candidate implementation and isolated CI tests pass; staging/production release remains blocked.**
