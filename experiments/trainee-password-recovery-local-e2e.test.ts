@@ -62,7 +62,7 @@ try {
   const crossTraineeCode = await call(traineeB.accessToken, { action: "code", request_id: requestId });
   assert(crossTraineeCode.status === 404, "another trainee retrieved the recovery code");
   const codeResult = await call(traineeA.accessToken, { action: "code", request_id: requestId });
-  assert(codeResult.status === 200 && /^\\d{4}$/.test(codeResult.body.code), "owner trainee could not retrieve approved code");
+  assert(codeResult.status === 200 && typeof codeResult.body.code === "string" && codeResult.body.code.length === 4 && [...codeResult.body.code].every((c: string) => c >= "0" && c <= "9"), "owner trainee could not retrieve approved code");
 
   const newPassword = "New-Strong-Password-2026!";
   const reset = await call(traineeA.accessToken, { action: "reset", request_id: requestId, code: codeResult.body.code, password: newPassword });
