@@ -57,6 +57,23 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
+      - name: Wait until Pages artifact is visible to the deployment API
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPOSITORY: ${{ github.repository }}
+          GH_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            if gh api "repos/$GH_REPOSITORY/actions/runs/$GH_RUN_ID/artifacts" --jq '.artifacts[]? | select(.name == "github-pages" and .expired == false) | .id' | grep -q .; then
+              echo "Pages artifact is visible to the GitHub Actions API."
+              exit 0
+            fi
+            echo "Pages artifact metadata is not visible yet (attempt $attempt/12); waiting 5 seconds..."
+            sleep 5
+          done
+          echo "::error::github-pages artifact was uploaded but did not become visible to the deployment API within 60 seconds."
+          exit 1
       - name: Deploy TEST app to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
