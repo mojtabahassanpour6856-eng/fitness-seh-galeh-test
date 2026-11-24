@@ -100,7 +100,7 @@ try {
   const approvalB = await post(coachFunctionUrl, { action: "review", request_id: claimB.request_id, decision: "approve" }, coachB.accessToken);
   assert(approvalB.status === 200, "coach B could not approve own trainee request");
   const issuedB = await post(preauthFunctionUrl, { action: "code", ...claimB });
-  assert(issuedB.status === 200 && /^\\d{4}$/.test(issuedB.body.code), "could not retrieve B's code for negative-attempt test");
+  assert(issuedB.status === 200 && /^\\d{4}$/.test(issuedB.body.code), "could not retrieve B code; HTTP " + issuedB.status + "");
   const wrongCode = issuedB.body.code === "0000" ? "0001" : "0000";
   for (let i = 0; i < 5; i++) {
     const wrong = await post(preauthFunctionUrl, { action: "reset", ...claimB, code: wrongCode, new_password: "Another-Strong-Password-2026!" });
