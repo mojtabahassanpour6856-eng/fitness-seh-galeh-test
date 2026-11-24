@@ -39,6 +39,7 @@ jobs:
                   raise SystemExit('Could not locate the end of the login screen for early initializer')
               html = html.replace(marker, '</div>\n' + early + '<div class="page">', 1)
           page.write_text(html, encoding='utf-8')
+          print('Prepared early redesigned login initializer in TEST artifact.')
           PY
       - name: Setup Pages
         uses: actions/configure-pages@v5
