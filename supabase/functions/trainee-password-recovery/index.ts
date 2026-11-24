@@ -17,6 +17,11 @@ const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: cors });
 const enc = new TextEncoder();
 const dec = new TextDecoder();
+function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
+  const copy = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(copy).set(bytes);
+  return copy;
+}
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const CODE_TTL_MS = 24 * 60 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
@@ -51,8 +56,8 @@ function randomFourDigitCode(): string {
 async function hmacVerifier(code: string, requestId: string, traineeId: string, expiresAt: string): Promise<string> {
   const pepper = unb64url(requiredSecret("RECOVERY_HMAC_PEPPER_B64URL"));
   if (pepper.length < 32) throw new Error("pepper too short");
-  const key = await crypto.subtle.importKey("raw", pepper, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  const signature = await crypto.subtle.sign("HMAC", key, enc.encode(["recovery-v1", requestId, traineeId, new Date(expiresAt).toISOString(), code].join("|")));
+  const key = await crypto.subtle.importKey("raw", toArrayBuffer(pepper), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const signature = await crypto.subtle.sign("HMAC", key, toArrayBuffer(enc.encode(["recovery-v1", requestId, traineeId, new Date(expiresAt).toISOString(), code].join("|"))));
   return b64url(new Uint8Array(signature));
 }
 async function constantTimeEqual(a: string, b: string): Promise<boolean> {
@@ -71,9 +76,9 @@ function aad(requestId: string, traineeId: string, expiresAt: string): Uint8Arra
 }
 async function encryptEnvelope(code: string, requestId: string, traineeId: string, expiresAt: string) {
   const rawKey = unb64url(requiredSecret("RECOVERY_ENVELOPE_KEY_B64URL", 32));
-  const key = await crypto.subtle.importKey("raw", rawKey, "AES-GCM", false, ["encrypt"]);
+  const key = await crypto.subtle.importKey("raw", toArrayBuffer(rawKey), "AES-GCM", false, ["encrypt"]);
   const nonce = crypto.getRandomValues(new Uint8Array(12));
-  const cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv: nonce, additionalData: aad(requestId, traineeId, expiresAt), tagLength: 128 }, key, enc.encode(code));
+  const cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv: toArrayBuffer(nonce), additionalData: toArrayBuffer(aad(requestId, traineeId, expiresAt)), tagLength: 128 }, key, toArrayBuffer(enc.encode(code)));
   return JSON.stringify({ v: 1, n: b64url(nonce), c: b64url(new Uint8Array(cipher)) });
 }
 async function decryptEnvelope(value: string, requestId: string, traineeId: string, expiresAt: string): Promise<string> {
@@ -81,14 +86,14 @@ async function decryptEnvelope(value: string, requestId: string, traineeId: stri
   if (envelope?.v !== 1 || typeof envelope.n !== "string" || typeof envelope.c !== "string") throw new Error("invalid envelope");
   const nonce = unb64url(envelope.n), cipher = unb64url(envelope.c);
   if (nonce.length !== 12 || cipher.length !== 20) throw new Error("invalid envelope size");
-  const key = await crypto.subtle.importKey("raw", unb64url(requiredSecret("RECOVERY_ENVELOPE_KEY_B64URL", 32)), "AES-GCM", false, ["decrypt"]);
-  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: nonce, additionalData: aad(requestId, traineeId, expiresAt), tagLength: 128 }, key, cipher);
+  const key = await crypto.subtle.importKey("raw", toArrayBuffer(unb64url(requiredSecret("RECOVERY_ENVELOPE_KEY_B64URL", 32))), "AES-GCM", false, ["decrypt"]);
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: toArrayBuffer(nonce), additionalData: toArrayBuffer(aad(requestId, traineeId, expiresAt)), tagLength: 128 }, key, toArrayBuffer(cipher));
   const code = dec.decode(plain);
   if (!/^\d{4}$/.test(code)) throw new Error("invalid code payload");
   return code;
 }
 async function enforceRateLimit(admin: any, userId: string, action: string, windowSeconds: number, maxRequests: number): Promise<boolean> {
-  const digest = await crypto.subtle.digest("SHA-256", enc.encode(["recovery-v1", action, userId].join("|")));
+  const digest = await crypto.subtle.digest("SHA-256", toArrayBuffer(enc.encode(["recovery-v1", action, userId].join("|"))));
   const keyHash = hex(new Uint8Array(digest));
   const { data, error } = await admin.rpc("consume_registration_rate_limit", {
     p_key_hash: keyHash, p_window_seconds: windowSeconds, p_max_requests: maxRequests,
@@ -134,6 +139,7 @@ Deno.serve(async (req: Request) => {
     }
 
     if (action === "request") {
+      if (!trainee) return json({ error: "حساب شاگرد فعال پیدا نشد." }, 403);
       const rateKey = hex(new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode("recovery-request|" + userId))));
       const { data: allowed, error: rateError } = await admin.rpc("consume_registration_rate_limit", {
         p_key_hash: rateKey, p_window_seconds: 3600, p_max_requests: 3,
@@ -193,6 +199,7 @@ Deno.serve(async (req: Request) => {
     }
 
     if (action === "code") {
+      if (!trainee) return json({ error: "حساب شاگرد فعال پیدا نشد." }, 403);
       if (!(await enforceRateLimit(admin, userId, "code", 300, 10))) return json({ error: "درخواست دریافت کد بیش از حد مجاز است." }, 429);
       const requestId = String(body?.request_id ?? "");
       if (!UUID.test(requestId)) return json({ error: "درخواست نامعتبر است." }, 400);
@@ -207,6 +214,7 @@ Deno.serve(async (req: Request) => {
     }
 
     if (action === "reset") {
+      if (!trainee) return json({ error: "حساب شاگرد فعال پیدا نشد." }, 403);
       if (!(await enforceRateLimit(admin, userId, "reset", 900, 5))) return json({ error: "تلاش برای تغییر رمز بیش از حد مجاز است." }, 429);
       const requestId = String(body?.request_id ?? "");
       const code = normalizeCode(body?.code);
