@@ -25,7 +25,7 @@ async function markUnknown(admin: AdminClient, requestId: string, attemptId: str
       p_request_id: requestId,
       p_attempt_id: attemptId,
     });
-    return Boolean(error);
+    return Boolean(error) || data !== true;
   } catch {
     // The row remains processing; after lease expiry, begin() must quarantine it fail-closed.
     return true;
