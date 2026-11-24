@@ -27,8 +27,11 @@ function isDefinitiveNoMutationAuthError(error: unknown): boolean {
   const value = error as { status?: unknown; code?: unknown; name?: unknown };
   const status = Number(value.status);
   const code = typeof value.code === "string" ? value.code : "";
+  const name = typeof value.name === "string" ? value.name : "";
+  const isKnownAuthApiError = name === "AuthApiError" && code === "same_password";
+  const isKnownWeakPasswordError = name === "AuthWeakPasswordError" && code === "weak_password";
   return (status === 400 || status === 422) &&
-    new Set(["weak_password", "same_password"]).has(code);
+    (isKnownAuthApiError || isKnownWeakPasswordError);
 }
 
 async function releaseDefinitiveRejection(
