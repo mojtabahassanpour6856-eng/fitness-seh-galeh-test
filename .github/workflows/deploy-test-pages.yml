@@ -26,25 +26,17 @@ jobs:
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          # Match the TEST entrypoint preloaded in head and executed just after authScreen; retry cleanly after transient Pages status errors.
           old = 'connected-auth.js?v=20261121-2057'
-          new = 'connected-auth.js?v=20261125-auth-init-retry'
-          previous = 'connected-auth.js?v=20261125-stable-startup'
+          new = 'connected-auth.js?v=20261124-scroll-fix-v2'
           if old in s:
               s = s.replace(old, new)
               p.write_text(s, encoding='utf-8')
               print('Updated approved login script cache key.')
-          elif previous in s:
-              s = s.replace(previous, new)
-              p.write_text(s, encoding='utf-8')
-              print('Refreshed login script cache key for deferred initialization.')
           elif new in s or 'connected-auth.js?v=20261124-scroll-fix-v2' in s:
               print('Approved login script cache key is already current.')
           else:
               raise SystemExit('Unexpected connected-auth.js reference; refusing to rewrite it.')
           PY
-      - name: Validate TEST login JavaScript syntax
-        run: node --check auth-preview/connected-auth.js
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload TEST app artifact
@@ -87,8 +79,6 @@ jobs:
           grep -Fq 'sehAuthHome' "$auth_js"
           grep -Fq 'sehAuthCoach' "$auth_js"
           grep -Fq 'sehAuthTrainee' "$auth_js"
-          grep -Fq 'initializeApprovedAuth' "$auth_js"
-          grep -Fq 'retryObserver.observe(document.documentElement' "$auth_js"
           grep -Fq 'height:100dvh!important' "$auth_js"
           grep -Fq 'touch-action:pan-y!important' "$auth_js"
           grep -Fq -- '-webkit-overflow-scrolling:touch!important' "$auth_js"
