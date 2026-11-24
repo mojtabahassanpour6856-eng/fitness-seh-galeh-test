@@ -21,7 +21,7 @@ type AdminClient = {
 
 async function markUnknown(admin: AdminClient, requestId: string, attemptId: string): Promise<boolean> {
   try {
-    const { error } = await admin.rpc("mark_trainee_password_reset_reconciliation_required", {
+    const { data, error } = await admin.rpc("mark_trainee_password_reset_reconciliation_required", {
       p_request_id: requestId,
       p_attempt_id: attemptId,
     });
