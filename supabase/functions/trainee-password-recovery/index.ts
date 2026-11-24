@@ -210,7 +210,7 @@ Deno.serve(async (req: Request) => {
       const requestId = String(body?.request_id ?? "");
       const code = normalizeCode(body?.code);
       const password = String(body?.new_password ?? "");
-      if (!UUID.test(requestId) || !/^\\d{4}$/.test(code) || password.length < 8 || password.length > 128)
+      if (!UUID.test(requestId) || !/^\d{4}$/.test(code) || password.length < 8 || password.length > 128)
         return json({ error: "درخواست، کد یا رمز جدید معتبر نیست." }, 400);
 
       const { data: row, error } = await admin.from("trainee_password_recovery_requests")
@@ -218,8 +218,10 @@ Deno.serve(async (req: Request) => {
         .eq("id", requestId).eq("trainee_id", trainee.id).maybeSingle();
       if (error || !row || !row.token_hash || !row.token_expires_at || Number(row.token_attempts) >= MAX_ATTEMPTS)
         return json({ error: "کد نامعتبر یا منقضی شده است." }, 400);
+      if (row.reset_reconciliation_required === true)
+        return json({ error: "نتیجه تلاش قبلی برای تغییر رمز نامشخص است؛ تلاش مجدد مسدود شده است. با پشتیبانی باشگاه تماس بگیرید." }, 409);
 
-      if (row.reset_reconciliation_required === true)\n        return json({ error: "نتیجه تلاش قبلی برای تغییر رمز نامشخص است؛ برای جلوگیری از تغییر ناخواسته رمز، تلاش مجدد مسدود شده است. با پشتیبانی باشگاه تماس بگیرید." }, 409);\n\n      const candidate = await hmacVerifier(code, row.id, trainee.id, row.token_expires_at);
+      const candidate = await hmacVerifier(code, row.id, trainee.id, row.token_expires_at);
       if (!(await constantTimeEqual(candidate, row.token_hash))) {
         if (row.status !== "approved" || new Date(row.token_expires_at).getTime() <= Date.now())
           return json({ error: "کد نامعتبر یا منقضی شده است." }, 400);
@@ -234,9 +236,6 @@ Deno.serve(async (req: Request) => {
 
       if (row.status === "approved" && new Date(row.token_expires_at).getTime() <= Date.now())
         return json({ error: "کد بازیابی منقضی شده است." }, 400);
-      if (row.status === "processing" &&
-          (!row.reset_recovery_until || new Date(row.reset_recovery_until).getTime() <= Date.now()))
-        return json({ error: "مهلت ادامه بازیابی پایان یافته است؛ با مربی تماس بگیرید." }, 409);
       if (row.status !== "approved" && row.status !== "processing")
         return json({ error: "این درخواست قابل استفاده نیست." }, 409);
 
@@ -248,15 +247,24 @@ Deno.serve(async (req: Request) => {
         p_lease_seconds: 120,
       });
       if (leaseError) return json({ error: "دریافت مجوز تغییر رمز ممکن نشد." }, 503);
-      if (leaseState !== "acquired")
-        return json({ error: leaseState === "busy" ? "عملیات دیگری در حال انجام است؛ دو دقیقه دیگر دوباره تلاش کنید." : "کد یا مهلت بازیابی معتبر نیست." }, 409);
+      if (leaseState !== "acquired") {
+        if (leaseState === "blocked_unknown_outcome")
+          return json({ error: "نتیجه تلاش قبلی برای تغییر رمز نامشخص است؛ درخواست جدیدی ارسال نمی‌شود. با پشتیبانی باشگاه تماس بگیرید." }, 409);
+        if (leaseState === "busy")
+          return json({ error: "عملیات قبلی هنوز در حال پردازش است؛ درخواست تغییر رمز دیگری ارسال نکنید." }, 409);
+        return json({ error: "کد یا مهلت بازیابی معتبر نیست." }, 409);
+      }
 
       const { error: passwordError } = await admin.auth.admin.updateUserById(userId, { password });
       if (passwordError) {
-        // Treat every Auth error as ambiguous: do not release or reopen the code.
-        // The same trainee may retry after the lease expires, using the same code.
-        console.error("recovery auth update outcome uncertain", passwordError.status ?? "unknown");
-        return json({ error: "نتیجه تغییر رمز هنوز قطعی نیست؛ دو دقیقه صبر کنید و با همان کد دوباره تلاش کنید." }, 503);
+        // Auth errors are ambiguous unless a separately reviewed provider contract proves no side effect.
+        // Never release the lease or invite a trainee retry after a transport/provider error.
+        const { error: quarantineError } = await admin.rpc("mark_trainee_password_reset_reconciliation_required", {
+          p_request_id: row.id,
+          p_attempt_id: attemptId,
+        });
+        console.error("recovery auth outcome quarantined", passwordError.status ?? "unknown", quarantineError ? "marker_write_failed" : "marker_written");
+        return json({ error: "نتیجه تغییر رمز نامشخص است؛ برای جلوگیری از بازنویسی رمز، تلاش مجدد مسدود شده است. با پشتیبانی باشگاه تماس بگیرید." }, 503);
       }
 
       const { data: finished, error: finishError } = await admin.rpc("finish_trainee_password_reset", {
@@ -265,8 +273,12 @@ Deno.serve(async (req: Request) => {
         p_expected_verifier: row.token_hash,
       });
       if (finishError || finished !== true) {
-        console.error("recovery completion marker pending", finishError ? "rpc_error" : "lease_or_state_conflict");
-        return json({ success: true, completion_pending: true, message: "تغییر رمز توسط سامانه تأیید شد؛ ثبت نهایی درخواست کامل نشده است. در صورت نیاز دو دقیقه دیگر با همان کد دوباره تلاش کنید." });
+        const { error: quarantineError } = await admin.rpc("mark_trainee_password_reset_reconciliation_required", {
+          p_request_id: row.id,
+          p_attempt_id: attemptId,
+        });
+        console.error("recovery completion marker pending", finishError ? "rpc_error" : "lease_or_state_conflict", quarantineError ? "quarantine_write_failed" : "quarantined");
+        return json({ success: true, completion_pending: true, message: "تغییر رمز ممکن است در سامانه اعمال شده باشد، اما ثبت نهایی تأیید نشده است. دوباره تلاش نکنید و با پشتیبانی باشگاه تماس بگیرید." }, 503);
       }
       return json({ success: true, message: "رمز جدید با موفقیت ثبت شد." });
     }
