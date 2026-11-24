@@ -1,6 +1,7 @@
 // CANDIDATE ONLY. Do not deploy until migration and integration tests are reviewed.
 // No SMS/email/provider calls. Every action requires a valid Supabase user JWT.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
+import { runPasswordResetAttempt } from "./reset-attempt.ts";
 
 const allowedOrigin = Deno.env.get("RECOVERY_ALLOWED_ORIGIN") ?? "";
 const cors = {
@@ -240,46 +241,28 @@ Deno.serve(async (req: Request) => {
         return json({ error: "این درخواست قابل استفاده نیست." }, 409);
 
       const attemptId = crypto.randomUUID();
-      const { data: leaseState, error: leaseError } = await admin.rpc("begin_or_resume_trainee_password_reset", {
-        p_request_id: row.id,
-        p_expected_verifier: row.token_hash,
-        p_attempt_id: attemptId,
-        p_lease_seconds: 120,
+      const resetResult = await runPasswordResetAttempt({
+        admin,
+        userId,
+        requestId: row.id,
+        attemptId,
+        expectedVerifier: row.token_hash,
+        password,
+        leaseSeconds: 120,
       });
-      if (leaseError) return json({ error: "دریافت مجوز تغییر رمز ممکن نشد." }, 503);
-      if (leaseState !== "acquired") {
-        if (leaseState === "blocked_unknown_outcome")
-          return json({ error: "نتیجه تلاش قبلی برای تغییر رمز نامشخص است؛ درخواست جدیدی ارسال نمی‌شود. با پشتیبانی باشگاه تماس بگیرید." }, 409);
-        if (leaseState === "busy")
-          return json({ error: "عملیات قبلی هنوز در حال پردازش است؛ درخواست تغییر رمز دیگری ارسال نکنید." }, 409);
+
+      if (resetResult.kind === "lease_error")
+        return json({ error: "دریافت مجوز تغییر رمز ممکن نشد." }, 503);
+      if (resetResult.kind === "busy")
+        return json({ error: "عملیات قبلی هنوز در حال پردازش است؛ درخواست تغییر رمز دیگری ارسال نکنید." }, 409);
+      if (resetResult.kind === "blocked_unknown_outcome")
+        return json({ error: "نتیجه تلاش قبلی برای تغییر رمز نامشخص است؛ درخواست جدیدی ارسال نمی‌شود. با پشتیبانی باشگاه تماس بگیرید." }, 409);
+      if (resetResult.kind === "invalid")
         return json({ error: "کد یا مهلت بازیابی معتبر نیست." }, 409);
-      }
-
-      const { error: passwordError } = await admin.auth.admin.updateUserById(userId, { password });
-      if (passwordError) {
-        // Auth errors are ambiguous unless a separately reviewed provider contract proves no side effect.
-        // Never release the lease or invite a trainee retry after a transport/provider error.
-        const { error: quarantineError } = await admin.rpc("mark_trainee_password_reset_reconciliation_required", {
-          p_request_id: row.id,
-          p_attempt_id: attemptId,
-        });
-        console.error("recovery auth outcome quarantined", passwordError.status ?? "unknown", quarantineError ? "marker_write_failed" : "marker_written");
+      if (resetResult.kind === "auth_unknown")
         return json({ error: "نتیجه تغییر رمز نامشخص است؛ برای جلوگیری از بازنویسی رمز، تلاش مجدد مسدود شده است. با پشتیبانی باشگاه تماس بگیرید." }, 503);
-      }
-
-      const { data: finished, error: finishError } = await admin.rpc("finish_trainee_password_reset", {
-        p_request_id: row.id,
-        p_attempt_id: attemptId,
-        p_expected_verifier: row.token_hash,
-      });
-      if (finishError || finished !== true) {
-        const { error: quarantineError } = await admin.rpc("mark_trainee_password_reset_reconciliation_required", {
-          p_request_id: row.id,
-          p_attempt_id: attemptId,
-        });
-        console.error("recovery completion marker pending", finishError ? "rpc_error" : "lease_or_state_conflict", quarantineError ? "quarantine_write_failed" : "quarantined");
+      if (resetResult.kind === "completion_pending")
         return json({ success: true, completion_pending: true, message: "تغییر رمز ممکن است در سامانه اعمال شده باشد، اما ثبت نهایی تأیید نشده است. دوباره تلاش نکنید و با پشتیبانی باشگاه تماس بگیرید." }, 503);
-      }
       return json({ success: true, message: "رمز جدید با موفقیت ثبت شد." });
     }
     return json({ error: "عملیات نامعتبر است." }, 400);
