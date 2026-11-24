@@ -80,7 +80,7 @@ jobs:
           grep -Fq 'sehAuthTrainee' "$auth_js"
           grep -Fq 'height:100dvh!important' "$auth_js"
           grep -Fq 'touch-action:pan-y!important' "$auth_js"
-          grep -Fq '-webkit-overflow-scrolling:touch!important' "$auth_js"
+          grep -Fq -- '-webkit-overflow-scrolling:touch!important' "$auth_js"
           grep -Fq 'overscroll-behavior-y:contain!important' "$auth_js"
           for asset in assets/auth/trainee-entry.png assets/auth/coach-entry.png; do
             asset_status="$(curl --silent --show-error --location --max-time 30 --output /dev/null --write-out '%{http_code}' "${PAGES_URL}${asset}" || true)"
