@@ -40,6 +40,8 @@ jobs:
         run: deno test --no-check experiments/trainee-password-recovery-auth-reconciliation.test.ts
       - name: Test definitive versus ambiguous Auth errors
         run: deno test --no-check experiments/trainee-password-recovery-auth-error-classification.test.ts
+      - name: Verify pinned Supabase SDK Auth error contract
+        run: deno test --no-check experiments/trainee-password-recovery-auth-sdk-contract.test.ts
       - name: Type-check recovery Edge Function and orchestration tests
         run: deno check supabase/functions/trainee-password-recovery/index.ts experiments/trainee-password-recovery-auth-reconciliation.test.ts experiments/trainee-password-recovery-auth-error-classification.test.ts
 
