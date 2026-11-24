@@ -1,7 +1,7 @@
 name: Pre-auth password recovery candidate checks
 on:
   push:
-    branches: ["implementation/no-sms-recovery-integration-20261124"]
+    branches: ["implementation/no-sms-recovery-integration-20261124", "integration/full-app-mirror-20261115"]
   pull_request:
     branches: ["implementation/no-sms-recovery-integration-20261124"]
   workflow_dispatch:
