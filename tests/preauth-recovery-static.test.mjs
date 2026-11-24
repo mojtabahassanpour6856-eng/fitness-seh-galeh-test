@@ -7,6 +7,7 @@ const config = readFileSync("supabase/config.toml", "utf8");
 const migration = readFileSync("supabase/migrations/202611240002_pre_auth_recovery_claims.sql", "utf8");
 
 assert.match(config, /\[functions\.trainee-password-recovery-preauth\][\s\S]*?verify_jwt\s*=\s*false/);
+assert.match(config, /\[functions\.trainee-password-recovery\][\s\S]*?verify_jwt\s*=\s*true/, "coach recovery endpoint must retain gateway JWT verification");
 assert.doesNotMatch(preauth, /auth\.getUser\s*\(/, "pre-auth handler must not depend on a trainee JWT");
 assert.match(preauth, /claim_token_hash/);
 assert.match(preauth, /claim_expires_at/);
