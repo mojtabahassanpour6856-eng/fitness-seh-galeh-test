@@ -70,6 +70,9 @@ try {
   assert(coachAList.status === 200 && coachAList.body.requests.some((x: any) => x.id === claimA.request_id), "coach A cannot see own trainee request");
   const approvalA = await post(coachFunctionUrl, { action: "review", request_id: claimA.request_id, decision: "approve" }, coachA.accessToken);
   assert(approvalA.status === 200 && approvalA.body.status === "approved" && !("code" in approvalA.body) && !("recovery_code" in approvalA.body), "coach approval leaked recovery code");
+  const approvedWindow = await admin.from("trainee_password_recovery_requests").select("token_expires_at,claim_expires_at").eq("id", claimA.request_id).single();
+  const approvedTtlMs = new Date(approvedWindow.data?.token_expires_at ?? 0).getTime() - Date.now();
+  assert(!approvedWindow.error && approvedWindow.data.token_expires_at === approvedWindow.data.claim_expires_at && approvedTtlMs > 23 * 60 * 60 * 1000 && approvedTtlMs <= 24 * 60 * 60 * 1000, "browser claim/code do not share a full 24-hour approval window");
 
   const wrongClaim = randomClaim();
   const stolenClaim = await post(preauthFunctionUrl, { action: "code", request_id: claimA.request_id, claim_token: wrongClaim.claim_token });
@@ -120,7 +123,7 @@ try {
     .update({ token_expires_at: new Date(Date.now() - 1000).toISOString() }).eq("id", claimC.request_id);
   assert(!codeExpireError, "could not prepare code-expiry fixture");
   const expiredCode = await post(preauthFunctionUrl, { action: "code", ...claimC });
-  assert(expiredCode.status === 404, "expired 15-minute recovery code was returned");
+  assert(expiredCode.status === 404, "expired 24-hour recovery code was returned");
   const { error: claimExpireError } = await admin.from("trainee_password_recovery_requests")
     .update({ claim_expires_at: new Date(Date.now() - 1000).toISOString() }).eq("id", claimC.request_id);
   assert(!claimExpireError, "could not prepare claim-expiry fixture");

@@ -18,7 +18,7 @@ const json = (body: unknown, status = 200) => new Response(JSON.stringify(body),
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 const MAX_ATTEMPTS = 5;
-const CODE_TTL_MS = 15 * 60 * 1000;
+const CODE_TTL_MS = 24 * 60 * 60 * 1000;
 const CLAIM_TTL_MS = 24 * 60 * 60 * 1000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 

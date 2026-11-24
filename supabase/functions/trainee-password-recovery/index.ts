@@ -23,7 +23,7 @@ function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
   return copy;
 }
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const CODE_TTL_MS = 15 * 60 * 1000;
+const CODE_TTL_MS = 24 * 60 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
 
 function hex(bytes: Uint8Array): string { return Array.from(bytes, b => b.toString(16).padStart(2, "0")).join(""); }
@@ -191,7 +191,7 @@ Deno.serve(async (req: Request) => {
       const { data: changed, error } = await admin.from("trainee_password_recovery_requests").update({
         status: "approved", reviewed_at: new Date().toISOString(), reviewed_by: userId,
         token_hash: verifier, token_expires_at: expiresAt, token_attempts: 0,
-        code_envelope: envelope, updated_at: new Date().toISOString(),
+        code_envelope: envelope, claim_expires_at: expiresAt, updated_at: new Date().toISOString(),
       }).eq("id", requestId).eq("status", "pending").select("id").maybeSingle();
       if (error || !changed) return json({ error: "تأیید درخواست انجام نشد." }, 503);
       // Deliberately do not return or log the code to the coach.
