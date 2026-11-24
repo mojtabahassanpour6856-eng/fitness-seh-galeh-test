@@ -80,6 +80,7 @@ Passing this gate does not itself authorize production migration or deployment. 
 A separate GitHub Actions job, `real-local-gotrue-integration`, has been added. It creates a temporary Supabase project directory on the GitHub-hosted runner, starts the local Supabase stack (including a real GoTrue Auth server), creates one random disposable Auth user, and verifies:
 
 - The original password can sign in before the admin password update.
+- GoTrue rejects a deliberately weak password with the pinned SDK's structured `AuthWeakPasswordError` / `weak_password` / HTTP 422 contract, and the old password remains valid after that rejection.
 - `auth.admin.updateUserById` changes the password through the real local GoTrue server.
 - The old password is rejected after the update.
 - The new password is accepted after the update.
@@ -96,4 +97,4 @@ Therefore this remote mirror was not modified: no users were created or deleted,
 
 ## Current execution status
 
-The local GoTrue integration test and workflow are committed to the candidate branch, but their GitHub Actions result must be checked after the workflow run completes. Until a green run is observed, mark the real-GoTrue CI gate as **pending**, not passed.
+The local GoTrue integration test and workflow are committed to the candidate branch. The test now also checks a real weak-password rejection against GoTrue, not only mocked SDK responses. The workflow uses `supabase/setup-cli@v3` with the CLI pinned to `3.0.0`, and refuses to run unless the Auth API URL is loopback-local. Its GitHub Actions result must still be checked after the workflow run completes. Until a green run is observed, mark the real-GoTrue CI gate as **pending**, not passed.
