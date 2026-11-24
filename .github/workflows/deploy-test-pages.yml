@@ -30,7 +30,15 @@ jobs:
               if '<head>' not in html:
                   raise SystemExit('index.html has no opening head tag')
               html = html.replace('<head>', '<head>' + guard, 1)
-              page.write_text(html, encoding='utf-8')
+          # Run the redesigned entry screen immediately after its source DOM exists,
+          # rather than waiting until the very end of this large legacy single-page file.
+          marker = '</div>\\n<div class="page">'
+          early = '<script id="seh-auth-redesign-early" src="./auth-preview/connected-auth.js?v=20261124-early1"></script>\\n'
+          if 'seh-auth-redesign-early' not in html:
+              if marker not in html:
+                  raise SystemExit('Could not locate the end of the login screen for early initializer')
+              html = html.replace(marker, '</div>\\n' + early + '<div class="page">', 1)
+          page.write_text(html, encoding='utf-8')
           PY
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -67,6 +75,7 @@ jobs:
           grep -Fq '<title>فیتنس سه‌قلعه</title>' "$body"
           grep -Fq 'FITNESS SEH GALEH' "$body"
           grep -Fq 'auth-preview/connected-auth.js' "$body"
+          grep -Fq 'seh-auth-redesign-early' "$body"
           auth_js="$(mktemp)"
           trap 'rm -f "$body" "$auth_js"' EXIT
           auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js" || true)"
