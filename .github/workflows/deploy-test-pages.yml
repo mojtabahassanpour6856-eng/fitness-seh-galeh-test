@@ -34,13 +34,13 @@ jobs:
           # The legacy app initializes/rebuilds authTabs late in its large script.
           # Remove any earlier injected copy and move the closing tags after every
           # legacy script, then run the redesign as the final executable script.
-          html = re.sub(r'<script\\s+id="seh-auth-redesign-(?:early|final)"[^>]*>\\s*</script>', '', html, flags=re.I)
-          closing = re.search(r'</body\\s*>\\s*</html\\s*>', html, flags=re.I)
+          html = re.sub(r'<script\s+id="seh-auth-redesign-(?:early|final)"[^>]*>\s*</script>', '', html, flags=re.I)
+          closing = re.search(r'</body\s*>\s*</html\s*>', html, flags=re.I)
           if not closing:
               raise SystemExit('Could not locate closing body/html tags')
           html = html[:closing.start()] + html[closing.end():]
-          final_script = '<script id="seh-auth-redesign-final" src="./auth-preview/connected-auth.js?v=20261124-final2"></script>\\n'
-          html = html.rstrip() + '\\n' + final_script + '</body></html>\\n'
+          final_script = '<script id="seh-auth-redesign-final" src="./auth-preview/connected-auth.js?v=20261124-final2"></script>\n'
+          html = html.rstrip() + '\n' + final_script + '</body></html>\n'
           if html.rfind('seh-auth-redesign-final') < html.rfind('seh-session-accessor-terminal-override-v2'):
               raise SystemExit('Redesigned auth script was not placed after the legacy terminal scripts')
           page.write_text(html, encoding='utf-8')
