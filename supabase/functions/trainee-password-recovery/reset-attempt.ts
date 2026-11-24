@@ -106,7 +106,7 @@ export async function runPasswordResetAttempt(input: {
       if (released) return { kind: "auth_rejected", leaseReleaseFailed: false };
       // A proven provider rejection is safe, but a failed DB release leaves state uncertain.
       // Quarantine rather than allowing another attempt to inherit a stale processing row.
-      const markerWriteFailed = await markUnknown(admin, requestId, attemptId);
+      await markUnknown(admin, requestId, attemptId);
       return { kind: "auth_rejected", leaseReleaseFailed: true };
     }
     const markerWriteFailed = await markUnknown(admin, requestId, attemptId);
