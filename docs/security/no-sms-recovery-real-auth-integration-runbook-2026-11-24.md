@@ -73,3 +73,27 @@ Real-Auth integration remains **BLOCKED** until all of the following are true:
 - A separate explicit release decision is made.
 
 Passing this gate does not itself authorize production migration or deployment. Production rollout requires a separate backup, migration review, rollback plan, and explicit approval.
+
+
+## CI implementation update (2026-11-24)
+
+A separate GitHub Actions job, `real-local-gotrue-integration`, has been added. It creates a temporary Supabase project directory on the GitHub-hosted runner, starts the local Supabase stack (including a real GoTrue Auth server), creates one random disposable Auth user, and verifies:
+
+- The original password can sign in before the admin password update.
+- `auth.admin.updateUserById` changes the password through the real local GoTrue server.
+- The old password is rejected after the update.
+- The new password is accepted after the update.
+- The disposable Auth user is deleted in a `finally` cleanup path.
+- No remote Supabase project, production key, or persistent test account is used by this job.
+
+This integration is deliberately narrower than the complete no-SMS recovery flow. It validates the real Auth password-mutation boundary; database-backed request approval, encrypted code retrieval, rate limits, coach isolation, and end-to-end Edge Function behavior remain separate gates.
+
+## Existing remote mirror safety assessment (read-only)
+
+The existing remote project named `fitness-seh-galeh-test` is **not treated as a clean throwaway Auth environment**. Read-only inspection found existing Auth users, an existing recovery request row, and active Edge Functions for the wider app. Its applied migration history also does not yet include the current candidate Auth-reconciliation migration.
+
+Therefore this remote mirror was not modified: no users were created or deleted, no passwords changed, no migrations applied, and no functions deployed. It must not be used as a disposable password-reset fixture without a separately approved cleanup/fixture plan. The production project was not modified either.
+
+## Current execution status
+
+The local GoTrue integration test and workflow are committed to the candidate branch, but their GitHub Actions result must be checked after the workflow run completes. Until a green run is observed, mark the real-GoTrue CI gate as **pending**, not passed.
