@@ -214,12 +214,12 @@ Deno.serve(async (req: Request) => {
         return json({ error: "درخواست، کد یا رمز جدید معتبر نیست." }, 400);
 
       const { data: row, error } = await admin.from("trainee_password_recovery_requests")
-        .select("id,trainee_id,status,token_hash,token_expires_at,token_attempts,reset_recovery_until")
+        .select("id,trainee_id,status,token_hash,token_expires_at,token_attempts,reset_recovery_until,reset_reconciliation_required")
         .eq("id", requestId).eq("trainee_id", trainee.id).maybeSingle();
       if (error || !row || !row.token_hash || !row.token_expires_at || Number(row.token_attempts) >= MAX_ATTEMPTS)
         return json({ error: "کد نامعتبر یا منقضی شده است." }, 400);
 
-      const candidate = await hmacVerifier(code, row.id, trainee.id, row.token_expires_at);
+      if (row.reset_reconciliation_required === true)\n        return json({ error: "نتیجه تلاش قبلی برای تغییر رمز نامشخص است؛ برای جلوگیری از تغییر ناخواسته رمز، تلاش مجدد مسدود شده است. با پشتیبانی باشگاه تماس بگیرید." }, 409);\n\n      const candidate = await hmacVerifier(code, row.id, trainee.id, row.token_expires_at);
       if (!(await constantTimeEqual(candidate, row.token_hash))) {
         if (row.status !== "approved" || new Date(row.token_expires_at).getTime() <= Date.now())
           return json({ error: "کد نامعتبر یا منقضی شده است." }, 400);
