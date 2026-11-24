@@ -14,7 +14,7 @@ Deno.test("explicit weak_password Auth validation response safely releases lease
       throw new Error("unexpected RPC " + name);
     },
     auth: { admin: { async updateUserById() {
-      return { error: Object.assign(new Error("weak password"), { status: 422, code: "weak_password" }) };
+      return { error: Object.assign(new Error("weak password"), { name: "AuthWeakPasswordError", status: 422, code: "weak_password" }) };
     } } },
   };
   const result = await runPasswordResetAttempt({
@@ -36,7 +36,7 @@ Deno.test("generic Auth 400 remains ambiguous and is quarantined", async () => {
       throw new Error("unexpected RPC " + name);
     },
     auth: { admin: { async updateUserById() {
-      return { error: Object.assign(new Error("bad request"), { status: 400, code: "validation_failed" }) };
+      return { error: Object.assign(new Error("bad request"), { name: "AuthApiError", status: 400, code: "validation_failed" }) };
     } } },
   };
   const result = await runPasswordResetAttempt({
@@ -81,7 +81,7 @@ Deno.test("explicit same_password 422 rejection is treated as no-mutation and re
       throw new Error("unexpected RPC " + name);
     },
     auth: { admin: { async updateUserById() {
-      return { error: Object.assign(new Error("same password"), { status: 422, code: "same_password" }) };
+      return { error: Object.assign(new Error("same password"), { name: "AuthApiError", status: 422, code: "same_password" }) };
     } } },
   };
   const result = await runPasswordResetAttempt({
@@ -102,7 +102,7 @@ Deno.test("Auth 500 unexpected_failure remains ambiguous and quarantined", async
       throw new Error("unexpected RPC " + name);
     },
     auth: { admin: { async updateUserById() {
-      return { error: Object.assign(new Error("Auth service failure"), { status: 500, code: "unexpected_failure" }) };
+      return { error: Object.assign(new Error("Auth service failure"), { name: "AuthApiError", status: 500, code: "unexpected_failure" }) };
     } } },
   };
   const result = await runPasswordResetAttempt({
