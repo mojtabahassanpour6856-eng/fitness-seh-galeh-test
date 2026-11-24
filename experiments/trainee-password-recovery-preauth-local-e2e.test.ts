@@ -6,7 +6,7 @@ const service = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const coachFunctionUrl = Deno.env.get("RECOVERY_FUNCTION_URL")!;
 const preauthFunctionUrl = Deno.env.get("RECOVERY_PREAUTH_FUNCTION_URL")!;
 const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const origin = "http://127.0.0.1:55321";
+const origin = Deno.env.get("RECOVERY_ALLOWED_ORIGIN") ?? "http://127.0.0.1:55321";
 function assert(ok: unknown, message: string): asserts ok { if (!ok) throw new Error(message); }
 function randomClaim() {
   const bytes = crypto.getRandomValues(new Uint8Array(32));
