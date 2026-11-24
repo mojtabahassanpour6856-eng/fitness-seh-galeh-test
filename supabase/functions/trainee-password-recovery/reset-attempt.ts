@@ -5,6 +5,7 @@ export type PasswordResetAttemptResult =
   | { kind: "busy" }
   | { kind: "blocked_unknown_outcome" }
   | { kind: "invalid" }
+  | { kind: "auth_rejected"; leaseReleaseFailed: boolean }
   | { kind: "auth_unknown"; markerWriteFailed: boolean }
   | { kind: "completion_pending"; markerWriteFailed: boolean }
   | { kind: "completed" };
@@ -18,6 +19,33 @@ type AdminClient = {
     };
   };
 };
+
+// Only these explicit Auth validation responses are treated as proof that no password
+// mutation occurred. Generic 4xx/5xx, missing codes, and transport failures stay ambiguous.
+function isDefinitiveNoMutationAuthError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const value = error as { status?: unknown; code?: unknown; name?: unknown };
+  const status = Number(value.status);
+  const code = typeof value.code === "string" ? value.code : "";
+  return (status === 400 || status === 422) &&
+    new Set(["weak_password", "same_password", "validation_failed"]).has(code);
+}
+
+async function releaseDefinitiveRejection(
+  admin: AdminClient,
+  requestId: string,
+  attemptId: string,
+): Promise<boolean> {
+  try {
+    const { data, error } = await admin.rpc("release_trainee_password_reset_lease", {
+      p_request_id: requestId,
+      p_attempt_id: attemptId,
+    });
+    return !error && data === true;
+  } catch {
+    return false;
+  }
+}
 
 async function markUnknown(admin: AdminClient, requestId: string, attemptId: string): Promise<boolean> {
   try {
@@ -62,15 +90,25 @@ export async function runPasswordResetAttempt(input: {
   if (leaseState !== "acquired") return { kind: "invalid" };
 
   // Any thrown transport exception or provider error is ambiguous. Never automatically retry.
-  let authFailed = false;
+  let authError: unknown = null;
+  let authThrew = false;
   try {
     const result = await admin.auth.admin.updateUserById(userId, { password });
-    authFailed = Boolean(result.error);
-  } catch {
-    authFailed = true;
+    authError = result.error;
+  } catch (error) {
+    authThrew = true;
+    authError = error;
   }
 
-  if (authFailed) {
+  if (authThrew || authError) {
+    if (!authThrew && isDefinitiveNoMutationAuthError(authError)) {
+      const released = await releaseDefinitiveRejection(admin, requestId, attemptId);
+      if (released) return { kind: "auth_rejected", leaseReleaseFailed: false };
+      // A proven provider rejection is safe, but a failed DB release leaves state uncertain.
+      // Quarantine rather than allowing another attempt to inherit a stale processing row.
+      const markerWriteFailed = await markUnknown(admin, requestId, attemptId);
+      return { kind: "auth_rejected", leaseReleaseFailed: !markerWriteFailed };
+    }
     const markerWriteFailed = await markUnknown(admin, requestId, attemptId);
     return { kind: "auth_unknown", markerWriteFailed };
   }
