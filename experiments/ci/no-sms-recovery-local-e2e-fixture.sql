@@ -47,7 +47,7 @@ create or replace function public.consume_registration_rate_limit(
 ) returns boolean
 language plpgsql security definer set search_path = ''
 as $$
-declare allowed boolean;
+declare allowed_count integer;
 begin
   insert into public.registration_rate_limits(key_hash, window_started_at, request_count)
   values (p_key_hash, pg_catalog.now(), 1)
@@ -58,8 +58,8 @@ begin
         request_count = case
           when registration_rate_limits.window_started_at + pg_catalog.make_interval(secs => p_window_seconds) <= pg_catalog.now()
           then 1 else registration_rate_limits.request_count + 1 end
-  returning request_count into allowed;
-  return allowed <= p_max_requests;
+  returning request_count into allowed_count;
+  return allowed_count <= p_max_requests;
 end;
 $$;
 
