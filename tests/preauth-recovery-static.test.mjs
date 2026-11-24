@@ -11,7 +11,7 @@ assert.doesNotMatch(preauth, /auth\.getUser\s*\(/, "pre-auth handler must not de
 assert.match(preauth, /claim_token_hash/);
 assert.match(preauth, /claim_expires_at/);
 assert.match(preauth, /constantTimeEqual\s*\(/);
-assert.match(preauth, /CODE_TTL_MS\s*=\s*15\s*\*\s*60\s*\*\s*1000/, "pre-auth recovery code must expire after 15 minutes");
+assert.match(preauth, /CODE_TTL_MS\s*=\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/, "pre-auth recovery code must expire after 24 hours");
 assert.match(preauth, /CLAIM_TTL_MS\s*=\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/, "browser claim must remain available for 24 hours");
 assert.match(preauth, /record_trainee_recovery_failed_attempt_no_sms/);
 assert.match(preauth, /runPasswordResetAttempt\s*\(/);
@@ -19,7 +19,7 @@ assert.match(preauth, /consume_registration_rate_limit/);
 assert.match(preauth, /matches\.length\s*!==\s*1/, "ambiguous phone matches must fail closed");
 assert.match(coach, /auth\.getUser\s*\(/, "coach endpoint must retain JWT validation");
 assert.match(coach, /coach_user_id/);
-assert.match(coach, /CODE_TTL_MS\s*=\s*15\s*\*\s*60\s*\*\s*1000/);
+assert.match(coach, /CODE_TTL_MS\s*=\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/);
 assert.doesNotMatch(coach, /recovery_code\s*:/, "coach endpoint must not return the recovery code");
 assert.match(migration, /claim_token_hash/);
 assert.match(migration, /request_ip_hash/);
