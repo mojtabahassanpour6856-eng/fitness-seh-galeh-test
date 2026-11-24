@@ -26,7 +26,7 @@ jobs:
           import re
           page = Path('index.html')
           html = page.read_text(encoding='utf-8')
-          guard = '''<style id="seh-auth-first-paint">#authScreen{visibility:hidden!important}</style><script>(function(){window.setTimeout(function(){var e=document.getElementById('authScreen');if(e&&!e.dataset.sehReady){var g=document.getElementById('seh-auth-first-paint');if(g)g.remove();e.style.visibility='visible';}},8000);})();</script>'''
+          guard = '''<style id="seh-auth-first-paint">html,body{background:#070b11!important}body:before{content:"";position:fixed;inset:0;background:#070b11;z-index:2147483647}#authScreen{visibility:hidden!important}</style><script>(function(){window.setTimeout(function(){var e=document.getElementById('authScreen');if(e&&!e.dataset.sehReady){document.documentElement.dataset.sehAuthLoadError='true';document.body.style.setProperty('--seh-auth-load-error','"صفحه ورود بارگذاری نشد؛ لطفاً دوباره تلاش کنید."');}},12000);})();</script>'''
           if 'seh-auth-first-paint' not in html:
               if '<head>' not in html:
                   raise SystemExit('index.html has no opening head tag')
@@ -39,7 +39,7 @@ jobs:
           if not closing:
               raise SystemExit('Could not locate closing body/html tags')
           html = html[:closing.start()] + html[closing.end():]
-          final_script = '<script id="seh-auth-redesign-final" src="./auth-preview/connected-auth.js?v=20261124-final2"></script>\n'
+          final_script = '<script id="seh-auth-redesign-final" src="./auth-preview/connected-auth.js?v=20261124-one-screen-v1"></script>\n'
           html = html.rstrip() + '\n' + final_script + '</body></html>\n'
           if html.rfind('seh-auth-redesign-final') < html.rfind('seh-session-accessor-terminal-override-v2'):
               raise SystemExit('Redesigned auth script was not placed after the legacy terminal scripts')
