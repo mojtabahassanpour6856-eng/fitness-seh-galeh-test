@@ -22,4 +22,19 @@ assert.match(migration, /claim_token_hash/);
 assert.match(migration, /request_ip_hash/);
 assert.match(migration, /request_phone_hash/);
 
-console.log("PASS: pre-auth recovery static security contract");
+
+const html = readFileSync("index.html", "utf8");
+const uiStart = html.indexOf('<script id="seh-password-recovery-ui-20261017">');
+assert.ok(uiStart >= 0, "recovery UI script must exist");
+const uiBodyStart = html.indexOf(">", uiStart) + 1;
+const uiEnd = html.indexOf("</script>", uiBodyStart);
+assert.ok(uiEnd > uiBodyStart, "recovery UI script must close");
+const uiScript = html.slice(uiBodyStart, uiEnd);
+assert.doesNotThrow(() => new Function(uiScript), "recovery UI must parse");
+assert.match(uiScript, /trainee-password-recovery-preauth/);
+assert.match(uiScript, /sessionStorage/);
+assert.match(uiScript, /crypto\.getRandomValues/);
+assert.match(uiScript, /sehRecoveryFetchCodeBtn/);
+assert.doesNotMatch(uiScript, /data\.recovery_code/, "coach UI must never display a recovery code");
+
+console.log("PASS: pre-auth recovery and browser UI static security contract");
