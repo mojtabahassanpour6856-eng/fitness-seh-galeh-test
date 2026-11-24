@@ -118,7 +118,7 @@ END $$;
 
 
 -- A known provider validation rejection may release only its own still-live lease.
-DO $
+DO $test$
 DECLARE
   v_request uuid := '20000000-0000-4000-8000-000000000003';
   v_hash text := repeat('d', 64);
@@ -150,10 +150,10 @@ BEGIN
   IF v_status <> 'approved' OR v_owner IS NOT NULL OR v_marker IS DISTINCT FROM false THEN
     RAISE EXCEPTION 'safe release did not restore approved state';
   END IF;
-END $;
+END $test$;
 
 -- Even a provider rejection is not allowed to release a lease that has already expired.
-DO $
+DO $test$
 DECLARE
   v_request uuid := '20000000-0000-4000-8000-000000000004';
   v_hash text := repeat('e', 64);
@@ -186,7 +186,7 @@ BEGIN
   IF v_marker IS DISTINCT FROM false THEN
     RAISE EXCEPTION 'release function should not silently mutate expired lease';
   END IF;
-END $;
+END $test$;
 
 -- RPCs must remain service-role-only.
 DO $$
