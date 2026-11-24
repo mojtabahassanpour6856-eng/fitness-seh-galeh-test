@@ -23,7 +23,7 @@ function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
   return copy;
 }
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const CODE_TTL_MS = 15 * 60 * 1000;
+const CODE_TTL_MS = 24 * 60 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
 
 function hex(bytes: Uint8Array): string { return Array.from(bytes, b => b.toString(16).padStart(2, "0")).join(""); }
