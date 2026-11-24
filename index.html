@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- Low-risk startup optimization: warm up connections to services used on app startup. -->
 <link rel="preload" as="script" href="./vendor/supabase-2.119.0.js">
+<link rel="preload" as="script" href="./auth-preview/connected-auth.js?v=20261126-stable-entry-v1" fetchpriority="high">
 <link rel="preconnect" href="https://udptdznbvewkublvzmtm.supabase.co" crossorigin>
 <title>فیتنس سه‌قلعه</title>
 <meta name="theme-color" content="#ffbd16">
@@ -440,6 +441,7 @@ body.locked{overflow:hidden!important}
 @media(max-width:420px){#authScreen{padding:10px}#authScreen .auth-card{padding:16px}#authScreen #authTabs>button{min-height:62px;font-size:13px}}
 </style>
 
+<style id="seh-auth-first-paint-guard">#authScreen,.page{visibility:hidden!important}</style><script id="seh-auth-first-paint-fallback">(function(){window.setTimeout(function(){var r=document.getElementById("authScreen");if(r&&!r.dataset.sehReady){var g=document.getElementById("seh-auth-first-paint-guard");if(g)g.remove();r.style.visibility="visible";}},8000);})();</script>
 </head>
 <body class="locked">
 <div id="authScreen">
@@ -480,6 +482,7 @@ body.locked{overflow:hidden!important}
     <div id="authError" class="auth-error"></div>
   </div>
 </div>
+<script id="seh-auth-redesign-early" src="./auth-preview/connected-auth.js?v=20261126-stable-entry-v1" onerror="var g=document.getElementById('seh-auth-first-paint-guard');if(g)g.remove();var r=document.getElementById('authScreen');if(r)r.style.visibility='visible';"></script>
 <div class="page">
 
 <div id="authUserBar" class="card" style="display:none;padding:10px;margin-bottom:10px">
@@ -753,7 +756,7 @@ body.locked{overflow:hidden!important}
 
 <div id="mealCoachView">
 <div id="sehEmbeddedNutritionBuilder" style="width:100%;margin:0 0 14px">
-<iframe id="sehNutritionBuilderFrame" title="برنامه‌ساز غذایی جدید" src="./coach-nutrition-builder.html" loading="eager" style="display:block;width:100%;height:900px;border:1px solid #e5d8b9;border-radius:12px;background:#f7f3e9"></iframe>
+<iframe id="sehNutritionBuilderFrame" title="برنامه‌ساز غذایی جدید" src="./coach-nutrition-builder.html" loading="lazy" style="display:block;width:100%;height:900px;border:1px solid #e5d8b9;border-radius:12px;background:#f7f3e9"></iframe>
 </div>
 <script>
 (function(){
@@ -3845,7 +3848,9 @@ window.saveMembershipCard=async function(){if(!currentClient)return alert('او�
 function buildMembershipCard(){const sec=$id('client');if(!sec||$id('membershipCardBox'))return;const card=document.createElement('div');card.className='card';card.id='membershipCardBox';card.innerHTML=`<h2>💳 کارت عضویت باشگاه</h2><div class="membership-card-visual" dir="rtl"><div class="mc-top"><strong>FITNESS SEH GALEH</strong><span>کارت عضویت</span></div><div class="mc-chip">▰</div><div class="mc-number" id="memberCardNumber">—</div><div class="mc-name"><small id="memberCardType">عضو</small><strong id="memberCardName">—</strong></div><div class="mc-details"><div><small>تاریخ عضویت در باشگاه</small><strong id="memberCardStart">—</strong></div><div><small>تاریخ انقضا</small><strong id="memberCardExpiry">—</strong></div><div><small>مبلغ شهریه</small><strong id="memberCardAmount">—</strong></div></div></div><div class="grid2"><label>نام عضو<input id="cardHolder" placeholder="نام و نام خانوادگی" readonly></label><label>شماره کارت عضویت<input id="cardNumber" placeholder="با ثبت شماره عضویت تکمیل می‌شود" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" readonly></label><label>تاریخ عضویت در باشگاه<input id="membershipStartDate" type="date" readonly></label><label>تاریخ انقضا<input id="cardExpiry" type="date" readonly></label><label>مبلغ شهریه (تومان)<input id="membershipCardAmountInput" type="number" min="0" readonly></label></div><p class="muted" style="margin-top:10px">شماره عضویت به‌صورت خودکار و تصادفی توسط سیستم اختصاص داده می‌شود.</p><button class="secondary" onclick="copyMembershipCard()">📋 کپی شماره کارت</button>`;sec.appendChild(card);}
 window.copyMembershipCard=function(){const v=$id('cardNumber')?.value||'';if(!v)return alert('شماره کارت ثبت نشده است.');if(!navigator.clipboard?.writeText){alert(v);return;}navigator.clipboard.writeText(v).then(()=>alert('شماره کارت کپی شد.')).catch(()=>alert(v));};const prevSelectClient=window.selectClient;window.selectClient=async function(id){await prevSelectClient(id);if(currentClient){if($id('trainingDaysEdit'))$id('trainingDaysEdit').value=currentClient.training_days||'';if($id('trainingTimeEdit'))$id('trainingTimeEdit').value=currentClient.training_time||'';await loadGoal();await loadMembershipCard();await loadWaterGoal();await loadWeeklyWaterLogs();}};
 
-  buildAuthTabs();addRegistrationFields();buildGoalBox();addLibraryGoalField();addWaterGoal();addStyle();buildDashboard();buildMembershipCard();addNavDashboard();buildWorkoutControls();addScheduleUI();addPrintButtons();fixLibraryUse();
+  // Keep the early approved login redesign intact; never rebuild the legacy login over it.
+  if(!window.__sehAuthRedesignConnected)buildAuthTabs();
+  addRegistrationFields();buildGoalBox();addLibraryGoalField();addWaterGoal();addStyle();buildDashboard();buildMembershipCard();addNavDashboard();buildWorkoutControls();addScheduleUI();addPrintButtons();fixLibraryUse();
   
 window.__sehGetSessionSingleFlight().then(({data})=>{if(data?.session)window.finishLogin(data.session.user);}).catch(e=>console.error(e));
 })();
@@ -15884,4 +15889,3 @@ window.sehNutritionBuilderBridge={
 })();
 </script>
 
-<script src="./auth-preview/connected-auth.js?v=20261124-scroll-fix-v2"></script>

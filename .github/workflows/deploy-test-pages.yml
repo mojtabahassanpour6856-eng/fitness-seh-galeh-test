@@ -20,22 +20,36 @@ jobs:
     steps:
       - name: Checkout TEST integration branch
         uses: actions/checkout@v4
+      - name: Validate unified login startup and mobile shell contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html = Path('index.html').read_text(encoding='utf-8')
+          auth = Path('auth-preview/connected-auth.js').read_text(encoding='utf-8')
+          sw = Path('sw.js').read_text(encoding='utf-8')
+          key = 'connected-auth.js?v=20261126-stable-entry-v1'
+          assert html.count(key) == 2, 'Expected preload plus one early login script'
+          assert html.index('seh-auth-redesign-early') < html.index('<div class="page">'), 'Login script must run before app body'
+          assert 'seh-auth-first-paint-guard' in html, 'First-paint guard missing'
+          assert 'loading="lazy"' in html, 'Nutrition iframe must not block initial page load'
+          assert 'if(!window.__sehAuthRedesignConnected)buildAuthTabs();' in html, 'Legacy builder guard missing'
+          assert 'window.__sehAuthRedesignConnected=true;' in auth, 'Auth ready flag missing'
+          assert 'min-height:100dvh!important' in auth, 'Login card and viewport units differ'
+          assert "SHELL_CACHE_NAME = 'seh-shell-v12'" in sw, 'PWA shell cache was not invalidated'
+          print('PASS: first paint, early auth, legacy guard, lazy iframe, viewport and PWA cache contracts')
+          PY
       - name: Cache-bust restored approved login screen
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          old = 'connected-auth.js?v=20261121-2057'
-          new = 'connected-auth.js?v=20261124-scroll-fix-v2'
-          if old in s:
-              s = s.replace(old, new)
-              p.write_text(s, encoding='utf-8')
-              print('Updated approved login script cache key.')
-          elif new in s or 'connected-auth.js?v=20261124-scroll-fix-v2' in s:
-              print('Approved login script cache key is already current.')
-          else:
-              raise SystemExit('Unexpected connected-auth.js reference; refusing to rewrite it.')
+          expected = 'connected-auth.js?v=20261126-stable-entry-v1'
+          if s.count(expected) != 2:
+              raise SystemExit('Expected exactly one preload and one early login script reference.')
+          if 'connected-auth.js?v=20261124-scroll-fix-v2' in s:
+              raise SystemExit('A stale terminal login script reference remains.')
+          print('Verified one preloaded and one early approved login script reference.')
           PY
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -68,10 +82,14 @@ jobs:
           fi
           grep -Fq '<title>فیتنس سه‌قلعه</title>' "$body"
           grep -Fq 'FITNESS SEH GALEH' "$body"
-          grep -Fq 'auth-preview/connected-auth.js' "$body"
+          grep -Fq 'auth-preview/connected-auth.js?v=20261126-stable-entry-v1' "$body"
+          grep -Fq 'seh-auth-first-paint-guard' "$body"
+          grep -Fq 'loading="lazy"' "$body"
+          grep -Fq 'if(!window.__sehAuthRedesignConnected)buildAuthTabs();' "$body"
+          grep -Fq "SHELL_CACHE_NAME = 'seh-shell-v12'" "$body"
           auth_js="$(mktemp)"
           trap 'rm -f "$body" "$auth_js"' EXIT
-          auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js" || true)"
+          auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js?v=20261126-stable-entry-v1" || true)"
           if [ "$auth_status" != "200" ]; then
             echo "::error::Connected login redesign JS failed to load (HTTP ${auth_status:-no response})"
             exit 1

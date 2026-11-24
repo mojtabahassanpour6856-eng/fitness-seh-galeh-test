@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const SHELL_CACHE_NAME = 'seh-shell-v9';
+const SHELL_CACHE_NAME = 'seh-shell-v12';
 const SHELL_ASSETS = [
   'index.html',
   'auth-preview/connected-auth.js',
