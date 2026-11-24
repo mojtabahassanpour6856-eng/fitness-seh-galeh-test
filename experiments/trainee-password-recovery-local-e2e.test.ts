@@ -24,7 +24,7 @@ async function createAccount(label: string, role: "coach" | "trainee") {
 async function call(token: string, payload: Record<string, unknown>) {
   const response = await fetch(functionUrl, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Origin: "http://127.0.0.1:54321" },
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Origin: "http://127.0.0.1:55321" },
     body: JSON.stringify(payload),
   });
   let body: any = {};
@@ -65,7 +65,7 @@ try {
   assert(codeResult.status === 200 && typeof codeResult.body.code === "string" && codeResult.body.code.length === 4 && [...codeResult.body.code].every((c: string) => c >= "0" && c <= "9"), "owner trainee could not retrieve approved code");
 
   const newPassword = "New-Strong-Password-2026!";
-  const reset = await call(traineeA.accessToken, { action: "reset", request_id: requestId, code: codeResult.body.code, password: newPassword });
+  const reset = await call(traineeA.accessToken, { action: "reset", request_id: requestId, code: codeResult.body.code, new_password: newPassword });
   assert(reset.status === 200 && reset.body.success === true, "password reset did not complete");
   const { data: completed, error: completedError } = await admin.from("trainee_password_recovery_requests")
     .select("status,token_hash,code_envelope").eq("id", requestId).single();
@@ -77,7 +77,7 @@ try {
   const newLogin = await traineeClient.auth.signInWithPassword({ email: traineeA.email, password: newPassword });
   assert(!!newLogin.data.session && !newLogin.error, "new password did not authenticate");
 
-  const replay = await call(traineeA.accessToken, { action: "reset", request_id: requestId, code: codeResult.body.code, password: "Another-Strong-Password-2026!" });
+  const replay = await call(traineeA.accessToken, { action: "reset", request_id: requestId, code: codeResult.body.code, new_password: "Another-Strong-Password-2026!" });
   assert(replay.status !== 200, "completed recovery request was replayable");
 
   console.log("PASS: trainee request, coach isolation/approval, trainee-only code retrieval, one-time reset, old/new password Auth verification.");
