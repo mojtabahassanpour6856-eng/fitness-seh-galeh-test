@@ -32,15 +32,13 @@ jobs:
           mkdir -p "${RUNNER_TEMP}/preauth-recovery-e2e"
           cd "${RUNNER_TEMP}/preauth-recovery-e2e"
           supabase init
-          BASE_PORT=$((55000 + GITHUB_RUN_ID % 1000 * 10))
-          export BASE_PORT
-          echo "BASE_PORT=$BASE_PORT" >> "$GITHUB_ENV"
+          echo "BASE_PORT=$((55000 + GITHUB_RUN_ID % 1000 * 10))" >> "$GITHUB_ENV"
           python3 - <<'PY'
           import os
           from pathlib import Path
           p = Path("supabase/config.toml")
           s = p.read_text()
-          base = int(os.environ["BASE_PORT"])
+          base = 55000 + (int(os.environ["GITHUB_RUN_ID"]) % 1000) * 10
           replacements = {
               "port = 54321": f"port = {base}",
               "port = 54322": f"port = {base + 1}",
