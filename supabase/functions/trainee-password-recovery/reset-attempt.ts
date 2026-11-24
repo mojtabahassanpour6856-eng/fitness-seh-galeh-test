@@ -28,7 +28,7 @@ function isDefinitiveNoMutationAuthError(error: unknown): boolean {
   const status = Number(value.status);
   const code = typeof value.code === "string" ? value.code : "";
   return (status === 400 || status === 422) &&
-    new Set(["weak_password", "same_password", "validation_failed"]).has(code);
+    new Set(["weak_password", "same_password"]).has(code);
 }
 
 async function releaseDefinitiveRejection(
