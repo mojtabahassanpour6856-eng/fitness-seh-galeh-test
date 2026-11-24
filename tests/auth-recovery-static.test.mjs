@@ -27,6 +27,20 @@ test('coach and trainee image paths exist and match their intended roles', () =>
   assert.ok(existsSync('assets/auth/trainee-entry.png'));
 });
 
+test('image assets are valid PNG files with non-zero dimensions', () => {
+  for (const path of ['assets/auth/coach-entry.png', 'assets/auth/trainee-entry.png']) {
+    const png = readFileSync(path);
+    assert.deepEqual([...png.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10], `${path} is not a PNG`);
+    assert.ok(png.readUInt32BE(16) > 0, `${path} has zero width`);
+    assert.ok(png.readUInt32BE(20) > 0, `${path} has zero height`);
+  }
+});
+
+test('the redesigned home screen is defined exactly once', () => {
+  const matches = auth.match(/id="sehAuthHome"/g) || [];
+  assert.equal(matches.length, 1, 'duplicate home-screen IDs can cause the wrong screen to render');
+});
+
 test('auth scroll overrides allow document and locked body scrolling', () => {
   assert.match(auth, /html:has\(#authScreen:not\(\[style\*="display: none"\]\)\)\{[^}]*overflow-y:auto!important/);
   assert.match(auth, /body\.locked\{[^}]*overflow-y:auto!important/);
