@@ -26,6 +26,7 @@ jobs:
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
+          # Match the TEST entrypoint preloaded in head and executed just after authScreen.
           old = 'connected-auth.js?v=20261121-2057'
           new = 'connected-auth.js?v=20261125-stable-startup'
           if old in s:
