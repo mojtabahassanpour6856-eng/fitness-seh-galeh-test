@@ -191,7 +191,7 @@ Deno.serve(async (req: Request) => {
       const { data: changed, error } = await admin.from("trainee_password_recovery_requests").update({
         status: "approved", reviewed_at: new Date().toISOString(), reviewed_by: userId,
         token_hash: verifier, token_expires_at: expiresAt, token_attempts: 0,
-        code_envelope: envelope, updated_at: new Date().toISOString(),
+        code_envelope: envelope, claim_expires_at: expiresAt, updated_at: new Date().toISOString(),
       }).eq("id", requestId).eq("status", "pending").select("id").maybeSingle();
       if (error || !changed) return json({ error: "تأیید درخواست انجام نشد." }, 503);
       // Deliberately do not return or log the code to the coach.
