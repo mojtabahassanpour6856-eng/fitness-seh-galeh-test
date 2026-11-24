@@ -160,7 +160,20 @@ Deno.serve(async (req: Request) => {
       const { data: openRows, error: openError } = await admin.from("trainee_password_recovery_requests")
         .select("id,status,claim_token_hash,claim_expires_at")
         .eq("trainee_id", trainee.id).in("status", ["pending", "approved", "processing"]).limit(1);
-      if (openError || (openRows ?? []).length > 0) return genericRequestResponse();
+      if (openError) return genericRequestResponse();
+      const openRequest = openRows?.[0];
+      if (openRequest) {
+        const claimExpired = openRequest.claim_expires_at &&
+          new Date(openRequest.claim_expires_at).getTime() <= Date.now();
+        if (!claimExpired || !["pending", "approved"].includes(openRequest.status)) return genericRequestResponse();
+        const { error: expireError } = await admin.from("trainee_password_recovery_requests")
+          .update({
+            status: "expired", token_hash: null, token_expires_at: null, code_envelope: null,
+            claim_token_hash: null, claim_expires_at: null, request_ip_hash: null, request_phone_hash: null,
+            updated_at: new Date().toISOString(),
+          }).eq("id", openRequest.id).eq("status", openRequest.status);
+        if (expireError) return genericRequestResponse();
+      }
 
       const claimHash = await hmac("claim-v1|" + claimToken);
       const claimExpires = new Date(Date.now() + CODE_TTL_MS).toISOString();
