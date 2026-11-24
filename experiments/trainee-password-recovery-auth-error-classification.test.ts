@@ -113,3 +113,28 @@ Deno.test("Auth 500 unexpected_failure remains ambiguous and quarantined", async
   assert(calls.includes("mark_trainee_password_reset_reconciliation_required"), "500 must quarantine");
   assert(!calls.includes("release_trainee_password_reset_lease"), "500 must never release the lease");
 });
+
+
+Deno.test("a matching status and code on a non-Supabase error class is still ambiguous", async () => {
+  const calls: string[] = [];
+  const admin = {
+    async rpc(name: string) {
+      calls.push(name);
+      if (name === "begin_or_resume_trainee_password_reset") return { data: "acquired", error: null };
+      if (name === "mark_trainee_password_reset_reconciliation_required") return { data: true, error: null };
+      throw new Error("unexpected RPC " + name);
+    },
+    auth: { admin: { async updateUserById() {
+      return { error: Object.assign(new Error("spoofed error shape"), {
+        name: "SomeOtherError", status: 422, code: "weak_password",
+      }) };
+    } } },
+  };
+  const result = await runPasswordResetAttempt({
+    admin, userId: "auth-user", requestId: "request-spoof", attemptId: "attempt-spoof",
+    expectedVerifier: "verifier", password: "weak",
+  });
+  assert(result.kind === "auth_unknown", "unrecognized error class must remain ambiguous");
+  assert(calls.includes("mark_trainee_password_reset_reconciliation_required"), "unrecognized class must quarantine");
+  assert(!calls.includes("release_trainee_password_reset_lease"), "unrecognized class must not release");
+});
