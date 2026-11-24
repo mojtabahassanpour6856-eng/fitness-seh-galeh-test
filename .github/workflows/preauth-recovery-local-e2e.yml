@@ -1,7 +1,7 @@
 name: Pre-auth recovery local Supabase E2E
 on:
   push:
-    branches: ["implementation/no-sms-recovery-integration-20261124"]
+    branches: ["implementation/no-sms-recovery-integration-20261124", "integration/full-app-mirror-20261115"]
     paths:
       - 'supabase/functions/trainee-password-recovery/**'
       - 'supabase/functions/trainee-password-recovery-preauth/**'
