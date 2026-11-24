@@ -20,6 +20,7 @@ assert.match(preauth, /matches\.length\s*!==\s*1/, "ambiguous phone matches must
 assert.match(coach, /auth\.getUser\s*\(/, "coach endpoint must retain JWT validation");
 assert.match(coach, /coach_user_id/);
 assert.match(coach, /CODE_TTL_MS\s*=\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/);
+assert.match(coach, /claim_expires_at:\s*expiresAt/, "coach approval must keep the browser claim valid for the full code window");
 assert.doesNotMatch(coach, /recovery_code\s*:/, "coach endpoint must not return the recovery code");
 assert.match(migration, /claim_token_hash/);
 assert.match(migration, /request_ip_hash/);
