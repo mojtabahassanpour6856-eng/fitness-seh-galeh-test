@@ -24,7 +24,7 @@ async function createAccount(label: string, role: "coach" | "trainee") {
 async function call(token: string, payload: Record<string, unknown>) {
   const response = await fetch(functionUrl, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Origin: "http://127.0.0.1:54321" },
     body: JSON.stringify(payload),
   });
   let body: any = {};
