@@ -140,7 +140,7 @@ jobs:
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v3
         with:
           version: latest
       - name: Create isolated local Supabase project directory
@@ -158,6 +158,10 @@ jobs:
           set -euo pipefail
           eval "$(supabase status -o env)"
           test -n "${API_URL:-}"
+          case "$API_URL" in
+            http://127.0.0.1:*|http://localhost:*) ;;
+            *) echo "Refusing non-local Supabase Auth endpoint"; exit 1 ;;
+          esac
           test -n "${ANON_KEY:-}"
           test -n "${SERVICE_ROLE_KEY:-}"
           export SUPABASE_URL="$API_URL"
