@@ -93,7 +93,7 @@ jobs:
           ready_coach=0; ready_trainee=0
           for i in $(seq 1 60); do
             coach_code="$(curl -sS -o /dev/null -w '%{http_code}' -X POST "$RECOVERY_FUNCTION_URL" -H 'Content-Type: application/json' -H "Origin: $RECOVERY_ALLOWED_ORIGIN" -d '{}' || true)"
-            trainee_code="$(curl -sS -o /dev/null -w '%{http_code}' -X POST "$RECOVERY_PREAUTH_FUNCTION_URL" -H 'Content-Type: application/json' -H 'Origin: http://127.0.0.1:55321' -d '{}' || true)"
+            trainee_code="$(curl -sS -o /dev/null -w '%{http_code}' -X POST "$RECOVERY_PREAUTH_FUNCTION_URL" -H 'Content-Type: application/json' -H "Origin: $RECOVERY_ALLOWED_ORIGIN" -d '{}' || true)"
             [ "$coach_code" = "401" ] && ready_coach=1
             [ "$trainee_code" = "400" ] && ready_trainee=1
             [ "$ready_coach" = 1 ] && [ "$ready_trainee" = 1 ] && break
