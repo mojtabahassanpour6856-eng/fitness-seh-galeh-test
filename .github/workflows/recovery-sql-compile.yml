@@ -1,0 +1,77 @@
+name: Recovery SQL compile check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - fix/trainee-password-recovery-ui-20261122
+    paths:
+      - 'experiments/**'
+      - '.github/workflows/recovery-sql-compile.yml'
+  pull_request:
+    branches:
+      - integration/full-app-mirror-20261115
+    paths:
+      - 'experiments/**'
+      - '.github/workflows/recovery-sql-compile.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  unit-test-recovery-crypto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Test isolated recovery v11 crypto primitives
+        run: deno test --no-check experiments/trainee-password-recovery-v11-security-primitives.review.test.ts
+
+  compile-recovery-sql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci-only-password
+          POSTGRES_DB: recovery_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d recovery_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: ci-only-password
+      PGDATABASE: recovery_ci
+      PGOPTIONS: '-c plpgsql.extra_warnings=all -c plpgsql.extra_errors=all'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Initialize disposable fixture
+        run: psql -v ON_ERROR_STOP=1 -f experiments/ci/recovery-postgres-fixture.sql
+      - name: Apply delivery metadata draft in disposable database
+        run: psql -v ON_ERROR_STOP=1 -f experiments/trainee-password-recovery-delivery-metadata-migration.review.sql
+      - name: Compile core RPC draft
+        run: psql -v ON_ERROR_STOP=1 -f experiments/trainee-password-recovery-core-rpcs.review.sql
+      - name: Compile atomic attempt RPC draft
+        run: psql -v ON_ERROR_STOP=1 -f experiments/trainee-password-recovery-atomic-attempts.review.sql
+      - name: Compile delivery and finish RPC drafts
+        run: psql -v ON_ERROR_STOP=1 -f experiments/trainee-password-recovery-delivery-finish-rpcs.review.sql
+      - name: Assert service-role-only RPC grants
+        run: |
+          psql -v ON_ERROR_STOP=1 -Atc "SELECT COALESCE(bool_and(has_function_privilege('service_role', p.oid, 'EXECUTE') AND NOT has_function_privilege('anon', p.oid, 'EXECUTE') AND NOT has_function_privilege('authenticated', p.oid, 'EXECUTE')), false) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND p.proname IN ('create_trainee_recovery_request','approve_and_queue_trainee_recovery','claim_trainee_recovery_code','record_trainee_recovery_failed_attempt','record_trainee_recovery_delivery_result','finish_trainee_recovery')" | grep -qx t
+      - name: Assert recovery RPC ownership, fixed search_path, and least-privilege ACLs
+        run: psql -v ON_ERROR_STOP=1 -f experiments/ci/recovery-postgres-security-assertions.sql
+      - name: Run lifecycle smoke tests in disposable database
+        run: psql -v ON_ERROR_STOP=1 -f experiments/ci/recovery-postgres-smoke-tests.sql
+      - name: Run independent-session concurrency tests (20 contenders)
+        run: bash experiments/ci/recovery-postgres-concurrency-tests.sh
