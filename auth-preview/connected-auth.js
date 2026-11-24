@@ -25,7 +25,7 @@ document.getElementById('sehCoachMount').appendChild(coach);
 const registration=trainee.querySelector('.seh-reg-block');if(registration){document.getElementById('sehRegisterMount').appendChild(registration);registration.style.display='block';}
 function moveRecovery(){const p=document.getElementById('sehRecoveryStudentPanel'),m=document.getElementById('sehRecoveryMount');if(p&&m&&p.parentElement!==m)m.appendChild(p);}
 window.sehAuthNavigate=function(v){root.dataset.sehView=v;if(v==='recovery'&&!document.getElementById('sehRecoveryStudentPanel')){root.dataset.sehView='trainee';error.textContent='بخش بازیابی رمز هنوز بارگذاری نشده است؛ چند لحظه بعد دوباره تلاش کنید.';error.style.display='block';}else{error.style.display='none';}moveRecovery();};
-root.dataset.sehView='home';root.dataset.sehReady='true';const firstPaintGuard=document.getElementById('seh-auth-first-paint');if(firstPaintGuard)firstPaintGuard.remove();root.style.visibility='visible';window.__sehAuthRedesignConnected=true;
+root.dataset.sehView='home';root.dataset.sehReady='true';const firstPaintGuard=document.getElementById('seh-auth-first-paint-guard');if(firstPaintGuard)firstPaintGuard.remove();root.style.visibility='visible';window.__sehAuthRedesignConnected=true;
 new MutationObserver(moveRecovery).observe(trainee,{childList:true,subtree:true});
 document.addEventListener('DOMContentLoaded',moveRecovery,{once:true});setTimeout(moveRecovery,900);
 })();
