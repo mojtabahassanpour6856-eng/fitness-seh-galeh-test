@@ -32,12 +32,12 @@ jobs:
               html = html.replace('<head>', '<head>' + guard, 1)
           # Run the redesigned entry screen immediately after its source DOM exists,
           # rather than waiting until the very end of this large legacy single-page file.
-          marker = '</div>\\n<div class="page">'
-          early = '<script id="seh-auth-redesign-early" src="./auth-preview/connected-auth.js?v=20261124-early1"></script>\\n'
+          marker = '</div>\n<div class="page">'
+          early = '<script id="seh-auth-redesign-early" src="./auth-preview/connected-auth.js?v=20261124-early1"></script>\n'
           if 'seh-auth-redesign-early' not in html:
               if marker not in html:
                   raise SystemExit('Could not locate the end of the login screen for early initializer')
-              html = html.replace(marker, '</div>\\n' + early + '<div class="page">', 1)
+              html = html.replace(marker, '</div>\n' + early + '<div class="page">', 1)
           page.write_text(html, encoding='utf-8')
           PY
       - name: Setup Pages
