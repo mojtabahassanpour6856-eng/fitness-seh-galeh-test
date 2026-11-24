@@ -142,3 +142,29 @@ Deno.test("a thrown transport error after Auth dispatch quarantines and blocks a
   assert(authCalls === 1, "no second Auth request may be dispatched");
   assert(quarantined, "ambiguous outcome must persist quarantine");
 });
+
+Deno.test("a non-error RPC response that fails to confirm quarantine is reported as marker failure", async () => {
+  let authCalls = 0;
+  const admin = {
+    async rpc(name: string) {
+      if (name === "begin_or_resume_trainee_password_reset") return { data: "acquired", error: null };
+      if (name === "mark_trainee_password_reset_reconciliation_required") return { data: false, error: null };
+      throw new Error("unexpected RPC: " + name);
+    },
+    auth: {
+      admin: {
+        async updateUserById() {
+          authCalls++;
+          return { error: new Error("ambiguous provider result") };
+        },
+      },
+    },
+  };
+  const result = await runPasswordResetAttempt({
+    admin, userId: "trainee-auth-id", requestId: "request-3",
+    attemptId: "attempt-E", expectedVerifier: "verifier", password: "password-P1",
+  });
+  assert(result.kind === "auth_unknown", "Auth outcome must remain ambiguous");
+  assert(result.markerWriteFailed, "false marker result must be reported as a failed quarantine write");
+  assert(authCalls === 1, "exactly one Auth dispatch is permitted");
+});
