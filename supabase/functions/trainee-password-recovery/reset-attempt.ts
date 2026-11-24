@@ -10,7 +10,7 @@ export type PasswordResetAttemptResult =
   | { kind: "completed" };
 
 type AdminClient = {
-  rpc: (name: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>;
+  rpc: (name: string, args: Record<string, unknown>) => PromiseLike<{ data: unknown; error: unknown }>;
   auth: {
     admin: {
       updateUserById: (userId: string, attributes: { password: string }) =>
