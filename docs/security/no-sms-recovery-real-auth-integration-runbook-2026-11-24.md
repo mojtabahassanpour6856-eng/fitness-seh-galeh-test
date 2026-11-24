@@ -1,6 +1,6 @@
 # No-SMS password recovery: isolated real-Auth integration gate
 
-Status: **planned / not yet executed**  
+Status: **local GoTrue and no-SMS happy-path E2E passed; remaining release-gate cases are still pending**  
 Scope: candidate branch only. This runbook does not authorize deployment, migration, or testing against the production Supabase project.
 
 ## Why this gate is separate
@@ -95,6 +95,17 @@ The existing remote project named `fitness-seh-galeh-test` is **not treated as a
 
 Therefore this remote mirror was not modified: no users were created or deleted, no passwords changed, no migrations applied, and no functions deployed. It must not be used as a disposable password-reset fixture without a separately approved cleanup/fixture plan. The production project was not modified either.
 
-## Current execution status
+## Current execution status (2026-11-24)
 
-The local GoTrue integration test and workflow are committed to the candidate branch. The test now also checks a real weak-password rejection against GoTrue, not only mocked SDK responses. The workflow uses `supabase/setup-cli@v3` with the CLI pinned to `3.0.0`, and refuses to run unless the Auth API URL is loopback-local. Its GitHub Actions result must still be checked after the workflow run completes. Until a green run is observed, mark the real-GoTrue CI gate as **pending**, not passed.
+The candidate branch now has two green isolated local-Supabase CI gates:
+
+- **Run 45406696823** — overall conclusion: `success`; commit `9436f88e554274fa4b3a2ba0fe85806c82767ed8`.
+- `real-local-gotrue-integration`: passed against a disposable local GoTrue server. It verifies the real Auth password lifecycle, weak-password rejection, old-password rejection, new-password acceptance, and cleanup of the temporary Auth user.
+- `local-no-sms-recovery-e2e`: passed against a separate disposable local Supabase stack with candidate migrations and generated test-only secrets. Its sanitized output confirms: trainee request creation; coach-to-coach isolation; approval without code disclosure; owner-trainee-only code retrieval; one-time password reset; old-password rejection; new-password acceptance; and replay rejection. The test creates two coaches and two trainees and deletes all four Auth users in cleanup.
+- PostgreSQL migration compilation, RPC security/ACL assertions, 20-contender concurrency tests, Auth ambiguity reconciliation, SDK error-contract tests, and crypto tests also passed in the same run.
+
+The first E2E attempt exposed a port collision; the local E2E stack now uses isolated ports. The next attempt exposed test-harness mismatches (Origin and reset payload field); those were corrected. These were test-harness failures, not changes to the production project.
+
+**Still not covered by this successful full-flow run:** simulated transport interruption after Auth dispatch within the full Edge Function flow; explicit end-to-end expiry/exhaustion/inactive-account cases; coach B reject/inspect variants beyond list/approve isolation; and a full manual review of all deployment prerequisites. The separate deterministic reconciliation tests cover the ambiguous Auth outcome and no-second-dispatch barrier, but the complete real-GoTrue E2E flow has not simulated a network interruption.
+
+All work remains on the candidate branch and in disposable local CI environments. No remote Supabase project, production database, production Auth user, production secret, deployment, or production migration was used. A green CI run is evidence for these tested paths only; it does **not** authorize deployment or production migration.
