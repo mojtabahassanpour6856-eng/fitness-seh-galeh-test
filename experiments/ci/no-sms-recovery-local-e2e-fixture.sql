@@ -19,7 +19,7 @@ create table public.trainees (
 create table public.trainee_password_recovery_requests (
   id uuid primary key default gen_random_uuid(),
   trainee_id uuid not null references public.trainees(id) on delete cascade,
-  phone_normalized text not null check (phone_normalized ~ '^\\+989[0-9]{9}$'),
+  phone_normalized text not null check (phone_normalized ~ '^\+989[0-9]{9}$'),
   status text not null check (status in ('pending','approved','processing','rejected','completed','expired')),
   requested_at timestamptz not null default now(),
   reviewed_at timestamptz,
