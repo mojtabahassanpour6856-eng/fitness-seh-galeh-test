@@ -3,9 +3,12 @@
  */
 'use strict';
 
-const SHELL_CACHE_NAME = 'seh-shell-v3';
+const SHELL_CACHE_NAME = 'seh-shell-v4';
 const SHELL_ASSETS = [
   'index.html',
+  'auth-preview/connected-auth.js',
+  'assets/auth/trainee-entry.png',
+  'assets/auth/coach-entry.png',
   'manifest.json',
   'icon.svg',
   'vendor/supabase-2.119.0.js',
