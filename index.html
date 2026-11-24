@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- Low-risk startup optimization: warm up connections to services used on app startup. -->
 <link rel="preload" as="script" href="./vendor/supabase-2.119.0.js">
+<link rel="preload" as="script" href="./auth-preview/connected-auth.js?v=20261125-stable-startup" fetchpriority="high">
 <link rel="preconnect" href="https://udptdznbvewkublvzmtm.supabase.co" crossorigin>
 <title>فیتنس سه‌قلعه</title>
 <meta name="theme-color" content="#ffbd16">
@@ -440,6 +441,7 @@ body.locked{overflow:hidden!important}
 @media(max-width:420px){#authScreen{padding:10px}#authScreen .auth-card{padding:16px}#authScreen #authTabs>button{min-height:62px;font-size:13px}}
 </style>
 
+<style id="seh-auth-first-paint-guard">#authScreen{visibility:hidden}</style>
 </head>
 <body class="locked">
 <div id="authScreen">
@@ -480,6 +482,8 @@ body.locked{overflow:hidden!important}
     <div id="authError" class="auth-error"></div>
   </div>
 </div>
+<script src="./auth-preview/connected-auth.js?v=20261125-stable-startup" onerror="var r=document.getElementById('authScreen');if(r)r.style.visibility='visible';"></script>
+
 <div class="page">
 
 <div id="authUserBar" class="card" style="display:none;padding:10px;margin-bottom:10px">
@@ -753,7 +757,7 @@ body.locked{overflow:hidden!important}
 
 <div id="mealCoachView">
 <div id="sehEmbeddedNutritionBuilder" style="width:100%;margin:0 0 14px">
-<iframe id="sehNutritionBuilderFrame" title="برنامه‌ساز غذایی جدید" src="./coach-nutrition-builder.html" loading="eager" style="display:block;width:100%;height:900px;border:1px solid #e5d8b9;border-radius:12px;background:#f7f3e9"></iframe>
+<iframe id="sehNutritionBuilderFrame" title="برنامه‌ساز غذایی جدید" src="./coach-nutrition-builder.html" loading="lazy" style="display:block;width:100%;height:900px;border:1px solid #e5d8b9;border-radius:12px;background:#f7f3e9"></iframe>
 </div>
 <script>
 (function(){
@@ -15884,4 +15888,3 @@ window.sehNutritionBuilderBridge={
 })();
 </script>
 
-<script src="./auth-preview/connected-auth.js?v=20261124-scroll-fix-v2"></script>
