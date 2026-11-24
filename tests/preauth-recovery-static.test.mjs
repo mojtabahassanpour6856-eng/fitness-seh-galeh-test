@@ -12,6 +12,7 @@ assert.match(preauth, /claim_token_hash/);
 assert.match(preauth, /claim_expires_at/);
 assert.match(preauth, /constantTimeEqual\s*\(/);
 assert.match(preauth, /CODE_TTL_MS\s*=\s*15\s*\*\s*60\s*\*\s*1000/, "pre-auth recovery code must expire after 15 minutes");
+assert.match(preauth, /CLAIM_TTL_MS\s*=\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/, "browser claim must remain available for 24 hours");
 assert.match(preauth, /record_trainee_recovery_failed_attempt_no_sms/);
 assert.match(preauth, /runPasswordResetAttempt\s*\(/);
 assert.match(preauth, /consume_registration_rate_limit/);
