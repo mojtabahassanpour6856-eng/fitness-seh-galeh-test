@@ -99,7 +99,7 @@ create or replace function public.begin_or_resume_trainee_password_reset(
 language plpgsql
 security definer
 set search_path = ''
-as $
+as $$
 declare
   r public.trainee_password_recovery_requests%rowtype;
 begin
@@ -154,7 +154,7 @@ begin
    where id = p_request_id;
   return 'acquired';
 end;
-$;
+$$;
 
 create or replace function public.finish_trainee_password_reset(
   p_request_id uuid,
@@ -164,7 +164,7 @@ create or replace function public.finish_trainee_password_reset(
 language plpgsql
 security definer
 set search_path = ''
-as $
+as $$
 declare
   finished_id uuid;
 begin
@@ -187,7 +187,7 @@ begin
   returning id into finished_id;
   return finished_id is not null;
 end;
-$;
+$$;
 
 -- Release only after a definitive Auth rejection, never after a timeout/unknown result.
 create or replace function public.release_trainee_password_reset_lease(
@@ -197,7 +197,7 @@ create or replace function public.release_trainee_password_reset_lease(
 language plpgsql
 security definer
 set search_path = ''
-as $
+as $$
 declare
   released_id uuid;
 begin
@@ -213,7 +213,7 @@ begin
   returning id into released_id;
   return released_id is not null;
 end;
-$;
+$$;
 
 revoke all on function public.begin_or_resume_trainee_password_reset(uuid, text, uuid, integer) from public, anon, authenticated;
 revoke all on function public.finish_trainee_password_reset(uuid, uuid, text) from public, anon, authenticated;
