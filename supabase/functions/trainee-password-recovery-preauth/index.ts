@@ -63,6 +63,14 @@ async function consumeLimit(admin: any, key: string, seconds: number, maximum: n
   if (error) throw new Error("rate limiter unavailable");
   return data === true;
 }
+async function constantTimeEqual(a: string, b: string): Promise<boolean> {
+  let left: Uint8Array, right: Uint8Array;
+  try { left = unb64url(a); right = unb64url(b); } catch { return false; }
+  if (left.length !== 32 || right.length !== 32) return false;
+  let diff = 0;
+  for (let i = 0; i < 32; i++) diff |= left[i] ^ right[i];
+  return diff === 0;
+}
 function normalizePhone(value: unknown): string | null {
   let phone = String(value ?? "").trim().replace(/[۰-۹]/g, d => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))
     .replace(/[٠-٩]/g, d => String("٠١٢٣٤٥٦٧٨٩".indexOf(d))).replace(/[\s()-]/g, "");
@@ -155,7 +163,7 @@ Deno.serve(async (req: Request) => {
       if (openError || (openRows ?? []).length > 0) return genericRequestResponse();
 
       const claimHash = await hmac("claim-v1|" + claimToken);
-      const claimExpires = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+      const claimExpires = new Date(Date.now() + CODE_TTL_MS).toISOString();
       const { error: insertError } = await admin.from("trainee_password_recovery_requests").insert({
         id: requestId,
         trainee_id: trainee.id,
@@ -206,7 +214,7 @@ Deno.serve(async (req: Request) => {
       const resetRate = await hashForRateLimit("reset|" + requestId + "|" + claimHash);
       if (!(await consumeLimit(admin, resetRate, 900, 5))) return json({ error: "تعداد تلاش‌ها بیش از حد مجاز است." }, 429);
       const candidate = await codeVerifier(code, row.id, row.trainee_id, row.token_expires_at);
-      if (candidate !== row.token_hash) {
+      if (!(await constantTimeEqual(candidate, row.token_hash))) {
         if (row.status !== "approved" || new Date(row.token_expires_at).getTime() <= Date.now()) return json({ error: "کد نامعتبر یا منقضی شده است." }, 400);
         const { data: attempts, error: attemptError } = await admin.rpc("record_trainee_recovery_failed_attempt_no_sms", {
           p_request_id: row.id, p_expected_verifier: row.token_hash,
