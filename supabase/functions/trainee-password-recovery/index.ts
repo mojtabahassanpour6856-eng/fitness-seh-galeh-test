@@ -1,6 +1,6 @@
 // CANDIDATE ONLY. Do not deploy until migration and integration tests are reviewed.
 // No SMS/email/provider calls. Every action requires a valid Supabase user JWT.
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.119.2";
 import { runPasswordResetAttempt } from "./reset-attempt.ts";
 
 const allowedOrigin = Deno.env.get("RECOVERY_ALLOWED_ORIGIN") ?? "";
