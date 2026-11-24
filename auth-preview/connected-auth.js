@@ -38,6 +38,86 @@ st.textContent += `
 html:has(#authScreen:not([style*="display: none"])){min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:auto!important}\nbody.locked{min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:auto!important}
 `;
 
+
+/* Keep the landing/home choice screen fully inside one viewport.
+   Other auth views retain natural scrolling for small screens and forms. */
+st.textContent += `
+@supports (height: 100dvh) {
+  #authScreen[data-seh-view=home] {
+    position:fixed!important;inset:0!important;width:100%!important;
+    height:100dvh!important;min-height:0!important;max-height:100dvh!important;
+    overflow:hidden!important;overscroll-behavior:none!important;
+  }
+  #authScreen[data-seh-view=home] .auth-card {
+    box-sizing:border-box!important;height:100dvh!important;min-height:0!important;
+    max-height:100dvh!important;overflow:hidden!important;
+    padding:clamp(8px,1.7dvh,16px) clamp(12px,4vw,22px)!important;
+  }
+}
+#authScreen[data-seh-view=home] .auth-card {
+  display:flex!important;flex-direction:column!important;
+}
+#authScreen[data-seh-view=home] .auth-card>div:first-child {
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+  justify-content:flex-start!important;min-height:0!important;
+}
+#authScreen[data-seh-view=home] .seh-top {
+  flex:0 0 auto!important;margin-bottom:clamp(5px,1.2vh,12px)!important;
+  font-size:10px!important;
+}
+#authScreen[data-seh-view=home] .seh-brand {
+  flex:0 0 auto!important;margin:0 0 clamp(7px,1.5vh,14px)!important;
+}
+#authScreen[data-seh-view=home] .seh-mark {
+  width:clamp(48px,8vh,68px)!important;height:clamp(48px,8vh,68px)!important;
+  margin-bottom:6px!important;border-radius:16px!important;
+}
+#authScreen[data-seh-view=home] .seh-brand h2 {font-size:clamp(17px,2.8vh,21px)!important}
+#authScreen[data-seh-view=home] .seh-brand p {margin-top:3px!important;font-size:11px!important}
+#authScreen[data-seh-view=home] #sehAuthHome {
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+  justify-content:center!important;min-height:0!important;
+}
+#authScreen[data-seh-view=home] .seh-welcome {margin-bottom:clamp(7px,1.5vh,14px)!important}
+#authScreen[data-seh-view=home] .seh-welcome h3 {
+  font-size:clamp(16px,2.7vh,20px)!important;margin:4px 0!important;
+}
+#authScreen[data-seh-view=home] .seh-welcome p {font-size:11px!important;line-height:1.55!important}
+#authScreen[data-seh-view=home] .seh-choices {gap:clamp(7px,1.4vh,11px)!important}
+#authScreen[data-seh-view=home] .seh-choice {
+  min-height:0!important;padding:clamp(7px,1.4vh,11px)!important;
+  gap:10px!important;border-radius:14px!important;
+}
+#authScreen[data-seh-view=home] .seh-art {
+  width:clamp(64px,10vh,84px)!important;height:clamp(64px,10vh,84px)!important;
+  flex-basis:clamp(64px,10vh,84px)!important;border-radius:13px!important;
+}
+#authScreen[data-seh-view=home] .seh-copy b {font-size:14px!important;margin-bottom:3px!important}
+#authScreen[data-seh-view=home] .seh-copy small {font-size:10px!important;line-height:1.5!important}
+#authScreen[data-seh-view=home] .seh-register {
+  flex:0 0 auto!important;margin-top:clamp(7px,1.5vh,13px)!important;
+  padding:7px!important;border-radius:11px!important;
+}
+#authScreen[data-seh-view=home] .seh-register p {font-size:10px!important;margin-bottom:2px!important}
+#authScreen[data-seh-view=home] .seh-link {padding:5px!important;font-size:11px!important}
+#authScreen[data-seh-view=home] .seh-foot {
+  flex:0 0 auto!important;margin-top:clamp(5px,1vh,9px)!important;
+  padding-top:0!important;font-size:9px!important;line-height:1.4!important;
+}
+@media (max-height:620px) {
+  #authScreen[data-seh-view=home] .seh-top {margin-bottom:4px!important}
+  #authScreen[data-seh-view=home] .seh-brand {margin-bottom:5px!important}
+  #authScreen[data-seh-view=home] .seh-mark {width:46px!important;height:46px!important}
+  #authScreen[data-seh-view=home] .seh-welcome {margin-bottom:6px!important}
+  #authScreen[data-seh-view=home] .seh-welcome p {display:none!important}
+  #authScreen[data-seh-view=home] .seh-art {
+    width:58px!important;height:58px!important;flex-basis:58px!important
+  }
+  #authScreen[data-seh-view=home] .seh-register {margin-top:6px!important;padding:5px!important}
+  #authScreen[data-seh-view=home] .seh-foot {display:none!important}
+}
+`;
+
 document.head.appendChild(st);
 const shell=document.createElement('div');
 shell.innerHTML='<div class="seh-top"><span>FITNESS SEH GALEH</span><span class="seh-tag">ورود امن اعضا</span></div><div class="seh-brand"><div class="seh-mark"><img src="./icon.svg" alt="نشان فیتنس سه‌قلعه"></div><h2>باشگاه فیتنس سه‌قلعه</h2><p>مربی من | همراه شما در مسیر تناسب اندام</p></div>'+
