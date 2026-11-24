@@ -168,3 +168,95 @@ Deno.test("a non-error RPC response that fails to confirm quarantine is reported
   assert(result.markerWriteFailed, "false marker result must be reported as a failed quarantine write");
   assert(authCalls === 1, "exactly one Auth dispatch is permitted");
 });
+
+
+Deno.test("fresh Edge invocation after ambiguous outcome reads durable quarantine and never redispatches Auth", async () => {
+  const persisted = { state: "approved" as "approved" | "processing", owner: "", quarantined: false };
+  let authCalls = 0;
+  const makeAdmin = (throwAfterDispatch: boolean) => ({
+    async rpc(name: string, args: Record<string, unknown>) {
+      if (name === "begin_or_resume_trainee_password_reset") {
+        if (persisted.quarantined) return { data: "blocked_unknown_outcome", error: null };
+        if (persisted.state === "approved") {
+          persisted.state = "processing";
+          persisted.owner = String(args.p_attempt_id);
+          return { data: "acquired", error: null };
+        }
+        return { data: "busy", error: null };
+      }
+      if (name === "mark_trainee_password_reset_reconciliation_required") {
+        if (persisted.state === "processing" && persisted.owner === args.p_attempt_id) {
+          persisted.quarantined = true;
+          return { data: true, error: null };
+        }
+        return { data: false, error: null };
+      }
+      throw new Error("unexpected RPC " + name);
+    },
+    auth: { admin: { async updateUserById() {
+      authCalls++;
+      if (throwAfterDispatch) throw new Error("synthetic response lost after dispatch");
+      return { error: null };
+    } } },
+  });
+
+  const firstInvocation = await runPasswordResetAttempt({
+    admin: makeAdmin(true), userId: "auth-user", requestId: "request-restart",
+    attemptId: "attempt-first", expectedVerifier: "verifier", password: "candidate-1",
+  });
+  assert(firstInvocation.kind === "auth_unknown", "first invocation must quarantine unknown outcome");
+
+  // Simulate a new Edge isolate/client with no in-memory state, backed by the same DB row.
+  const restartedInvocation = await runPasswordResetAttempt({
+    admin: makeAdmin(false), userId: "auth-user", requestId: "request-restart",
+    attemptId: "attempt-after-restart", expectedVerifier: "verifier", password: "candidate-2",
+  });
+  assert(restartedInvocation.kind === "blocked_unknown_outcome", "new isolate must observe DB quarantine");
+  assert(authCalls === 1, "new isolate must not dispatch a second Auth request");
+});
+
+Deno.test("two concurrent reset invocations dispatch at most one Auth update", async () => {
+  let state: "approved" | "processing" | "completed" = "approved";
+  let owner = "";
+  let authCalls = 0;
+  const admin = {
+    async rpc(name: string, args: Record<string, unknown>) {
+      if (name === "begin_or_resume_trainee_password_reset") {
+        if (state === "approved") {
+          state = "processing";
+          owner = String(args.p_attempt_id);
+          return { data: "acquired", error: null };
+        }
+        if (state === "processing") return { data: "busy", error: null };
+        return { data: "invalid", error: null };
+      }
+      if (name === "finish_trainee_password_reset") {
+        if (state === "processing" && owner === args.p_attempt_id) {
+          state = "completed";
+          return { data: true, error: null };
+        }
+        return { data: false, error: null };
+      }
+      throw new Error("unexpected RPC " + name);
+    },
+    auth: { admin: { async updateUserById() {
+      authCalls++;
+      return { error: null };
+    } } },
+  };
+  const [one, two] = await Promise.all([
+    runPasswordResetAttempt({
+      admin, userId: "auth-user", requestId: "request-race",
+      attemptId: "attempt-race-1", expectedVerifier: "verifier", password: "password-1",
+    }),
+    runPasswordResetAttempt({
+      admin, userId: "auth-user", requestId: "request-race",
+      attemptId: "attempt-race-2", expectedVerifier: "verifier", password: "password-2",
+    }),
+  ]);
+  assert([one.kind, two.kind].filter(kind => kind === "completed").length === 1,
+    "exactly one concurrent invocation should complete");
+  assert([one.kind, two.kind].filter(kind => kind === "busy").length === 1,
+    "the competing invocation must be rejected as busy");
+  assert(authCalls === 1, "only the lease owner may dispatch Auth");
+});
