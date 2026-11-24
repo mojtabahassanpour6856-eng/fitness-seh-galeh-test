@@ -35,7 +35,7 @@ st.textContent += `
   flex:initial!important;
   min-height:0!important;
 }
-html,body{min-height:100%!important;overscroll-behavior-y:auto!important}
+html:has(#authScreen:not([style*="display: none"])){min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:auto!important}\nbody.locked{min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:auto!important}
 `;
 
 document.head.appendChild(st);
