@@ -170,5 +170,11 @@ jobs:
           deno test --no-check --allow-net --allow-env "$GITHUB_WORKSPACE/experiments/trainee-password-recovery-real-gotrue.integration.test.ts"
       - name: Stop disposable local Supabase stack
         if: always()
-        working-directory: ${{ runner.temp }}/recovery-auth-local
-        run: supabase stop --no-backup || true
+        shell: bash
+        run: |
+          if [ -d "${RUNNER_TEMP}/recovery-auth-local/supabase" ]; then
+            cd "${RUNNER_TEMP}/recovery-auth-local"
+            supabase stop --no-backup || true
+          else
+            echo "Local Supabase project was not initialized; nothing to stop."
+          fi
