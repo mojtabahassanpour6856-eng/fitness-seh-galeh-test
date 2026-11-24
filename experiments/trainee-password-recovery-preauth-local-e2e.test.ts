@@ -70,6 +70,8 @@ try {
   assert(coachAList.status === 200 && coachAList.body.requests.some((x: any) => x.id === claimA.request_id), "coach A cannot see own trainee request");
   const approvalA = await post(coachFunctionUrl, { action: "review", request_id: claimA.request_id, decision: "approve" }, coachA.accessToken);
   assert(approvalA.status === 200 && approvalA.body.status === "approved" && !("code" in approvalA.body) && !("recovery_code" in approvalA.body), "coach approval leaked recovery code");
+  const approvedWindow = await admin.from("trainee_password_recovery_requests").select("token_expires_at,claim_expires_at").eq("id", claimA.request_id).single();
+  assert(!approvedWindow.error && approvedWindow.data.token_expires_at === approvedWindow.data.claim_expires_at, "browser claim does not cover the full 24-hour code window");
 
   const wrongClaim = randomClaim();
   const stolenClaim = await post(preauthFunctionUrl, { action: "code", request_id: claimA.request_id, claim_token: wrongClaim.claim_token });
