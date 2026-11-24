@@ -69,3 +69,47 @@ Deno.test("failed DB release after definitive Auth rejection falls back to quara
   assert(result.kind === "auth_rejected" && result.leaseReleaseFailed, "failed release must be explicit");
   assert(calls.includes("mark_trainee_password_reset_reconciliation_required"), "failed release must quarantine");
 });
+
+
+Deno.test("explicit same_password 422 rejection is treated as no-mutation and releases lease", async () => {
+  const calls: string[] = [];
+  const admin = {
+    async rpc(name: string) {
+      calls.push(name);
+      if (name === "begin_or_resume_trainee_password_reset") return { data: "acquired", error: null };
+      if (name === "release_trainee_password_reset_lease") return { data: true, error: null };
+      throw new Error("unexpected RPC " + name);
+    },
+    auth: { admin: { async updateUserById() {
+      return { error: Object.assign(new Error("same password"), { status: 422, code: "same_password" }) };
+    } } },
+  };
+  const result = await runPasswordResetAttempt({
+    admin, userId: "auth-user", requestId: "request-same", attemptId: "attempt-same",
+    expectedVerifier: "verifier", password: "same-password",
+  });
+  assert(result.kind === "auth_rejected" && !result.leaseReleaseFailed, "same_password should be a definitive rejection");
+  assert(calls.includes("release_trainee_password_reset_lease"), "same_password must release the exact live lease");
+});
+
+Deno.test("Auth 500 unexpected_failure remains ambiguous and quarantined", async () => {
+  const calls: string[] = [];
+  const admin = {
+    async rpc(name: string) {
+      calls.push(name);
+      if (name === "begin_or_resume_trainee_password_reset") return { data: "acquired", error: null };
+      if (name === "mark_trainee_password_reset_reconciliation_required") return { data: true, error: null };
+      throw new Error("unexpected RPC " + name);
+    },
+    auth: { admin: { async updateUserById() {
+      return { error: Object.assign(new Error("Auth service failure"), { status: 500, code: "unexpected_failure" }) };
+    } } },
+  };
+  const result = await runPasswordResetAttempt({
+    admin, userId: "auth-user", requestId: "request-500", attemptId: "attempt-500",
+    expectedVerifier: "verifier", password: "candidate-password",
+  });
+  assert(result.kind === "auth_unknown", "500 must remain ambiguous");
+  assert(calls.includes("mark_trainee_password_reset_reconciliation_required"), "500 must quarantine");
+  assert(!calls.includes("release_trainee_password_reset_lease"), "500 must never release the lease");
+});
