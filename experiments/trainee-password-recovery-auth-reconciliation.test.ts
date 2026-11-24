@@ -92,7 +92,7 @@ Deno.test("delayed Auth request beyond lease expiry cannot be followed by a seco
   assert(firstResult.kind === "completion_pending", "late first attempt must not clear quarantine");
   assert(authPassword === "password-P1", "only the delayed first password may have reached Auth");
   assert(authCalls === 1, "Auth call count must remain exactly one after late completion");
-  assert(quarantined === true, "request must remain quarantined after late completion");
+  assert(Boolean(quarantined), "request must remain quarantined after late completion");
 });
 
 Deno.test("a thrown transport error after Auth dispatch quarantines and blocks all later attempts", async () => {
