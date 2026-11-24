@@ -59,7 +59,7 @@ Deno.test("failed DB release after definitive Auth rejection falls back to quara
       throw new Error("unexpected RPC " + name);
     },
     auth: { admin: { async updateUserById() {
-      return { error: Object.assign(new Error("weak password"), { status: 422, code: "weak_password" }) };
+      return { error: Object.assign(new Error("weak password"), { name: "AuthWeakPasswordError", status: 422, code: "weak_password" }) };
     } } },
   };
   const result = await runPasswordResetAttempt({
