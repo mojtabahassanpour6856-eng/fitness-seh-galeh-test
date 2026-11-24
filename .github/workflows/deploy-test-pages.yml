@@ -19,32 +19,19 @@ jobs:
     steps:
       - name: Checkout TEST integration branch
         uses: actions/checkout@v4
-      - name: Keep legacy login hidden and run redesigned entry screen last
+      - name: Cache-bust restored approved login screen
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
-          page = Path('index.html')
-          html = page.read_text(encoding='utf-8')
-          guard = '''<style id="seh-auth-first-paint">html,body{background:#070b11!important}body:before{content:"";position:fixed;inset:0;background:#070b11;z-index:2147483647}#authScreen{visibility:hidden!important}html[data-seh-auth-load-error="true"] body:before{content:"صفحه ورود بارگذاری نشد؛ لطفاً صفحه را دوباره بارگذاری کنید.";display:grid;place-items:center;color:#f7f8fa;text-align:center;padding:24px;direction:rtl}</style><script>(function(){window.setTimeout(function(){var e=document.getElementById('authScreen');if(e&&!e.dataset.sehReady){document.documentElement.dataset.sehAuthLoadError='true';document.body.style.setProperty('--seh-auth-load-error','"صفحه ورود بارگذاری نشد؛ لطفاً دوباره تلاش کنید."');}},12000);})();</script>'''
-          if 'seh-auth-first-paint' not in html:
-              if '<head>' not in html:
-                  raise SystemExit('index.html has no opening head tag')
-              html = html.replace('<head>', '<head>' + guard, 1)
-          # The legacy app initializes/rebuilds authTabs late in its large script.
-          # Remove any earlier injected copy and move the closing tags after every
-          # legacy script, then run the redesign as the final executable script.
-          html = re.sub(r'<script\s+id="seh-auth-redesign-(?:early|final)"[^>]*>\s*</script>', '', html, flags=re.I)
-          closing = re.search(r'</body\s*>\s*</html\s*>', html, flags=re.I)
-          if not closing:
-              raise SystemExit('Could not locate closing body/html tags')
-          html = html[:closing.start()] + html[closing.end():]
-          final_script = '<script id="seh-auth-redesign-final" src="./auth-preview/connected-auth.js?v=20261124-one-screen-v1"></script>\n'
-          html = html.rstrip() + '\n' + final_script + '</body></html>\n'
-          if html.rfind('seh-auth-redesign-final') < html.rfind('seh-session-accessor-terminal-override-v2'):
-              raise SystemExit('Redesigned auth script was not placed after the legacy terminal scripts')
-          page.write_text(html, encoding='utf-8')
-          print('Prepared final auth initializer after all legacy scripts; first-paint guard remains active.')
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          old = 'connected-auth.js?v=20261121-2057'
+          new = 'connected-auth.js?v=20261124-approved-restore'
+          if old not in s:
+              raise SystemExit('Expected approved login script reference was not found')
+          s = s.replace(old, new)
+          p.write_text(s, encoding='utf-8')
+          print('Restored approved login script cache key.')
           PY
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -52,29 +39,12 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-          name: github-pages
-      - name: Wait until Pages artifact is visible to the deployment API
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPOSITORY: ${{ github.repository }}
-          GH_RUN_ID: ${{ github.run_id }}
-        run: |
-          set -euo pipefail
-          for attempt in $(seq 1 12); do
-            if gh api "repos/$GH_REPOSITORY/actions/runs/$GH_RUN_ID/artifacts" --jq '.artifacts[]? | select(.name == "github-pages" and .expired == false) | .id' | grep -q .; then
-              echo "Pages artifact is visible to the GitHub Actions API."
-              exit 0
-            fi
-            echo "Pages artifact metadata is not visible yet (attempt $attempt/12); waiting 5 seconds..."
-            sleep 5
-          done
-          echo "::error::github-pages artifact was uploaded but did not become visible to the deployment API within 60 seconds."
-          exit 1
+          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Deploy TEST app to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
         with:
-          artifact_name: github-pages
+          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Verify published TEST site
         env:
           PAGES_URL: ${{ steps.deployment.outputs.page_url }}
@@ -98,26 +68,9 @@ jobs:
           grep -Fq '<title>فیتنس سه‌قلعه</title>' "$body"
           grep -Fq 'FITNESS SEH GALEH' "$body"
           grep -Fq 'auth-preview/connected-auth.js' "$body"
-          grep -Fq 'seh-auth-redesign-final' "$body"
-          if grep -Fq 'seh-auth-redesign-early' "$body"; then
-            echo "::error::An early auth initializer is still present"
-            exit 1
-          fi
-          python - "$body" <<'PY'
-          import sys
-          from pathlib import Path
-          html = Path(sys.argv[1]).read_text(encoding='utf-8')
-          final = html.rfind('seh-auth-redesign-final')
-          legacy = html.rfind('seh-session-accessor-terminal-override-v2')
-          if final <= legacy:
-              raise SystemExit('Final redesigned auth initializer does not follow legacy scripts')
-          if html.count('seh-auth-redesign-final') != 1:
-              raise SystemExit('Expected exactly one final auth initializer')
-          print('PASS: redesigned auth initializer is last, after all legacy scripts.')
-          PY
           auth_js="$(mktemp)"
           trap 'rm -f "$body" "$auth_js"' EXIT
-          auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js?v=20261124-final2" || true)"
+          auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js" || true)"
           if [ "$auth_status" != "200" ]; then
             echo "::error::Connected login redesign JS failed to load (HTTP ${auth_status:-no response})"
             exit 1
@@ -137,4 +90,4 @@ jobs:
             echo "::error::Production Supabase ref was found in the deployed TEST HTML"
             exit 1
           fi
-          echo "PASS: deployed TEST app returned HTTP 200, uses TEST-only Supabase, and runs redesigned auth last."
+          echo "PASS: deployed TEST app returned HTTP 200 and contains TEST-only branding and Supabase reference."
