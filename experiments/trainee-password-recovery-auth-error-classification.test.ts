@@ -36,7 +36,7 @@ Deno.test("generic Auth 400 remains ambiguous and is quarantined", async () => {
       throw new Error("unexpected RPC " + name);
     },
     auth: { admin: { async updateUserById() {
-      return { error: Object.assign(new Error("bad request"), { status: 400, code: "other" }) };
+      return { error: Object.assign(new Error("bad request"), { status: 400, code: "validation_failed" }) };
     } } },
   };
   const result = await runPasswordResetAttempt({
