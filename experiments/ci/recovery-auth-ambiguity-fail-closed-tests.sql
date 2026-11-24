@@ -116,6 +116,78 @@ BEGIN
   END IF;
 END $$;
 
+
+-- A known provider validation rejection may release only its own still-live lease.
+DO $
+DECLARE
+  v_request uuid := '20000000-0000-4000-8000-000000000003';
+  v_hash text := repeat('d', 64);
+  v_attempt uuid := '30000000-0000-4000-8000-000000000006';
+  v_state text;
+  v_ok boolean;
+  v_status text;
+  v_owner uuid;
+  v_marker boolean;
+BEGIN
+  INSERT INTO public.trainee_password_recovery_requests(
+    id, trainee_id, phone_normalized, status, token_hash, token_expires_at,
+    token_attempts, code_envelope
+  ) VALUES (
+    v_request, '10000000-0000-4000-8000-000000000001', '+989121234567',
+    'approved', v_hash, pg_catalog.now() + interval '24 hours', 0, 'synthetic-envelope'
+  );
+
+  SELECT public.begin_or_resume_trainee_password_reset(v_request, v_hash, v_attempt, 120)
+    INTO v_state;
+  IF v_state <> 'acquired' THEN RAISE EXCEPTION 'definitive rejection fixture not acquired'; END IF;
+
+  SELECT public.release_trainee_password_reset_lease(v_request, v_attempt) INTO v_ok;
+  IF v_ok IS DISTINCT FROM true THEN RAISE EXCEPTION 'matching live lease did not release'; END IF;
+
+  SELECT status, reset_attempt_id, reset_reconciliation_required
+    INTO v_status, v_owner, v_marker
+    FROM public.trainee_password_recovery_requests WHERE id = v_request;
+  IF v_status <> 'approved' OR v_owner IS NOT NULL OR v_marker IS DISTINCT FROM false THEN
+    RAISE EXCEPTION 'safe release did not restore approved state';
+  END IF;
+END $;
+
+-- Even a provider rejection is not allowed to release a lease that has already expired.
+DO $
+DECLARE
+  v_request uuid := '20000000-0000-4000-8000-000000000004';
+  v_hash text := repeat('e', 64);
+  v_attempt uuid := '30000000-0000-4000-8000-000000000007';
+  v_state text;
+  v_ok boolean;
+  v_marker boolean;
+BEGIN
+  INSERT INTO public.trainee_password_recovery_requests(
+    id, trainee_id, phone_normalized, status, token_hash, token_expires_at,
+    token_attempts, code_envelope
+  ) VALUES (
+    v_request, '10000000-0000-4000-8000-000000000002', '+989121234568',
+    'approved', v_hash, pg_catalog.now() + interval '24 hours', 0, 'synthetic-envelope'
+  );
+
+  SELECT public.begin_or_resume_trainee_password_reset(v_request, v_hash, v_attempt, 120)
+    INTO v_state;
+  IF v_state <> 'acquired' THEN RAISE EXCEPTION 'expired-lease fixture not acquired'; END IF;
+
+  UPDATE public.trainee_password_recovery_requests
+     SET reset_lease_until = pg_catalog.now() - interval '1 second'
+   WHERE id = v_request AND reset_attempt_id = v_attempt;
+
+  SELECT public.release_trainee_password_reset_lease(v_request, v_attempt) INTO v_ok;
+  IF v_ok IS DISTINCT FROM false THEN RAISE EXCEPTION 'expired lease unexpectedly released'; END IF;
+
+  SELECT reset_reconciliation_required INTO v_marker
+    FROM public.trainee_password_recovery_requests WHERE id = v_request;
+  IF v_marker IS DISTINCT FROM false THEN
+    RAISE EXCEPTION 'release function should not silently mutate expired lease';
+  END IF;
+END $;
+
 -- RPCs must remain service-role-only.
 DO $$
 DECLARE
