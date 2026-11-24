@@ -29,15 +29,22 @@ jobs:
           # Match the TEST entrypoint preloaded in head and executed just after authScreen; retry cleanly after transient Pages status errors.
           old = 'connected-auth.js?v=20261121-2057'
           new = 'connected-auth.js?v=20261125-auth-init-retry'
+          previous = 'connected-auth.js?v=20261125-stable-startup'
           if old in s:
               s = s.replace(old, new)
               p.write_text(s, encoding='utf-8')
               print('Updated approved login script cache key.')
+          elif previous in s:
+              s = s.replace(previous, new)
+              p.write_text(s, encoding='utf-8')
+              print('Refreshed login script cache key for deferred initialization.')
           elif new in s or 'connected-auth.js?v=20261124-scroll-fix-v2' in s:
               print('Approved login script cache key is already current.')
           else:
               raise SystemExit('Unexpected connected-auth.js reference; refusing to rewrite it.')
           PY
+      - name: Validate TEST login JavaScript syntax
+        run: node --check auth-preview/connected-auth.js
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload TEST app artifact
