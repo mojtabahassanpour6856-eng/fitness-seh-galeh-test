@@ -97,3 +97,34 @@ All RPCs are SECURITY DEFINER, fixed `search_path`, revoked from public/anon/aut
 ## Current decision
 
 This design addresses the recoverable reset boundary but has not been implemented or tested. The existing candidate remains blocked. Keep `RECOVERY_NO_SMS_ENABLED` unset/false; do not apply migrations or deploy.
+
+
+## Addendum — distributed Auth/DB boundary (2026-11-24)
+
+A lease plus a fencing token protects database state, but it cannot fence an already-issued
+Supabase Auth HTTP request. If request A times out locally while Auth is still processing it,
+its lease can expire; request B can acquire a new lease and submit another password update;
+request A may then complete late and overwrite B. A later conditional DB finalize cannot undo
+that external Auth side effect.
+
+Therefore the current candidate's automatic "retry after lease expiry" is **not proven safe**
+for ambiguous Auth outcomes. Do not treat a lease as exactly-once execution across Postgres
+and Auth.
+
+Safe release/retry policy:
+- A lease may be released automatically only when the Auth endpoint returns a definitive
+  rejection that guarantees the password was not changed.
+- For timeout, connection reset, gateway error, or any uncertain outcome, do not automatically
+  issue another Auth update merely because the lease expires.
+- Keep the request in a distinct reconciliation-required state (or processing with an explicit
+  manual-review marker), block further reset attempts, and require an operator to verify the
+  account state through an independently authenticated recovery/admin process before reopening.
+- Never ask the trainee to submit a new password while the previous Auth update may still be
+  in flight.
+- Add fault-injection tests where Auth completion is delayed beyond lease expiry; the second
+  update must not be issued.
+
+This is a hard distributed-systems limitation, not something a longer lease or DB transaction
+can eliminate. The implementation must be revised to fail closed on ambiguous Auth outcomes
+before any deployment. The existing 120-second lease/resume behavior is a candidate experiment
+only and is not approved for production.
