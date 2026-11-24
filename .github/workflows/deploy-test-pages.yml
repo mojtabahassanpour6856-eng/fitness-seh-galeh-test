@@ -26,12 +26,15 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
           old = 'connected-auth.js?v=20261121-2057'
-          new = 'connected-auth.js?v=20261124-mobile-scroll-restore'
-          if old not in s:
-              raise SystemExit('Expected approved login script reference was not found')
-          s = s.replace(old, new)
-          p.write_text(s, encoding='utf-8')
-          print('Restored approved login script cache key.')
+          new = 'connected-auth.js?v=20261124-scroll-fix-v2'
+          if old in s:
+              s = s.replace(old, new)
+              p.write_text(s, encoding='utf-8')
+              print('Updated approved login script cache key.')
+          elif new in s:
+              print('Approved login script cache key is already current.')
+          else:
+              raise SystemExit('Unexpected connected-auth.js reference; refusing to rewrite it.')
           PY
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -82,6 +85,8 @@ jobs:
           grep -Fq 'touch-action:pan-y!important' "$auth_js"
           grep -Fq -- '-webkit-overflow-scrolling:touch!important' "$auth_js"
           grep -Fq 'overscroll-behavior-y:contain!important' "$auth_js"
+          grep -Fq 'overflow-y:auto!important' "$auth_js"
+          grep -Fq 'overflow:visible!important;touch-action:pan-y!important' "$auth_js"
           for asset in assets/auth/trainee-entry.png assets/auth/coach-entry.png; do
             asset_status="$(curl --silent --show-error --location --max-time 30 --output /dev/null --write-out '%{http_code}' "${PAGES_URL}${asset}" || true)"
             if [ "$asset_status" != "200" ]; then
