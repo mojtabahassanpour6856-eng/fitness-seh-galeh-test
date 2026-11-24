@@ -18,7 +18,7 @@ const json = (body: unknown, status = 200) => new Response(JSON.stringify(body),
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 const MAX_ATTEMPTS = 5;
-const CODE_TTL_MS = 24 * 60 * 60 * 1000;
+const CODE_TTL_MS = 15 * 60 * 1000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function toBuffer(bytes: Uint8Array): ArrayBuffer {
@@ -187,7 +187,7 @@ Deno.serve(async (req: Request) => {
       const { data: row, error } = await admin.from("trainee_password_recovery_requests")
         .select("id,trainee_id,status,claim_token_hash,claim_expires_at,token_hash,token_expires_at,token_attempts,code_envelope,reset_reconciliation_required,trainees!inner(id,auth_user_id,approval_status)")
         .eq("id", requestId).maybeSingle();
-      if (error || !row || row.claim_token_hash !== claimHash || !row.claim_expires_at ||
+      if (error || !row || !(await constantTimeEqual(row.claim_token_hash ?? "", claimHash)) || !row.claim_expires_at ||
           new Date(row.claim_expires_at).getTime() <= Date.now()) {
         return json({ error: "درخواست معتبر نیست یا منقضی شده است." }, 400);
       }
