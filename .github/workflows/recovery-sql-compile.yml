@@ -39,7 +39,7 @@ jobs:
       - name: Test delayed Auth completion and fail-closed retry barrier
         run: deno test --no-check experiments/trainee-password-recovery-auth-reconciliation.test.ts
       - name: Type-check recovery Edge Function and orchestration tests
-        run: deno check supabase/functions/trainee-password-recovery/reset-attempt.ts experiments/trainee-password-recovery-auth-reconciliation.test.ts
+        run: deno check supabase/functions/trainee-password-recovery/index.ts experiments/trainee-password-recovery-auth-reconciliation.test.ts
 
 
   candidate-auth-reconciliation:
