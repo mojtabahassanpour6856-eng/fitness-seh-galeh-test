@@ -1,7 +1,8 @@
 name: Auth recovery static regression tests
 on:
   push:
-    branches: [recovery/auth-photos-scroll-2026-11-24]
+    branches:
+      - integration/auth-recovery-mirror-selective-2026-11-25
   pull_request:
     branches: [main]
     paths:
