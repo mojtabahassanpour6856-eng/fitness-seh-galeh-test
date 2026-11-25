@@ -1,7 +1,9 @@
 name: Auth recovery static regression tests
 on:
   push:
-    branches: [recovery/auth-photos-scroll-2026-11-24]
+    branches:
+      - recovery/auth-photos-scroll-2026-11-24
+      - test/fix-missing-profile-fields-guard-2026-11-25
   pull_request:
     branches: [main]
     paths:

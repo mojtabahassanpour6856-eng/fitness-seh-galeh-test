@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- Prevent the legacy auth markup from flashing before the approved screen is ready. -->
-<link rel="preload" as="script" href="./auth-preview/connected-auth.js?v=3">
+<link rel="preload" as="script" href="./auth-preview/connected-auth.js?v=4">
 <style id="seh-auth-preload-hide">
 html,body{background:#070b11!important}
 .page{visibility:hidden!important}
@@ -2570,7 +2570,7 @@ if($("prDate"))$("prDate").value=today();if($("anDate"))$("anDate").value=today(
   window.dashOpen=function(section){
     const btn=qsAll('.nav button').find(b=>String(b.getAttribute('onclick')||'').includes("'"+section+"'"));
     if(section==='analysis')buildTraineeAnalysisSection();
-    if(section==='client'){addProfileBasicFields();if(currentClient)loadProfileBasic();}
+    if(section==='client'){if(typeof window.addProfileBasicFields==='function')window.addProfileBasicFields();if(currentClient&&typeof window.loadProfileBasic==='function')window.loadProfileBasic();}
     showSection(section==='analysis'?'traineeAnalysis':section==='activity'?'activitySection':section,btn||null);
     if(section==='activity'){if(typeof loadActivityToday==='function')loadActivityToday();if(typeof previewActivityCalories==='function')previewActivityCalories();return;}
     if(section==='analysis'){loadTraineeAnalysis();return;}
@@ -3286,41 +3286,43 @@ window.copyMembershipCard=function(){const v=$id('cardNumber')?.value||'';if(!v)
 })();
 </script>
 
-<!-- AUTH SCREEN FALLBACK: keeps role choices available if the main initializer exits early -->
+<!-- AUTH SCREEN FALLBACK: run only after all page scripts have loaded; preserve the original registration DOM -->
 <script>
-(function(){
-  const card=document.querySelector('#authScreen .auth-card');
-  if(!card||document.getElementById('authTabs'))return;
-  card.innerHTML=`<div class="auth-logo">🏋️</div><h2>باشگاه فیتنس سه‌قلعه</h2><p class="muted" style="text-align:center">ورود به سامانه مربی من</p>
-    <div id="authTabs" class="meal-tabs"><button type="button" class="active" id="authCoachTab" onclick="fallbackAuthMode('coach')">👨‍🏫 مربی</button><button type="button" id="authTraineeTab" onclick="fallbackAuthMode('trainee')">👤 شاگرد</button></div>
-    <div id="coachLoginBox"><label>ایمیل</label><input id="loginEmail" type="email" autocomplete="username" placeholder="ایمیل مربی"><label>رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button type="button" onclick="if(typeof window.loginApp==='function')window.loginApp();else {const e=document.getElementById('authError');e.textContent='کد ورود مربی بارگذاری نشده است؛ بخشی از اسکریپت ورود اجرا نشده. صفحه را تازه‌سازی کنید و اگر تکرار شد از صفحه عکس بفرستید.';e.style.display='block';}">🔐 ورود مربی</button></div>
-    <div id="traineeLoginBox" class="hide"><div class="trainee-auth-block"><h3>🔐 ورود شاگرد</h3><label>شماره موبایل</label><input id="traineePhoneLogin" type="tel" inputmode="tel" autocomplete="username" placeholder="09121234567"><label>رمز عبور</label><input id="traineeLoginPassword" type="password" autocomplete="current-password" placeholder="رمز اولیه یا رمز شخصی"><button type="button" onclick="if(typeof window.loginTraineePhone==='function')window.loginTraineePhone();else {const e=document.getElementById('authError');e.textContent='کد ورود شاگرد بارگذاری نشده است؛ بخشی از اسکریپت ورود اجرا نشده. صفحه را تازه‌سازی کنید و اگر تکرار شد از صفحه عکس بفرستید.';e.style.display='block';}">ورود شاگرد</button><p class="muted">ورود پس از تأیید درخواست ثبت‌نام توسط مربی امکان‌پذیر است.</p></div></div>
-    <div id="authError" class="auth-error"></div>`;
-  const diag=window.__fitnessLastScriptError;
-  if(diag){
-    const e=document.getElementById('authError');
-    if(e){
-      e.style.display='block';
-      e.textContent='خطای واقعی اجرای اسکریپت ورود: '+diag.message+(diag.source?' | فایل: '+diag.source.split('/').pop():'')+(diag.line?' | خط: '+diag.line:'')+(diag.column?' | ستون: '+diag.column:'')+'. این اطلاعات برای رفع علت اصلی ثبت شده است.';
-    }
-  } else {
-    const e=document.getElementById('authError');
-    if(e){
-      e.style.display='block';
-      e.textContent='بخش اصلی ورود اجرا نشده است، اما خطای جاوااسکریپت ثبت‌شده‌ای در دسترس نیست. وضعیت: ورود مربی='+typeof window.loginApp+'، ورود شاگرد='+typeof window.loginTraineePhone+'، اتصال Supabase='+typeof window.AUTH_SUPABASE+'، کتابخانه Supabase='+typeof window.supabase+'.';
-    }
-  }
-  window.fallbackAuthMode=function(mode){
-    const coach=document.getElementById('coachLoginBox'),trainee=document.getElementById('traineeLoginBox');
-    if(coach)coach.classList.toggle('hide',mode!=='coach');
-    if(trainee)trainee.classList.toggle('hide',mode!=='trainee');
-    document.getElementById('authCoachTab')?.classList.toggle('active',mode==='coach');
-    document.getElementById('authTraineeTab')?.classList.toggle('active',mode==='trainee');
-    const err=document.getElementById('authError');if(err)err.style.display='none';
-  };
-})();
-</script>
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    const root=document.getElementById('authScreen');
+    // The connected redesign must finish mounting before fallback can inspect the page.
+    if(!root||window.__sehAuthRedesignConnected)return;
+    const card=root.querySelector('.auth-card');
+    const coach=document.getElementById('coachLoginBox');
+    const trainee=document.getElementById('traineeLoginBox');
+    const tabs=document.getElementById('authTabs');
+    const error=document.getElementById('authError');
+    if(!card||!coach||!trainee||!error)return;
 
+    // Never rebuild or replace .auth-card: the original registration fields live inside it.
+    document.getElementById('seh-auth-preload-hide')?.remove();
+    root.style.visibility='visible';
+    coach.classList.remove('hide');
+    trainee.classList.add('hide');
+    if(tabs)tabs.classList.remove('hide');
+
+    window.fallbackAuthMode=function(mode){
+      coach.classList.toggle('hide',mode!=='coach');
+      trainee.classList.toggle('hide',mode!=='trainee');
+      document.getElementById('authCoachTab')?.classList.toggle('active',mode==='coach');
+      document.getElementById('authTraineeTab')?.classList.toggle('active',mode==='trainee');
+      error.style.display='none';
+    };
+
+    const diag=window.__fitnessLastScriptError;
+    error.style.display='block';
+    error.textContent=diag
+      ? 'خطای اجرای صفحه ورود: '+diag.message+(diag.source?' | فایل: '+diag.source.split('/').pop():'')+(diag.line?' | خط: '+diag.line:'')+(diag.column?' | ستون: '+diag.column:'')
+      : 'طراحی جدید صفحه ورود بارگذاری نشد. فرم اصلی ثبت‌نام حفظ شده است؛ می‌توانید از گزینه‌های ورود مربی و شاگرد استفاده کنید و برای بررسی، این پیام را ارسال کنید.';
+  },0);
+},{once:true});
+</script>
 <!-- FINAL COMPLETION LAYER: 18/18 -->
 <script>
 (function(){
@@ -3596,7 +3598,8 @@ const plans=workoutResult.data||[], nutrition=nutritionResult.data||[];
 
   // -------- Nutrition: substitution is linked to the actual meal food; custom food remains DB-backed --------
   
-  addProfileBasicFields();
+  // Profile helper is optional in this build; never abort the remaining app startup when absent.
+  if(typeof window.addProfileBasicFields==='function')window.addProfileBasicFields();
 
   // -------- Subscription/payment completeness --------
   const originalSaveSubscription=window.saveSubscription;
@@ -15189,6 +15192,6 @@ window.sehNutritionBuilderBridge={
 </script>
 
 <!-- SEH_AUTH_REDESIGN_CONNECTED_V1 -->
-<script src="./auth-preview/connected-auth.js?v=3" onload="document.getElementById('seh-auth-preload-hide')?.remove()" onerror="document.getElementById('seh-auth-preload-hide')?.remove()"></script>
+<script src="./auth-preview/connected-auth.js?v=4" onload="document.getElementById('seh-auth-preload-hide')?.remove()" onerror="document.getElementById('seh-auth-preload-hide')?.remove()"></script>
 </body>
 </html>
