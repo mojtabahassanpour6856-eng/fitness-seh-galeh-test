@@ -3289,8 +3289,11 @@ window.copyMembershipCard=function(){const v=$id('cardNumber')?.value||'';if(!v)
 <!-- AUTH SCREEN FALLBACK: keeps role choices available if the main initializer exits early -->
 <script>
 (function(){
-  const card=document.querySelector('#authScreen .auth-card');
-  if(!card||document.getElementById('authTabs'))return;
+  const root=document.getElementById('authScreen');
+  const card=root&&root.querySelector('.auth-card');
+  // The redesigned initializer intentionally removes #authTabs after it succeeds.
+  // Only skip the fallback when the redesigned home view is actually mounted.
+  if(!card||(document.getElementById('sehAuthHome')&&root.dataset.sehView==='home'))return;
   card.innerHTML=`<div class="auth-logo">🏋️</div><h2>باشگاه فیتنس سه‌قلعه</h2><p class="muted" style="text-align:center">ورود به سامانه مربی من</p>
     <div id="authTabs" class="meal-tabs"><button type="button" class="active" id="authCoachTab" onclick="fallbackAuthMode('coach')">👨‍🏫 مربی</button><button type="button" id="authTraineeTab" onclick="fallbackAuthMode('trainee')">👤 شاگرد</button></div>
     <div id="coachLoginBox"><label>ایمیل</label><input id="loginEmail" type="email" autocomplete="username" placeholder="ایمیل مربی"><label>رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button type="button" onclick="if(typeof window.loginApp==='function')window.loginApp();else {const e=document.getElementById('authError');e.textContent='کد ورود مربی بارگذاری نشده است؛ بخشی از اسکریپت ورود اجرا نشده. صفحه را تازه‌سازی کنید و اگر تکرار شد از صفحه عکس بفرستید.';e.style.display='block';}">🔐 ورود مربی</button></div>
