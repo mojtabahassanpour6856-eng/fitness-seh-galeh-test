@@ -57,6 +57,6 @@ test('auth fallback does not mistake the redesigned screen removing authTabs for
   const fallbackEnd = html.indexOf('<!-- FINAL COMPLETION LAYER', fallbackStart);
   assert.ok(fallbackStart >= 0 && fallbackEnd > fallbackStart, 'auth fallback block must exist');
   const fallback = html.slice(fallbackStart, fallbackEnd);
-  assert.match(fallback, /document\\.getElementById\\('sehAuthHome'\\)\\s*&&\\s*root\\.dataset\\.sehView===['"]home['"]/);
-  assert.doesNotMatch(fallback, /if\\(!card\\s*\\|\\|\\s*document\\.getElementById\\(['"]authTabs['"]\\)\\)return/);
+  assert.ok(fallback.includes("if(!card||(document.getElementById('sehAuthHome')&&root.dataset.sehView==='home'))return;"));
+  assert.ok(!fallback.includes("if(!card||document.getElementById('authTabs'))return;"));
 });
