@@ -20,6 +20,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Optimize login images for mobile delivery
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Generate WebP login images and logo
+        run: |
+          npm install --prefix /tmp/auth-image-tools sharp
+          NODE_PATH=/tmp/auth-image-tools/node_modules node scripts/optimize-auth-assets.cjs
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
