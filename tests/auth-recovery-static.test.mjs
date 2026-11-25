@@ -78,3 +78,11 @@ test('missing optional profile helper cannot abort main app startup or client na
   assert.doesNotMatch(html, /(?<![\\w.$])addProfileBasicFields\(\);/);
   assert.match(html, /currentClient&&typeof window\.loadProfileBasic==='function'/);
 });
+
+test('moved trainee registration form stays visible in the redesigned registration view', () => {
+  assert.match(auth, /#sehRegisterMount>\.seh-reg-block\{display:block!important/);
+  assert.match(auth, /registration\.style\.setProperty\('display','block','important'\)/);
+  for (const id of ['traineeRegName', 'traineeRegPhone', 'traineeRegSessions', 'traineeRegDays', 'traineeRegTime']) {
+    assert.ok(html.includes(`id="${id}"`), `missing registration field #${id}`);
+  }
+});
