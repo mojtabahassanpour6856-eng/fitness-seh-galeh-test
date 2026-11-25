@@ -1,0 +1,122 @@
+name: Pre-auth recovery local Supabase E2E
+on:
+  push:
+    branches: ["feature/recovery-24h-preserve-login-ui-2026-11-25"]
+    paths:
+      - 'supabase/functions/trainee-password-recovery/**'
+      - 'supabase/functions/trainee-password-recovery-preauth/**'
+      - 'supabase/migrations/**'
+      - 'experiments/**'
+      - '.github/workflows/preauth-recovery-local-e2e.yml'
+  pull_request:
+    branches: ["feature/recovery-24h-preserve-login-ui-2026-11-25"]
+    paths:
+      - 'supabase/functions/trainee-password-recovery/**'
+      - 'supabase/functions/trainee-password-recovery-preauth/**'
+      - 'supabase/migrations/**'
+      - 'experiments/**'
+      - '.github/workflows/preauth-recovery-local-e2e.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-no-jwt-recovery-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      SUPABASE_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 3.0.0
+      - name: Create isolated local Supabase project and install candidate fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/preauth-recovery-e2e"
+          cd "${RUNNER_TEMP}/preauth-recovery-e2e"
+          supabase init
+          echo "BASE_PORT=$((55000 + GITHUB_RUN_ID % 1000 * 10))" >> "$GITHUB_ENV"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          p = Path("supabase/config.toml")
+          s = p.read_text()
+          base = 55000 + (int(os.environ["GITHUB_RUN_ID"]) % 1000) * 10
+          replacements = {
+              "port = 54321": f"port = {base}",
+              "port = 54322": f"port = {base + 1}",
+              "port = 54323": f"port = {base + 2}",
+              "port = 54324": f"port = {base + 3}",
+              "port = 54320": f"port = {base - 1}",
+              "port = 54327": f"port = {base + 6}",
+          }
+          for before, after in replacements.items():
+              s = s.replace(before, after)
+          p.write_text(s)
+          PY
+          mkdir -p supabase/migrations
+          cp "$GITHUB_WORKSPACE/experiments/ci/no-sms-recovery-local-e2e-fixture.sql" supabase/migrations/202611220001_recovery_e2e_fixture.sql
+          cp "$GITHUB_WORKSPACE/supabase/migrations/202611230001_no_sms_recovery_atomic_candidates.sql" supabase/migrations/
+          cp "$GITHUB_WORKSPACE/supabase/migrations/202611240001_recovery_auth_ambiguity_fail_closed.sql" supabase/migrations/
+          cp "$GITHUB_WORKSPACE/supabase/migrations/202611240002_pre_auth_recovery_claims.sql" supabase/migrations/
+          mkdir -p supabase/functions/trainee-password-recovery supabase/functions/trainee-password-recovery-preauth
+          cp "$GITHUB_WORKSPACE/supabase/functions/trainee-password-recovery/"*.ts supabase/functions/trainee-password-recovery/
+          cp "$GITHUB_WORKSPACE/supabase/functions/trainee-password-recovery-preauth/"*.ts supabase/functions/trainee-password-recovery-preauth/
+      - name: Start disposable Supabase and apply candidate migrations
+        working-directory: ${{ runner.temp }}/preauth-recovery-e2e
+        run: |
+          supabase start
+          supabase db reset --local
+      - name: Serve both functions and test pre-auth lifecycle against real local GoTrue
+        shell: bash
+        working-directory: ${{ runner.temp }}/preauth-recovery-e2e
+        run: |
+          set -euo pipefail
+          eval "$(supabase status -o env)"
+          case "$API_URL" in
+            http://127.0.0.1:*|http://localhost:*) ;;
+            *) echo "Refusing non-local Supabase endpoint"; exit 1 ;;
+          esac
+          export SUPABASE_URL="$API_URL"
+          export SUPABASE_ANON_KEY="$ANON_KEY"
+          export SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY"
+          export RECOVERY_FUNCTION_URL="$API_URL/functions/v1/trainee-password-recovery"
+          export RECOVERY_PREAUTH_FUNCTION_URL="$API_URL/functions/v1/trainee-password-recovery-preauth"
+          export RECOVERY_ALLOWED_ORIGIN="http://127.0.0.1:$BASE_PORT"
+          export RECOVERY_NO_SMS_ENABLED="true"
+          export RECOVERY_HMAC_PEPPER_B64URL="$(openssl rand -base64 32 | tr '+/' '-_' | tr -d '=')"
+          export RECOVERY_ENVELOPE_KEY_B64URL="$(openssl rand -base64 32 | tr '+/' '-_' | tr -d '=')"
+          env_file="$RUNNER_TEMP/preauth-recovery.env"
+          umask 077
+          printf 'SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\nSUPABASE_SERVICE_ROLE_KEY=%s\nRECOVERY_NO_SMS_ENABLED=true\nRECOVERY_ALLOWED_ORIGIN=%s\nRECOVERY_HMAC_PEPPER_B64URL=%s\nRECOVERY_ENVELOPE_KEY_B64URL=%s\n' "$SUPABASE_URL" "$SUPABASE_ANON_KEY" "$SUPABASE_SERVICE_ROLE_KEY" "$RECOVERY_ALLOWED_ORIGIN" "$RECOVERY_HMAC_PEPPER_B64URL" "$RECOVERY_ENVELOPE_KEY_B64URL" > "$env_file"
+          supabase functions serve trainee-password-recovery --no-verify-jwt --env-file "$env_file" > "$RUNNER_TEMP/preauth-coach-function.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/preauth-coach-function.pid"
+          supabase functions serve trainee-password-recovery-preauth --no-verify-jwt --env-file "$env_file" > "$RUNNER_TEMP/preauth-trainee-function.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/preauth-trainee-function.pid"
+          ready_coach=0; ready_trainee=0
+          for i in $(seq 1 60); do
+            coach_code="$(curl -sS -o /dev/null -w '%{http_code}' -X POST "$RECOVERY_FUNCTION_URL" -H 'Content-Type: application/json' -H "Origin: $RECOVERY_ALLOWED_ORIGIN" -d '{}' || true)"
+            trainee_code="$(curl -sS -o /dev/null -w '%{http_code}' -X POST "$RECOVERY_PREAUTH_FUNCTION_URL" -H 'Content-Type: application/json' -H "Origin: $RECOVERY_ALLOWED_ORIGIN" -d '{}' || true)"
+            [ "$coach_code" = "401" ] && ready_coach=1
+            [ "$trainee_code" = "400" ] && ready_trainee=1
+            [ "$ready_coach" = 1 ] && [ "$ready_trainee" = 1 ] && break
+            sleep 2
+          done
+          test "$ready_coach" = 1
+          test "$ready_trainee" = 1
+          deno test --no-check --allow-net --allow-env "$GITHUB_WORKSPACE/experiments/trainee-password-recovery-preauth-local-e2e.test.ts"
+      - name: Stop local functions and disposable Supabase
+        if: always()
+        shell: bash
+        run: |
+          if [ -f "$RUNNER_TEMP/preauth-coach-function.pid" ]; then kill "$(cat "$RUNNER_TEMP/preauth-coach-function.pid")" || true; fi
+          if [ -f "$RUNNER_TEMP/preauth-trainee-function.pid" ]; then kill "$(cat "$RUNNER_TEMP/preauth-trainee-function.pid")" || true; fi
+          if [ -d "$RUNNER_TEMP/preauth-recovery-e2e/supabase" ]; then
+            cd "$RUNNER_TEMP/preauth-recovery-e2e"
+            supabase stop --no-backup || true
+          fi
