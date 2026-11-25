@@ -1,0 +1,24 @@
+name: Network dependency static checks
+on:
+  push:
+    branches:
+      - test/local-supabase-sdk-irancell-2026-11-25
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'vendor/**'
+      - 'tests/network-dependencies-static.test.mjs'
+      - '.github/workflows/network-dependency-static.yml'
+permissions:
+  contents: read
+jobs:
+  network-dependency-static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Audit critical network dependencies
+        run: node --test tests/network-dependencies-static.test.mjs
