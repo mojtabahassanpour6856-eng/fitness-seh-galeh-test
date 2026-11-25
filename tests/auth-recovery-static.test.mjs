@@ -7,7 +7,7 @@ const authPath = 'auth-preview/connected-auth.js';
 const auth = readFileSync(authPath, 'utf8');
 
 test('main app loads the connected auth implementation', () => {
-  assert.match(html, /<script[^>]+src=["']\.\/auth-preview\/connected-auth\.js\?v=4["']/);
+  assert.match(html, /<script[^>]+src=["']\.\/auth-preview\/connected-auth\.js\?v=5["']/);
 });
 
 test('main app contains the auth host elements required by the initializer', () => {
