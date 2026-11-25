@@ -129,8 +129,10 @@ shell.innerHTML='<div class="seh-top"><span>FITNESS SEH GALEH</span><span class=
 card.replaceChildren(shell,coach,trainee,error);
 if(tabs)tabs.remove();
 coach.classList.remove('hide');trainee.classList.remove('hide');
-const blocks=[...trainee.querySelectorAll('.trainee-auth-block')];
-for(const b of blocks){const h=b.querySelector('h3')?.textContent||'';if(h.includes('ورود شاگرد'))b.classList.add('seh-login-block');if(h.includes('درخواست ثبت‌نام'))b.classList.add('seh-reg-block');}
+const registrationBlock=trainee.querySelector('#traineeRegName')?.closest('.trainee-auth-block');
+const loginBlock=trainee.querySelector('#traineePhoneLogin')?.closest('.trainee-auth-block');
+if(registrationBlock)registrationBlock.classList.add('seh-reg-block');
+if(loginBlock)loginBlock.classList.add('seh-login-block');
 document.getElementById('sehTraineeMount').appendChild(trainee);
 document.getElementById('sehCoachMount').appendChild(coach);
 const registration=trainee.querySelector('.seh-reg-block');const registerMount=document.getElementById('sehRegisterMount');if(registration&&registerMount){registerMount.appendChild(registration);registration.classList.remove('hide');registration.hidden=false;registration.removeAttribute('aria-hidden');registration.style.setProperty('display','block','important');registration.style.setProperty('visibility','visible','important');registration.querySelectorAll('label,input,select,button,p,h3').forEach(el=>{el.hidden=false;el.removeAttribute('aria-hidden');el.style.removeProperty('display');el.style.setProperty('visibility','visible','important');});}
