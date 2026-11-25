@@ -79,6 +79,12 @@ test('missing optional profile helper cannot abort main app startup or client na
   assert.match(html, /currentClient&&typeof window\.loadProfileBasic==='function'/);
 });
 
+test('registration and login blocks are located by stable field IDs, not heading text', () => {
+  assert.match(auth, /trainee\.querySelector\('#traineeRegName'\)\?\.closest\('\.trainee-auth-block'\)/);
+  assert.match(auth, /trainee\.querySelector\('#traineePhoneLogin'\)\?\.closest\('\.trainee-auth-block'\)/);
+  assert.match(auth, /if\(registrationBlock\)registrationBlock\.classList\.add\('seh-reg-block'\)/);
+});
+
 test('moved trainee registration form stays visible in the redesigned registration view', () => {
   assert.match(auth, /#sehRegisterMount>\.seh-reg-block\{display:block!important/);
   assert.match(auth, /registration\.style\.setProperty\('display','block','important'\)/);
