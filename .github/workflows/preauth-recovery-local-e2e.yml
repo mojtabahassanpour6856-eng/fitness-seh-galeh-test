@@ -1,7 +1,7 @@
 name: Pre-auth recovery local Supabase E2E
 on:
   push:
-    branches: ["feature/recovery-24h-preserve-login-ui-2026-11-25"]
+    branches: ["backup/pre-recovery-login-ui-freeze-2026-11-25"]
     paths:
       - 'supabase/functions/trainee-password-recovery/**'
       - 'supabase/functions/trainee-password-recovery-preauth/**'
@@ -9,7 +9,7 @@ on:
       - 'experiments/**'
       - '.github/workflows/preauth-recovery-local-e2e.yml'
   pull_request:
-    branches: ["feature/recovery-24h-preserve-login-ui-2026-11-25"]
+    branches: ["backup/pre-recovery-login-ui-freeze-2026-11-25"]
     paths:
       - 'supabase/functions/trainee-password-recovery/**'
       - 'supabase/functions/trainee-password-recovery-preauth/**'
