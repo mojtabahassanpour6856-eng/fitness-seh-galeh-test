@@ -17,9 +17,7 @@ body.locked::before{
 </style>
 
 <!-- Low-risk startup optimization: warm up connections to services used on app startup. -->
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin>
-<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+<link rel="preload" as="script" href="./vendor/supabase-2.119.0.js">
 <link rel="preconnect" href="https://udptdznbvewkublvzmtm.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="//udptdznbvewkublvzmtm.supabase.co">
 <title>فیتنس سه‌قلعه</title>
@@ -2293,7 +2291,7 @@ async function loadActivityToday(){
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"></script>
+<script id="seh-supabase-sdk" src="./vendor/supabase-2.119.0.js"></script>
 <script>
 window.AUTH_SUPABASE=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 /* SEH_FIX_ORIGINAL_FETCH_SCOPE_20261016: expose the original browser fetch across classic-script scopes */
