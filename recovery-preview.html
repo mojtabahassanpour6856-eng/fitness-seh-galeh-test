@@ -1,0 +1,126 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>پیش‌نمایش ایزوله بازیابی رمز | فیتنس سه‌قلعه</title><style>
+*{box-sizing:border-box}
+body{margin:0;background:#050a11;color:#fff;font-family:Tahoma,Arial,sans-serif}
+.page{max-width:1050px;margin:auto;padding:10px}
+.hero{overflow:hidden;border-radius:20px;background:#101923;border:1px solid #26384a}
+.hero img{width:100%;display:block;max-height:260px;object-fit:cover}
+.brand{padding:16px 18px;background:#0a111b}.brand h1{margin:0;font-size:23px}.brand p{margin:7px 0 0;color:#cbd5df;font-size:13px}
+.nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.nav button{margin:0;background:#162434;color:#fff;border:1px solid #2d4357}
+.nav button.active{background:#ffbd16;color:#111}
+.card{background:#0d1722;border:1px solid #26384a;border-radius:16px;padding:16px;margin:12px 0}
+h2{font-size:18px;margin:0 0 13px}.muted{color:#aeb9c4;font-size:12px;line-height:1.9}
+.grid{display:grid;grid-template-columns:1fr 150px;gap:10px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:12px;margin:7px 0;color:#ddd;font-weight:bold}
+select,input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #34495c;background:#101e2d;color:#fff;font:inherit}
+textarea{min-height:90px;resize:vertical}
+button{width:100%;padding:13px;border:0;border-radius:10px;background:#ffbd16;color:#111;font-weight:bold;font:inherit;cursor:pointer;margin-top:10px}
+button.secondary{background:#162434;color:#fff;border:1px solid #34495c}
+button.danger{background:#b83232;color:#fff}
+.result{display:none;background:#062f29;border:1px solid #079875;border-radius:14px;padding:16px;margin-top:13px}
+.big{font-size:36px;font-weight:bold;text-align:center;margin:5px}.sub{text-align:center;color:#ddd}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:13px}.stat{background:#10212b;border-radius:10px;padding:9px;text-align:center;font-size:11px}.stat b{display:block;font-size:17px;margin-bottom:3px}
+table{width:100%;border-collapse:collapse;margin-top:13px;font-size:12px}th,td{padding:8px;border-bottom:1px solid #253746;text-align:center}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.section{display:none}.section.active{display:block}
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.badge{background:#101e2d;border-radius:12px;padding:12px;text-align:center}.badge b{display:block;font-size:20px;margin-bottom:4px}
+.registration-requests-card{border-color:#725b20;background:linear-gradient(145deg,#121d28,#0d1722);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.registration-requests-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.registration-requests-heading h2{margin-bottom:6px;color:#ffd166}
+.registration-refresh{width:auto;min-width:132px;margin:0;white-space:nowrap}
+#registrationRequests{min-width:0;overflow-x:auto}
+#registrationRequests .v4-table{min-width:0}
+@media(max-width:600px){.registration-requests-heading{display:block}.registration-refresh{width:100%;margin-top:8px}.registration-requests-card{padding:12px}}
+.client{padding:12px;border:1px solid #2b4053;border-radius:12px;margin:8px 0;background:#101b28}
+.client strong{display:block;margin-bottom:5px}.pill{display:inline-block;padding:4px 8px;border-radius:20px;background:#203447;color:#dce7ef;font-size:11px}
+#custom{display:none}.hide{display:none!important}
+.footer{text-align:center;color:#8998a6;padding:18px;font-size:11px}
+@media(max-width:600px){.grid,.grid2{grid-template-columns:1fr}.stats,.badges{grid-template-columns:1fr 1fr}.nav{grid-template-columns:1fr 1fr}.row{display:grid;grid-template-columns:1fr}}
+
+.meal-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}.meal-tabs button{margin:0;padding:10px;font-size:12px}.meal-tabs button.active{background:#ffbd16;color:#111}.meal-card{background:#101e2d;border:1px solid #2b4053;border-radius:14px;padding:12px;margin:10px 0}.meal-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.meal-head h3{margin:0;font-size:15px}.meal-total{color:#b9c7d3;font-size:11px}.food-line{display:grid;grid-template-columns:1fr 82px 58px auto;gap:6px;align-items:center;border-top:1px solid #253746;padding:9px 0}.food-line:first-child{border-top:0}.food-name{font-size:12px}.food-meta{font-size:10px;color:#aeb9c4}.mini{margin:0;padding:7px 8px;font-size:11px}.meal-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.meal-summary .stat{padding:10px}.student-meal{border:1px solid #2b4053;border-radius:14px;margin:9px 0;padding:12px;background:#101b28}.checkfood{display:flex;align-items:center;gap:8px;font-size:12px;padding:7px 0}.checkfood input{width:auto}.report-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:9px 0;border-bottom:1px solid #253746;font-size:12px}.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:12px;z-index:50}.modal-back.show{display:flex}.modal{width:min(520px,100%);max-height:90vh;overflow:auto;background:#0d1722;border:1px solid #34495c;border-radius:16px;padding:15px}.modal h3{margin:0 0 12px}.close-row{display:flex;gap:8px}.close-row button{margin-top:0}.sub-result{background:#062f29;border:1px solid #079875;border-radius:12px;padding:10px;margin-top:10px}
+@media(max-width:600px){.meal-tabs{grid-template-columns:1fr 1fr 1fr}.food-line{grid-template-columns:1fr 70px 52px auto}.meal-summary{grid-template-columns:1fr 1fr}}
+button,.client,.meal-card,.badge{transition:transform .08s ease,opacity .08s ease}
+button:active,.client:active,.meal-card:active,.badge:active{transform:scale(.98);opacity:.9}
+
+/* Student workout mission report: one completion action per whole session. */
+.workout-session-mission-controls{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.workout-session-mission-controls button{min-height:38px;white-space:normal}
+.workout-session-mission-controls button:disabled{opacity:.72;cursor:default}
+
+/* FITNESS_SEH_GALEH_COACH_DESKTOP_WORKOUT_LAYOUT_20261022
+   Desktop-only layout for the coach workout editor. Trainee UI and mobile layout stay unchanged. */
+@media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
+  body:has(#workout.active) .page { max-width: 1450px; }
+  body:has(#workout.active) #workout { width: 100%; }
+  body:has(#workout.active) #workout > .card { padding: 20px; }
+  body:has(#workout.active) #workout .grid2 { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  body:has(#workout.active) #workout .workout-add-fields { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  body:has(#workout.active) #workout input,
+  body:has(#workout.active) #workout select,
+  body:has(#workout.active) #workout textarea { font-size: 15px; }
+  body:has(#workout.active) #workout #workoutList .meal-card { margin-bottom: 12px; }
+}
+</style><style>
+#authScreen{position:fixed;inset:0;background:#050a11;z-index:999;display:flex;align-items:center;justify-content:center;padding:16px}
+#authScreen .auth-card{width:min(430px,100%);background:#0d1722;border:1px solid #26384a;border-radius:20px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+#authScreen h2{font-size:22px;text-align:center;margin-bottom:8px}.auth-logo{text-align:center;font-size:38px;margin-bottom:8px}.auth-error{color:#ff8e8e;background:#3a1414;border:1px solid #6d2929;border-radius:10px;padding:10px;margin-top:10px;font-size:12px;display:none}.auth-user{margin:10px 0;color:#cbd5df;font-size:12px;text-align:center}
+body.locked .page{display:none!important}
+body.locked{overflow:hidden}
+.logout-btn{background:#b83232!important;color:#fff!important;margin-top:8px!important}
+</style><style>
+body{min-height:100vh;background:#050a11}#authScreen{position:relative;min-height:100vh}
+.preview-note{position:fixed;top:8px;left:8px;right:8px;z-index:1001;background:#5b4315;color:#fff4d6;border:1px solid #b99543;border-radius:9px;padding:8px 10px;text-align:center;font-size:11px;line-height:1.7}
+#recoveryDemo{display:none;position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.78);align-items:center;justify-content:center;padding:16px}#recoveryDemo.show{display:flex}
+#recoveryDemo .dialog{width:min(430px,100%);background:#0d1722;border:1px solid #b99543;border-radius:18px;padding:20px;box-shadow:0 20px 60px #000}
+#recoveryDemo h3{margin:0 0 10px;color:#f4d78a}#recoveryDemo .step{display:none}#recoveryDemo .step.active{display:block}
+#recoveryDemo .hint{font-size:11px;color:#aeb9c4;line-height:1.9}#recoveryDemo button{margin-top:9px}#recoveryDemo .close{background:#26384a;color:#fff}
+.demo-code{font-size:26px;letter-spacing:8px;text-align:center;direction:ltr;color:#f4d78a;padding:12px;border:1px dashed #b99543;border-radius:10px}
+</style></head><body class="locked"><div class="preview-note">پیش‌نمایش ظاهری و ایزوله — هیچ ورود، ثبت‌نام یا ارتباطی با اطلاعات واقعی انجام نمی‌شود.</div><div id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">🏋️</div>
+    <h2>باشگاه فیتنس سه‌قلعه</h2>
+    <p class="muted" style="text-align:center">ورود به سامانه مربی من</p>
+    <div id="authTabs" class="meal-tabs">
+      <button type="button" class="active" id="authCoachTab" onclick="if(window.authMode){window.authMode('coach')}else{document.getElementById('coachLoginBox').classList.remove('hide');document.getElementById('traineeLoginBox').classList.add('hide');document.getElementById('authCoachTab').classList.add('active');document.getElementById('authTraineeTab').classList.remove('active');document.getElementById('authError').style.display='none'}">👨‍🏫 مربی</button>
+      <button type="button" id="authTraineeTab" onclick="if(window.authMode){window.authMode('trainee')}else{document.getElementById('coachLoginBox').classList.add('hide');document.getElementById('traineeLoginBox').classList.remove('hide');document.getElementById('authCoachTab').classList.remove('active');document.getElementById('authTraineeTab').classList.add('active');document.getElementById('authError').style.display='none'}">👤 شاگرد</button>
+    </div>
+    <div id="coachLoginBox">
+      <label>ایمیل</label><input id="loginEmail" type="email" autocomplete="username" placeholder="ایمیل مربی">
+      <label>رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="رمز عبور">
+      <button type="button" disabled>🔐 ورود مربی (در پیش‌نمایش غیرفعال)</button>
+    </div>
+    <div id="traineeLoginBox" class="hide">
+      <div class="trainee-auth-block">
+        <h3>🆕 درخواست ثبت‌نام شاگرد</h3>
+        <p class="muted">ثبت درخواست بدون رمز انجام می‌شود و پس از بررسی مربی فعال خواهد شد.</p>
+        <label>نام و نام خانوادگی</label><input id="traineeRegName" autocomplete="name" placeholder="نام کامل">
+        <label>شماره موبایل</label><input id="traineeRegPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09121234567">
+        <label>تعداد جلسات تمرین در هفته</label><select id="traineeRegSessions"><option value="">انتخاب کنید</option><option value="1">۱ جلسه</option><option value="2">۲ جلسه</option><option value="3">۳ جلسه</option><option value="4">۴ جلسه</option><option value="5">۵ جلسه</option><option value="6">۶ جلسه</option><option value="7">۷ جلسه</option></select>
+        <label>روزهای تمرین</label><input id="traineeRegDays" placeholder="مثلاً شنبه، دوشنبه، چهارشنبه">
+        <label>ساعت تمرین</label><input id="traineeRegTime" type="time">
+        <label>رمز شخصی (حداقل ۸ کاراکتر)</label><input id="traineeRegPassword" type="password" autocomplete="new-password" minlength="8" placeholder="رمز دلخواه خودتان">
+        <label>تکرار رمز شخصی</label><input id="traineeRegPasswordConfirm" type="password" autocomplete="new-password" minlength="8" placeholder="رمز را دوباره وارد کنید">
+        <button type="button" disabled>📨 ارسال درخواست ثبت‌نام (غیرفعال)</button>
+      </div>
+      <div class="trainee-auth-block">
+        <h3>🔐 ورود شاگرد</h3>
+        <label>شماره موبایل</label><input id="traineePhoneLogin" type="tel" inputmode="tel" autocomplete="username" placeholder="09121234567">
+        <label>رمز عبور</label><input id="traineeLoginPassword" type="password" autocomplete="current-password" placeholder="رمز شخصی هنگام ثبت‌نام">
+        <button type="button" disabled>ورود شاگرد (غیرفعال)</button>
+        <p class="muted">ورود پس از تأیید درخواست ثبت‌نام توسط مربی امکان‌پذیر است.</p><button type="button" class="secondary" id="openRecovery">🔑 رمز عبور را فراموش کرده‌ام</button>
+      </div>
+    </div>
+    <div id="authError" class="auth-error"></div>
+  </div>
+</div>
+<div id="recoveryDemo"><div class="dialog">
+<div class="step active" id="step1"><h3>بازیابی رمز عبور شاگرد</h3><p class="hint">شماره موبایل ثبت‌شده را وارد کنید. در نسخه واقعی، درخواست برای بررسی مربی ارسال می‌شود.</p><label>شماره موبایل</label><input id="demoPhone" inputmode="tel" placeholder="09121234567"><button id="sendDemo">ارسال درخواست آزمایشی</button></div>
+<div class="step" id="step2"><h3>درخواست در انتظار بررسی</h3><p class="hint">در نسخه واقعی، پس از تأیید مربی، کد چهاررقمی فقط در همان مرورگر نمایش داده می‌شود. اینجا فقط نمایش نمونه است.</p><div class="demo-code">۱۲۳۴</div><button id="showReset">ادامه به ثبت رمز جدید (نمایشی)</button></div>
+<div class="step" id="step3"><h3>ثبت رمز عبور جدید</h3><label>رمز جدید</label><input type="password" placeholder="حداقل ۸ کاراکتر"><label>تکرار رمز جدید</label><input type="password" placeholder="تکرار رمز"><p class="hint">این فرم نمایشی است و هیچ رمزی ذخیره یا تغییر داده نمی‌شود.</p><button id="finishDemo">پایان پیش‌نمایش</button></div><button class="close" id="closeDemo">بستن</button></div></div>
+<script>(function(){const m=document.getElementById('recoveryDemo'),ss=[1,2,3].map(n=>document.getElementById('step'+n));function show(n){ss.forEach((s,i)=>s.classList.toggle('active',i===n-1));}
+document.getElementById('openRecovery').addEventListener('click',()=>{m.classList.add('show');show(1);});
+document.getElementById('sendDemo').addEventListener('click',()=>{const p=document.getElementById('demoPhone').value.replace(/\s/g,'');if(!/^09\d{9}$/.test(p)){alert('شماره موبایل نمونه را به شکل 09121234567 وارد کنید.');return;}show(2);});
+document.getElementById('showReset').addEventListener('click',()=>show(3));function close(){m.classList.remove('show');}
+document.getElementById('closeDemo').addEventListener('click',close);document.getElementById('finishDemo').addEventListener('click',close);
+document.getElementById('authCoachTab').addEventListener('click',()=>{document.getElementById('openRecovery').style.display='none';});
+document.getElementById('authTraineeTab').addEventListener('click',()=>{document.getElementById('openRecovery').style.display='block';});})();</script></body></html>
