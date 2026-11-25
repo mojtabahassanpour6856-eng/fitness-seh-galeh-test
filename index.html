@@ -2570,7 +2570,7 @@ if($("prDate"))$("prDate").value=today();if($("anDate"))$("anDate").value=today(
   window.dashOpen=function(section){
     const btn=qsAll('.nav button').find(b=>String(b.getAttribute('onclick')||'').includes("'"+section+"'"));
     if(section==='analysis')buildTraineeAnalysisSection();
-    if(section==='client'){addProfileBasicFields();if(currentClient)loadProfileBasic();}
+    if(section==='client'){if(typeof window.addProfileBasicFields==='function')window.addProfileBasicFields();if(currentClient&&typeof window.loadProfileBasic==='function')window.loadProfileBasic();}
     showSection(section==='analysis'?'traineeAnalysis':section==='activity'?'activitySection':section,btn||null);
     if(section==='activity'){if(typeof loadActivityToday==='function')loadActivityToday();if(typeof previewActivityCalories==='function')previewActivityCalories();return;}
     if(section==='analysis'){loadTraineeAnalysis();return;}
@@ -3599,7 +3599,8 @@ const plans=workoutResult.data||[], nutrition=nutritionResult.data||[];
 
   // -------- Nutrition: substitution is linked to the actual meal food; custom food remains DB-backed --------
   
-  addProfileBasicFields();
+  // Profile helper is optional in this build; never abort the remaining app startup when absent.
+  if(typeof window.addProfileBasicFields==='function')window.addProfileBasicFields();
 
   // -------- Subscription/payment completeness --------
   const originalSaveSubscription=window.saveSubscription;
