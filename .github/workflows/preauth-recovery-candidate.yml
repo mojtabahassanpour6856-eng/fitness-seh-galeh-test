@@ -3,7 +3,7 @@ on:
   push:
     branches: ["integration/auth-recovery-mirror-selective-2026-11-25"]
   pull_request:
-    branches: ["backup/pre-recovery-login-ui-freeze-2026-11-25"]
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
