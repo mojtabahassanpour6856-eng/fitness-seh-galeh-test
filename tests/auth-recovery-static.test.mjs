@@ -27,8 +27,8 @@ test('connected auth marks itself ready only after mounting all auth views', () 
 });
 
 test('coach and trainee image paths exist and match their intended roles', () => {
-  assert.ok(auth.includes('./assets/auth/coach-entry.png'));
-  assert.ok(auth.includes('./assets/auth/trainee-entry.png'));
+  assert.ok(auth.includes('./assets/auth/coach-entry.webp'));
+  assert.ok(auth.includes('./assets/auth/trainee-entry.webp'));
   assert.ok(existsSync('assets/auth/coach-entry.png'));
   assert.ok(existsSync('assets/auth/trainee-entry.png'));
 });
