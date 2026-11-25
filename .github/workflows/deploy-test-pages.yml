@@ -33,6 +33,7 @@ jobs:
           assert 'seh-auth-first-paint-guard' in html, 'First-paint guard missing'
           assert 'loading="lazy"' in html, 'Nutrition iframe must not block initial page load'
           assert 'if(!window.__sehAuthRedesignConnected)buildAuthTabs();' in html, 'Legacy builder guard missing'
+          assert "if(!card||window.__sehAuthRedesignConnected||document.getElementById('sehAuthHome')||document.getElementById('authTabs'))return;" in html, 'Legacy fallback must not replace the connected redesign'
           assert 'window.__sehAuthRedesignConnected=true;' in auth, 'Auth ready flag missing'
           assert 'min-height:100dvh!important' in auth, 'Login card and viewport units differ'
           assert "SHELL_CACHE_NAME = 'seh-shell-v12'" in sw, 'PWA shell cache was not invalidated'
@@ -103,6 +104,7 @@ jobs:
           grep -Fq 'seh-auth-first-paint-guard' "$body"
           grep -Fq 'loading="lazy"' "$body"
           grep -Fq 'if(!window.__sehAuthRedesignConnected)buildAuthTabs();' "$body"
+          grep -Fq "if(!card||window.__sehAuthRedesignConnected||document.getElementById('sehAuthHome')||document.getElementById('authTabs'))return;" "$body"
           auth_js="$(mktemp)"
           sw_body="$(mktemp)"
           trap 'rm -f "$body" "$auth_js" "$sw_body"' EXIT

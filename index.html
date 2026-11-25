@@ -3939,7 +3939,7 @@ window.__sehGetSessionSingleFlight().then(({data})=>{if(data?.session)window.fin
 <script>
 (function(){
   const card=document.querySelector('#authScreen .auth-card');
-  if(!card||document.getElementById('authTabs'))return;
+  if(!card||window.__sehAuthRedesignConnected||document.getElementById('sehAuthHome')||document.getElementById('authTabs'))return;
   card.innerHTML=`<div class="auth-logo">🏋️</div><h2>باشگاه فیتنس سه‌قلعه</h2><p class="muted" style="text-align:center">ورود به سامانه مربی من</p>
     <div id="authTabs" class="meal-tabs"><button type="button" class="active" id="authCoachTab" onclick="fallbackAuthMode('coach')">👨‍🏫 مربی</button><button type="button" id="authTraineeTab" onclick="fallbackAuthMode('trainee')">👤 شاگرد</button></div>
     <div id="coachLoginBox"><label>ایمیل</label><input id="loginEmail" type="email" autocomplete="username" placeholder="ایمیل مربی"><label>رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button type="button" onclick="if(typeof window.loginApp==='function')window.loginApp();else {const e=document.getElementById('authError');e.textContent='کد ورود مربی بارگذاری نشده است؛ بخشی از اسکریپت ورود اجرا نشده. صفحه را تازه‌سازی کنید و اگر تکرار شد از صفحه عکس بفرستید.';e.style.display='block';}">🔐 ورود مربی</button></div>
