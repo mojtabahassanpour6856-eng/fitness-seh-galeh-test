@@ -17,4 +17,8 @@ const tasks = [
     const after = fs.statSync(target).size;
     console.log(input + ' -> ' + output + ': ' + before + ' -> ' + after + ' bytes (' + Math.round((1-after/before)*100) + '% smaller)');
   }
+  // The PNG originals remain safely stored in Git; omit them only from the published artifact.
+  for (const input of ['assets/auth/trainee-entry.png', 'assets/auth/coach-entry.png']) {
+    fs.rmSync(path.join(root, input), { force: true });
+  }
 })().catch(error => { console.error(error); process.exit(1); });
