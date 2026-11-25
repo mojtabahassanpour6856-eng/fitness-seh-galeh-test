@@ -1,9 +1,9 @@
 name: Pre-auth password recovery candidate checks
 on:
   push:
-    branches: ["feature/recovery-24h-preserve-login-ui-2026-11-25"]
+    branches: ["backup/pre-recovery-login-ui-freeze-2026-11-25"]
   pull_request:
-    branches: ["feature/recovery-24h-preserve-login-ui-2026-11-25"]
+    branches: ["backup/pre-recovery-login-ui-freeze-2026-11-25"]
   workflow_dispatch:
 permissions:
   contents: read
