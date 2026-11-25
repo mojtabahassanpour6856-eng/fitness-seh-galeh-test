@@ -60,3 +60,14 @@ test('auth fallback does not mistake the redesigned screen removing authTabs for
   assert.ok(fallback.includes("if(!card||(document.getElementById('sehAuthHome')&&root.dataset.sehView==='home'))return;"));
   assert.ok(!fallback.includes("if(!card||document.getElementById('authTabs'))return;"));
 });
+
+test('auth fallback waits until the connected redesign initializer has had a chance to mount', () => {
+  const fallbackStart = html.indexOf('<!-- AUTH SCREEN FALLBACK');
+  const fallbackEnd = html.indexOf('<!-- FINAL COMPLETION LAYER', fallbackStart);
+  const connectedScript = html.lastIndexOf('<script src="./auth-preview/connected-auth.js?v=3"');
+  assert.ok(fallbackStart >= 0 && fallbackEnd > fallbackStart);
+  assert.ok(connectedScript > fallbackEnd, 'connected auth script is expected after the fallback block');
+  const fallback = html.slice(fallbackStart, fallbackEnd);
+  assert.ok(fallback.includes('setTimeout(function(){'), 'fallback must defer its DOM check until parsing and later scripts complete');
+  assert.ok(fallback.includes('},0);'), 'fallback must run as a zero-delay deferred callback');
+});
