@@ -1,0 +1,12 @@
+project_id = "fitness-seh-galeh-test"
+
+# Candidate-only Supabase function configuration.
+# This disables gateway JWT verification ONLY for the isolated pre-auth endpoint.
+# The function must enforce browser claim tokens itself. Coach operations remain
+# in trainee-password-recovery and retain gateway + in-function JWT verification.
+[functions.trainee-password-recovery-preauth]
+verify_jwt = false
+
+# Coach review endpoint requires a valid Supabase JWT at the gateway and in handler.
+[functions.trainee-password-recovery]
+verify_jwt = true
