@@ -9,7 +9,7 @@ on:
       - 'experiments/**'
       - '.github/workflows/preauth-recovery-local-e2e.yml'
   pull_request:
-    branches: ["backup/pre-recovery-login-ui-freeze-2026-11-25"]
+    branches: [main]
     paths:
       - 'supabase/functions/trainee-password-recovery/**'
       - 'supabase/functions/trainee-password-recovery-preauth/**'
