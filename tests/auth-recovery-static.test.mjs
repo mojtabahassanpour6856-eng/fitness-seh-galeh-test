@@ -58,13 +58,13 @@ test('trainee password recovery UI logic remains present', () => {
   assert.ok(auth.includes('moveRecovery'));
 });
 
-test('auth fallback does not mistake the redesigned screen removing authTabs for a failure', () => {
+test('auth fallback skips when the redesigned initializer mounted successfully', () => {
   const fallbackStart = html.indexOf('<!-- AUTH SCREEN FALLBACK');
   const fallbackEnd = html.indexOf('<!-- FINAL COMPLETION LAYER', fallbackStart);
-  assert.ok(fallbackStart >= 0 && fallbackEnd > fallbackStart, 'auth fallback block must exist');
+  assert.ok(fallbackStart >= 0 && fallbackEnd > fallbackStart);
   const fallback = html.slice(fallbackStart, fallbackEnd);
-  assert.ok(fallback.includes("if(!card||(document.getElementById('sehAuthHome')&&root.dataset.sehView==='home'))return;"));
-  assert.ok(!fallback.includes("if(!card||document.getElementById('authTabs'))return;"));
+  assert.ok(fallback.includes('if(!root||window.__sehAuthRedesignConnected)return;'));
+  assert.doesNotMatch(fallback, /card\\.innerHTML\\s*=/);
 });
 
 test('auth fallback waits until the connected redesign initializer has had a chance to mount', () => {
