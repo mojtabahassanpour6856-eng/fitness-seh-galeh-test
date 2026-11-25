@@ -20,6 +20,12 @@ test('connected auth JavaScript parses', () => {
   assert.doesNotThrow(() => new Function(auth));
 });
 
+test('connected auth marks itself ready only after mounting all auth views', () => {
+  assert.match(auth, /window\.__sehAuthRedesignConnecting=true/);
+  assert.match(auth, /window\.__sehAuthRedesignConnected=true;\s*window\.__sehAuthRedesignConnecting=false;\s*\}\)\(\);/);
+  assert.doesNotMatch(auth, /window\.__sehAuthRedesignConnected=true;\s*const st=/);
+});
+
 test('coach and trainee image paths exist and match their intended roles', () => {
   assert.ok(auth.includes('./assets/auth/coach-entry.png'));
   assert.ok(auth.includes('./assets/auth/trainee-entry.png'));
@@ -72,6 +78,20 @@ test('auth fallback waits until the connected redesign initializer has had a cha
   assert.ok(fallback.includes('},0);'), 'fallback must run as a zero-delay deferred callback');
 });
 
+
+test('auth fallback waits for window load and never destroys the original registration form', () => {
+  const fallbackStart = html.indexOf('<!-- AUTH SCREEN FALLBACK');
+  const fallbackEnd = html.indexOf('<!-- FINAL COMPLETION LAYER', fallbackStart);
+  assert.ok(fallbackStart >= 0 && fallbackEnd > fallbackStart);
+  const fallback = html.slice(fallbackStart, fallbackEnd);
+  assert.match(fallback, /window\.addEventListener\('load'/);
+  assert.match(fallback, /window\.__sehAuthRedesignConnected/);
+  assert.doesNotMatch(fallback, /card\.innerHTML\s*=/);
+  assert.doesNotMatch(fallback, /card\.replaceChildren\s*\(/);
+  for (const id of ['traineeRegName', 'traineeRegPhone', 'traineeRegSessions', 'traineeRegDays', 'traineeRegTime', 'traineeRegPassword', 'traineeRegPasswordConfirm']) {
+    assert.ok(html.includes(`id="${id}"`), `original registration field #${id} must remain in the document`);
+  }
+});
 
 test('missing optional profile helper cannot abort main app startup or client navigation', () => {
   assert.match(html, /if\(typeof window\.addProfileBasicFields==='function'\)window\.addProfileBasicFields\(\);/);
