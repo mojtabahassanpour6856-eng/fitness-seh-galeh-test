@@ -7,7 +7,7 @@ const authPath = 'auth-preview/connected-auth.js';
 const auth = readFileSync(authPath, 'utf8');
 
 test('main app loads the connected auth implementation', () => {
-  assert.match(html, /<script[^>]+src=["']\.\/auth-preview\/connected-auth\.js\?v=3["']/);
+  assert.match(html, /<script[^>]+src=["']\.\/auth-preview\/connected-auth\.js\?v=4["']/);
 });
 
 test('main app contains the auth host elements required by the initializer', () => {
@@ -70,7 +70,7 @@ test('auth fallback skips when the redesigned initializer mounted successfully',
 test('auth fallback waits until the connected redesign initializer has had a chance to mount', () => {
   const fallbackStart = html.indexOf('<!-- AUTH SCREEN FALLBACK');
   const fallbackEnd = html.indexOf('<!-- FINAL COMPLETION LAYER', fallbackStart);
-  const connectedScript = html.lastIndexOf('<script src="./auth-preview/connected-auth.js?v=3"');
+  const connectedScript = html.lastIndexOf('<script src="./auth-preview/connected-auth.js?v=4"');
   assert.ok(fallbackStart >= 0 && fallbackEnd > fallbackStart);
   assert.ok(connectedScript > fallbackEnd, 'connected auth script is expected after the fallback block');
   const fallback = html.slice(fallbackStart, fallbackEnd);
