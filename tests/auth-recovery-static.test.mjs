@@ -71,3 +71,10 @@ test('auth fallback waits until the connected redesign initializer has had a cha
   assert.ok(fallback.includes('setTimeout(function(){'), 'fallback must defer its DOM check until parsing and later scripts complete');
   assert.ok(fallback.includes('},0);'), 'fallback must run as a zero-delay deferred callback');
 });
+
+
+test('missing optional profile helper cannot abort main app startup or client navigation', () => {
+  assert.match(html, /if\(typeof window\.addProfileBasicFields==='function'\)window\.addProfileBasicFields\(\);/);
+  assert.doesNotMatch(html, /(?<![\\w.$])addProfileBasicFields\(\);/);
+  assert.match(html, /currentClient&&typeof window\.loadProfileBasic==='function'/);
+});
