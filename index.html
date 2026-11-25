@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- Prevent the legacy auth markup from flashing before the approved screen is ready. -->
-<link rel="preload" as="script" href="./auth-preview/connected-auth.js?v=3">
+<link rel="preload" as="script" href="./auth-preview/connected-auth.js?v=4">
 <style id="seh-auth-preload-hide">
 html,body{background:#070b11!important}
 .page{visibility:hidden!important}
@@ -17,9 +17,7 @@ body.locked::before{
 </style>
 
 <!-- Low-risk startup optimization: warm up connections to services used on app startup. -->
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin>
-<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+<link rel="preload" as="script" href="./vendor/supabase-2.119.0.js">
 <link rel="preconnect" href="https://udptdznbvewkublvzmtm.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="//udptdznbvewkublvzmtm.supabase.co">
 <title>فیتنس سه‌قلعه</title>
@@ -2293,7 +2291,7 @@ async function loadActivityToday(){
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"></script>
+<script id="seh-supabase-sdk" src="./vendor/supabase-2.119.0.js"></script>
 <script>
 window.AUTH_SUPABASE=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 /* SEH_FIX_ORIGINAL_FETCH_SCOPE_20261016: expose the original browser fetch across classic-script scopes */
@@ -2570,7 +2568,7 @@ if($("prDate"))$("prDate").value=today();if($("anDate"))$("anDate").value=today(
   window.dashOpen=function(section){
     const btn=qsAll('.nav button').find(b=>String(b.getAttribute('onclick')||'').includes("'"+section+"'"));
     if(section==='analysis')buildTraineeAnalysisSection();
-    if(section==='client'){addProfileBasicFields();if(currentClient)loadProfileBasic();}
+    if(section==='client'){if(typeof window.addProfileBasicFields==='function')window.addProfileBasicFields();if(currentClient&&typeof window.loadProfileBasic==='function')window.loadProfileBasic();}
     showSection(section==='analysis'?'traineeAnalysis':section==='activity'?'activitySection':section,btn||null);
     if(section==='activity'){if(typeof loadActivityToday==='function')loadActivityToday();if(typeof previewActivityCalories==='function')previewActivityCalories();return;}
     if(section==='analysis'){loadTraineeAnalysis();return;}
@@ -3286,41 +3284,43 @@ window.copyMembershipCard=function(){const v=$id('cardNumber')?.value||'';if(!v)
 })();
 </script>
 
-<!-- AUTH SCREEN FALLBACK: keeps role choices available if the main initializer exits early -->
+<!-- AUTH SCREEN FALLBACK: run only after all page scripts have loaded; preserve the original registration DOM -->
 <script>
-(function(){
-  const card=document.querySelector('#authScreen .auth-card');
-  if(!card||document.getElementById('authTabs'))return;
-  card.innerHTML=`<div class="auth-logo">🏋️</div><h2>باشگاه فیتنس سه‌قلعه</h2><p class="muted" style="text-align:center">ورود به سامانه مربی من</p>
-    <div id="authTabs" class="meal-tabs"><button type="button" class="active" id="authCoachTab" onclick="fallbackAuthMode('coach')">👨‍🏫 مربی</button><button type="button" id="authTraineeTab" onclick="fallbackAuthMode('trainee')">👤 شاگرد</button></div>
-    <div id="coachLoginBox"><label>ایمیل</label><input id="loginEmail" type="email" autocomplete="username" placeholder="ایمیل مربی"><label>رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button type="button" onclick="if(typeof window.loginApp==='function')window.loginApp();else {const e=document.getElementById('authError');e.textContent='کد ورود مربی بارگذاری نشده است؛ بخشی از اسکریپت ورود اجرا نشده. صفحه را تازه‌سازی کنید و اگر تکرار شد از صفحه عکس بفرستید.';e.style.display='block';}">🔐 ورود مربی</button></div>
-    <div id="traineeLoginBox" class="hide"><div class="trainee-auth-block"><h3>🔐 ورود شاگرد</h3><label>شماره موبایل</label><input id="traineePhoneLogin" type="tel" inputmode="tel" autocomplete="username" placeholder="09121234567"><label>رمز عبور</label><input id="traineeLoginPassword" type="password" autocomplete="current-password" placeholder="رمز اولیه یا رمز شخصی"><button type="button" onclick="if(typeof window.loginTraineePhone==='function')window.loginTraineePhone();else {const e=document.getElementById('authError');e.textContent='کد ورود شاگرد بارگذاری نشده است؛ بخشی از اسکریپت ورود اجرا نشده. صفحه را تازه‌سازی کنید و اگر تکرار شد از صفحه عکس بفرستید.';e.style.display='block';}">ورود شاگرد</button><p class="muted">ورود پس از تأیید درخواست ثبت‌نام توسط مربی امکان‌پذیر است.</p></div></div>
-    <div id="authError" class="auth-error"></div>`;
-  const diag=window.__fitnessLastScriptError;
-  if(diag){
-    const e=document.getElementById('authError');
-    if(e){
-      e.style.display='block';
-      e.textContent='خطای واقعی اجرای اسکریپت ورود: '+diag.message+(diag.source?' | فایل: '+diag.source.split('/').pop():'')+(diag.line?' | خط: '+diag.line:'')+(diag.column?' | ستون: '+diag.column:'')+'. این اطلاعات برای رفع علت اصلی ثبت شده است.';
-    }
-  } else {
-    const e=document.getElementById('authError');
-    if(e){
-      e.style.display='block';
-      e.textContent='بخش اصلی ورود اجرا نشده است، اما خطای جاوااسکریپت ثبت‌شده‌ای در دسترس نیست. وضعیت: ورود مربی='+typeof window.loginApp+'، ورود شاگرد='+typeof window.loginTraineePhone+'، اتصال Supabase='+typeof window.AUTH_SUPABASE+'، کتابخانه Supabase='+typeof window.supabase+'.';
-    }
-  }
-  window.fallbackAuthMode=function(mode){
-    const coach=document.getElementById('coachLoginBox'),trainee=document.getElementById('traineeLoginBox');
-    if(coach)coach.classList.toggle('hide',mode!=='coach');
-    if(trainee)trainee.classList.toggle('hide',mode!=='trainee');
-    document.getElementById('authCoachTab')?.classList.toggle('active',mode==='coach');
-    document.getElementById('authTraineeTab')?.classList.toggle('active',mode==='trainee');
-    const err=document.getElementById('authError');if(err)err.style.display='none';
-  };
-})();
-</script>
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    const root=document.getElementById('authScreen');
+    // The connected redesign must finish mounting before fallback can inspect the page.
+    if(!root||window.__sehAuthRedesignConnected)return;
+    const card=root.querySelector('.auth-card');
+    const coach=document.getElementById('coachLoginBox');
+    const trainee=document.getElementById('traineeLoginBox');
+    const tabs=document.getElementById('authTabs');
+    const error=document.getElementById('authError');
+    if(!card||!coach||!trainee||!error)return;
 
+    // Never rebuild or replace .auth-card: the original registration fields live inside it.
+    document.getElementById('seh-auth-preload-hide')?.remove();
+    root.style.visibility='visible';
+    coach.classList.remove('hide');
+    trainee.classList.add('hide');
+    if(tabs)tabs.classList.remove('hide');
+
+    window.fallbackAuthMode=function(mode){
+      coach.classList.toggle('hide',mode!=='coach');
+      trainee.classList.toggle('hide',mode!=='trainee');
+      document.getElementById('authCoachTab')?.classList.toggle('active',mode==='coach');
+      document.getElementById('authTraineeTab')?.classList.toggle('active',mode==='trainee');
+      error.style.display='none';
+    };
+
+    const diag=window.__fitnessLastScriptError;
+    error.style.display='block';
+    error.textContent=diag
+      ? 'خطای اجرای صفحه ورود: '+diag.message+(diag.source?' | فایل: '+diag.source.split('/').pop():'')+(diag.line?' | خط: '+diag.line:'')+(diag.column?' | ستون: '+diag.column:'')
+      : 'طراحی جدید صفحه ورود بارگذاری نشد. فرم اصلی ثبت‌نام حفظ شده است؛ می‌توانید از گزینه‌های ورود مربی و شاگرد استفاده کنید و برای بررسی، این پیام را ارسال کنید.';
+  },0);
+},{once:true});
+</script>
 <!-- FINAL COMPLETION LAYER: 18/18 -->
 <script>
 (function(){
@@ -3596,7 +3596,8 @@ const plans=workoutResult.data||[], nutrition=nutritionResult.data||[];
 
   // -------- Nutrition: substitution is linked to the actual meal food; custom food remains DB-backed --------
   
-  addProfileBasicFields();
+  // Profile helper is optional in this build; never abort the remaining app startup when absent.
+  if(typeof window.addProfileBasicFields==='function')window.addProfileBasicFields();
 
   // -------- Subscription/payment completeness --------
   const originalSaveSubscription=window.saveSubscription;
@@ -14301,28 +14302,51 @@ window.sehResetTurnstile=function(){};
     el.style.color=ok?'#8be0b5':'#ffb4a8';
   }
   function client(){return window.AUTH_SUPABASE;}
+  const CLAIM_KEY='seh_trainee_recovery_claim_v1';
+  function b64url(bytes){let s='';for(const b of bytes)s+=String.fromCharCode(b);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/g,'');}
+  function currentClaim(){
+    try{const x=JSON.parse(sessionStorage.getItem(CLAIM_KEY)||'null');return x&&typeof x.request_id==='string'&&typeof x.claim_token==='string'&&typeof x.phone==='string'?x:null;}catch(_){return null;}
+  }
+  function createClaim(phone){
+    const bytes=crypto.getRandomValues(new Uint8Array(32));
+    const claim={request_id:crypto.randomUUID(),claim_token:b64url(bytes),phone};
+    sessionStorage.setItem(CLAIM_KEY,JSON.stringify(claim));return claim;
+  }
+  function recoveryClaim(phone){
+    const existing=currentClaim();
+    return existing&&existing.phone===phone?existing:createClaim(phone);
+  }
+  function clearRecoveryClaim(){try{sessionStorage.removeItem(CLAIM_KEY);}catch(_){}}
+  async function invokePreauth(body){return await client().functions.invoke('trainee-password-recovery-preauth',{body});}
   function addStudentRecovery(){
-    const box=$('traineeLoginBox');
-    if(!box||$('sehRecoveryStudentPanel'))return;
-    const panel=document.createElement('div');
+    /* There are legacy duplicate traineeLoginBox IDs in the page. Always attach
+       recovery to the currently visible login box, not the first hidden legacy copy. */
+    const boxes=Array.from(document.querySelectorAll('[id="traineeLoginBox"]'));
+    if(!boxes.length)return;
+    const visible=boxes.filter(b=>!b.classList.contains('hide')&&b.getClientRects().length>0);
+    const box=visible[visible.length-1]||boxes[boxes.length-1];
+    let panel=$('sehRecoveryStudentPanel');
+    if(!panel){panel=document.createElement('div');panel.id='sehRecoveryStudentPanel';}
+    if(panel.parentElement!==box)box.appendChild(panel);
+    if(panel.dataset.sehRecoveryBound==='1')return;
     panel.id='sehRecoveryStudentPanel';
     panel.className='trainee-auth-block';
     panel.innerHTML=
       '<h3>🔑 بازیابی رمز با تأیید مربی</h3>'+
-      '<p class="muted">بدون پیامک: درخواست را بفرستید. پس از تأیید مربی، شناسهٔ درخواست و کد یک‌بارمصرف را از خود مربی دریافت کنید.</p>'+
+      '<p class="muted">بدون پیامک: درخواست را ثبت کنید. پس از تأیید مربی، کد چهاررقمی را فقط در همین مرورگر دریافت کنید.</p>'+
       '<label for="sehRecoveryPhone">شماره موبایل ثبت‌شده</label><input id="sehRecoveryPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09121234567">'+
       '<button type="button" id="sehRecoveryRequestBtn">📨 درخواست بازیابی رمز</button>'+
-      '<div id="sehRecoveryRequestStatus" role="status" style="display:none;white-space:pre-wrap;line-height:1.8;margin-top:8px"></div>'+
+      '<div id="sehRecoveryRequestStatus" role="status" style="display:none;white-space:pre-wrap;line-height:1.8;margin-top:8px"></div>'+'<button type="button" class="secondary" id="sehRecoveryFetchCodeBtn">🔎 دریافت کد پس از تأیید مربی</button>'+'<div id="sehRecoveryCodeStatus" role="status" style="display:none;white-space:pre-wrap;line-height:1.8;margin-top:8px"></div>'+
       '<hr style="border-color:#344b60;margin:14px 0">'+
       '<h3>🔐 تعیین رمز جدید</h3>'+
-      '<label for="sehRecoveryRequestId">شناسهٔ درخواست (از مربی بگیرید)</label><input id="sehRecoveryRequestId" autocomplete="off" placeholder="شناسهٔ درخواست">'+
-      '<label for="sehRecoveryCode">کد ۸ رقمی بازیابی</label><input id="sehRecoveryCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="کد دریافت‌شده از مربی">'+
+      '<label for="sehRecoveryCode">کد ۴ رقمی بازیابی</label><input id="sehRecoveryCode" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="کدی که در همین مرورگر دریافت می‌کنید">'+
       '<label for="sehRecoveryNewPassword">رمز جدید (حداقل ۸ کاراکتر)</label><input id="sehRecoveryNewPassword" type="password" autocomplete="new-password" minlength="8" placeholder="رمز جدید">'+
       '<label for="sehRecoveryNewPassword2">تکرار رمز جدید</label><input id="sehRecoveryNewPassword2" type="password" autocomplete="new-password" minlength="8" placeholder="تکرار رمز جدید">'+
       '<button type="button" id="sehRecoveryResetBtn">🔒 ذخیره رمز جدید</button>'+
       '<div id="sehRecoveryResetStatus" role="status" style="display:none;white-space:pre-wrap;line-height:1.8;margin-top:8px"></div>';
-    box.appendChild(panel);
-    const loginPhone=$('traineePhoneLogin');
+    /* Keep recovery outside the replaceable login form, but inside the active auth box. */
+    panel.dataset.sehRecoveryBound='1';
+    const loginPhone=box.querySelector('#traineePhoneLogin');
     $('sehRecoveryPhone').value=loginPhone?.value||'';
     loginPhone?.addEventListener('change',()=>{if(!$('sehRecoveryPhone').value)$('sehRecoveryPhone').value=loginPhone.value;});
     $('sehRecoveryRequestBtn').addEventListener('click',async()=>{
@@ -14331,29 +14355,44 @@ window.sehResetTurnstile=function(){};
       if(!client()?.functions?.invoke){message('sehRecoveryRequestStatus','ارتباط با سامانه آماده نیست؛ صفحه را تازه‌سازی کنید.',false);return;}
       btn.disabled=true;btn.textContent='⏳ در حال ارسال…';
       try{
-        const {data,error}=await client().functions.invoke('trainee-password-recovery',{body:{action:'request',phone}});
+        const claim=recoveryClaim(phone);
+        const {data,error}=await invokePreauth({action:'request',phone,request_id:claim.request_id,claim_token:claim.claim_token});
         if(error)throw error;if(data?.error)throw new Error(data.error);
         message('sehRecoveryRequestStatus',data?.message||'درخواست ارسال شد. پس از بررسی مربی پیگیری کنید.',true);
       }catch(e){console.error('[seh recovery request]',e);message('sehRecoveryRequestStatus','ارسال درخواست انجام نشد: '+(e?.message||String(e)),false);}
       finally{btn.disabled=false;btn.textContent='📨 درخواست بازیابی رمز';}
     });
+    $('sehRecoveryFetchCodeBtn').addEventListener('click',async()=>{
+      const claim=currentClaim();
+      if(!claim){message('sehRecoveryCodeStatus','ابتدا درخواست بازیابی را ثبت کنید.',false);return;}
+      const btn=$('sehRecoveryFetchCodeBtn');btn.disabled=true;btn.textContent='⏳ بررسی تأیید مربی…';
+      try{
+        const {data,error}=await invokePreauth({action:'code',request_id:claim.request_id,claim_token:claim.claim_token});
+        if(error)throw error;if(data?.error)throw new Error(data.error);
+        $('sehRecoveryCode').value=String(data.code||'');
+        message('sehRecoveryCodeStatus','کد بازیابی در همین مرورگر دریافت شد.',true);
+      }catch(e){message('sehRecoveryCodeStatus',e?.message||'کد هنوز صادر نشده یا درخواست منقضی شده است.',false);}
+      finally{btn.disabled=false;btn.textContent='🔎 دریافت کد پس از تأیید مربی';}
+    });
     $('sehRecoveryResetBtn').addEventListener('click',async()=>{
       const btn=$('sehRecoveryResetBtn'),phone=phoneNorm($('sehRecoveryPhone').value);
-      const request_id=$('sehRecoveryRequestId').value.trim(),code=$('sehRecoveryCode').value.trim();
+      const code=$('sehRecoveryCode').value.trim().replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
       const new_password=$('sehRecoveryNewPassword').value||'',repeat=$('sehRecoveryNewPassword2').value||'';
       if(!/^\+989\d{9}$/.test(phone)){message('sehRecoveryResetStatus','شماره موبایل ثبت‌شده را درست وارد کنید.',false);return;}
-      if(!/^[0-9a-f-]{36}$/i.test(request_id)){message('sehRecoveryResetStatus','شناسهٔ درخواست را دقیقاً از مربی دریافت و وارد کنید.',false);return;}
-      if(!/^\d{8}$/.test(code)){message('sehRecoveryResetStatus','کد بازیابی باید ۸ رقم باشد.',false);return;}
+      if(!/^\d{4}$/.test(code)){message('sehRecoveryResetStatus','کد بازیابی باید ۴ رقم باشد.',false);return;}
       if(new_password.length<8||new_password.length>128){message('sehRecoveryResetStatus','رمز جدید باید بین ۸ تا ۱۲۸ کاراکتر باشد.',false);return;}
       if(new_password!==repeat){message('sehRecoveryResetStatus','رمز جدید و تکرار آن یکسان نیستند.',false);return;}
       btn.disabled=true;btn.textContent='⏳ در حال ذخیره…';
       try{
-        const {data,error}=await client().functions.invoke('trainee-password-recovery',{body:{action:'reset',request_id,code,new_password}});
+        const claim=currentClaim();
+        if(!claim){message('sehRecoveryResetStatus','درخواست بازیابی این مرورگر پیدا نشد؛ دوباره درخواست ثبت کنید.',false);return;}
+        const {data,error}=await invokePreauth({action:'reset',request_id:claim.request_id,claim_token:claim.claim_token,code,new_password});
         if(error)throw error;if(data?.error)throw new Error(data.error);
         message('sehRecoveryResetStatus',data?.message||'رمز جدید ذخیره شد؛ اکنون وارد شوید.',true);
         $('traineePhoneLogin').value=$('sehRecoveryPhone').value;
         $('traineeLoginPassword').value=new_password;
-        $('sehRecoveryRequestId').value='';$('sehRecoveryCode').value='';
+        clearRecoveryClaim();
+        $('sehRecoveryCode').value='';
         $('sehRecoveryNewPassword').value='';$('sehRecoveryNewPassword2').value='';
       }catch(e){console.error('[seh recovery reset]',e);message('sehRecoveryResetStatus','تغییر رمز انجام نشد: '+(e?.message||String(e)),false);}
       finally{btn.disabled=false;btn.textContent='🔒 ذخیره رمز جدید';}
@@ -14368,7 +14407,7 @@ window.sehResetTurnstile=function(){};
     panel.innerHTML='<div class="registration-requests-heading"><div><h2>🔑 درخواست‌های بازیابی رمز</h2><p class="muted">بدون پیامک؛ فقط درخواست شاگردان متصل به حساب مربی شما نمایش داده می‌شود.</p></div><button type="button" class="secondary" id="sehRecoveryRefreshBtn">🔄 به‌روزرسانی</button></div>'+
       '<div id="sehCoachRecoveryMessage" role="status" style="display:none;white-space:pre-wrap;line-height:1.8;margin:8px 0"></div>'+
       '<div id="sehCoachRecoveryRequests"><p class="muted">برای دریافت درخواست‌ها، به‌روزرسانی را بزنید.</p></div>'+
-      '<div id="sehRecoveryIssuedCode" style="display:none;margin-top:12px;padding:12px;border:1px solid #b58a35;border-radius:10px;background:#fff7df;color:#302714"></div>';
+      '';
     base.insertAdjacentElement('afterend',panel);
     $('sehRecoveryRefreshBtn').addEventListener('click',loadCoachRequests);
   }
@@ -14393,29 +14432,14 @@ window.sehResetTurnstile=function(){};
   async function reviewCoachRequest(btn){
     const request_id=btn.dataset.sehRecoveryId,decision=btn.dataset.sehRecoveryReview;
     if(!request_id||!['approve','reject'].includes(decision))return;
-    if(!confirm(decision==='approve'?'درخواست بازیابی این شاگرد تأیید شود؟ کد فقط همین بار نمایش داده می‌شود و ۱۵ دقیقه اعتبار دارد.':'درخواست بازیابی رمز رد شود؟'))return;
+    if(!confirm(decision==='approve'?'درخواست بازیابی این شاگرد تأیید شود؟ پس از تأیید، کد فقط در مرورگر ثبت‌کننده درخواست قابل دریافت است.':'درخواست بازیابی رمز رد شود؟'))return;
     btn.disabled=true;
     try{
       const {data,error}=await client().functions.invoke('trainee-password-recovery',{body:{action:'review',request_id,decision}});
       if(error)throw error;if(data?.error)throw new Error(data.error);
       if(decision==='approve'){
-        const codeBox=$('sehRecoveryIssuedCode');
-        codeBox.style.display='block';
-        codeBox.innerHTML='<h3 style="margin:0 0 8px">🔐 کد بازیابی — فقط همین بار نمایش داده می‌شود</h3>'+
-          '<p><b>شاگرد:</b> '+esc(btn.dataset.sehRecoveryName||'شاگرد')+'</p>'+
-          '<p><b>شماره:</b> '+esc(btn.dataset.sehRecoveryPhone||'')+'</p>'+
-          '<p><b>شناسهٔ درخواست:</b><br><code style="word-break:break-all">'+esc(request_id)+'</code></p>'+
-          '<p style="font-size:24px;font-weight:bold;letter-spacing:4px;margin:12px 0">'+esc(data.recovery_code||'')+'</p>'+
-          '<p>اعتبار: ۱۵ دقیقه. شناسهٔ درخواست و کد را فقط به خود شاگرد بدهید؛ پیامک خودکار ارسال نمی‌شود.</p>'+
-          '<button type="button" id="sehRecoveryCopyDetails">📋 کپی شناسه و کد</button>';
-        $('sehRecoveryCopyDetails').addEventListener('click',async()=>{
-          const textValue='شناسه درخواست: '+request_id+'\nکد بازیابی: '+String(data.recovery_code||'');
-          try{await navigator.clipboard.writeText(textValue);message('sehCoachRecoveryMessage','شناسه و کد کپی شد؛ آن را فقط به خود شاگرد بدهید.',true);}
-          catch(e){message('sehCoachRecoveryMessage','کپی خودکار ممکن نیست؛ شناسه و کد را از کادر بالا دستی منتقل کنید.',false);}
-        });
-        message('sehCoachRecoveryMessage','درخواست تأیید شد. کد ۱۵ دقیقه اعتبار دارد و در سرور به‌صورت متن خام نگهداری نمی‌شود.',true);
+        message('sehCoachRecoveryMessage','درخواست تأیید شد. کد به مربی نمایش داده نمی‌شود و فقط در همان مرورگری که درخواست را ثبت کرده قابل دریافت است.',true);
       }else{
-        $('sehRecoveryIssuedCode').style.display='none';
         message('sehCoachRecoveryMessage','درخواست بازیابی رد شد.',true);
       }
       await loadCoachRequests();
@@ -15189,6 +15213,6 @@ window.sehNutritionBuilderBridge={
 </script>
 
 <!-- SEH_AUTH_REDESIGN_CONNECTED_V1 -->
-<script src="./auth-preview/connected-auth.js?v=3" onload="document.getElementById('seh-auth-preload-hide')?.remove()" onerror="document.getElementById('seh-auth-preload-hide')?.remove()"></script>
+<script src="./auth-preview/connected-auth.js?v=4" onload="document.getElementById('seh-auth-preload-hide')?.remove()" onerror="document.getElementById('seh-auth-preload-hide')?.remove()"></script>
 </body>
 </html>
