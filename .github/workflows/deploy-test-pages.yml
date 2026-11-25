@@ -27,7 +27,7 @@ jobs:
           html = Path('index.html').read_text(encoding='utf-8')
           auth = Path('auth-preview/connected-auth.js').read_text(encoding='utf-8')
           sw = Path('sw.js').read_text(encoding='utf-8')
-          key = 'connected-auth.js?v=20261126-stable-entry-v1'
+          key = 'connected-auth.js?v=20261125-fallback-guard-v1'
           assert html.count(key) == 2, 'Expected preload plus one early login script'
           assert html.index('seh-auth-redesign-early') < html.index('<div class="page">'), 'Login script must run before app body'
           assert 'seh-auth-first-paint-guard' in html, 'First-paint guard missing'
@@ -36,7 +36,7 @@ jobs:
           assert "if(!card||window.__sehAuthRedesignConnected||document.getElementById('sehAuthHome')||document.getElementById('authTabs'))return;" in html, 'Legacy fallback must not replace the connected redesign'
           assert 'window.__sehAuthRedesignConnected=true;' in auth, 'Auth ready flag missing'
           assert 'min-height:100dvh!important' in auth, 'Login card and viewport units differ'
-          assert "SHELL_CACHE_NAME = 'seh-shell-v12'" in sw, 'PWA shell cache was not invalidated'
+          assert "SHELL_CACHE_NAME = 'seh-shell-v13'" in sw, 'PWA shell cache was not invalidated'
           print('PASS: first paint, early auth, legacy guard, lazy iframe, viewport and PWA cache contracts')
           PY
       - name: Cache-bust restored approved login screen
@@ -45,7 +45,7 @@ jobs:
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          expected = 'connected-auth.js?v=20261126-stable-entry-v1'
+          expected = 'connected-auth.js?v=20261125-fallback-guard-v1'
           if s.count(expected) != 2:
               raise SystemExit('Expected exactly one preload and one early login script reference.')
           if 'connected-auth.js?v=20261124-scroll-fix-v2' in s:
@@ -100,7 +100,7 @@ jobs:
           fi
           grep -Fq '<title>فیتنس سه‌قلعه</title>' "$body"
           grep -Fq 'FITNESS SEH GALEH' "$body"
-          grep -Fq 'auth-preview/connected-auth.js?v=20261126-stable-entry-v1' "$body"
+          grep -Fq 'auth-preview/connected-auth.js?v=20261125-fallback-guard-v1' "$body"
           grep -Fq 'seh-auth-first-paint-guard' "$body"
           grep -Fq 'loading="lazy"' "$body"
           grep -Fq 'if(!window.__sehAuthRedesignConnected)buildAuthTabs();' "$body"
@@ -113,8 +113,8 @@ jobs:
             echo "::error::Published TEST service worker failed to load (HTTP ${sw_status:-no response})"
             exit 1
           fi
-          grep -Fq "SHELL_CACHE_NAME = 'seh-shell-v12'" "$sw_body"
-          auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js?v=20261126-stable-entry-v1" || true)"
+          grep -Fq "SHELL_CACHE_NAME = 'seh-shell-v13'" "$sw_body"
+          auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js?v=20261125-fallback-guard-v1" || true)"
           if [ "$auth_status" != "200" ]; then
             echo "::error::Connected login redesign JS failed to load (HTTP ${auth_status:-no response})"
             exit 1

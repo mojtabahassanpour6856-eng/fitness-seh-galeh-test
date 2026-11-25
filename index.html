@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- Low-risk startup optimization: warm up connections to services used on app startup. -->
 <link rel="preload" as="script" href="./vendor/supabase-2.119.0.js">
-<link rel="preload" as="script" href="./auth-preview/connected-auth.js?v=20261126-stable-entry-v1" fetchpriority="high">
+<link rel="preload" as="script" href="./auth-preview/connected-auth.js?v=20261125-fallback-guard-v1" fetchpriority="high">
 <link rel="preconnect" href="https://udptdznbvewkublvzmtm.supabase.co" crossorigin>
 <title>فیتنس سه‌قلعه</title>
 <meta name="theme-color" content="#ffbd16">
@@ -482,7 +482,7 @@ body.locked{overflow:hidden!important}
     <div id="authError" class="auth-error"></div>
   </div>
 </div>
-<script id="seh-auth-redesign-early" src="./auth-preview/connected-auth.js?v=20261126-stable-entry-v1" onerror="var g=document.getElementById('seh-auth-first-paint-guard');if(g)g.remove();var r=document.getElementById('authScreen');if(r)r.style.visibility='visible';"></script>
+<script id="seh-auth-redesign-early" src="./auth-preview/connected-auth.js?v=20261125-fallback-guard-v1" onerror="var g=document.getElementById('seh-auth-first-paint-guard');if(g)g.remove();var r=document.getElementById('authScreen');if(r)r.style.visibility='visible';"></script>
 <div class="page">
 
 <div id="authUserBar" class="card" style="display:none;padding:10px;margin-bottom:10px">
