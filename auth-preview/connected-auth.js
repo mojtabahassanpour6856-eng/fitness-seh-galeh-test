@@ -267,3 +267,50 @@ document.addEventListener('DOMContentLoaded',moveRecovery,{once:true});setTimeou
 window.__sehAuthRedesignConnected=true;
 window.__sehAuthRedesignConnecting=false;
 })();
+
+/* Temporary, read-only auth-screen diagnostics. Does not change authentication or data. */
+(function(){
+  'use strict';
+  function start(){
+    if(window.__sehAuthDiagStarted)return;
+    window.__sehAuthDiagStarted=true;
+    var root=document.getElementById('authScreen');
+    if(!root)return;
+    var panel=document.createElement('aside');
+    panel.id='sehAuthDiagnosticPanel';
+    panel.setAttribute('role','status');
+    panel.style.cssText='position:fixed;z-index:2147483646;left:8px;right:8px;bottom:8px;max-height:28vh;overflow:auto;background:#111e;color:#fff;border:1px solid #c6a24a;border-radius:10px;padding:8px;font:11px/1.7 monospace;direction:ltr;text-align:left;pointer-events:none;white-space:pre-wrap';
+    panel.textContent='AUTH DIAGNOSTICS: initializing…';
+    document.body.appendChild(panel);
+    var errors=[];
+    function report(){
+      var imgs=Array.from(root.querySelectorAll('img')).map(function(im){
+        return {src:im.currentSrc||im.src,complete:im.complete,naturalWidth:im.naturalWidth,naturalHeight:im.naturalHeight,display:getComputedStyle(im).display,visibility:getComputedStyle(im).visibility,pointerEvents:getComputedStyle(im).pointerEvents};
+      });
+      var cs=getComputedStyle(root),card=root.querySelector('.auth-card');
+      var info={
+        readyState:document.readyState,
+        authInitConnected:!!window.__sehAuthRedesignConnected,
+        authInitConnecting:!!window.__sehAuthRedesignConnecting,
+        view:root.dataset.sehView||null,
+        bodyLocked:document.body.classList.contains('locked'),
+        htmlOverflow:getComputedStyle(document.documentElement).overflow,
+        bodyOverflow:getComputedStyle(document.body).overflow,
+        authRect:(function(){var r=root.getBoundingClientRect();return {top:r.top,bottom:r.bottom,height:r.height,scrollHeight:root.scrollHeight,clientHeight:root.clientHeight,scrollTop:root.scrollTop};})(),
+        authOverflowY:cs.overflowY,authPointerEvents:cs.pointerEvents,
+        cardPresent:!!card,cardScrollHeight:card?card.scrollHeight:null,
+        images:imgs,errors:errors.slice(-4)
+      };
+      panel.textContent='AUTH DIAGNOSTICS (read-only)\n'+JSON.stringify(info,null,2);
+    }
+    window.addEventListener('error',function(e){errors.push('error: '+(e.message||'unknown')+' @ '+(e.filename||'')+':'+(e.lineno||''));report();});
+    window.addEventListener('unhandledrejection',function(e){errors.push('promise: '+String(e.reason&&e.reason.message||e.reason));report();});
+    root.addEventListener('click',function(e){errors.push('click received: '+(e.target&&e.target.tagName)+'#'+(e.target&&e.target.id||''));report();},true);
+    root.addEventListener('touchstart',function(){errors.push('touchstart received');report();},{passive:true,once:true});
+    root.addEventListener('scroll',function(){errors.push('scroll received, top='+root.scrollTop);report();},{passive:true});
+    root.querySelectorAll('img').forEach(function(im){im.addEventListener('load',report);im.addEventListener('error',function(){errors.push('image load failed: '+im.src);report();});});
+    report();
+    setInterval(report,3000);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
