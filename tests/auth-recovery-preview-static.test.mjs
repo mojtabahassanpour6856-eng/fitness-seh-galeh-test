@@ -8,6 +8,7 @@ const auth = readFileSync('auth-preview/connected-auth.js', 'utf8');
 assert.doesNotThrow(() => new Function(ui), 'recovery preview module must parse');
 assert.doesNotThrow(() => new Function(auth), 'connected auth shell must parse');
 assert.match(html, /auth-preview\/recovery-ui-preview\.js\?v=/, 'index must load the isolated preview module');
+assert.ok(html.indexOf('recovery-ui-preview.js') < html.indexOf('connected-auth.js'), 'recovery initializer must run before auth shell mounting');
 assert.doesNotMatch(ui, /functions\.invoke|fetch\s*\(/, 'preview UI must not make backend requests');
 assert.match(ui, /disabled/, 'all recovery actions remain disabled in the preview stage');
 assert.match(ui, /sehRecoveryStudentPanel/);
