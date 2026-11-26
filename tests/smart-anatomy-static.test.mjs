@@ -17,10 +17,19 @@ test('all inline JavaScript parses', () => {
   for (const [, source] of scripts) assert.doesNotThrow(() => new Function(source));
 });
 
-test('selected muscle family is highlighted red and unrelated groups reset', () => {
-  assert.match(html, /\.muscle\.selected[^{]*\{[^}]*fill:\s*#df3434/i);
+test('photo anatomy supports primary, secondary, and tertiary activation levels', () => {
+  assert.match(html, /\.hotspot\.level-primary path\s*\{[^}]*fill:#e53935/i);
+  assert.match(html, /\.hotspot\.level-secondary path\s*\{[^}]*fill:#ed7772/i);
+  assert.match(html, /\.hotspot\.level-tertiary path\s*\{[^}]*fill:#f4b8b4/i);
+  assert.match(html, /applyPhotoMuscleLevels\(\)/);
   assert.match(html, /\(parentMap\[mid\]\|\|mid\)===family/);
   assert.match(html, /classList\.toggle\("selected",active\)/);
+});
+
+test('photo assets are local and both body views can be selected', () => {
+  assert.doesNotMatch(html, /raw\.githubusercontent\.com/);
+  assert.match(html, /\.\/images\/images\/IMG_/);
+  assert.match(html, /data-view="back"(?![^>]*disabled)/);
 });
 
 test('selection supports keyboard and accessible pressed state', () => {
