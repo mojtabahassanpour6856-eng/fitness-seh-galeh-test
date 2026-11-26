@@ -45,6 +45,15 @@ test('recovery panel is mounted into the dedicated recovery view', () => {
   assert.match(auth, /moveRecovery/);
 });
 
+test('recovery panel cannot ping-pong between the login box and recovery mount', () => {
+  const script = scriptById('seh-password-recovery-ui-20261017');
+  assert.match(script, /const recoveryMount=\$\('sehRecoveryMount'\)/);
+  assert.match(script, /const target=recoveryMount\|\|box/);
+  assert.match(script, /observer\.observe\(document\.body,\{childList:true,subtree:true\}\)/);
+  assert.doesNotMatch(script, /observer\.observe\(document\.body,\{childList:true,subtree:true,attributes:true/);
+  assert.match(script, /panel\.style\.display!=='none'/);
+});
+
 test('trainee phone-alias login fix remains present and parses', () => {
   assert.ok(html.includes('SEH_TRAINEE_ALIAS_LOGIN_ROOT_FIX_20261126'));
   const start = html.indexOf('<script id="SEH_TRAINEE_ALIAS_LOGIN_ROOT_FIX_20261126">');
