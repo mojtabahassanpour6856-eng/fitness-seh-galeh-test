@@ -53,7 +53,7 @@ test('trainee phone-alias login fix remains present and parses', () => {
   assert.ok(end > bodyStart);
   const script = html.slice(bodyStart, end);
   assert.doesNotThrow(() => new Function(script));
-  assert.match(script, /trainee\.\+hash/);
+  assert.ok(script.includes("'trainee.'+hash"));
   assert.match(script, /signInWithPassword/);
   assert.match(script, /getSession/);
 });
