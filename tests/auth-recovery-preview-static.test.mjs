@@ -62,4 +62,12 @@ assert.ok(connected.includes('sehCoachRecoveryList'), 'coach request list must b
 const coachUi = connected.slice(connected.indexOf('async function coachRefresh'), connected.indexOf("document.addEventListener('click'"));
 assert.doesNotMatch(coachUi, /result\.code|claim_token|new_password/, 'coach UI must never receive or render recovery secrets');
 
+
+assert.ok(connected.includes('function readClaims()'), 'recovery claims must be stored as a phone-keyed session map');
+assert.ok(connected.includes('claims[value.phone]=value'), 'a new phone request must not overwrite another phone claim');
+assert.ok(connected.includes('const claims=readClaims(), value=claims[phone]'), 'retries must reuse the claim for the same normalized phone');
+assert.ok(connected.includes('clearClaim(claim.phone)'), 'successful reset must clear only the completed phone claim');
+assert.ok(connected.includes('value.request_id') && connected.includes('value.claim_token') && connected.includes('return {[value.phone]:value}'), 'legacy single-claim session data must remain recoverable after migration');
+assert.ok(connected.includes('sessionStorage.removeItem(STORE_KEY)'), 'session claims must be cleared from the current tab after completion');
+
 console.log('PASS: isolated recovery UI preview; no backend calls; WebP auth assets preserved');
