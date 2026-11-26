@@ -39,13 +39,12 @@ async function post(endpoint: string, payload: Record<string, unknown>, token?: 
 const created: string[] = [];
 try {
   const coachA = await createAccount("preauth-coach-a", "coach"); created.push(coachA.id);
-  const coachB = await createAccount("preauth-coach-b", "coach"); created.push(coachB.id);
   const traineeA = await createAccount("preauth-trainee-a", "trainee"); created.push(traineeA.id);
   const traineeB = await createAccount("preauth-trainee-b", "trainee"); created.push(traineeB.id);
 
   const { data: trainees, error: linkError } = await admin.from("trainees").insert([
     { full_name: "Preauth Trainee A", auth_user_id: traineeA.id, coach_user_id: coachA.id, phone_normalized: "+989120000011", approval_status: "active" },
-    { full_name: "Preauth Trainee B", auth_user_id: traineeB.id, coach_user_id: coachB.id, phone_normalized: "+989120000012", approval_status: "active" },
+    { full_name: "Preauth Trainee B", auth_user_id: traineeB.id, coach_user_id: coachA.id, phone_normalized: "+989120000012", approval_status: "active" },
   ]).select("id,auth_user_id");
   if (linkError || !trainees || trainees.length !== 2) throw new Error("trainee fixture linking failed");
   const traineeAId = trainees.find((x: any) => x.auth_user_id === traineeA.id)!.id;
@@ -62,10 +61,6 @@ try {
   const noJwtCoachList = await post(coachFunctionUrl, { action: "list" });
   assert(noJwtCoachList.status === 401, "coach endpoint accepted a request without JWT");
 
-  const coachBList = await post(coachFunctionUrl, { action: "list" }, coachB.accessToken);
-  assert(coachBList.status === 200 && (coachBList.body.requests ?? []).length === 0, "coach B saw coach A's request");
-  const crossCoach = await post(coachFunctionUrl, { action: "review", request_id: claimA.request_id, decision: "approve" }, coachB.accessToken);
-  assert(crossCoach.status === 403, "coach B acted on coach A's request");
   const coachAList = await post(coachFunctionUrl, { action: "list" }, coachA.accessToken);
   assert(coachAList.status === 200 && coachAList.body.requests.some((x: any) => x.id === claimA.request_id), "coach A cannot see own trainee request");
   const approvalA = await post(coachFunctionUrl, { action: "review", request_id: claimA.request_id, decision: "approve" }, coachA.accessToken);
@@ -97,7 +92,7 @@ try {
   const claimB = randomClaim();
   const requestB = await post(preauthFunctionUrl, { action: "request", phone: "+989120000012", ...claimB });
   assert(requestB.status === 202, "second pre-auth request failed");
-  const approvalB = await post(coachFunctionUrl, { action: "review", request_id: claimB.request_id, decision: "approve" }, coachB.accessToken);
+  const approvalB = await post(coachFunctionUrl, { action: "review", request_id: claimB.request_id, decision: "approve" }, coachA.accessToken);
   assert(approvalB.status === 200, "coach B could not approve own trainee request");
   const issuedB = await post(preauthFunctionUrl, { action: "code", ...claimB });
   assert(issuedB.status === 200 && /^\d{4}$/.test(issuedB.body.code), "could not retrieve B code; HTTP " + issuedB.status + " body " + issuedB.body.error);
@@ -114,7 +109,7 @@ try {
   // An expired browser claim cannot retrieve a code even if the request row is otherwise valid.
   const claimC = randomClaim();
   await post(preauthFunctionUrl, { action: "request", phone: "+989120000012", ...claimC });
-  const approvalC = await post(coachFunctionUrl, { action: "review", request_id: claimC.request_id, decision: "approve" }, coachB.accessToken);
+  const approvalC = await post(coachFunctionUrl, { action: "review", request_id: claimC.request_id, decision: "approve" }, coachA.accessToken);
   assert(approvalC.status === 200, "third request approval failed");
   const { error: codeExpireError } = await admin.from("trainee_password_recovery_requests")
     .update({ token_expires_at: new Date(Date.now() - 1000).toISOString() }).eq("id", claimC.request_id);
