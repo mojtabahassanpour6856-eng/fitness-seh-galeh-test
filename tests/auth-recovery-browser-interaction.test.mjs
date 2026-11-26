@@ -23,6 +23,8 @@ try {
     if (body.action === 'review') result = { success: true, status: 'approved' };
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(result) });
   });
+  await page.route('https://fixture.invalid/', route => route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><html><body></body></html>' }));
+  await page.goto('https://fixture.invalid/');
   await page.setContent(`
     <section id="sehRecoveryStudentPanel">
       <input id="sehRecoveryPhone" value="09120000011">
