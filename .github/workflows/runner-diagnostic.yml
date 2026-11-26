@@ -1,0 +1,18 @@
+name: Hosted runner diagnostic
+on:
+  push:
+    branches: ["diagnostic/hosted-runner-20261126"]
+permissions:
+  contents: read
+jobs:
+  runner-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Confirm hosted runner allocation
+        run: |
+          echo "RUNNER_DIAGNOSTIC_STARTED"
+          echo "runner=$RUNNER_OS"
+          echo "arch=$RUNNER_ARCH"
+          echo "github_ref=$GITHUB_REF"
+          echo "sha=$GITHUB_SHA"
