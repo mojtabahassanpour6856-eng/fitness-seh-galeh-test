@@ -9,8 +9,9 @@ function addStudentPreview(){
   const visible=boxes.filter(b=>!b.classList.contains('hide')&&b.getClientRects().length>0);
   const box=visible[visible.length-1]||boxes[boxes.length-1];
   let panel=$('sehRecoveryStudentPanel');
-  if(panel&&panel.parentElement===box)return true;
-  if(!panel){panel=document.createElement('section');panel.id='sehRecoveryStudentPanel';}
+  // Once mounted, leave ownership to connected-auth.js; never move it back and forth.
+  if(panel)return true;
+  panel=document.createElement('section');panel.id='sehRecoveryStudentPanel';
   panel.className='trainee-auth-block';
   panel.setAttribute('aria-labelledby','sehRecoveryTitle');
   panel.innerHTML=
