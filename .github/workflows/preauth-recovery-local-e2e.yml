@@ -70,7 +70,9 @@ jobs:
       - name: Start disposable Supabase and apply candidate migrations
         working-directory: ${{ runner.temp }}/preauth-recovery-e2e
         run: |
-          supabase start
+          # Studio is not used by this API/function E2E; excluding it avoids
+          # transient host-port collisions on shared GitHub runners.
+          supabase start --exclude studio
           supabase db reset --local
       - name: Serve both functions and test pre-auth lifecycle against real local GoTrue
         shell: bash
