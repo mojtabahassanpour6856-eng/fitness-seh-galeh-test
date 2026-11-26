@@ -9490,10 +9490,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const STORE='seh_test_saved_accounts_v2';
   const $=id=>document.getElementById(id);
   const normalizePhone=v=>{
-    let p=String(v||'').trim().replace(/[\\s()-]/g,'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
-    if(/^09\\d{9}$/.test(p))p='+98'+p.slice(1);
-    else if(/^989\\d{9}$/.test(p))p='+'+p;
-    else if(/^00989\\d{9}$/.test(p))p='+'+p.slice(2);
+    let p=String(v||'').trim().replace(/[\s()-]/g,'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+    if(/^09\d{9}$/.test(p))p='+98'+p.slice(1);
+    else if(/^989\d{9}$/.test(p))p='+'+p;
+    else if(/^00989\d{9}$/.test(p))p='+'+p.slice(2);
     return p;
   };
   const read=()=>{try{const a=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(a)?a:[]}catch(e){return []}};
@@ -9514,7 +9514,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     write(list);
   }
   function displayId(a){
-    if(a.type==='trainee'&&/^\\+989\\d{9}$/.test(a.id))return '0'+a.id.slice(3);
+    if(a.type==='trainee'&&/^\+989\d{9}$/.test(a.id))return '0'+a.id.slice(3);
     return a.id;
   }
   function render(){
