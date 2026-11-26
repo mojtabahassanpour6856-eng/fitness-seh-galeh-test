@@ -9810,13 +9810,28 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if(!Number.isInteger(weekly_sessions)||weekly_sessions<1||weekly_sessions>7||!training_days||!training_time){message("sehRegistrationLoginStatus","تعداد جلسات، روزها و ساعت تمرین را کامل کنید.");return;}
     if(password.length<8){message("sehRegistrationLoginStatus","رمز شخصی باید حداقل ۸ کاراکتر باشد.");return;}
     if(password!==confirmPassword){message("sehRegistrationLoginStatus","رمز عبور و تکرار آن یکسان نیستند.");return;}
-    const btn=$("traineeLoginBox")?.querySelector('.trainee-auth-block button[onclick*="registerTraineePhone"]');
+    const regBlock=visibleField("traineeRegName")?.closest(".trainee-auth-block");
+    const btn=regBlock?.querySelector('button[onclick*="registerTraineePhone"]');
     if(btn){btn.disabled=true;btn.textContent="⏳ در حال ارسال…";}
     try{
       const {data,error}=await AUTH_SUPABASE.functions.invoke("trainee-registration-request",{body:{full_name:name,phone,weekly_sessions,training_days,training_time,password}});
       if(error)throw error;if(data?.error)throw new Error(data.error);
-      ["traineeRegName","traineeRegPhone","traineeRegSessions","traineeRegDays","traineeRegTime","traineeRegPassword","traineeRegPasswordConfirm"].forEach(id=>{const el=visibleField(id);if(el)el.value="";});
-      message("sehRegistrationLoginStatus","درخواست عضویت «"+name+"» ثبت شد. پس از تأیید مربی، با همین شماره و رمزی که تعیین کردید وارد شوید.",true);
+      // Keep the submitted profile details visible for confirmation; clear only credentials.
+      ["traineeRegPassword","traineeRegPasswordConfirm"].forEach(id=>{const el=visibleField(id);if(el)el.value="";});
+      message("sehRegistrationLoginStatus","✅ درخواست شما با موفقیت برای مربی ارسال شد. اطلاعات ثبت‌شده در فرم باقی مانده است؛ پس از بررسی و تأیید مربی، می‌توانید وارد حساب خود شوید.",true);
+      const successStatus=$("sehRegistrationLoginStatus");
+      if(successStatus){
+        successStatus.setAttribute("role","status");
+        successStatus.setAttribute("aria-live","polite");
+        successStatus.style.display="block";
+        successStatus.style.padding="12px 14px";
+        successStatus.style.marginTop="12px";
+        successStatus.style.border="1px solid #27864c";
+        successStatus.style.borderRadius="12px";
+        successStatus.style.background="#123522";
+        successStatus.style.color="#b9f2ca";
+        successStatus.style.fontWeight="700";
+      }
     }catch(e){message("sehRegistrationLoginStatus","ارسال درخواست انجام نشد: "+(e?.message||String(e)));}
     finally{window.sehResetTurnstile?.(btn);if(btn){btn.disabled=false;btn.textContent="📨 ارسال درخواست عضویت";}}
   };
