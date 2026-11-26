@@ -1,0 +1,30 @@
+name: Recovery UI Chromium interaction tests
+on:
+  push:
+    branches: ["staging/recovery-ui-safe-webp-2026-11-26"]
+    paths:
+      - "auth-preview/recovery-ui-connected.js"
+      - "tests/auth-recovery-browser-interaction.test.mjs"
+      - ".github/workflows/recovery-ui-browser-interaction.yml"
+  pull_request:
+    paths:
+      - "auth-preview/recovery-ui-connected.js"
+      - "tests/auth-recovery-browser-interaction.test.mjs"
+      - ".github/workflows/recovery-ui-browser-interaction.yml"
+permissions:
+  contents: read
+jobs:
+  chromium-interaction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install isolated browser test dependency
+        run: npm install --no-save playwright
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Exercise student and coach recovery UI
+        run: node tests/auth-recovery-browser-interaction.test.mjs
