@@ -39,4 +39,28 @@ assert.match(registrationBlock, /traineeRegPassword.*?\.value=""/s, 'password fi
 assert.match(auth, /trainee-entry\.webp/);
 assert.match(auth, /coach-entry\.webp/);
 assert.match(auth, /seh-recovery-preview-notice|sehRecoveryStudentPanel/);
+
+const connected = readFileSync('auth-preview/recovery-ui-connected.js', 'utf8');
+assert.doesNotThrow(() => new Function(connected), 'connected recovery module must parse');
+assert.match(html, /auth-preview\\/recovery-ui-connected\\.js\\?v=/, 'index must load the gated integration module');
+assert.match(connected, /window\\.SEH_RECOVERY_CONNECTED_ENABLED === true/, 'integration must require an explicit release flag');
+assert.doesNotMatch(connected, /localStorage/, 'claim token must never be persisted in localStorage');
+assert.match(connected, /sessionStorage\\.setItem/, 'claim token must be scoped to the current browser session');
+assert.match(connected, /crypto\\.randomUUID\\(\\)/, 'request ID must be generated with a cryptographic UUID');
+assert.match(connected, /new Uint8Array\\(32\\)/, 'claim token must contain 32 random bytes');
+assert.match(connected, /trainee-password-recovery-preauth/, 'student requests must use the pre-auth endpoint');
+assert.match(connected, /trainee-password-recovery'/, 'coach actions must use the JWT-protected endpoint');
+assert.match(connected, /auth\\.getSession\\(\\)/, 'coach actions must use the current authenticated session');
+assert.match(connected, /action:'request'/, 'request payload action must be explicit');
+assert.match(connected, /action:'code'/, 'code payload action must be explicit');
+assert.match(connected, /action:'reset'/, 'reset payload action must be explicit');
+assert.match(connected, /action:'list'/, 'coach list payload action must be explicit');
+assert.match(connected, /action:'review'/, 'coach review payload action must be explicit');
+assert.doesNotMatch(connected, /service_role|SUPABASE_SERVICE_ROLE_KEY/, 'client module must never contain a service-role credential');
+assert.doesNotMatch(connected, /console\\.(log|debug)\\(/, 'sensitive recovery data must not be logged');
+assert.match(connected, /window\\.AUTH_SUPABASE/, 'coach requests must reuse the shared Supabase client');
+assert.match(connected, /decision:button\\.dataset\\.decision/, 'coach decision must be sent from the approved action controls');
+assert.match(connected, /sehCoachRecoveryList/, 'coach request list must be rendered in its own container');
+assert.doesNotMatch(connected, /code.*?coach.*?textContent/is, 'recovery code must not be rendered in the coach panel');
+
 console.log('PASS: isolated recovery UI preview; no backend calls; WebP auth assets preserved');
