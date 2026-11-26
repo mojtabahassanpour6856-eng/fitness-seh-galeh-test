@@ -69,7 +69,7 @@ try {
   await page.locator('#sehCoachRecoveryRefreshBtn').click();
   await page.getByText('شاگرد مرورگر آزمایشی A').waitFor();
   assert.equal(await page.locator('#sehCoachRecoveryList').getByText('شاگرد مرورگر آزمایشی A').count(), 1);
-  assert.equal(await page.locator('#sehCoachRecoveryList').getByText(/\b\d{4}\b/).count(), 0);
+  assert.doesNotMatch(await page.locator('#sehCoachRecoveryList').innerText(), /کد\s*[:：]/, 'coach UI must not display a recovery code');
   await page.locator('#sehCoachRecoveryList').getByRole('button', { name: 'تأیید درخواست' }).click();
   await page.waitForFunction(() => document.querySelector('#sehCoachRecoveryList').textContent.includes('درخواست در انتظار بررسی وجود ندارد'));
 
