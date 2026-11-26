@@ -2,7 +2,7 @@
 name: Deploy isolated preview to GitHub Pages
 on:
   push:
-    branches: ["main", "experiment/nutrition-builder-isolated-20261105", "integration/auth-recovery-mirror-selective-2026-11-25"]
+    branches: ["main", "experiment/nutrition-builder-isolated-20261105", "integration/auth-recovery-mirror-selective-2026-11-25", "feature/login-recovery-code-notice-2026-11-26"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -28,6 +28,9 @@ jobs:
         run: |
           npm install --prefix /tmp/auth-image-tools sharp
           NODE_PATH=/tmp/auth-image-tools/node_modules node scripts/optimize-auth-assets.cjs
+      - name: Cache-bust connected auth only for the isolated feature preview
+        if: github.ref == 'refs/heads/feature/login-recovery-code-notice-2026-11-26'
+        run: sed -i 's/connected-auth\\.js?v=5/connected-auth.js?v=6/g' index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
