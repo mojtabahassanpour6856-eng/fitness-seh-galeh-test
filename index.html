@@ -9486,23 +9486,27 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 <script id="seh-multi-account-switcher">
 (function(){
-  const STORE='seh_saved_accounts_v1';
+  // Isolate this test app's account history from the production Pages app.
+  const STORE='seh_test_saved_accounts_v2';
   const $=id=>document.getElementById(id);
   const normalizePhone=v=>{
-    let p=String(v||'').trim().replace(/[\\s()-]/g,'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
-    if(/^09\\d{9}$/.test(p))p='+98'+p.slice(1);
-    else if(/^989\\d{9}$/.test(p))p='+'+p;
-    else if(/^00989\\d{9}$/.test(p))p='+'+p.slice(2);
+    let p=String(v||'').trim().replace(/[\s()-]/g,'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+    if(/^09\d{9}$/.test(p))p='+98'+p.slice(1);
+    else if(/^989\d{9}$/.test(p))p='+'+p;
+    else if(/^00989\d{9}$/.test(p))p='+'+p.slice(2);
     return p;
   };
   const read=()=>{try{const a=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(a)?a:[]}catch(e){return []}};
   const write=a=>{try{localStorage.setItem(STORE,JSON.stringify(a.slice(0,6)))}catch(e){}};
   function remember(user){
     if(!user)return;
-    const phone=normalizePhone(user.phone||'');
+    // The verified profile role is authoritative; phone presence is not a role signal.
+    const role=(typeof authProfile!=='undefined'&&authProfile&&authProfile.role)||null;
+    if(role!=='trainee'&&role!=='coach')return;
+    const phone=normalizePhone(user.phone||(role==='trainee'&&typeof currentClient!=='undefined'&&currentClient?currentClient.phone:''));
     const email=String(user.email||'').trim().toLowerCase();
-    const type=phone?'trainee':'coach';
-    const id=phone||email;
+    const type=role;
+    const id=type==='trainee'?phone:email;
     if(!id)return;
     const visible=($('authUserText')?.textContent||'').split('|')[0].trim();
     const list=read().filter(x=>!(x.type===type&&x.id===id));
@@ -9510,7 +9514,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     write(list);
   }
   function displayId(a){
-    if(a.type==='trainee'&&/^\\+989\\d{9}$/.test(a.id))return '0'+a.id.slice(3);
+    if(a.type==='trainee'&&/^\+989\d{9}$/.test(a.id))return '0'+a.id.slice(3);
     return a.id;
   }
   function render(){
