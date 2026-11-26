@@ -26,7 +26,9 @@ function randomToken(){
  return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/g,'');
 }
 function readClaims(){
- try{const value=JSON.parse(sessionStorage.getItem(STORE_KEY)||'{}');
+ try{
+  const value=JSON.parse(sessionStorage.getItem(STORE_KEY)||'{}');
+  if(value&&typeof value.request_id==='string'&&typeof value.claim_token==='string'&&typeof value.phone==='string')return {[value.phone]:value};
   return value&&typeof value==='object'&&!Array.isArray(value)?value:{};
  }catch(_){return {};}
 }
