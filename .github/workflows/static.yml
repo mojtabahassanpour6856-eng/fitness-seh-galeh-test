@@ -2,7 +2,7 @@
 name: Deploy isolated preview to GitHub Pages
 on:
   push:
-    branches: ["main", "experiment/nutrition-builder-isolated-20261105"]
+    branches: ["main", "experiment/nutrition-builder-isolated-20261105", "fix/trainee-phone-auth-alias-20261126", "fix/restore-auth-images-with-phone-login-20261126"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -26,6 +26,9 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
+          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+        with:
+          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
