@@ -14326,7 +14326,12 @@ window.sehResetTurnstile=function(){};
     const box=visible[visible.length-1]||boxes[boxes.length-1];
     let panel=$('sehRecoveryStudentPanel');
     if(!panel){panel=document.createElement('div');panel.id='sehRecoveryStudentPanel';}
-    if(panel.parentElement!==box)box.appendChild(panel);
+    /* The redesigned auth shell owns the recovery view. Never move this panel
+       back into traineeLoginBox after connected-auth.js has mounted it there:
+       doing so creates a MutationObserver ping-pong and freezes the whole app. */
+    const recoveryMount=$('sehRecoveryMount');
+    const target=recoveryMount||box;
+    if(panel.parentElement!==target)target.appendChild(panel);
     if(panel.dataset.sehRecoveryBound==='1')return;
     panel.id='sehRecoveryStudentPanel';
     panel.className='trainee-auth-block';
@@ -14457,14 +14462,16 @@ window.sehResetTurnstile=function(){};
         $('sehCoachRecoveryPanel').dataset.loaded='1';
         loadCoachRequests();
       }
-    }else if(panel){
+    }else if(panel&&panel.style.display!=='none'){
       panel.style.display='none';
     }
   }
   const observer=new MutationObserver(update);
   function start(){
     update();
-    observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style']});
+    /* Observe structural changes only. Watching every style/class mutation here
+       caused update() to retrigger itself on its own display changes. */
+    observer.observe(document.body,{childList:true,subtree:true});
     if($('authUserText'))observer.observe($('authUserText'),{childList:true,subtree:true,characterData:true});
     setInterval(update,1800);
   }
