@@ -28,8 +28,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f optimization-preview-trigger.txt
           if ! git diff --quiet; then
-            git add assets/auth scripts/optimize-auth-images.py '*.html' '*.css' '*.js' '*.json' '*.webmanifest'
+            git add -A
             git commit -m "Optimize authentication illustrations as WebP"
             git push origin HEAD:perf/auth-images-webp-2026-11-26
           else
