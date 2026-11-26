@@ -118,6 +118,54 @@ st.textContent += `
 }
 `;
 
+/* New recovery view: visually match the connected sign-in redesign. */
+st.textContent += `
+#authScreen #sehRecoveryMount{margin-top:16px}
+#authScreen #sehRecoveryStudentPanel{
+  display:block!important;visibility:visible!important;width:100%!important;
+  box-sizing:border-box!important;margin:0!important;padding:18px!important;
+  border:1px solid #34495d!important;border-radius:18px!important;
+  background:linear-gradient(145deg,#111d29,#0c141e)!important;
+  color:#e8edf2!important;box-shadow:0 14px 35px #0004!important;
+}
+#authScreen #sehRecoveryStudentPanel h3{
+  color:#f4c64e!important;font-size:15px!important;line-height:1.8!important;
+  margin:4px 0 12px!important;
+}
+#authScreen #sehRecoveryStudentPanel p,
+#authScreen #sehRecoveryStudentPanel .muted{
+  color:#aeb9c5!important;font-size:12px!important;line-height:1.9!important;
+}
+#authScreen #sehRecoveryStudentPanel label{
+  display:block!important;color:#e5e9ed!important;font-size:12px!important;
+  font-weight:700!important;margin:12px 0 7px!important;
+}
+#authScreen #sehRecoveryStudentPanel input{
+  display:block!important;width:100%!important;box-sizing:border-box!important;
+  min-height:46px!important;padding:12px!important;margin:0 0 12px!important;
+  border:1px solid #34495d!important;border-radius:11px!important;
+  background:#0a131d!important;color:#fff!important;font-size:14px!important;
+}
+#authScreen #sehRecoveryStudentPanel button{
+  display:block!important;width:100%!important;min-height:45px!important;
+  margin:9px 0!important;padding:11px 13px!important;border:0!important;
+  border-radius:11px!important;background:linear-gradient(100deg,#ffd04b,#ffb900)!important;
+  color:#17120a!important;font-weight:900!important;cursor:pointer!important;
+}
+#authScreen #sehRecoveryStudentPanel button.secondary{
+  border:1px solid #80631f!important;background:#252313!important;color:#f4d77d!important;
+}
+#authScreen #sehRecoveryStudentPanel button:disabled{opacity:.6!important;cursor:wait!important}
+#authScreen #sehRecoveryStudentPanel hr{border-color:#34495d!important;margin:18px 0!important}
+#authScreen #sehRecoveryStudentPanel [role=status]{
+  display:block;white-space:pre-wrap;line-height:1.9;margin-top:9px;
+  color:#dce5ec;font-size:12px;
+}
+#authScreen .seh-recovery-pending{
+  padding:15px;border:1px dashed #80631f;border-radius:13px;
+  color:#e8d49b;background:#171b20;font-size:12px;line-height:1.9;
+}
+`;
 document.head.appendChild(st);
 const shell=document.createElement('div');
 shell.innerHTML='<div class="seh-top"><span>FITNESS SEH GALEH</span><span class="seh-tag">ورود امن اعضا</span></div><div class="seh-brand"><div class="seh-mark"><img src="./icon.svg" alt="نشان فیتنس سه‌قلعه"></div><h2>باشگاه فیتنس سه‌قلعه</h2><p>مربی من | همراه شما در مسیر تناسب اندام</p></div>'+
@@ -134,8 +182,38 @@ for(const b of blocks){const h=b.querySelector('h3')?.textContent||'';if(h.inclu
 document.getElementById('sehTraineeMount').appendChild(trainee);
 document.getElementById('sehCoachMount').appendChild(coach);
 const registration=trainee.querySelector('.seh-reg-block');if(registration){document.getElementById('sehRegisterMount').appendChild(registration);registration.style.display='block';}
-function moveRecovery(){const p=document.getElementById('sehRecoveryStudentPanel'),m=document.getElementById('sehRecoveryMount');if(p&&m&&p.parentElement!==m)m.appendChild(p);}
-window.sehAuthNavigate=function(v){root.dataset.sehView=v;if(v==='recovery'&&!document.getElementById('sehRecoveryStudentPanel')){root.dataset.sehView='trainee';error.textContent='بخش بازیابی رمز هنوز بارگذاری نشده است؛ چند لحظه بعد دوباره تلاش کنید.';error.style.display='block';}else{error.style.display='none';}moveRecovery();};
+function moveRecovery(){
+  const m=document.getElementById('sehRecoveryMount');
+  const p=document.querySelector('[id="sehRecoveryStudentPanel"]');
+  if(!m)return false;
+  if(p){
+    if(p.parentElement!==m)m.appendChild(p);
+    m.querySelector('.seh-recovery-pending')?.remove();
+    return true;
+  }
+  if(root.dataset.sehView==='recovery'&&!m.querySelector('.seh-recovery-pending')){
+    const note=document.createElement('p');
+    note.className='seh-recovery-pending';
+    note.setAttribute('role','status');
+    note.textContent='در حال آماده‌سازی فرم امن بازیابی رمز…';
+    m.appendChild(note);
+  }
+  return false;
+}
+window.sehAuthNavigate=function(v){
+  root.dataset.sehView=v;
+  error.style.display='none';
+  if(v==='recovery'){
+    moveRecovery();
+    // The recovery module initializes near the end of the app bundle; keep the new view
+    // active while its panel is mounted asynchronously instead of falling back to legacy UI.
+    let attempts=0;
+    const retry=setInterval(()=>{
+      attempts++;
+      if(moveRecovery()||attempts>=40)clearInterval(retry);
+    },250);
+  }else moveRecovery();
+};
 root.dataset.sehView='home';
 
 /* Pull-to-refresh with a lightweight gold arc indicator; keeps the existing reload trigger. */
