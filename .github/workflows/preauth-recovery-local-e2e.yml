@@ -8,6 +8,8 @@ on:
       - 'supabase/functions/trainee-password-recovery-preauth/**'
       - 'supabase/migrations/**'
       - 'experiments/**'
+      - 'tests/auth-recovery-fullstack-browser.test.mjs'
+      - 'auth-preview/recovery-ui-connected.js'
       - '.github/workflows/preauth-recovery-local-e2e.yml'
   workflow_dispatch:
 permissions:
