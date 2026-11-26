@@ -42,6 +42,7 @@ assert.match(auth, /seh-recovery-preview-notice|sehRecoveryStudentPanel/);
 
 const connected = readFileSync('auth-preview/recovery-ui-connected.js', 'utf8');
 assert.doesNotThrow(() => new Function(connected), 'connected recovery module must parse');
+assert.ok(connected.includes('&&/^\\d{4}$/.test'), 'code readiness must recognize a four-digit numeric code');
 assert.ok(html.includes('auth-preview/recovery-ui-connected.js?v='), 'index must load the gated integration module');
 assert.ok(connected.includes('window.SEH_RECOVERY_CONNECTED_ENABLED === true'), 'integration must require an explicit release flag');
 assert.doesNotMatch(connected, /localStorage/, 'claim token must never be persisted in localStorage');
