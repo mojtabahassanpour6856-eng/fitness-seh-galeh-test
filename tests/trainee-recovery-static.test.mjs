@@ -75,6 +75,7 @@ test('coach and trainee entry images are restored without replacing the phone lo
   assert.match(auth, /\.\/assets\/auth\/coach-entry\.webp/);
   assert.match(auth, /seh-art-trainee/);
   assert.match(auth, /seh-art-coach/);
+  assert.match(auth, /seh-art img\\{display:block;width:100%;height:100%;object-fit:cover/);
   assert.ok(html.includes('SEH_TRAINEE_ALIAS_LOGIN_ROOT_FIX_20261126'));
   assert.match(html, /signInWithPassword/);
   assert.match(html, /getSession/);
