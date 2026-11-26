@@ -13,6 +13,9 @@ on:
       - 'auth-preview/recovery-ui-connected.js'
       - 'assets/auth/**'
       - 'tests/auth-recovery-preview-static.test.mjs'
+      - 'tests/auth-recovery-atomic-request.test.mjs'
+      - 'supabase/functions/trainee-password-recovery-preauth/**'
+      - 'supabase/migrations/**'
       - '.github/workflows/auth-recovery-static.yml'
 permissions:
   contents: read
@@ -25,4 +28,4 @@ jobs:
         with:
           node-version: 22
       - name: Run auth recovery static regression tests
-        run: node --test tests/auth-recovery-preview-static.test.mjs
+        run: node --test tests/auth-recovery-preview-static.test.mjs tests/auth-recovery-atomic-request.test.mjs
