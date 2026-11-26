@@ -42,26 +42,24 @@ assert.match(auth, /seh-recovery-preview-notice|sehRecoveryStudentPanel/);
 
 const connected = readFileSync('auth-preview/recovery-ui-connected.js', 'utf8');
 assert.doesNotThrow(() => new Function(connected), 'connected recovery module must parse');
-assert.match(html, /auth-preview\\/recovery-ui-connected\\.js\\?v=/, 'index must load the gated integration module');
-assert.match(connected, /window\\.SEH_RECOVERY_CONNECTED_ENABLED === true/, 'integration must require an explicit release flag');
+assert.ok(html.includes('auth-preview/recovery-ui-connected.js?v='), 'index must load the gated integration module');
+assert.ok(connected.includes('window.SEH_RECOVERY_CONNECTED_ENABLED === true'), 'integration must require an explicit release flag');
 assert.doesNotMatch(connected, /localStorage/, 'claim token must never be persisted in localStorage');
-assert.match(connected, /sessionStorage\\.setItem/, 'claim token must be scoped to the current browser session');
-assert.match(connected, /crypto\\.randomUUID\\(\\)/, 'request ID must be generated with a cryptographic UUID');
-assert.match(connected, /new Uint8Array\\(32\\)/, 'claim token must contain 32 random bytes');
-assert.match(connected, /trainee-password-recovery-preauth/, 'student requests must use the pre-auth endpoint');
-assert.match(connected, /trainee-password-recovery'/, 'coach actions must use the JWT-protected endpoint');
-assert.match(connected, /auth\\.getSession\\(\\)/, 'coach actions must use the current authenticated session');
-assert.match(connected, /action:'request'/, 'request payload action must be explicit');
-assert.match(connected, /action:'code'/, 'code payload action must be explicit');
-assert.match(connected, /action:'reset'/, 'reset payload action must be explicit');
-assert.match(connected, /action:'list'/, 'coach list payload action must be explicit');
-assert.match(connected, /action:'review'/, 'coach review payload action must be explicit');
+assert.ok(connected.includes('sessionStorage.setItem'), 'claim token must be scoped to the current browser session');
+assert.ok(connected.includes('crypto.randomUUID()'), 'request ID must be generated with a cryptographic UUID');
+assert.ok(connected.includes('new Uint8Array(32)'), 'claim token must contain 32 random bytes');
+assert.ok(connected.includes('trainee-password-recovery-preauth'), 'student requests must use the pre-auth endpoint');
+assert.ok(connected.includes('/functions/v1/trainee-password-recovery\''), 'coach actions must use the JWT-protected endpoint');
+assert.ok(connected.includes('auth.getSession()'), 'coach actions must use the current authenticated session');
+for (const action of ["action:'request'","action:'code'","action:'reset'","action:'list'","action:'review'"]) {
+  assert.ok(connected.includes(action), 'missing recovery action contract: ' + action);
+}
 assert.doesNotMatch(connected, /service_role|SUPABASE_SERVICE_ROLE_KEY/, 'client module must never contain a service-role credential');
-assert.doesNotMatch(connected, /console\\.(log|debug)\\(/, 'sensitive recovery data must not be logged');
-assert.match(connected, /window\\.AUTH_SUPABASE/, 'coach requests must reuse the shared Supabase client');
-assert.match(connected, /decision:button\\.dataset\\.decision/, 'coach decision must be sent from the approved action controls');
-assert.match(connected, /sehCoachRecoveryList/, 'coach request list must be rendered in its own container');
+assert.doesNotMatch(connected, /console\.(log|debug)\(/, 'sensitive recovery data must not be logged');
+assert.ok(connected.includes('window.AUTH_SUPABASE'), 'coach requests must reuse the shared Supabase client');
+assert.ok(connected.includes('decision:button.dataset.decision'), 'coach decision must be sent from the approved action controls');
+assert.ok(connected.includes('sehCoachRecoveryList'), 'coach request list must be rendered in its own container');
 const coachUi = connected.slice(connected.indexOf('async function coachRefresh'), connected.indexOf("document.addEventListener('click'"));
-assert.doesNotMatch(coachUi, /result\\.code|claim_token|new_password/, 'coach UI must never receive or render recovery secrets');
+assert.doesNotMatch(coachUi, /result\.code|claim_token|new_password/, 'coach UI must never receive or render recovery secrets');
 
 console.log('PASS: isolated recovery UI preview; no backend calls; WebP auth assets preserved');
