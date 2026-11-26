@@ -116,7 +116,7 @@ jobs:
             cat "$RUNNER_TEMP/preauth-functions.log" || true
             exit 1
           fi
-          deno test --no-check --allow-net --allow-env "$GITHUB_WORKSPACE/experiments/trainee-password-recovery-preauth-local-e2e.test.ts"
+          deno run --no-check --allow-net --allow-env "$GITHUB_WORKSPACE/experiments/trainee-password-recovery-preauth-local-e2e.test.ts"
           node "$GITHUB_WORKSPACE/tests/auth-recovery-fullstack-browser.test.mjs"
       - name: Stop local functions and disposable Supabase
         if: always()
