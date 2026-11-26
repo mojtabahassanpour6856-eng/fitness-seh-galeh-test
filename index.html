@@ -15190,10 +15190,6 @@ window.sehNutritionBuilderBridge={
 
 <!-- SEH_AUTH_REDESIGN_CONNECTED_V1 -->
 <script src="./auth-preview/connected-auth.js?v=3" onload="document.getElementById('seh-auth-preload-hide')?.remove()" onerror="document.getElementById('seh-auth-preload-hide')?.remove()"></script>
-</body>
-</html>
-
-
 <!-- SEH_TRAINEE_ALIAS_LOGIN_ROOT_FIX_20261126: final override for the actual root app login -->
 <script id="SEH_TRAINEE_ALIAS_LOGIN_ROOT_FIX_20261126">
 (function(){
@@ -15204,7 +15200,7 @@ window.sehNutritionBuilderBridge={
     var p=String(value||'').trim()
       .replace(/[۰-۹]/g,function(d){return String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d));})
       .replace(/[٠-٩]/g,function(d){return String('٠١٢٣٤٥٦٧٨٩'.indexOf(d));})
-      .replace(/[\\s()-]/g,'');
+      .replace(/[\s()-]/g,'');
     if(p.indexOf('0098')===0)p='+98'+p.slice(4);
     else if(p.indexOf('98')===0)p='+'+p;
     else if(p.indexOf('0')===0)p='+98'+p.slice(1);
@@ -15225,7 +15221,7 @@ window.sehNutritionBuilderBridge={
     var box=document.getElementById('traineeLoginBox');
     var btn=box&&Array.from(box.querySelectorAll('button')).find(function(b){return /ورود شاگرد/.test(b.textContent||'');});
     var client=window.AUTH_SUPABASE;
-    if(!/^\\+989\\d{9}$/.test(phone)||!password){show('شماره موبایل معتبر و رمز عبور را وارد کنید. نمونه شماره: 09121234567');return;}
+    if(!/^\+989\d{9}$/.test(phone)||!password){show('شماره موبایل معتبر و رمز عبور را وارد کنید. نمونه شماره: 09121234567');return;}
     if(!client||!client.auth){show('اتصال ورود آماده نیست؛ صفحه را تازه‌سازی کنید و دوباره تلاش کنید.');return;}
     if(typeof window.finishLogin!=='function'){show('بخش تکمیل ورود شاگرد بارگذاری نشده است؛ صفحه را تازه‌سازی کنید.');return;}
     if(btn){btn.disabled=true;btn.dataset.sehOriginalText=btn.textContent;btn.textContent='⏳ در حال ورود…';}
@@ -15250,3 +15246,8 @@ window.sehNutritionBuilderBridge={
   };
 })();
 </script>
+</body>
+</html>
+
+
+
