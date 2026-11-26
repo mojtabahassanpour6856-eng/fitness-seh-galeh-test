@@ -1,0 +1,46 @@
+name: Optimize authentication images and deploy preview
+on:
+  push:
+    branches:
+      - perf/auth-images-webp-2026-11-26
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: auth-image-optimization-preview
+  cancel-in-progress: false
+jobs:
+  optimize-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout optimization branch
+        uses: actions/checkout@v4
+        with:
+          ref: perf/auth-images-webp-2026-11-26
+          fetch-depth: 0
+      - name: Install image optimizer
+        run: python -m pip install --disable-pip-version-check Pillow
+      - name: Convert authentication images to WebP
+        run: python scripts/optimize-auth-images.py
+      - name: Commit optimized assets and references
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet; then
+            git add assets/auth scripts/optimize-auth-images.py '*.html' '*.css' '*.js' '*.json' '*.webmanifest'
+            git commit -m "Optimize authentication illustrations as WebP"
+            git push origin HEAD:perf/auth-images-webp-2026-11-26
+          else
+            echo "No image optimization changes to commit."
+          fi
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload optimized preview
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: Deploy optimized preview
+        id: deployment
+        uses: actions/deploy-pages@v5
