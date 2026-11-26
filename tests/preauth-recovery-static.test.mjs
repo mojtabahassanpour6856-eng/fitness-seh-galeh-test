@@ -5,6 +5,8 @@ const preauth = readFileSync("supabase/functions/trainee-password-recovery-preau
 const coach = readFileSync("supabase/functions/trainee-password-recovery/index.ts", "utf8");
 const config = readFileSync("supabase/config.toml", "utf8");
 const migration = readFileSync("supabase/migrations/202611240002_pre_auth_recovery_claims.sql", "utf8");
+const authShell = readFileSync("auth-preview/connected-auth.js", "utf8");
+const rootSw = readFileSync("sw.js", "utf8");
 
 assert.match(config, /\[functions\.trainee-password-recovery-preauth\][\s\S]*?verify_jwt\s*=\s*false/);
 assert.match(config, /\[functions\.trainee-password-recovery\][\s\S]*?verify_jwt\s*=\s*true/, "coach recovery endpoint must retain gateway JWT verification");
@@ -42,5 +44,14 @@ assert.match(uiScript, /existing&&existing\.phone===phone/, "browser claim must 
 assert.match(uiScript, /crypto\.getRandomValues/);
 assert.match(uiScript, /sehRecoveryFetchCodeBtn/);
 assert.doesNotMatch(uiScript, /data\.recovery_code/, "coach UI must never display a recovery code");
+
+assert.ok(authShell.includes("#authScreen .seh-art{width:88px!important;height:88px!important;flex-basis:88px!important"), "short mobile screens must keep auth images readable");
+assert.ok(authShell.lastIndexOf("width:88px!important") > authShell.indexOf("width:58px!important"), "readable image override must follow the compact rule");
+assert.ok(authShell.includes("#authScreen .seh-art{width:76px!important;height:76px!important;flex-basis:76px!important"), "very short screens must keep auth images readable");
+assert.ok(authShell.lastIndexOf("width:76px!important") > authShell.indexOf("width:46px!important"), "very-short-screen image override must follow the compact rule");
+assert.ok(authShell.includes("#authScreen .auth-card{display:flex!important;flex-direction:column!important;flex:0 0 auto!important;min-height:100dvh!important;height:auto!important;max-height:none!important;overflow:visible!important"), "auth screen must remain scrollable");
+assert.doesNotThrow(() => new Function(authShell), "connected auth redesign must parse");
+assert.match(rootSw, /seh-shell-v14/);
+assert.doesNotMatch(rootSw, /seh-shell-v13/);
 
 console.log("PASS: pre-auth recovery and browser UI static security contract");
