@@ -112,3 +112,22 @@ test('moved trainee registration form stays visible in the redesigned registrati
     assert.ok(html.includes(`id="${id}"`), `missing registration field #${id}`);
   }
 });
+
+
+test('approved recovery code appears on trainee login only through the same tab browser claim', () => {
+  assert.ok(auth.includes('id="sehRecoveryLoginNotice"'));
+  assert.match(auth, /seh_trainee_recovery_claim_v1/);
+  assert.match(auth, /sessionStorage\.getItem\(RECOVERY_CLAIM_KEY/);
+  assert.match(auth, /trainee-password-recovery-preauth/);
+  assert.match(auth, /action:'code'/);
+  assert.match(auth, /expires_at/);
+  assert.match(auth, /setInterval\(\(\)=>\{if\(root\.dataset\.sehView==='trainee'/);
+  assert.doesNotMatch(auth, /localStorage\.(?:getItem|setItem).*RECOVERY/i);
+  assert.doesNotMatch(auth, /sessionStorage\.setItem\([^,]*RECOVERY[^,]*,\s*String\(data\.code/);
+});
+
+test('recovery notice never exposes the browser claim token and offers navigation to reset', () => {
+  assert.match(auth, /window\.sehAuthNavigate\('recovery'\)/);
+  assert.match(auth, /رفتن به بازیابی رمز/);
+  assert.match(auth, /کد فقط در همین مرورگر قابل مشاهده است/);
+});
