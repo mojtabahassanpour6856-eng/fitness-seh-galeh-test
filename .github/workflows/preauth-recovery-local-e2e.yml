@@ -98,29 +98,32 @@ jobs:
           env_file="$RUNNER_TEMP/preauth-recovery.env"
           umask 077
           printf 'SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\nSUPABASE_SERVICE_ROLE_KEY=%s\nRECOVERY_NO_SMS_ENABLED=true\nRECOVERY_ALLOWED_ORIGIN=%s\nRECOVERY_HMAC_PEPPER_B64URL=%s\nRECOVERY_ENVELOPE_KEY_B64URL=%s\n' "$SUPABASE_URL" "$SUPABASE_ANON_KEY" "$SUPABASE_SERVICE_ROLE_KEY" "$RECOVERY_ALLOWED_ORIGIN" "$RECOVERY_HMAC_PEPPER_B64URL" "$RECOVERY_ENVELOPE_KEY_B64URL" > "$env_file"
-          supabase functions serve trainee-password-recovery --no-verify-jwt --env-file "$env_file" > "$RUNNER_TEMP/preauth-coach-function.log" 2>&1 &
-          echo $! > "$RUNNER_TEMP/preauth-coach-function.pid"
-          supabase functions serve trainee-password-recovery-preauth --no-verify-jwt --env-file "$env_file" > "$RUNNER_TEMP/preauth-trainee-function.log" 2>&1 &
-          echo $! > "$RUNNER_TEMP/preauth-trainee-function.pid"
+          # Serve both endpoints from one Supabase CLI process; concurrent
+          # "functions serve <name>" processes can compete for the local gateway.
+          supabase functions serve --no-verify-jwt --env-file "$env_file" > "$RUNNER_TEMP/preauth-functions.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/preauth-functions.pid"
           ready_coach=0; ready_trainee=0
           for i in $(seq 1 60); do
-            coach_code="$(curl -sS -o /dev/null -w '%{http_code}' -X POST "$RECOVERY_FUNCTION_URL" -H 'Content-Type: application/json' -H "Origin: $RECOVERY_ALLOWED_ORIGIN" -d '{}' || true)"
-            trainee_code="$(curl -sS -o /dev/null -w '%{http_code}' -X POST "$RECOVERY_PREAUTH_FUNCTION_URL" -H 'Content-Type: application/json' -H "Origin: $RECOVERY_ALLOWED_ORIGIN" -d '{}' || true)"
+            coach_code="$(curl -sS --max-time 5 -o /dev/null -w '%{http_code}' -X POST "$RECOVERY_FUNCTION_URL" -H 'Content-Type: application/json' -H "Origin: $RECOVERY_ALLOWED_ORIGIN" -d '{}' || true)"
+            trainee_code="$(curl -sS --max-time 5 -o /dev/null -w '%{http_code}' -X POST "$RECOVERY_PREAUTH_FUNCTION_URL" -H 'Content-Type: application/json' -H "Origin: $RECOVERY_ALLOWED_ORIGIN" -d '{}' || true)"
             [ "$coach_code" = "401" ] && ready_coach=1
             [ "$trainee_code" = "400" ] && ready_trainee=1
             [ "$ready_coach" = 1 ] && [ "$ready_trainee" = 1 ] && break
             sleep 2
           done
-          test "$ready_coach" = 1
-          test "$ready_trainee" = 1
+          if [ "$ready_coach" != 1 ] || [ "$ready_trainee" != 1 ]; then
+            echo "Function readiness failed: coach=$coach_code trainee=$trainee_code"
+            cat "$RUNNER_TEMP/preauth-functions.log" || true
+            exit 1
+          fi
           deno test --no-check --allow-net --allow-env "$GITHUB_WORKSPACE/experiments/trainee-password-recovery-preauth-local-e2e.test.ts"
           node "$GITHUB_WORKSPACE/tests/auth-recovery-fullstack-browser.test.mjs"
       - name: Stop local functions and disposable Supabase
         if: always()
         shell: bash
         run: |
-          if [ -f "$RUNNER_TEMP/preauth-coach-function.pid" ]; then kill "$(cat "$RUNNER_TEMP/preauth-coach-function.pid")" || true; fi
-          if [ -f "$RUNNER_TEMP/preauth-trainee-function.pid" ]; then kill "$(cat "$RUNNER_TEMP/preauth-trainee-function.pid")" || true; fi
+          if [ -f "$RUNNER_TEMP/preauth-functions.pid" ]; then kill "$(cat "$RUNNER_TEMP/preauth-functions.pid")" || true; fi
+          if [ -f "$RUNNER_TEMP/preauth-functions.log" ]; then cat "$RUNNER_TEMP/preauth-functions.log" || true; fi
           if [ -d "$RUNNER_TEMP/preauth-recovery-e2e/supabase" ]; then
             cd "$RUNNER_TEMP/preauth-recovery-e2e"
             supabase stop --no-backup || true
