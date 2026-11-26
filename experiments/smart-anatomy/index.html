@@ -476,6 +476,21 @@ const movementActivationRules=[
  {match:/کرانچ|بالا آوردن پا|بالا آوردن زانو/,primary:["upper-abs","lower-abs"],secondary:["obliques"],tertiary:[]},
  {match:/مچ دمبل.*کف دست بالا|مچ هالتر.*کف دست بالا/,primary:["forearm-flexors"],secondary:["forearm-extensors"],tertiary:["biceps-long","biceps-short"]},
  {match:/مچ دمبل.*کف دست پایین|مچ هالتر.*کف دست پایین/,primary:["forearm-extensors"],secondary:["forearm-flexors"],tertiary:["biceps-long","biceps-short"]},
+ {match:/دیپ با تاکید بر سینه/,primary:["lower-chest"],secondary:["triceps-long","triceps-lateral","front-delts"],tertiary:["mid-chest"]},
+ {match:/شنا دست جمع/,primary:["triceps-long","triceps-lateral"],secondary:["lower-chest","front-delts"],tertiary:["mid-chest"]},
+ {match:/پلانک با جمع کردن زانو/,primary:["upper-abs","lower-abs"],secondary:["obliques"],tertiary:[]},
+ {match:/لانج جانبی/,primary:["adductors","glute-max"],secondary:["quads","hamstrings"],tertiary:["calves"]},
+ {match:/کابل اداکشن/,primary:["adductors"],secondary:["glute-max"],tertiary:["quads"]},
+ {match:/دور کردن ران کابل|دور کردن ران خوابیده|صدف با کش|استپ آپ جانبی/,primary:["glute-med"],secondary:["glute-max","abductors"],tertiary:["quads"]},
+ {match:/کول سیم کش/,primary:["traps"],secondary:["forearm-flexors"],tertiary:["mid-back"]},
+ {match:/لت دست جمع/,primary:["lats"],secondary:["biceps-long","biceps-short","mid-back"],tertiary:["forearm-flexors"]},
+ {match:/پول اور سیم کش/,primary:["lats"],secondary:["triceps-long"],tertiary:["mid-back"]},
+ {match:/تی بار رو/,primary:["lats","mid-back"],secondary:["biceps-long","biceps-short","rear-delts"],tertiary:["traps"]},
+ {match:/فیس پول/,primary:["mid-back","traps"],secondary:["rear-delts"],tertiary:["lats"]},
+ {match:/ددلیفت$/,primary:["glute-max","quads"],secondary:["hamstrings","lower-back"],tertiary:["traps"]},
+ {match:/گودمورنینگ/,primary:["hamstrings","glute-max"],secondary:["lower-back"],tertiary:["adductors"]},
+ {match:/لانج راه رفتنی/,primary:["glute-max","quads"],secondary:["hamstrings","adductors"],tertiary:["calves"]},
+ {match:/پشت پا نشسته|پشت پا تک پا/,primary:["hamstrings"],secondary:["calves"],tertiary:["glute-max"]},
  {match:/مچ دمبل|مچ هالتر/,primary:["forearm-flexors","forearm-extensors"],secondary:[],tertiary:["biceps-long","biceps-short"]}
 ];
 function applyMovementRule(exercise,roles){
