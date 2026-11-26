@@ -35,6 +35,7 @@ jobs:
           assert 'if(!window.__sehAuthRedesignConnected)buildAuthTabs();' in html, 'Legacy builder guard missing'
           assert "if(!card||window.__sehAuthRedesignConnected||document.getElementById('sehAuthHome')||document.getElementById('authTabs'))return;" in html, 'Legacy fallback must not replace the connected redesign'
           assert 'window.__sehAuthRedesignConnected=true;' in auth, 'Auth ready flag missing'
+          assert "document.addEventListener('DOMContentLoaded',init,{once:true})" in auth, 'Auth script must wait until login DOM exists'
           assert 'min-height:100dvh!important' in auth, 'Login card and viewport units differ'
           assert "SHELL_CACHE_NAME = 'seh-shell-v14'" in sw, 'PWA shell cache was not invalidated'
           print('PASS: first paint, early auth, legacy guard, lazy iframe, viewport and PWA cache contracts')
@@ -104,6 +105,7 @@ jobs:
           grep -Fq 'seh-auth-first-paint-guard' "$body"
           grep -Fq 'loading="lazy"' "$body"
           grep -Fq 'if(!window.__sehAuthRedesignConnected)buildAuthTabs();' "$body"
+          grep -Fq "document.addEventListener('DOMContentLoaded',init,{once:true})" "$auth_js"
           grep -Fq "if(!card||window.__sehAuthRedesignConnected||document.getElementById('sehAuthHome')||document.getElementById('authTabs'))return;" "$body"
           auth_js="$(mktemp)"
           sw_body="$(mktemp)"
