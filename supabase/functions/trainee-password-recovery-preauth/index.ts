@@ -2,7 +2,7 @@
 // Configure this function with verify_jwt=false ONLY after local tests pass.
 // Coach list/review stays in the JWT-protected trainee-password-recovery function.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.119.2";
-import { runPasswordResetAttempt } from "../trainee-password-recovery/reset-attempt.ts";
+import { runPasswordResetAttempt } from "./reset-attempt.ts";
 
 const allowedOrigin = Deno.env.get("RECOVERY_ALLOWED_ORIGIN") ?? "";
 const cors = {
