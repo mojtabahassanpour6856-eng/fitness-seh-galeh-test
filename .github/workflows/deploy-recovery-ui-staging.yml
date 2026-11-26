@@ -1,0 +1,43 @@
+name: Deploy recovery UI staging preview
+on:
+  push:
+    branches:
+      - staging/recovery-ui-safe-webp-2026-11-26
+    paths:
+      - "index.html"
+      - "auth-preview/**"
+      - "assets/auth/**"
+      - "scripts/optimize-auth-images.py"
+      - ".github/workflows/deploy-recovery-ui-staging.yml"
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: recovery-ui-staging-pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact staging commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Install image optimizer
+        run: python -m pip install --disable-pip-version-check Pillow
+      - name: Ensure optimized auth images in deployment artifact
+        run: python scripts/optimize-auth-images.py
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload staging artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: Deploy staging preview
+        id: deployment
+        uses: actions/deploy-pages@v5
