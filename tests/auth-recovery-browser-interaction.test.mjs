@@ -32,6 +32,13 @@ try {
       <button id="sehRecoveryResetBtn">ثبت</button><div id="sehRecoveryResetStatus"></div>
     </section>
     <section id="sehCoachRecoveryPanel"><div class="registration-requests-heading"><button>به‌روزرسانی</button></div></section>`);
+  await page.evaluate(() => {
+    window.SEH_RECOVERY_CONNECTED_ENABLED = true;
+    window.SUPABASE_URL = 'https://fixture.invalid';
+    window.SUPABASE_KEY = 'fixture-public-key';
+    window.authProfile = { role: 'coach' };
+    window.AUTH_SUPABASE = { auth: { getSession: async () => ({ data: { session: { access_token: 'fixture-coach-token' } } }) } };
+  });
   await page.addScriptTag({ path: 'auth-preview/recovery-ui-connected.js' });
   await page.locator('#sehRecoveryRequestBtn').click();
   await page.waitForFunction(() => document.querySelector('#sehRecoveryRequestStatus').textContent.includes('ارسال شد'));
