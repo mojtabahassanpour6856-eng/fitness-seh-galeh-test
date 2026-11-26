@@ -1,14 +1,18 @@
 name: Auth recovery static regression tests
 on:
   push:
-    branches: [recovery/auth-photos-scroll-2026-11-24]
+    branches:
+      - recovery/auth-photos-scroll-2026-11-24
+      - staging/recovery-ui-safe-webp-2026-11-26
   pull_request:
     branches: [main]
     paths:
       - 'index.html'
       - 'auth-preview/connected-auth.js'
+      - 'auth-preview/recovery-ui-preview.js'
+      - 'auth-preview/recovery-ui-connected.js'
       - 'assets/auth/**'
-      - 'tests/auth-recovery-static.test.mjs'
+      - 'tests/auth-recovery-preview-static.test.mjs'
       - '.github/workflows/auth-recovery-static.yml'
 permissions:
   contents: read
@@ -20,5 +24,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Run auth recovery regression tests
-        run: node --test tests/auth-recovery-static.test.mjs
+      - name: Run auth recovery static regression tests
+        run: node --test tests/auth-recovery-preview-static.test.mjs
