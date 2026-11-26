@@ -1,5 +1,6 @@
 (function(){
 'use strict';
+function init(){
 if(window.__sehAuthRedesignConnected)return;
 const root=document.getElementById('authScreen'),card=root&&root.querySelector('.auth-card');
 const coach=document.getElementById('coachLoginBox'),trainee=document.getElementById('traineeLoginBox'),error=document.getElementById('authError'),tabs=document.getElementById('authTabs');
@@ -28,4 +29,6 @@ window.sehAuthNavigate=function(v){root.dataset.sehView=v;if(v==='recovery'&&!do
 root.dataset.sehView='home';root.dataset.sehReady='true';const firstPaintGuard=document.getElementById('seh-auth-first-paint-guard');if(firstPaintGuard)firstPaintGuard.remove();root.style.visibility='visible';window.__sehAuthRedesignConnected=true;
 new MutationObserver(moveRecovery).observe(trainee,{childList:true,subtree:true});
 document.addEventListener('DOMContentLoaded',moveRecovery,{once:true});setTimeout(moveRecovery,900);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
