@@ -26,6 +26,13 @@ jobs:
       - uses: supabase/setup-cli@v3
         with:
           version: 3.0.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install isolated browser integration dependencies
+        run: |
+          npm install --no-save playwright @supabase/supabase-js
+          npx playwright install --with-deps chromium
       - name: Create isolated local Supabase project and install candidate fixture
         shell: bash
         run: |
@@ -105,6 +112,7 @@ jobs:
           test "$ready_coach" = 1
           test "$ready_trainee" = 1
           deno test --no-check --allow-net --allow-env "$GITHUB_WORKSPACE/experiments/trainee-password-recovery-preauth-local-e2e.test.ts"
+          node "$GITHUB_WORKSPACE/tests/auth-recovery-fullstack-browser.test.mjs"
       - name: Stop local functions and disposable Supabase
         if: always()
         shell: bash
