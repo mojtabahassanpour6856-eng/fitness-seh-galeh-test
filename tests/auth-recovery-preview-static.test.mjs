@@ -13,6 +13,13 @@ assert.doesNotMatch(ui, /functions\.invoke|fetch\s*\(/, 'preview UI must not mak
 assert.match(ui, /disabled/, 'all recovery actions remain disabled in the preview stage');
 assert.match(ui, /sehRecoveryStudentPanel/);
 assert.match(ui, /sehCoachRecoveryPanel/);
+assert.match(ui, /کد ۴ رقمی یک‌بارمصرف/);
+assert.match(ui, /۲۴ ساعت اعتبار دارد/);
+assert.match(ui, /همین مرورگری/);
+assert.match(ui, /مربی به خود کد دسترسی ندارد/);
+assert.match(ui, /مرحله ۱: ثبت درخواست بازیابی/);
+assert.match(ui, /مرحله ۲: دریافت کد پس از تأیید مربی/);
+assert.doesNotMatch(ui, /کد ۸ رقمی/);
 assert.match(auth, /sehAuthRecovery/);
 assert.match(auth, /sehRecoveryStudentPanel/);
 assert.match(auth, /trainee-entry\.webp/);
