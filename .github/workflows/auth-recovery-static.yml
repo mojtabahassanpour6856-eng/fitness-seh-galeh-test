@@ -1,0 +1,25 @@
+name: Auth recovery static regression tests
+on:
+  push:
+    branches:
+      - integration/auth-recovery-mirror-selective-2026-11-25
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'auth-preview/connected-auth.js'
+      - 'assets/auth/**'
+      - 'tests/auth-recovery-static.test.mjs'
+      - '.github/workflows/auth-recovery-static.yml'
+permissions:
+  contents: read
+jobs:
+  auth-recovery-static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run auth recovery regression tests
+        run: node --test tests/auth-recovery-static.test.mjs

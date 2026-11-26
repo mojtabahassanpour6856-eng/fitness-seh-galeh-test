@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080d14">
+<title>پیش‌نمایش ورود | فیتنس سه‌قلعه</title>
+<style>
+:root{color-scheme:dark;--bg:#070b11;--panel:#101923;--panel2:#131f2c;--line:#29394a;--gold:#ffbd16;--gold2:#e6a900;--muted:#aeb9c5;--white:#f7f8fa}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -15%,#1a2b3b 0,transparent 48%),var(--bg);color:var(--white);font-family:Tahoma,Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer}.shell{width:min(100%,480px);min-height:100vh;margin:auto;padding:clamp(16px,4vw,26px);display:flex;flex-direction:column}
+.topline{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px;margin-bottom:28px}.preview-tag{border:1px solid #66501b;color:#ffd46a;border-radius:30px;padding:6px 10px}
+.brand{text-align:center;margin:5px 0 30px}.mark{width:66px;height:66px;margin:0 auto 13px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(145deg,#ffcf4d,#d99500);color:#17120a;font-size:29px;font-weight:900;box-shadow:0 9px 30px #ffbd1626}.brand h1{font-size:23px;letter-spacing:-.4px;margin:0}.brand p{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:1.8}
+.welcome{margin-bottom:19px}.eyebrow{color:var(--gold);font-size:11px;font-weight:bold;letter-spacing:.3px}.welcome h2{font-size:21px;margin:8px 0 7px}.welcome p{font-size:12px;line-height:1.9;color:var(--muted);margin:0}
+.choices{display:grid;gap:12px}.choice{position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:17px 15px;text-align:right;background:linear-gradient(115deg,#152332,#101923);border:1px solid #2c4052;border-radius:17px;color:var(--white);transition:.18s}.choice:active{transform:scale(.985)}.choice.primary{border-color:#b88614;background:linear-gradient(115deg,#252313,#141b22);box-shadow:inset 0 0 0 1px #ffbd1618}.ico{width:48px;height:48px;flex:0 0 48px;border-radius:14px;display:grid;place-items:center;background:#ffbd161a;color:var(--gold);font-size:23px}.choice-copy{flex:1}.choice-copy b{display:block;font-size:15px;margin-bottom:6px}.choice-copy small{display:block;color:var(--muted);font-size:11px;line-height:1.8}.arrow{font-size:22px;color:#c6a24a}.choice.primary .ico{background:var(--gold);color:#17120a}
+.divider{display:flex;align-items:center;gap:12px;color:#778493;font-size:10px;margin:22px 0 14px}.divider:before,.divider:after{content:"";height:1px;background:#253444;flex:1}
+.text-action{border:0;background:none;color:#d7b34d;padding:8px;font-size:12px}.register{text-align:center;padding:14px 10px;border:1px dashed #35485a;border-radius:14px;background:#0c141e}.register p{margin:0 0 5px;color:var(--muted);font-size:11px}.register button{font-size:13px;font-weight:bold;color:var(--gold);background:none;border:0;padding:6px}
+.footer{margin-top:auto;padding-top:28px;text-align:center;color:#718091;font-size:10px;line-height:2}
+.screen{display:none}.screen.active{display:block}.back{border:0;background:#142130;color:#dce3e9;border:1px solid #2b3e50;border-radius:11px;padding:9px 13px;font-size:12px;margin-bottom:22px}.form-head{margin-bottom:20px}.form-head .mini{color:var(--gold);font-size:11px}.form-head h2{font-size:21px;margin:8px 0}.form-head p{font-size:12px;color:var(--muted);line-height:1.9;margin:0}
+.form-card{padding:18px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#111d29,#0c141e);box-shadow:0 14px 35px #0004}
+label{display:block;font-size:12px;font-weight:bold;margin:0 0 8px;color:#e5e9ed}.field{margin-bottom:16px}input{width:100%;border:1px solid #34495d;border-radius:11px;background:#0a131d;color:white;padding:14px 13px;outline:none;font-size:14px}input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #ffbd161c}input::placeholder{color:#718092}
+.main-btn{width:100%;border:0;border-radius:12px;background:linear-gradient(100deg,#ffd04b,#ffb900);color:#17120a;padding:14px;font-weight:900;font-size:14px;box-shadow:0 7px 20px #ffbd1622}.sub-links{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:16px}.sub-links button{border:0;background:none;color:#e7bd4e;font-size:11px;padding:5px}.hint{font-size:11px;color:var(--muted);line-height:1.9;margin:15px 0 0}
+.notice{display:none;margin-top:13px;padding:10px;border-radius:10px;background:#1b2b24;border:1px solid #376c4b;color:#b8ebc9;font-size:11px;line-height:1.8}
+@media(min-width:520px){body{padding:22px 0}.shell{min-height:calc(100vh - 44px);border:1px solid #1d2b39;border-radius:26px;background:#090f17;box-shadow:0 24px 80px #0008}}
+</style>
+</head>
+<body>
+<main class="shell">
+ <div class="topline"><span>FITNESS SEH GALEH</span><span class="preview-tag">پیش‌نمایش آزمایشی</span></div>
+ <section id="home" class="screen active">
+  <header class="brand"><div class="mark">ف</div><h1>باشگاه فیتنس سه‌قلعه</h1><p>مربی من | همراه شما در مسیر تناسب اندام</p></header>
+  <div class="welcome"><span class="eyebrow">به جمع فیتنس سه‌قلعه خوش آمدید</span><h2>از کجا می‌خواهید وارد شوید؟</h2><p>برای ادامه، مسیر متناسب با حساب کاربری خود را انتخاب کنید.</p></div>
+  <div class="choices">
+   <button class="choice primary" onclick="show('trainee')"><span class="ico">♟</span><span class="choice-copy"><b>ورود شاگردان</b><small>ورود به حساب و مشاهده برنامه‌های تمرینی، غذایی و روند پیشرفت</small></span><span class="arrow">‹</span></button>
+   <button class="choice" onclick="show('coach')"><span class="ico">🏋</span><span class="choice-copy"><b>ورود مربیان</b><small>ورود به پنل مربیگری و مدیریت شاگردان</small></span><span class="arrow">‹</span></button>
+  </div>
+  <div class="divider">حساب کاربری ندارید؟</div>
+  <div class="register"><p>هنوز عضو فیتنس سه‌قلعه نشده‌اید؟</p><button onclick="show('register')">درخواست عضویت شاگرد جدید ←</button></div>
+ </section>
+ <section id="trainee" class="screen">
+  <button class="back" onclick="show('home')">→ بازگشت</button>
+  <div class="form-head"><span class="mini">حساب شاگرد</span><h2>خوش برگشتید 👋</h2><p>با شماره موبایل و رمز عبوری که قبلاً تعیین کرده‌اید وارد شوید. نیازی به تکمیل دوباره مشخصات نیست.</p></div>
+  <div class="form-card">
+   <div class="field"><label for="phone">شماره موبایل</label><input id="phone" type="tel" inputmode="tel" autocomplete="username" placeholder="مثلاً 09123456789"></div>
+   <div class="field"><label for="password">رمز عبور</label><input id="password" type="password" autocomplete="current-password" placeholder="رمز عبور حساب شما"></div>
+   <button class="main-btn" onclick="demo('نمونه نمایشی است؛ ورود واقعی در این پیش‌نمایش متصل نیست.')">ورود به حساب من</button>
+   <div class="sub-links"><button onclick="show('recovery')">رمز عبور را فراموش کرده‌ام</button><button onclick="show('register')">عضویت جدید</button></div>
+   <div id="traineeNotice" class="notice"></div>
+  </div>
+  <p class="hint">اگر قبلاً عضو شده‌اید، از همین فرم وارد شوید. فرم ثبت‌نام فقط برای افرادی است که هنوز حساب شاگردی ندارند.</p>
+ </section>
+ <section id="coach" class="screen">
+  <button class="back" onclick="show('home')">→ بازگشت</button><div class="form-head"><span class="mini">پنل مدیریت</span><h2>ورود مربیان</h2><p>برای ورود به پنل مربیگری، اطلاعات حساب خود را وارد کنید.</p></div>
+  <div class="form-card"><div class="field"><label>ایمیل مربی</label><input type="email" autocomplete="username" placeholder="ایمیل حساب مربی"></div><div class="field"><label>رمز عبور</label><input type="password" autocomplete="current-password" placeholder="رمز عبور"></div><button class="main-btn" onclick="demo('این صفحه صرفاً پیش‌نمایش طراحی است.')">ورود مربی</button></div>
+ </section>
+ <section id="register" class="screen">
+  <button class="back" onclick="show('home')">→ بازگشت</button><div class="form-head"><span class="mini">ویژه اعضای جدید</span><h2>درخواست عضویت</h2><p>این مسیر فقط برای شاگردانی است که هنوز حساب تأییدشده ندارند.</p></div>
+  <div class="form-card"><div class="field"><label>نام و نام خانوادگی</label><input autocomplete="name" placeholder="نام کامل"></div><div class="field"><label>شماره موبایل</label><input type="tel" inputmode="tel" autocomplete="tel" placeholder="09123456789"></div><p class="hint">در نسخه نهایی، سایر اطلاعات موردنیاز در همین فرایند و به‌صورت مرحله‌ای دریافت می‌شود.</p><button class="main-btn" onclick="demo('فرم نمایشی است و هنوز به ثبت‌نام واقعی متصل نشده است.')">ادامه درخواست عضویت</button></div>
+ </section>
+ <section id="recovery" class="screen">
+  <button class="back" onclick="show('trainee')">→ بازگشت به ورود</button><div class="form-head"><span class="mini">بازیابی دسترسی</span><h2>بازیابی رمز عبور</h2><p>برای شروع فرایند بازیابی، شماره موبایل حساب خود را وارد کنید.</p></div>
+  <div class="form-card"><div class="field"><label>شماره موبایل ثبت‌شده</label><input type="tel" inputmode="tel" autocomplete="tel" placeholder="09123456789"></div><button class="main-btn" onclick="demo('جریان بازیابی امن در مرحله بعد طراحی و پیاده‌سازی می‌شود.')">ادامه بازیابی رمز</button><p class="hint">بازیابی بدون پیامک، با بررسی نشست‌ها و دستگاه مورداعتماد و در صورت نیاز تأیید مربی طراحی خواهد شد.</p></div>
+ </section>
+ <footer class="footer">FITNESS SEH GALEH<br>همراه شما در مسیر تناسب اندام</footer>
+</main>
+<script>
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.toggle('active',x.id===id));window.scrollTo({top:0,behavior:'smooth'});}
+function demo(message){const n=document.querySelector('.screen.active .notice');if(n){n.textContent=message;n.style.display='block';}else alert(message);}
+</script>
+</body></html>

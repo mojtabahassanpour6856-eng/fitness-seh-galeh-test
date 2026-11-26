@@ -1,0 +1,9 @@
+'use strict';
+const CACHE='seh-offline-preview-v1';
+const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg'];
+self.addEventListener('install',event=>{event.waitUntil((async()=>{const cache=await caches.open(CACHE);const results=await Promise.allSettled(ASSETS.map(async path=>{const response=await fetch(path,{cache:'reload'});if(!response.ok)throw new Error('Failed to cache '+path);await cache.put(path,response);}));if(results[1].status!=='fulfilled')throw new Error('Preview shell could not be cached');await self.skipWaiting();})());});
+self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('seh-offline-preview-')&&k!==CACHE).map(k=>caches.delete(k)));await self.clients.claim();})());});
+self.addEventListener('fetch',event=>{const request=event.request;if(request.method!=='GET')return;const url=new URL(request.url);if(url.origin!==self.location.origin||!url.pathname.includes('/offline-preview/'))return;if(url.pathname.endsWith('/health.txt'))return;
+if(request.mode==='navigate'){event.respondWith((async()=>{try{const response=await fetch(request);if(response.ok){const c=await caches.open(CACHE);await c.put('./index.html',response.clone());}return response;}catch(_){const c=await caches.open(CACHE);return await c.match('./index.html')||Response.error();}})());return;}
+if(/\.(?:html|webmanifest|svg)$/.test(url.pathname)){event.respondWith((async()=>{const c=await caches.open(CACHE);const cached=await c.match(request);if(cached)return cached;try{const response=await fetch(request);if(response.ok)await c.put(request,response.clone());return response;}catch(_){return Response.error();}})());}
+});
