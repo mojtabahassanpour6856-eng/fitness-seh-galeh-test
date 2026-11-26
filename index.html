@@ -14989,6 +14989,11 @@ window.sehResetTurnstile=function(){};
     const visible=boxes.filter(b=>!b.classList.contains('hide')&&b.getClientRects().length>0);
     const box=visible[visible.length-1]||boxes[boxes.length-1];
     let panel=$('sehRecoveryStudentPanel');
+    /* connected-auth.js owns the panel while the recovery view is open.
+       Do not pull it back into the hidden trainee login box on each poll:
+       doing so detaches focused inputs and makes the recovery form unusable. */
+    const recoveryMount=$('sehRecoveryMount');
+    if(panel&&recoveryMount&&panel.parentElement===recoveryMount)return;
     if(!panel){panel=document.createElement('div');panel.id='sehRecoveryStudentPanel';}
     if(panel.parentElement!==box)box.appendChild(panel);
     if(panel.dataset.sehRecoveryBound==='1')return;
