@@ -69,7 +69,6 @@ test('trainee phone-alias login fix remains present and parses', () => {
 
 
 test('coach and trainee entry images are restored without replacing the phone login flow', () => {
-  const fs = require('node:fs');
   assert.ok(fs.existsSync('assets/auth/trainee-entry.webp'));
   assert.ok(fs.existsSync('assets/auth/coach-entry.webp'));
   assert.match(auth, /\.\/assets\/auth\/trainee-entry\.webp/);
