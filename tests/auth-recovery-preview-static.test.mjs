@@ -28,7 +28,9 @@ const registrationEnd = html.indexOf('  async function loadDeviceLinkRequests()'
 assert.ok(registrationEnd > registrationStart, 'registration handler boundary must be present');
 const registrationBlock = html.slice(registrationStart, registrationEnd);
 assert.match(registrationBlock, /درخواست شما با موفقیت برای مربی ارسال شد/, 'successful registration must show clear confirmation');
-assert.match(registrationBlock, /successStatus\.style\.background="#123522"/, 'success feedback must use a visible green status box');
+assert.match(html, /function registrationStatus\(text,ok=false\)/, 'registration feedback must be mounted in the visible registration form');
+assert.match(registrationBlock, /registrationStatus\("✅ درخواست شما با موفقیت برای مربی ارسال شد\./, 'successful registration must show confirmation in the visible form');
+assert.match(html, /document\.querySelectorAll\('\[id="/, 'status lookup must handle duplicate auth shell ids');
 assert.doesNotMatch(registrationBlock, /\["traineeRegName","traineeRegPhone","traineeRegSessions"/, 'profile fields must not be cleared after success');
 assert.match(registrationBlock, /traineeRegPassword.*?\.value=""/s, 'password fields must be cleared after successful submission');
 assert.match(auth, /trainee-entry\.webp/);
