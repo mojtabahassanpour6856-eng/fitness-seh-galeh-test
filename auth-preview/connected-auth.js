@@ -221,12 +221,12 @@ function moveRecovery(){
    256-bit claim kept in this tab's sessionStorage. The code itself is never stored. */
 const RECOVERY_CLAIM_KEY='seh_trainee_recovery_claim_v1';
 let recoveryNoticeBusy=false;
-function faDigits(value){return String(value).replace(/\\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);}
+function faDigits(value){return String(value).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);}
 function readRecoveryClaim(){
   try{
     const claim=JSON.parse(sessionStorage.getItem(RECOVERY_CLAIM_KEY)||'null');
     if(!claim||typeof claim.request_id!=='string'||typeof claim.claim_token!=='string'||typeof claim.phone!=='string')return null;
-    if(!/^[0-9a-f-]{36}$/i.test(claim.request_id)||!/^[A-Za-z0-9_-]{43}$/.test(claim.claim_token)||!/^\\+989\\d{9}$/.test(claim.phone))return null;
+    if(!/^[0-9a-f-]{36}$/i.test(claim.request_id)||!/^[A-Za-z0-9_-]{43}$/.test(claim.claim_token)||!/^\+989\d{9}$/.test(claim.phone))return null;
     return claim;
   }catch(_){return null;}
 }
@@ -268,7 +268,7 @@ async function refreshRecoveryNotice(){
       action:'code',request_id:claim.request_id,claim_token:claim.claim_token
     }});
     const data=result?.data;
-    if(result?.error||data?.error||data?.success!==true||!/^\\d{4}$/.test(String(data.code||''))){
+    if(result?.error||data?.error||data?.success!==true||!/^\d{4}$/.test(String(data.code||''))){
       paintRecoveryNotice('پس از تأیید مربی، کد چهاررقمی در همین صفحه نمایش داده می‌شود. اگر مهلت درخواست گذشته باشد، درخواست تازه ثبت کنید.',false);
       return;
     }
