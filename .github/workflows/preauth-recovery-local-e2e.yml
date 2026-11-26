@@ -1,4 +1,5 @@
 name: Pre-auth recovery local Supabase E2E (current candidate)
+# Isolated runner only: no remote project credentials are used.
 on:
   push:
     branches: ["staging/recovery-ui-safe-webp-2026-11-26"]
