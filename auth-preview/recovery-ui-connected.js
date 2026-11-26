@@ -94,7 +94,7 @@ async function studentRequest(){
  if(!phone){text('sehRecoveryRequestStatus','شماره موبایل معتبر وارد کنید.');return;}
  const button=$('sehRecoveryRequestBtn');setBusy(button,true,'در حال ارسال درخواست…');
  try{
-  let claim=loadClaim(normalizePhone($('sehRecoveryPhone')?.value));
+  let claim=loadClaim(phone);
   if(!claim||claim.phone!==phone){
    claim={request_id:crypto.randomUUID(),claim_token:randomToken(),phone,expires_at:Date.now()+24*60*60*1000};
   }
