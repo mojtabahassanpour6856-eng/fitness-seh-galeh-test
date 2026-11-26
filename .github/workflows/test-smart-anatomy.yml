@@ -1,5 +1,11 @@
 name: Smart anatomy prototype checks
 on:
+  push:
+    branches: ["experiment/anatomy-intensity-levels-20261127"]
+    paths:
+      - "experiments/smart-anatomy/**"
+      - "tests/smart-anatomy-static.test.mjs"
+      - ".github/workflows/test-smart-anatomy.yml"
   pull_request:
     branches: ["feature/smart-anatomy-prototype-20261118"]
     paths:
