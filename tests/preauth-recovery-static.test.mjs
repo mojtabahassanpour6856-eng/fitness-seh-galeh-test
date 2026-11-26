@@ -45,16 +45,11 @@ assert.match(uiScript, /crypto\.getRandomValues/);
 assert.match(uiScript, /sehRecoveryFetchCodeBtn/);
 assert.doesNotMatch(uiScript, /data\.recovery_code/, "coach UI must never display a recovery code");
 
-test("short mobile auth screens keep choice images readable and the page scrollable", () => {
-  assert.match(authShell, /@media \\(max-height:760px\\)\\{#authScreen \\.auth-card\\{min-height:100dvh!important;height:auto!important;max-height:none!important;overflow:visible!important/);
-  assert.match(authShell, /@media \\(max-height:760px\\)\\{#authScreen \\.seh-art\\{width:88px!important;height:88px!important;flex-basis:88px!important/);
-  assert.match(authShell, /@media \\(max-height:620px\\)\\{#authScreen \\.seh-art\\{width:76px!important;height:76px!important;flex-basis:76px!important/);
-  assert.doesNotThrow(() => new Function(authShell), "connected auth redesign must parse");
-});
-
-test("root service-worker shell cache is versioned past the stale v13 cache", () => {
-  assert.match(rootSw, /seh-shell-v14/);
-  assert.doesNotMatch(rootSw, /seh-shell-v13/);
-});
+assert.ok(authShell.includes("@media (max-height:760px){#authScreen .seh-art{width:88px!important;height:88px!important;flex-basis:88px!important"), "short mobile screens must keep auth images readable");
+assert.ok(authShell.includes("@media (max-height:620px){#authScreen .seh-art{width:76px!important;height:76px!important;flex-basis:76px!important"), "very short screens must keep auth images readable");
+assert.ok(authShell.includes("#authScreen .auth-card{display:flex!important;flex-direction:column!important;flex:0 0 auto!important;min-height:100dvh!important;height:auto!important;max-height:none!important;overflow:visible!important"), "auth screen must remain scrollable");
+assert.doesNotThrow(() => new Function(authShell), "connected auth redesign must parse");
+assert.match(rootSw, /seh-shell-v14/);
+assert.doesNotMatch(rootSw, /seh-shell-v13/);
 
 console.log("PASS: pre-auth recovery and browser UI static security contract");
