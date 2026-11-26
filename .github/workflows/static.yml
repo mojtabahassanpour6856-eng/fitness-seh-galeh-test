@@ -1,4 +1,4 @@
-# Safe pre-password-recovery app baseline; optimized asset generation for Pages preview.
+# Safe pre-password-recovery app baseline
 name: Deploy isolated preview to GitHub Pages
 on:
   push:
@@ -20,23 +20,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Optimize login images for mobile delivery
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Generate WebP login images and logo
-        run: |
-          npm install --prefix /tmp/auth-image-tools sharp
-          NODE_PATH=/tmp/auth-image-tools/node_modules node scripts/optimize-auth-assets.cjs
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
-        with:
-          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
