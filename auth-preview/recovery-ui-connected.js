@@ -25,14 +25,28 @@ function randomToken(){
  let binary=''; for(const b of bytes)binary+=String.fromCharCode(b);
  return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/g,'');
 }
-function loadClaim(){
- try{const value=JSON.parse(sessionStorage.getItem(STORE_KEY)||'null');
-  if(value&&typeof value.request_id==='string'&&typeof value.claim_token==='string'&&value.expires_at>Date.now())return value;
- }catch(_){}
+function readClaims(){
+ try{const value=JSON.parse(sessionStorage.getItem(STORE_KEY)||'{}');
+  return value&&typeof value==='object'&&!Array.isArray(value)?value:{};
+ }catch(_){return {};}
+}
+function loadClaim(phone){
+ if(!phone)return null;
+ const claims=readClaims(), value=claims[phone];
+ if(value&&value.phone===phone&&typeof value.request_id==='string'&&typeof value.claim_token==='string'&&value.expires_at>Date.now())return value;
+ if(value){delete claims[phone];try{sessionStorage.setItem(STORE_KEY,JSON.stringify(claims));}catch(_){}}
  return null;
 }
-function saveClaim(value){sessionStorage.setItem(STORE_KEY,JSON.stringify(value));}
-function clearClaim(){try{sessionStorage.removeItem(STORE_KEY);}catch(_){}}
+function saveClaim(value){
+ const claims=readClaims();claims[value.phone]=value;
+ sessionStorage.setItem(STORE_KEY,JSON.stringify(claims));
+}
+function clearClaim(phone){
+ try{const claims=readClaims();if(phone)delete claims[phone];else return;
+  if(Object.keys(claims).length)sessionStorage.setItem(STORE_KEY,JSON.stringify(claims));
+  else sessionStorage.removeItem(STORE_KEY);
+ }catch(_){}
+}
 async function post(url,payload,accessToken){
  if(!PROJECT_URL||!PUBLIC_KEY)throw new Error('تنظیمات اتصال نسخه آزمایشی آماده نیست.');
  const headers={'Content-Type':'application/json','apikey':PUBLIC_KEY};
@@ -62,7 +76,7 @@ function syncControls(){
  const panel=$('sehRecoveryStudentPanel');
  if(panel){
   ['sehRecoveryRequestBtn','sehRecoveryFetchCodeBtn'].forEach(id=>{const el=$(id);if(el)el.disabled=!ENABLED;});
-  const codeReady=Boolean(loadClaim()&&/^\\d{4}$/.test(normalizeDigits($('sehRecoveryCode')?.value||'').trim()));
+  const codeReady=Boolean(loadClaim(normalizePhone($('sehRecoveryPhone')?.value))&&/^\\d{4}$/.test(normalizeDigits($('sehRecoveryCode')?.value||'').trim()));
   ['sehRecoveryCode','sehRecoveryNewPassword','sehRecoveryNewPassword2','sehRecoveryResetBtn'].forEach(id=>{const el=$(id);if(el)el.disabled=!ENABLED||!codeReady;});
   const notice=panel.querySelector('.seh-recovery-preview-notice');
   if(notice&&ENABLED)notice.textContent='بازیابی به‌صورت آزمایشی و بدون پیامک انجام می‌شود. کد فقط در همین مرورگر قابل دریافت است.';
@@ -78,7 +92,7 @@ async function studentRequest(){
  if(!phone){text('sehRecoveryRequestStatus','شماره موبایل معتبر وارد کنید.');return;}
  const button=$('sehRecoveryRequestBtn');setBusy(button,true,'در حال ارسال درخواست…');
  try{
-  let claim=loadClaim();
+  let claim=loadClaim(normalizePhone($('sehRecoveryPhone')?.value));
   if(!claim||claim.phone!==phone){
    claim={request_id:crypto.randomUUID(),claim_token:randomToken(),phone,expires_at:Date.now()+24*60*60*1000};
   }
@@ -91,7 +105,7 @@ async function studentRequest(){
  finally{setBusy(button,false);}
 }
 async function studentFetchCode(){
- const claim=loadClaim();if(!claim){text('sehRecoveryCodeStatus','درخواست فعالی در این مرورگر پیدا نشد؛ دوباره درخواست ثبت کنید.');return;}
+ const claim=loadClaim(normalizePhone($('sehRecoveryPhone')?.value));if(!claim){text('sehRecoveryCodeStatus','درخواست فعالی در این مرورگر پیدا نشد؛ دوباره درخواست ثبت کنید.');return;}
  const button=$('sehRecoveryFetchCodeBtn');setBusy(button,true,'در حال بررسی…');
  try{
   const result=await post(PREAUTH_URL,{action:'code',request_id:claim.request_id,claim_token:claim.claim_token});
@@ -103,7 +117,7 @@ async function studentFetchCode(){
  finally{setBusy(button,false);}
 }
 async function studentReset(){
- const claim=loadClaim();if(!claim){text('sehRecoveryResetStatus','درخواست بازیابی در این مرورگر پیدا نشد.');return;}
+ const claim=loadClaim(normalizePhone($('sehRecoveryPhone')?.value));if(!claim){text('sehRecoveryResetStatus','درخواست بازیابی در این مرورگر پیدا نشد.');return;}
  const code=normalizeDigits($('sehRecoveryCode')?.value).trim();
  const password=$('sehRecoveryNewPassword')?.value||'';
  const repeat=$('sehRecoveryNewPassword2')?.value||'';
@@ -114,7 +128,7 @@ async function studentReset(){
  try{
   const result=await post(PREAUTH_URL,{action:'reset',request_id:claim.request_id,claim_token:claim.claim_token,code,new_password:password});
   if(!result.success)throw new Error('ثبت رمز جدید تأیید نشد.');
-  clearClaim();
+  clearClaim(claim.phone);
   ['sehRecoveryCode','sehRecoveryNewPassword','sehRecoveryNewPassword2'].forEach(id=>{const el=$(id);if(el)el.value='';});
   text('sehRecoveryResetStatus',result.message||'رمز جدید با موفقیت ثبت شد. اکنون با رمز جدید وارد شوید.');
  }catch(error){text('sehRecoveryResetStatus',error.message||'تغییر رمز انجام نشد.');}
