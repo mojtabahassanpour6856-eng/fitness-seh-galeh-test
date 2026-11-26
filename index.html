@@ -9701,15 +9701,33 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function clear(key){try{localStorage.removeItem(key)}catch(e){}}
   function message(id,text,ok=false){const all=Array.from(document.querySelectorAll('[id="'+id+'"]'));const e=all.find(el=>el.getClientRects().length>0&&!el.closest('.hide'))||all[0];if(e){e.textContent=text;e.style.color=ok?"#9be2b0":"#ffd28a";}}
   function registrationStatus(text,ok=false){
-    const field=visibleField("traineeRegName");
-    const block=field?.closest(".trainee-auth-block");
-    if(!block)return null;
-    let e=block.querySelector('[id="sehRegistrationLoginStatus"]');
-    if(!e){e=document.createElement("p");e.id="sehRegistrationLoginStatus";e.className="muted";block.appendChild(e);}
-    e.textContent=text;e.setAttribute("role","status");e.setAttribute("aria-live","polite");
-    e.style.display="block";e.style.padding="12px 14px";e.style.marginTop="12px";
-    e.style.border="1px solid "+(ok?"#27864c":"#8b6b2d");e.style.borderRadius="12px";
-    e.style.background=ok?"#123522":"#302714";e.style.color=ok?"#b9f2ca":"#ffe0a3";e.style.fontWeight="700";
+    // The registration block is moved into this unique mount by connected-auth.js.
+    // Do not resolve duplicate traineeRegName IDs across legacy/hidden auth shells.
+    const mount=document.getElementById("sehRegisterMount");
+    const block=mount?.querySelector(".seh-reg-block");
+    if(!mount||!block)return null;
+    let e=block.querySelector(":scope > [data-seh-registration-status]");
+    if(!e){
+      e=document.createElement("div");
+      e.setAttribute("data-seh-registration-status","true");
+      e.className="seh-registration-feedback";
+      e.setAttribute("role","status");
+      e.setAttribute("aria-live","polite");
+      block.appendChild(e);
+    }
+    e.textContent=text;
+    e.style.setProperty("display","block","important");
+    e.style.setProperty("visibility","visible","important");
+    e.style.setProperty("opacity","1","important");
+    e.style.setProperty("padding","13px 14px","important");
+    e.style.setProperty("margin","14px 0 4px","important");
+    e.style.setProperty("border","1px solid "+(ok?"#27864c":"#8b6b2d"),"important");
+    e.style.setProperty("border-radius","12px","important");
+    e.style.setProperty("background",ok?"#123522":"#302714","important");
+    e.style.setProperty("color",ok?"#b9f2ca":"#ffe0a3","important");
+    e.style.setProperty("font-weight","700","important");
+    e.style.setProperty("line-height","1.9","important");
+    e.style.setProperty("white-space","normal","important");
     return e;
   }
   function authReady(){return !!window.AUTH_SUPABASE?.auth;}
