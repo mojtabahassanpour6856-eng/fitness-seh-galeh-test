@@ -25,7 +25,7 @@ begin
   if p_request_ip_hash is null then return 'invalid'; end if;
   if p_request_phone_hash is null then return 'invalid'; end if;
   if p_claim_expires_at is null then return 'invalid'; end if;
-  if p_phone_normalized !~ '^\+989[0-9]{9} then return 'invalid'; end if;
+  if p_phone_normalized !~ '^\+989[0-9]{9}$' then return 'invalid'; end if;
   if p_claim_token_hash !~ '^[A-Za-z0-9_-]{43}$' then return 'invalid'; end if;
   if p_request_ip_hash !~ '^[0-9a-f]{64}$' then return 'invalid'; end if;
   if p_request_phone_hash !~ '^[0-9a-f]{64}$' then return 'invalid'; end if;
