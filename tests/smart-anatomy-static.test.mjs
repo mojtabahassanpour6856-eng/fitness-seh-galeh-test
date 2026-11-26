@@ -47,3 +47,15 @@ test('selection supports keyboard and accessible pressed state', () => {
   assert.match(html, /setAttribute\("aria-pressed"/);
   assert.match(html, /setAttribute\("aria-label"/);
 });
+
+test('movement-specific activation rules cover major gym movement families', () => {
+  assert.match(html, /movementActivationRules/);
+  assert.match(html, /پرس سینه/);
+  assert.match(html, /پرس بالاسینه/);
+  assert.match(html, /نشر جانب/);
+  assert.match(html, /اسکوات/);
+  assert.match(html, /ددلیفت رومانیایی/);
+  assert.match(html, /لت سیم کش/);
+  assert.match(html, /exerciseActivationMap/);
+  assert.match(html, /applyMovementRule\(exercise,curated\)/);
+});
