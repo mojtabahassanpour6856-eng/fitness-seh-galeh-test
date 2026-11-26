@@ -37,7 +37,7 @@ jobs:
           assert 'window.__sehAuthRedesignConnected=true;' in auth, 'Auth ready flag missing'
           assert "document.addEventListener('DOMContentLoaded',init,{once:true})" in auth, 'Auth script must wait until login DOM exists'
           assert 'min-height:100dvh!important' in auth, 'Login card and viewport units differ'
-          assert "SHELL_CACHE_NAME = 'seh-shell-v14'" in sw, 'PWA shell cache was not invalidated'
+          assert "SHELL_CACHE_NAME = 'seh-shell-v15'" in sw, 'PWA shell cache was not invalidated'
           print('PASS: first paint, early auth, legacy guard, lazy iframe, viewport and PWA cache contracts')
           PY
       - name: Cache-bust restored approved login screen
@@ -115,7 +115,7 @@ jobs:
             echo "::error::Published TEST service worker failed to load (HTTP ${sw_status:-no response})"
             exit 1
           fi
-          grep -Fq "SHELL_CACHE_NAME = 'seh-shell-v14'" "$sw_body"
+          grep -Fq "SHELL_CACHE_NAME = 'seh-shell-v15'" "$sw_body"
           auth_status="$(curl --silent --show-error --location --max-time 30 --output "$auth_js" --write-out '%{http_code}' "${PAGES_URL}auth-preview/connected-auth.js?v=20261125-fallback-guard-v1" || true)"
           if [ "$auth_status" != "200" ]; then
             echo "::error::Connected login redesign JS failed to load (HTTP ${auth_status:-no response})"
