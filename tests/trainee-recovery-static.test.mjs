@@ -66,3 +66,17 @@ test('trainee phone-alias login fix remains present and parses', () => {
   assert.match(script, /signInWithPassword/);
   assert.match(script, /getSession/);
 });
+
+
+test('coach and trainee entry images are restored without replacing the phone login flow', () => {
+  const fs = require('node:fs');
+  assert.ok(fs.existsSync('assets/auth/trainee-entry.webp'));
+  assert.ok(fs.existsSync('assets/auth/coach-entry.webp'));
+  assert.match(auth, /\.\/assets\/auth\/trainee-entry\.webp/);
+  assert.match(auth, /\.\/assets\/auth\/coach-entry\.webp/);
+  assert.match(auth, /seh-art-trainee/);
+  assert.match(auth, /seh-art-coach/);
+  assert.ok(html.includes('SEH_TRAINEE_ALIAS_LOGIN_ROOT_FIX_20261126'));
+  assert.match(html, /signInWithPassword/);
+  assert.match(html, /getSession/);
+});
