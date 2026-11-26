@@ -26,14 +26,10 @@ test('atomic RPC serializes per trainee and never replaces a live claim', () => 
   assert.match(migration, /when unique_violation then[\s\S]*?return 'open'/);
 });
 
-test('RPC validates input and is executable only by service_role', () => {
+test('RPC validates normalized phone, hashes, expiry, and service-role-only access', () => {
   assert.match(migration, /p_claim_token_hash is null/);
-  assert.match(migration, /p_phone_normalized !~ '\\\\+989\[0-9\]\{9\}\
-  assert.match(migration, /p_claim_expires_at > pg_catalog\.now\(\) \+ interval '24 hours 5 minutes'/);
-  assert.match(migration, /revoke all on function[\s\S]*?from public, anon, authenticated/);
-  assert.match(migration, /grant execute on function[\s\S]*?to service_role/);
-});
-/, 'SQL regex must match a literal plus sign in +989 phone numbers');
+  const expectedPhoneCheck = "p_phone_normalized !~ '^" + "\\" + "+989[0-9]{9}$'";
+  assert.ok(migration.includes(expectedPhoneCheck), 'SQL phone regex must escape plus exactly once');
   assert.match(migration, /p_claim_expires_at > pg_catalog\.now\(\) \+ interval '24 hours 5 minutes'/);
   assert.match(migration, /revoke all on function[\s\S]*?from public, anon, authenticated/);
   assert.match(migration, /grant execute on function[\s\S]*?to service_role/);
