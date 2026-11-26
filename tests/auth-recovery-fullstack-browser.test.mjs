@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 import { chromium } from 'playwright';
 
@@ -59,7 +60,7 @@ try {
     window.authProfile = { role: 'coach' };
     window.AUTH_SUPABASE = { auth: { getSession: async () => ({ data: { session: { access_token: coachToken } } }) } };
   }, { url, anon, coachToken });
-  await page.addScriptTag({ path: 'auth-preview/recovery-ui-connected.js' });
+  await page.addScriptTag({ path: fileURLToPath(new URL('../auth-preview/recovery-ui-connected.js', import.meta.url)) });
 
   await page.locator('#sehRecoveryRequestBtn').click();
   await page.waitForFunction(() => document.querySelector('#sehRecoveryRequestStatus').textContent.includes('درخواست شما'));
