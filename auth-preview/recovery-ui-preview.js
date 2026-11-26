@@ -16,15 +16,15 @@ function addStudentPreview(){
   panel.setAttribute('aria-labelledby','sehRecoveryTitle');
   panel.innerHTML=
     '<h3 id="sehRecoveryTitle">🔑 بازیابی رمز با تأیید مربی</h3>'+
-    '<p class="muted">درخواست بازیابی را ثبت می‌کنید؛ پس از بررسی و تأیید مربی، کد چهاررقمی فقط در همین مرورگر قابل دریافت خواهد بود.</p>'+
+    '<p class="muted">بازیابی رمز در دو مرحله انجام می‌شود. پیامک ارسال نمی‌شود؛ پس از تأیید مربی، کد یک‌بارمصرف فقط در همین مرورگری که درخواست را ثبت کرده‌اید قابل دریافت است.</p>'+
     '<div class="seh-recovery-preview-notice" role="status">نسخه آزمایشی رابط کاربری: در این مرحله هیچ درخواست واقعی ارسال نمی‌شود و هیچ رمزی تغییر نمی‌کند.</div>'+
-    '<label for="sehRecoveryPhone">شماره موبایل ثبت‌شده</label><input id="sehRecoveryPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09121234567">'+
+    '<h4>مرحله ۱: ثبت درخواست بازیابی</h4><label for="sehRecoveryPhone">شماره موبایل ثبت‌شده</label><input id="sehRecoveryPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09121234567">'+
     '<button type="button" id="sehRecoveryRequestBtn" disabled>📨 درخواست بازیابی رمز</button>'+
     '<div id="sehRecoveryRequestStatus" role="status">اتصال به سامانه پس از تکمیل آزمون‌های ایمنی فعال خواهد شد.</div>'+
-    '<button type="button" class="secondary" id="sehRecoveryFetchCodeBtn" disabled>🔎 دریافت کد پس از تأیید مربی</button>'+
+    '<h4>مرحله ۲: دریافت کد پس از تأیید مربی</h4><button type="button" class="secondary" id="sehRecoveryFetchCodeBtn" disabled>🔎 دریافت کد بازیابی</button>'+
     '<div id="sehRecoveryCodeStatus" role="status">دریافت کد در این نسخه غیرفعال است.</div>'+
     '<hr><h3>🔐 تعیین رمز جدید</h3>'+
-    '<label for="sehRecoveryCode">کد ۴ رقمی بازیابی</label><input id="sehRecoveryCode" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="کد چهاررقمی" disabled>'+
+    '<label for="sehRecoveryCode">کد ۴ رقمی یک‌بارمصرف</label><input id="sehRecoveryCode" type="text" inputmode="numeric" pattern="[0-9]{4}" autocomplete="one-time-code" maxlength="4" placeholder="کد ۴ رقمی دریافت‌شده" disabled><p class="muted">کد فقط یک‌بار قابل استفاده است و ۲۴ ساعت اعتبار دارد. مربی به خود کد دسترسی ندارد.</p>'+
     '<label for="sehRecoveryNewPassword">رمز جدید (حداقل ۸ کاراکتر)</label><input id="sehRecoveryNewPassword" type="password" autocomplete="new-password" minlength="8" placeholder="رمز جدید" disabled>'+
     '<label for="sehRecoveryNewPassword2">تکرار رمز جدید</label><input id="sehRecoveryNewPassword2" type="password" autocomplete="new-password" minlength="8" placeholder="تکرار رمز جدید" disabled>'+
     '<button type="button" id="sehRecoveryResetBtn" disabled>🔒 ذخیره رمز جدید</button>'+
@@ -38,7 +38,7 @@ function addCoachPreview(){
   const panel=document.createElement('section');
   panel.id='sehCoachRecoveryPanel';panel.className='card';
   panel.style.marginTop='12px';
-  panel.innerHTML='<div class="registration-requests-heading"><div><h2>🔑 درخواست‌های بازیابی رمز</h2><p class="muted">در نسخه نهایی فقط درخواست‌های شاگردان متصل به حساب همین مربی نمایش داده می‌شود.</p></div><button type="button" class="secondary" disabled>🔄 به‌روزرسانی</button></div><div class="seh-recovery-preview-notice" role="status">پیش‌نمایش مربی؛ دریافت و تأیید درخواست‌ها هنوز به بک‌اند متصل نیست.</div>';
+  panel.innerHTML='<div class="registration-requests-heading"><div><h2>🔑 درخواست‌های بازیابی رمز</h2><p class="muted">در نسخه نهایی فقط درخواست‌های شاگردان متصل به حساب همین مربی نمایش داده می‌شود.</p></div><button type="button" class="secondary" disabled>🔄 به‌روزرسانی</button></div><div class="seh-recovery-preview-notice" role="status">پیش‌نمایش مربی؛ مربی فقط درخواست را بررسی و تأیید می‌کند و کد بازیابی را مشاهده نمی‌کند. دریافت کد و تأیید هنوز به بک‌اند متصل نیست.</div>';
   base.insertAdjacentElement('afterend',panel);
 }
 function isCoach(){
