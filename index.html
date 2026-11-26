@@ -9486,7 +9486,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 <script id="seh-multi-account-switcher">
 (function(){
-  const STORE='seh_saved_accounts_v1';
+  // Isolate this test app's account history from the production Pages app.
+  const STORE='seh_test_saved_accounts_v2';
   const $=id=>document.getElementById(id);
   const normalizePhone=v=>{
     let p=String(v||'').trim().replace(/[\\s()-]/g,'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
@@ -9499,10 +9500,13 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const write=a=>{try{localStorage.setItem(STORE,JSON.stringify(a.slice(0,6)))}catch(e){}};
   function remember(user){
     if(!user)return;
-    const phone=normalizePhone(user.phone||'');
+    // The verified profile role is authoritative; phone presence is not a role signal.
+    const role=(typeof authProfile!=='undefined'&&authProfile&&authProfile.role)||null;
+    if(role!=='trainee'&&role!=='coach')return;
+    const phone=normalizePhone(user.phone||(role==='trainee'&&typeof currentClient!=='undefined'&&currentClient?currentClient.phone:''));
     const email=String(user.email||'').trim().toLowerCase();
-    const type=phone?'trainee':'coach';
-    const id=phone||email;
+    const type=role;
+    const id=type==='trainee'?phone:email;
     if(!id)return;
     const visible=($('authUserText')?.textContent||'').split('|')[0].trim();
     const list=read().filter(x=>!(x.type===type&&x.id===id));
