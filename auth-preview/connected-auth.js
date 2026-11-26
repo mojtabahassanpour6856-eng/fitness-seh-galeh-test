@@ -166,6 +166,21 @@ st.textContent += `
   color:#e8d49b;background:#171b20;font-size:12px;line-height:1.9;
 }
 `;
+
+/* TEMP DIAGNOSTIC: restore natural scrolling on the initial home view. */
+st.textContent += `
+@supports (height: 100dvh) {
+  #authScreen[data-seh-view=home] {
+    position:relative!important;inset:auto!important;width:100%!important;
+    height:auto!important;min-height:100vh!important;max-height:none!important;
+    overflow:visible!important;overscroll-behavior-y:auto!important;
+  }
+  #authScreen[data-seh-view=home] .auth-card {
+    height:auto!important;min-height:100vh!important;max-height:none!important;
+    overflow:visible!important;
+  }
+}
+`;
 document.head.appendChild(st);
 const shell=document.createElement('div');
 shell.innerHTML='<div class="seh-top"><span>FITNESS SEH GALEH</span><span class="seh-tag">ورود امن اعضا</span></div><div class="seh-brand"><div class="seh-mark"><img src="./icon.webp" alt="نشان فیتنس سه‌قلعه"></div><h2>باشگاه فیتنس سه‌قلعه</h2><p>مربی من | همراه شما در مسیر تناسب اندام</p></div>'+
