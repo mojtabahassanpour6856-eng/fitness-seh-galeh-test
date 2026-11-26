@@ -61,6 +61,7 @@ assert.doesNotMatch(connected, /console\\.(log|debug)\\(/, 'sensitive recovery d
 assert.match(connected, /window\\.AUTH_SUPABASE/, 'coach requests must reuse the shared Supabase client');
 assert.match(connected, /decision:button\\.dataset\\.decision/, 'coach decision must be sent from the approved action controls');
 assert.match(connected, /sehCoachRecoveryList/, 'coach request list must be rendered in its own container');
-assert.doesNotMatch(connected, /code.*?coach.*?textContent/is, 'recovery code must not be rendered in the coach panel');
+const coachUi = connected.slice(connected.indexOf('async function coachRefresh'), connected.indexOf("document.addEventListener('click'"));
+assert.doesNotMatch(coachUi, /result\\.code|claim_token|new_password/, 'coach UI must never receive or render recovery secrets');
 
 console.log('PASS: isolated recovery UI preview; no backend calls; WebP auth assets preserved');
