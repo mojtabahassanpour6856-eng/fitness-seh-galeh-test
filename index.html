@@ -9699,7 +9699,19 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function read(key){try{return JSON.parse(localStorage.getItem(key)||"null")}catch(e){return null}}
   function save(key,v){try{localStorage.setItem(key,JSON.stringify(v))}catch(e){}}
   function clear(key){try{localStorage.removeItem(key)}catch(e){}}
-  function message(id,text,ok=false){const e=$(id);if(e){e.textContent=text;e.style.color=ok?"#9be2b0":"#ffd28a";}}
+  function message(id,text,ok=false){const all=Array.from(document.querySelectorAll('[id="'+id+'"]'));const e=all.find(el=>el.getClientRects().length>0&&!el.closest('.hide'))||all[0];if(e){e.textContent=text;e.style.color=ok?"#9be2b0":"#ffd28a";}}
+  function registrationStatus(text,ok=false){
+    const field=visibleField("traineeRegName");
+    const block=field?.closest(".trainee-auth-block");
+    if(!block)return null;
+    let e=block.querySelector('[id="sehRegistrationLoginStatus"]');
+    if(!e){e=document.createElement("p");e.id="sehRegistrationLoginStatus";e.className="muted";block.appendChild(e);}
+    e.textContent=text;e.setAttribute("role","status");e.setAttribute("aria-live","polite");
+    e.style.display="block";e.style.padding="12px 14px";e.style.marginTop="12px";
+    e.style.border="1px solid "+(ok?"#27864c":"#8b6b2d");e.style.borderRadius="12px";
+    e.style.background=ok?"#123522":"#302714";e.style.color=ok?"#b9f2ca":"#ffe0a3";e.style.fontWeight="700";
+    return e;
+  }
   function authReady(){return !!window.AUTH_SUPABASE?.auth;}
   async function enterWithTemporaryPassword(data,storeKey,statusId){
     if(!data?.phone||!data?.temporary_password)throw new Error("اطلاعات ورود امن کامل دریافت نشد.");
@@ -9805,11 +9817,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const name=visibleField("traineeRegName")?.value.trim()||"",phone=normPhone(visibleField("traineeRegPhone")?.value||"");
     const weekly_sessions=Number(visibleField("traineeRegSessions")?.value||0),training_days=visibleField("traineeRegDays")?.value.trim()||"",training_time=visibleField("traineeRegTime")?.value||"";
     const password=visibleField("traineeRegPassword")?.value||"",confirmPassword=visibleField("traineeRegPasswordConfirm")?.value||"";
-    if(name.length<2){message("sehRegistrationLoginStatus","نام و نام خانوادگی را وارد کنید.");return;}
-    if(!/^\+989\d{9}$/.test(phone)){message("sehRegistrationLoginStatus","شماره موبایل معتبر نیست؛ مانند 09121234567 وارد کنید.");return;}
-    if(!Number.isInteger(weekly_sessions)||weekly_sessions<1||weekly_sessions>7||!training_days||!training_time){message("sehRegistrationLoginStatus","تعداد جلسات، روزها و ساعت تمرین را کامل کنید.");return;}
-    if(password.length<8){message("sehRegistrationLoginStatus","رمز شخصی باید حداقل ۸ کاراکتر باشد.");return;}
-    if(password!==confirmPassword){message("sehRegistrationLoginStatus","رمز عبور و تکرار آن یکسان نیستند.");return;}
+    if(name.length<2){registrationStatus("نام و نام خانوادگی را وارد کنید.");return;}
+    if(!/^\+989\d{9}$/.test(phone)){registrationStatus("شماره موبایل معتبر نیست؛ مانند 09121234567 وارد کنید.");return;}
+    if(!Number.isInteger(weekly_sessions)||weekly_sessions<1||weekly_sessions>7||!training_days||!training_time){registrationStatus("تعداد جلسات، روزها و ساعت تمرین را کامل کنید.");return;}
+    if(password.length<8){registrationStatus("رمز شخصی باید حداقل ۸ کاراکتر باشد.");return;}
+    if(password!==confirmPassword){registrationStatus("رمز عبور و تکرار آن یکسان نیستند.");return;}
     const regBlock=visibleField("traineeRegName")?.closest(".trainee-auth-block");
     const btn=regBlock?.querySelector('button[onclick*="registerTraineePhone"]');
     if(btn){btn.disabled=true;btn.textContent="⏳ در حال ارسال…";}
@@ -9818,21 +9830,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       if(error)throw error;if(data?.error)throw new Error(data.error);
       // Keep the submitted profile details visible for confirmation; clear only credentials.
       ["traineeRegPassword","traineeRegPasswordConfirm"].forEach(id=>{const el=visibleField(id);if(el)el.value="";});
-      message("sehRegistrationLoginStatus","✅ درخواست شما با موفقیت برای مربی ارسال شد. اطلاعات ثبت‌شده در فرم باقی مانده است؛ پس از بررسی و تأیید مربی، می‌توانید وارد حساب خود شوید.",true);
-      const successStatus=$("sehRegistrationLoginStatus");
-      if(successStatus){
-        successStatus.setAttribute("role","status");
-        successStatus.setAttribute("aria-live","polite");
-        successStatus.style.display="block";
-        successStatus.style.padding="12px 14px";
-        successStatus.style.marginTop="12px";
-        successStatus.style.border="1px solid #27864c";
-        successStatus.style.borderRadius="12px";
-        successStatus.style.background="#123522";
-        successStatus.style.color="#b9f2ca";
-        successStatus.style.fontWeight="700";
-      }
-    }catch(e){message("sehRegistrationLoginStatus","ارسال درخواست انجام نشد: "+(e?.message||String(e)));}
+      registrationStatus("✅ درخواست شما با موفقیت برای مربی ارسال شد. اطلاعات ثبت‌شده در فرم باقی مانده است؛ پس از بررسی و تأیید مربی، می‌توانید وارد حساب خود شوید.",true);
+    }catch(e){registrationStatus("ارسال درخواست انجام نشد: "+(e?.message||String(e)));}
     finally{window.sehResetTurnstile?.(btn);if(btn){btn.disabled=false;btn.textContent="📨 ارسال درخواست عضویت";}}
   };
 
