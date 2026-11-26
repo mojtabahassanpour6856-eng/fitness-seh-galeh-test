@@ -78,7 +78,7 @@ function syncControls(){
  const panel=$('sehRecoveryStudentPanel');
  if(panel){
   ['sehRecoveryRequestBtn','sehRecoveryFetchCodeBtn'].forEach(id=>{const el=$(id);if(el)el.disabled=!ENABLED;});
-  const codeReady=Boolean(loadClaim(normalizePhone($('sehRecoveryPhone')?.value))&&/^\\d{4}$/.test(normalizeDigits($('sehRecoveryCode')?.value||'').trim()));
+  const codeReady=Boolean(loadClaim(normalizePhone($('sehRecoveryPhone')?.value))&&/^\d{4}$/.test(normalizeDigits($('sehRecoveryCode')?.value||'').trim()));
   ['sehRecoveryCode','sehRecoveryNewPassword','sehRecoveryNewPassword2','sehRecoveryResetBtn'].forEach(id=>{const el=$(id);if(el)el.disabled=!ENABLED||!codeReady;});
   const notice=panel.querySelector('.seh-recovery-preview-notice');
   if(notice&&ENABLED)notice.textContent='بازیابی به‌صورت آزمایشی و بدون پیامک انجام می‌شود. کد فقط در همین مرورگر قابل دریافت است.';
