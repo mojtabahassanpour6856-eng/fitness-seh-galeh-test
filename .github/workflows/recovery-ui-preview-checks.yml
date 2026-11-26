@@ -1,0 +1,29 @@
+name: Recovery UI preview safety checks
+on:
+  push:
+    branches: ["staging/recovery-ui-safe-webp-2026-11-26"]
+    paths:
+      - "index.html"
+      - "auth-preview/connected-auth.js"
+      - "auth-preview/recovery-ui-preview.js"
+      - "tests/auth-recovery-preview-static.test.mjs"
+      - ".github/workflows/recovery-ui-preview-checks.yml"
+  pull_request:
+    paths:
+      - "index.html"
+      - "auth-preview/connected-auth.js"
+      - "auth-preview/recovery-ui-preview.js"
+      - "tests/auth-recovery-preview-static.test.mjs"
+      - ".github/workflows/recovery-ui-preview-checks.yml"
+permissions:
+  contents: read
+jobs:
+  static-preview-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate isolated recovery preview
+        run: node tests/auth-recovery-preview-static.test.mjs
