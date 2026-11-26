@@ -401,7 +401,7 @@ const extraExercises={
 "hamstrings":[["پشت پا نشسته","دستگاه","گروه عضلات همسترینگ","گاستروکنمیوس"],["پشت پا تک‌پا","دستگاه","همسترینگ","سرینی"],["گودمورنینگ","هالتر","همسترینگ","فیله و سرینی"]],
 "calves":[["ساق پرس پا","دستگاه","ساق","نعلی"],["ساق تک‌پا ایستاده","وزن بدن/دمبل","دوقلو","نعلی"],["ساق دانکی","دستگاه/وزن بدن","دوقلو","نعلی"]]};
 Object.entries(extraExercises).forEach(([g,items])=>{exercises[g]=[...(exercises[g]||[]),...items];});
-let selectedGroup=null,view="front",plan=[],bank="global";let staged=[],customBank={};const $=s=>document.querySelector(s);
+let selectedGroup=null,selectedExercise=null,view="front",plan=[],bank="global";let staged=[],customBank={};const $=s=>document.querySelector(s);
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 function normalizeExerciseName(value){return String(value||"").normalize("NFKC").replace(/[يى]/g,"ی").replace(/ك/g,"ک").replace(/[\u200c\s]+/g," ").trim().toLowerCase();}
 function equipmentMatches(equipment,filter){if(filter==="all")return true;const value=normalizeExerciseName(equipment);const target=normalizeExerciseName(filter);if(target==="کش")return value==="کش"||value.includes("کش مقاومتی")||value.includes("باند مقاومتی");const aliases={"سیم کش":["سیم کش","کابل"],"دستگاه":["دستگاه","اسمیت","ماشین"],"بارفیکس":["بارفیکس","میله بارفیکس"],"وزن بدن":["وزن بدن","بدون وسیله"],"هالتر":["هالتر","ez"],"دمبل":["دمبل"],"کش":["کش","باند مقاومتی"],"توپ":["توپ","فیت بال"]};return (aliases[target]||[target]).some(token=>value.includes(token));}
@@ -424,7 +424,7 @@ function getList(){
   Object.entries(exercises).forEach(([bucket,items])=>items.forEach(e=>{
    const primary=labelMatchesGroup(e[2],selectedGroup)||(bucket===selectedGroup&&!labelMatchesAnyOtherGroup(e[2],selectedGroup));
    const secondary=labelMatchesGroup(e[3],selectedGroup);
-   if((role==="primary"&&primary)||(role==="secondary"&&secondary&&!primary)||(role==="both"&&(primary||secondary)))combined.push({...e,source:"global",relation:primary?"اصلی":"کمکی"});
+   if((role==="primary"&&primary)||(role==="secondary"&&secondary&&!primary)||(role==="both"&&(primary||secondary)))combined.push({...e,muscleBucket:bucket,source:"global",relation:primary?"اصلی":"کمکی"});
   }));
  }
  if(bank!=="global"){
@@ -441,26 +441,43 @@ const exerciseMuscleRoles={
  "biceps-long":{secondary:["brachialis","forearm-flexors"],tertiary:["forearm-extensors"]},
  "quads":{secondary:["adductors","glute-max"],tertiary:["hamstrings","calves"]}
 };
+function exerciseActivationMap(exercise){
+ const primary=new Set(),secondary=new Set(),tertiary=new Set();
+ if(!exercise)return {primary,secondary,tertiary};
+ const primaryLabel=exercise[2]||"",secondaryLabel=exercise[3]||"";
+ groups.forEach(g=>{
+  if(labelMatchesGroup(primaryLabel,g.id))primary.add(g.id);
+  if(labelMatchesGroup(secondaryLabel,g.id))secondary.add(g.id);
+ });
+ if(exercise.muscleBucket&&groups.some(g=>g.id===exercise.muscleBucket)&&primary.size===0)primary.add(exercise.muscleBucket);
+ if(primary.size===0&&selectedGroup)primary.add(selectedGroup);
+ secondary.forEach(id=>primary.has(id)&&secondary.delete(id));
+ const fallback=exerciseMuscleRoles[exercise.muscleBucket||selectedGroup]||{};
+ (fallback.tertiary||[]).forEach(id=>{if(!primary.has(id)&&!secondary.has(id))tertiary.add(id);});
+ return {primary,secondary,tertiary};
+}
 function applyPhotoMuscleLevels(){
  const overlay=$("#muscleHotspots");if(!overlay)return;
- const roles=selectedGroup?exerciseMuscleRoles[selectedGroup]||{}:{};
- const primary=new Set(selectedGroup?[selectedGroup]:[]);
- const secondary=new Set(roles.secondary||[]);
- const tertiary=new Set(roles.tertiary||[]);
+ let roles;
+ if(selectedExercise)roles=exerciseActivationMap(selectedExercise);
+ else{
+  const fallback=selectedGroup?exerciseMuscleRoles[selectedGroup]||{}:{};
+  roles={primary:new Set(selectedGroup?[selectedGroup]:[]),secondary:new Set(fallback.secondary||[]),tertiary:new Set(fallback.tertiary||[])};
+ }
  overlay.querySelectorAll(".hotspot").forEach(h=>{
   const id=h.dataset.muscle;
   h.classList.remove("level-primary","level-secondary","level-tertiary","level-selected");
-  if(primary.has(id))h.classList.add("level-primary","level-selected");
-  else if(secondary.has(id))h.classList.add("level-secondary");
-  else if(tertiary.has(id))h.classList.add("level-tertiary");
+  if(roles.primary.has(id))h.classList.add("level-primary","level-selected");
+  else if(roles.secondary.has(id))h.classList.add("level-secondary");
+  else if(roles.tertiary.has(id))h.classList.add("level-tertiary");
  });
 }
 function renderGroups(){$("#muscleButtons").innerHTML=groups.filter(g=>phaseOneMuscles.has(g.id)).map(g=>'<button type="button" class="muscle-btn '+(g.id===selectedGroup?'active':'')+'" data-group="'+g.id+'" aria-pressed="'+(g.id===selectedGroup?'true':'false')+'">'+g.name+'</button>').join("");}
-function chooseGroup(id){if(!photoMuscles.has(id))return;selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();refreshPhotoAnatomy();const family=parentMap[id]||id;document.querySelectorAll(".muscle").forEach(el=>{const mid=el.dataset.id,active=mid===id||(parentMap[mid]||mid)===family;el.classList.toggle("selected",active);el.setAttribute("aria-pressed",active?"true":"false");});$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
+function chooseGroup(id){if(!photoMuscles.has(id))return;selectedExercise=null;selectedGroup=id;const g=groups.find(x=>x.id===id);if(!g)return;if(g.view!==view)setView(g.view);renderGroups();refreshPhotoAnatomy();const family=parentMap[id]||id;document.querySelectorAll(".muscle").forEach(el=>{const mid=el.dataset.id,active=mid===id||(parentMap[mid]||mid)===family;el.classList.toggle("selected",active);el.setAttribute("aria-pressed",active?"true":"false");});$("#selectedLabel").textContent="حرکات مرتبط با "+g.name;renderExercises();$("#exerciseDetail").innerHTML="<h3>جزئیات حرکت</h3><p class='sub'>برای انتخاب، روی کارت حرکت بزنید. امکان انتخاب چند حرکت وجود دارد. عضلات هدف و کمکی تقریبی‌اند؛ هیچ حرکت چندمفصلی کاملاً ایزوله نیست و تقسیم‌بندی سرها یا نواحی عضله به معنی جداسازی کامل آن‌ها نیست.</p>";}
 function setView(v){view=v;refreshPhotoAnatomy();$("#frontMuscles").style.display=v==="front"?"":"none";$("#backMuscles").style.display=v==="back"?"":"none";$("#frontDetail").style.display=v==="front"?"":"none";$("#backDetail").style.display=v==="back"?"":"none";document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",t.dataset.view===v));}
 function keyFor(g,e,source,session){return normalizeExerciseName(e[0])+"::"+(source||e.source||"global")+"::"+String(g||"")+"::"+String(session||"");}
 function renderExercises(){const list=getList();$("#exerciseCount").textContent=list.length+" حرکت قابل نمایش · "+staged.length+" حرکت انتخاب‌شده · "+(($("#muscleRoleFilter")?.value||"primary")==="primary"?"عضله اصلی":($("#muscleRoleFilter")?.value==="secondary"?"عضله کمکی":"اصلی و کمکی"));$("#exerciseList").innerHTML=list.map((e,i)=>'<button class="exercise '+(staged.some(x=>x.key===keyFor(selectedGroup,e,e.source,$("#sessionSelect").value))?"active":"")+'" data-ex="'+i+'"><b>'+escapeHtml(e[0])+'</b><small>تجهیزات: '+escapeHtml(e[1])+' · '+escapeHtml(e.relation||'عضله اصلی')+': '+escapeHtml(e[2])+'<br>'+(e.source==="coach"||bank==="coach"?"بانک اختصاصی مربی · نمونه":"بانک جامع سیستم · نمونه")+'</small></button>').join("")||'<p class="sub">برای این فیلتر حرکتی یافت نشد.</p>';}
-function chooseExercise(i){const e=getList()[i];if(!e)return;const session=$("#sessionSelect").value,k=keyFor(selectedGroup,e,e.source||bank,session),existing=staged.findIndex(x=>x.key===k);if(existing>=0)staged.splice(existing,1);else staged.push({key:k,group:selectedGroup,groupName:groups.find(x=>x.id===selectedGroup)?.name||selectedGroup,exercise:e,bank:e.source||bank,session,system:"عادی",groupLabel:"",sets:3,reps:"10-12",rest:60});renderExercises();renderStaged();$("#exerciseDetail").innerHTML='<h3>'+escapeHtml(e[0])+'</h3><p class="sub">تجهیزات: '+escapeHtml(e[1])+'</p><div class="tags"><span class="tag">عضله اصلی: '+escapeHtml(e[2])+'</span><span class="tag secondary">عضلات کمکی: '+escapeHtml(e[3])+'</span><span class="tag secondary">'+(e.source==="coach"||bank==="coach"?"بانک اختصاصی مربی":"بانک جامع سیستم")+'</span></div><p class="sub">نوع حرکت: '+ escapeHtml(e[5]||"عمومی") +'</p><p class="sub">'+ escapeHtml(e[4]||"توضیحی ثبت نشده") +'</p><p class="sub">کارت حرکت را برای افزودن یا حذف از فهرست انتخاب‌ها لمس کنید.</p>';}
+function chooseExercise(i){const e=getList()[i];if(!e)return;const session=$("#sessionSelect").value,k=keyFor(selectedGroup,e,e.source||bank,session),existing=staged.findIndex(x=>x.key===k);if(existing>=0){staged.splice(existing,1);if(selectedExercise&&keyFor(selectedGroup,selectedExercise,selectedExercise.source||bank,session)===k)selectedExercise=null;}else{staged.push({key:k,group:selectedGroup,groupName:groups.find(x=>x.id===selectedGroup)?.name||selectedGroup,exercise:e,bank:e.source||bank,session,system:"عادی",groupLabel:"",sets:3,reps:"10-12",rest:60});selectedExercise=e;}renderExercises();renderStaged();applyPhotoMuscleLevels();$("#exerciseDetail").innerHTML='<h3>'+escapeHtml(e[0])+'</h3><p class="sub">تجهیزات: '+escapeHtml(e[1])+'</p><div class="tags"><span class="tag">عضله اصلی: '+escapeHtml(e[2])+'</span><span class="tag secondary">عضلات کمکی: '+escapeHtml(e[3])+'</span><span class="tag secondary">'+(e.source==="coach"||bank==="coach"?"بانک اختصاصی مربی":"بانک جامع سیستم")+'</span></div><p class="sub">نوع حرکت: '+ escapeHtml(e[5]||"عمومی") +'</p><p class="sub">'+ escapeHtml(e[4]||"توضیحی ثبت نشده") +'</p><p class="sub">کارت حرکت را برای افزودن یا حذف از فهرست انتخاب‌ها لمس کنید.</p>';}
 function renderStaged(){$("#stagedList").innerHTML=staged.length?staged.map((x,i)=>'<div class="detail" style="margin:8px 0;padding:10px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>'+(i+1)+'. '+escapeHtml(x.exercise[0])+'</b><button data-remove="'+i+'" style="border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 9px;color:var(--red)">حذف</button></div><small class="sub">'+escapeHtml(x.groupName)+' · '+escapeHtml(x.session)+'</small><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px"><label class="sub">سیستم<select data-field="system" data-index="'+i+'" style="width:100%;padding:7px;border:1px solid var(--line);border-radius:8px"><option>عادی</option><option>دراپ‌ست</option><option>رست‌پاز</option><option>هرمی</option><option>هرمی معکوس</option><option>تکرار منفی</option><option>تکرار اجباری</option><option>تا ناتوانی</option><option>نیم‌تکرار</option><option>مایو رپس</option><option>سوپرست</option><option>تری‌ست</option><option>جاینت‌ست</option></select></label><label class="sub">گروه (سوپر/تری/جاینت)<input data-field="groupLabel" data-index="'+i+'" value="'+escapeHtml(x.groupLabel||'')+'" placeholder="A1" style="width:100%;padding:7px;border:1px solid var(--line);border-radius:8px"></label><label class="sub">ست<input data-field="sets" data-index="'+i+'" type="number" min="1" max="20" value="'+escapeHtml(x.sets)+'" style="width:100%;padding:7px;border:1px solid var(--line);border-radius:8px"></label><label class="sub">تکرار<input data-field="reps" maxlength="24" data-index="'+i+'" value="'+escapeHtml(x.reps)+'" style="width:100%;padding:7px;border:1px solid var(--line);border-radius:8px"></label><label class="sub">استراحت (ثانیه)<input data-field="rest" data-index="'+i+'" type="number" min="0" max="600" value="'+escapeHtml(x.rest)+'" style="width:100%;padding:7px;border:1px solid var(--line);border-radius:8px"></label></div></div>').join(""):"هنوز حرکتی انتخاب نشده است.";staged.forEach((x,i)=>{const sel=document.querySelector('[data-field="system"][data-index="'+i+'"]');if(sel)sel.value=x.system||"عادی";});const addButton=$("#addBtn");if(addButton){addButton.disabled=staged.length===0;addButton.style.opacity=staged.length===0?".55":"1";}}
 function renderPlan(){$("#planList").innerHTML=plan.length?plan.map((x,i)=>'<div class="plan-row"><span>'+(i+1)+'. '+escapeHtml(x.name)+' <small>('+escapeHtml(x.group)+' · '+escapeHtml(x.session)+')</small><br><small>'+escapeHtml(x.system)+' · '+escapeHtml(x.sets)+' ست × '+escapeHtml(x.reps)+' · استراحت '+escapeHtml(x.rest)+'ث '+(x.groupLabel?'· گروه '+escapeHtml(x.groupLabel):'')+'</small></span><span>✓</span></div>').join(""):"هنوز حرکتی به این پیش‌نمایش اضافه نشده است.";}
 document.querySelectorAll(".muscle").forEach((m,i)=>{m.setAttribute("tabindex","0");m.setAttribute("role","button");m.setAttribute("aria-label","انتخاب عضله "+(groups.find(g=>g.id===m.dataset.id)?.name||m.dataset.id));m.setAttribute("aria-pressed","false");m.setAttribute("focusable","true");});
