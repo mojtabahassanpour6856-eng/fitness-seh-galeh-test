@@ -22,6 +22,14 @@ assert.match(ui, /مرحله ۲: دریافت کد پس از تأیید مربی
 assert.doesNotMatch(ui, /کد ۸ رقمی/);
 assert.match(auth, /sehAuthRecovery/);
 assert.match(auth, /sehRecoveryStudentPanel/);
+const registrationStart = html.indexOf('const name=visibleField("traineeRegName")');
+assert.ok(registrationStart >= 0, 'authoritative trainee registration handler must be present');
+const registrationBlock = html.slice(registrationStart, registrationStart + 3600);
+assert.match(registrationBlock, /درخواست شما با موفقیت برای مربی ارسال شد/, 'successful registration must show clear confirmation');
+assert.match(registrationBlock, /successStatus\.style\.background="#123522"/, 'success feedback must use a visible green status box');
+assert.doesNotMatch(registrationBlock, /traineeRegName.*?\.value=""/s, 'submitted name must remain visible after success');
+assert.doesNotMatch(registrationBlock, /traineeRegPhone.*?\.value=""/s, 'submitted phone must remain visible after success');
+assert.match(registrationBlock, /traineeRegPassword.*?\.value=""/s, 'password fields must be cleared after successful submission');
 assert.match(auth, /trainee-entry\.webp/);
 assert.match(auth, /coach-entry\.webp/);
 assert.match(auth, /seh-recovery-preview-notice|sehRecoveryStudentPanel/);
