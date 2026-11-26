@@ -80,8 +80,9 @@ async function studentRequest(){
   if(!claim||claim.phone!==phone){
    claim={request_id:crypto.randomUUID(),claim_token:randomToken(),phone,expires_at:Date.now()+24*60*60*1000};
   }
-  await post(PREAUTH_URL,{action:'request',phone,request_id:claim.request_id,claim_token:claim.claim_token});
+  // Persist before the network call so an ambiguous timeout retries the same claim.
   saveClaim(claim);
+  await post(PREAUTH_URL,{action:'request',phone,request_id:claim.request_id,claim_token:claim.claim_token});
   text('sehRecoveryRequestStatus','درخواست شما برای بررسی مربی ارسال شد. پس از تأیید، از همین مرورگر کد را دریافت کنید.');
   const fetchButton=$('sehRecoveryFetchCodeBtn');if(fetchButton)fetchButton.disabled=false;
  }catch(error){text('sehRecoveryRequestStatus',error.message||'ارسال درخواست انجام نشد.');}
