@@ -82,4 +82,77 @@ window.sehAuthNavigate=function(v){root.dataset.sehView=v;if(v==='recovery'&&!do
 root.dataset.sehView='home';
 new MutationObserver(moveRecovery).observe(trainee,{childList:true,subtree:true});
 document.addEventListener('DOMContentLoaded',moveRecovery,{once:true});setTimeout(moveRecovery,900);
+
+/*
+ * TRAINEE PHONE LOGIN COMPATIBILITY
+ * Registration creates an internal email alias from SHA-256(normalized phone).
+ * Supabase Auth therefore requires that alias for password sign-in.
+ */
+(function(){
+  'use strict';
+  function normalizeTraineePhone(value){
+    let p=String(value||'').trim()
+      .replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+      .replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
+      .replace(/[\s()-]/g,'');
+    if(p.startsWith('0098'))p='+98'+p.slice(4);
+    else if(p.startsWith('98'))p='+'+p;
+    else if(p.startsWith('0'))p='+98'+p.slice(1);
+    else if(p.startsWith('9'))p='+98'+p;
+    return p;
+  }
+  async function traineeAuthEmail(phone){
+    const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(phone));
+    const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+    return 'trainee.'+hash+'@login.fitness-seh-galeh.invalid';
+  }
+  window.loginTraineePhone=async function(){
+    const phone=normalizeTraineePhone(document.getElementById('traineePhoneLogin')?.value);
+    const password=document.getElementById('traineeLoginPassword')?.value||'';
+    const err=document.getElementById('authError');
+    const show=message=>{if(err){err.textContent=message;err.style.display='block';}};
+    const box=document.getElementById('traineeLoginBox');
+    const btn=box?[...box.querySelectorAll('button')].find(b=>/ورود شاگرد/.test(b.textContent||'')):null;
+    if(!/^\+989\d{9}$/.test(phone)||!password){
+      show('شماره موبایل معتبر و رمز عبور را وارد کنید. نمونه شماره: 09121234567');
+      return;
+    }
+    const client=window.AUTH_SUPABASE;
+    if(!client?.auth){
+      show('اتصال ورود آماده نیست؛ صفحه را تازه‌سازی کنید و دوباره تلاش کنید.');
+      return;
+    }
+    if(typeof window.finishLogin!=='function'){
+      show('بخش تکمیل ورود شاگرد بارگذاری نشده است؛ صفحه را تازه‌سازی کنید.');
+      return;
+    }
+    if(btn){btn.disabled=true;btn.dataset.originalText=btn.textContent;btn.textContent='⏳ در حال ورود…';}
+    if(err)err.style.display='none';
+    try{
+      const email=await traineeAuthEmail(phone);
+      const signed=await client.auth.signInWithPassword({email,password});
+      if(signed.error)throw signed.error;
+      const user=signed.data?.user,session=signed.data?.session;
+      if(!user||!session?.access_token||!session?.refresh_token){
+        throw new Error('ورود انجام شد اما نشست امن شاگرد دریافت نشد.');
+      }
+      const saved=await client.auth.setSession({
+        access_token:session.access_token,
+        refresh_token:session.refresh_token
+      });
+      if(saved.error)throw saved.error;
+      const verified=await client.auth.getSession();
+      if(verified.error||verified.data?.session?.user?.id!==user.id){
+        throw new Error('نشست ورود ذخیره نشد؛ صفحه را تازه‌سازی و دوباره وارد شوید.');
+      }
+      await window.finishLogin(user);
+    }catch(e){
+      console.error('Trainee alias login failed:',e);
+      show('ورود انجام نشد. اگر درخواست هنوز تأیید نشده، منتظر تأیید مربی بمانید؛ در غیر این صورت شماره یا رمز را بررسی کنید. جزئیات: '+(e?.message||String(e)));
+    }finally{
+      if(btn){btn.disabled=false;btn.textContent=btn.dataset.originalText||'ورود شاگرد';delete btn.dataset.originalText;}
+    }
+  };
+})();
+
 })();
