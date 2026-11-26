@@ -170,10 +170,24 @@ document.head.appendChild(st);
 const shell=document.createElement('div');
 shell.innerHTML='<div class="seh-top"><span>FITNESS SEH GALEH</span><span class="seh-tag">ورود امن اعضا</span></div><div class="seh-brand"><div class="seh-mark"><img src="./icon.webp" alt="نشان فیتنس سه‌قلعه"></div><h2>باشگاه فیتنس سه‌قلعه</h2><p>مربی من | همراه شما در مسیر تناسب اندام</p></div>'+
 '<section id="sehAuthHome" class="seh-view"><div class="seh-welcome"><span class="seh-eyebrow">به جمع فیتنس سه‌قلعه خوش آمدید</span><h3>برای ادامه، مسیر خود را انتخاب کنید</h3><p>ورود اعضای فعلی و درخواست عضویت جدید در مسیرهای جداگانه انجام می‌شود.</p></div><div class="seh-choices"><button type="button" class="seh-choice primary" onclick="window.sehAuthNavigate(\'trainee\')"><span class="seh-art seh-art-trainee" aria-hidden="true"><img src="./assets/auth/trainee-entry.webp" alt="تصویر شاگرد ورزشکار" loading="eager"></span><span class="seh-copy"><b>ورود شاگردان</b><small>برای اعضایی که قبلاً ثبت‌نام کرده‌اند</small></span><span class="seh-arrow">‹</span></button><button type="button" class="seh-choice" onclick="window.sehAuthNavigate(\'coach\')"><span class="seh-art seh-art-coach" aria-hidden="true"><img src="./assets/auth/coach-entry.webp" alt="تصویر مربی" loading="eager"></span><span class="seh-copy"><b>ورود مربیان</b><small>ورود به پنل مدیریت و برنامه‌ریزی</small></span><span class="seh-arrow">‹</span></button></div><div class="seh-register"><p>هنوز عضو باشگاه نیستید؟</p><button class="seh-link" type="button" onclick="window.sehAuthNavigate(\'register\')">درخواست عضویت شاگرد جدید ←</button></div></section>'+
-'<section id="sehAuthTrainee" class="seh-view"><button class="seh-back" type="button" onclick="window.sehAuthNavigate(\'home\')">→ بازگشت</button><div class="seh-heading"><span class="seh-eyebrow">حساب اعضای فعلی</span><h3>ورود به حساب شاگرد</h3><p>شماره موبایل ثبت‌شده و رمز شخصی خود را وارد کنید.</p></div><div class="seh-form" id="sehTraineeMount"></div><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="seh-link" type="button" onclick="window.sehAuthNavigate(\'recovery\')">رمز عبور را فراموش کرده‌ام</button><button class="seh-link" type="button" onclick="window.sehAuthNavigate(\'register\')">عضویت جدید</button></div></section>'+
+'<section id="sehAuthTrainee" class="seh-view"><button class="seh-back" type="button" onclick="window.sehAuthNavigate(\'home\')">→ بازگشت</button><div class="seh-heading"><span class="seh-eyebrow">حساب اعضای فعلی</span><h3>ورود به حساب شاگرد</h3><p>شماره موبایل ثبت‌شده و رمز شخصی خود را وارد کنید.</p></div><div class="seh-form" id="sehTraineeMount"></div><div id="sehRecoveryLoginNotice" class="seh-recovery-login-notice" hidden></div><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="seh-link" type="button" onclick="window.sehAuthNavigate(\'recovery\')">رمز عبور را فراموش کرده‌ام</button><button class="seh-link" type="button" onclick="window.sehAuthNavigate(\'register\')">عضویت جدید</button></div></section>'+
 '<section id="sehAuthCoach" class="seh-view"><button class="seh-back" type="button" onclick="window.sehAuthNavigate(\'home\')">→ بازگشت</button><div class="seh-heading"><span class="seh-eyebrow">دسترسی مدیریت</span><h3>ورود مربیان</h3><p>برای ورود به پنل مربی، ایمیل و رمز عبور خود را وارد کنید.</p></div><div class="seh-form" id="sehCoachMount"></div></section>'+
 '<section id="sehAuthRegister" class="seh-view"><button class="seh-back" type="button" onclick="window.sehAuthNavigate(\'home\')">→ بازگشت</button><div class="seh-heading"><span class="seh-eyebrow">شروع مسیر ورزشی</span><h3>درخواست عضویت جدید</h3><p>اطلاعات اولیه را وارد کنید تا درخواست برای بررسی مربی ارسال شود.</p></div><div class="seh-form" id="sehRegisterMount"></div></section>'+
 '<section id="sehAuthRecovery" class="seh-view"><button class="seh-back" type="button" onclick="window.sehAuthNavigate(\'trainee\')">→ بازگشت به ورود شاگرد</button><div class="seh-heading"><span class="seh-eyebrow">بازیابی دسترسی</span><h3>بازیابی رمز عبور</h3><p>درخواست بازیابی با تأیید مربی انجام می‌شود.</p></div><div id="sehRecoveryMount"></div></section><div class="seh-foot">FITNESS SEH GALEH<br>همراه شما در مسیر تناسب اندام</div>';
+
+const recoveryNoticeStyle=document.createElement('style');
+recoveryNoticeStyle.id='seh-recovery-login-notice-style';
+recoveryNoticeStyle.textContent=`
+#authScreen .seh-recovery-login-notice{box-sizing:border-box;margin:13px 0 4px;padding:14px;border:1px solid #a88942;border-radius:15px;background:linear-gradient(145deg,#282414,#151c23);color:#f1ead8;line-height:1.8}
+#authScreen .seh-recovery-login-notice[hidden]{display:none!important}
+#authScreen .seh-recovery-login-notice h4{margin:0 0 6px;color:#f4c64e;font-size:14px}
+#authScreen .seh-recovery-login-notice p{margin:5px 0;color:#c6cbd1;font-size:11px}
+#authScreen .seh-recovery-login-notice .seh-recovery-login-code{margin:10px 0;padding:10px;border:1px dashed #c6a24a;border-radius:11px;background:#0b121b;text-align:center}
+#authScreen .seh-recovery-login-notice .seh-recovery-login-code strong{display:block;color:#ffd45b;font-size:27px;letter-spacing:7px;direction:ltr}
+#authScreen .seh-recovery-login-notice button{width:100%;min-height:40px;margin-top:8px;border:0;border-radius:10px;background:linear-gradient(100deg,#ffd04b,#ffb900);color:#17120a;font-weight:900;cursor:pointer}
+`;
+document.head.appendChild(recoveryNoticeStyle);
+
 card.replaceChildren(shell,coach,trainee,error);
 if(tabs)tabs.remove();
 coach.classList.remove('hide');trainee.classList.remove('hide');
@@ -202,8 +216,72 @@ function moveRecovery(){
   }
   return false;
 }
+
+/* Browser-bound recovery notice: retrieve the approved code only with the
+   256-bit claim kept in this tab's sessionStorage. The code itself is never stored. */
+const RECOVERY_CLAIM_KEY='seh_trainee_recovery_claim_v1';
+let recoveryNoticeBusy=false;
+function faDigits(value){return String(value).replace(/\\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);}
+function readRecoveryClaim(){
+  try{
+    const claim=JSON.parse(sessionStorage.getItem(RECOVERY_CLAIM_KEY)||'null');
+    if(!claim||typeof claim.request_id!=='string'||typeof claim.claim_token!=='string'||typeof claim.phone!=='string')return null;
+    if(!/^[0-9a-f-]{36}$/i.test(claim.request_id)||!/^[A-Za-z0-9_-]{43}$/.test(claim.claim_token)||!/^\\+989\\d{9}$/.test(claim.phone))return null;
+    return claim;
+  }catch(_){return null;}
+}
+function paintRecoveryNotice(message,approved){
+  const panel=document.getElementById('sehRecoveryLoginNotice');
+  if(!panel)return;
+  const claim=readRecoveryClaim();
+  if(!claim){panel.hidden=true;panel.replaceChildren();return;}
+  const local='0'+claim.phone.slice(3);
+  const masked=faDigits(local.slice(0,4))+'•••'+faDigits(local.slice(-4));
+  panel.hidden=false;
+  if(!approved){
+    panel.innerHTML='<h4>درخواست بازیابی رمز ثبت شده است</h4><p>شماره موبایل: <b dir="ltr">'+masked+'</b></p><p>'+message+'</p><button type="button" id="sehRecoveryNoticeRefresh">بررسی وضعیت درخواست</button>';
+    document.getElementById('sehRecoveryNoticeRefresh')?.addEventListener('click',refreshRecoveryNotice);
+    return;
+  }
+  const code=faDigits(message.code);
+  const expiryDate=new Date(message.expires_at);
+  let expiryText='۲۴ ساعت پس از تأیید مربی';
+  if(Number.isFinite(expiryDate.getTime()))expiryText=faDigits(expiryDate.toLocaleString('fa-IR',{dateStyle:'short',timeStyle:'short'}));
+  panel.innerHTML='<h4>✓ درخواست بازیابی رمز شما تأیید شد</h4>'+
+    '<p>شماره موبایل: <b dir="ltr">'+masked+'</b></p>'+
+    '<div class="seh-recovery-login-code"><p>کد اعلام‌شده توسط مربی</p><strong>'+code+'</strong></div>'+
+    '<p>اعتبار کد تا: <b>'+expiryText+'</b></p>'+
+    '<p>کد فقط در همین مرورگر قابل مشاهده است. برای تعیین رمز جدید وارد بخش بازیابی شوید.</p>'+
+    '<button type="button" id="sehRecoveryNoticeOpen">رفتن به بازیابی رمز</button>';
+  document.getElementById('sehRecoveryNoticeOpen')?.addEventListener('click',()=>window.sehAuthNavigate('recovery'));
+}
+async function refreshRecoveryNotice(){
+  const panel=document.getElementById('sehRecoveryLoginNotice');
+  if(!panel||recoveryNoticeBusy)return;
+  const claim=readRecoveryClaim();
+  if(!claim){paintRecoveryNotice('',false);return;}
+  recoveryNoticeBusy=true;
+  try{
+    const client=window.AUTH_SUPABASE;
+    if(!client?.functions?.invoke)throw new Error('client unavailable');
+    const result=await client.functions.invoke('trainee-password-recovery-preauth',{body:{
+      action:'code',request_id:claim.request_id,claim_token:claim.claim_token
+    }});
+    const data=result?.data;
+    if(result?.error||data?.error||data?.success!==true||!/^\\d{4}$/.test(String(data.code||''))){
+      paintRecoveryNotice('پس از تأیید مربی، کد چهاررقمی در همین صفحه نمایش داده می‌شود. اگر مهلت درخواست گذشته باشد، درخواست تازه ثبت کنید.',false);
+      return;
+    }
+    paintRecoveryNotice({code:String(data.code),expires_at:data.expires_at},true);
+  }catch(_){
+    paintRecoveryNotice('وضعیت درخواست در حال حاضر قابل بررسی نیست. اتصال اینترنت را بررسی و دوباره تلاش کنید.',false);
+  }finally{recoveryNoticeBusy=false;}
+}
+window.__sehRefreshRecoveryLoginNotice=refreshRecoveryNotice;
+
 window.sehAuthNavigate=function(v){
   root.dataset.sehView=v;
+  if(v==='trainee')setTimeout(refreshRecoveryNotice,0);
   error.style.display='none';
   if(v==='recovery'){
     moveRecovery();
@@ -217,6 +295,7 @@ window.sehAuthNavigate=function(v){
   }else moveRecovery();
 };
 root.dataset.sehView='home';
+setInterval(()=>{if(root.dataset.sehView==='trainee'&&!document.hidden)refreshRecoveryNotice();},45000);
 
 /* Pull-to-refresh with a lightweight gold arc indicator; keeps the existing reload trigger. */
 (function(){
