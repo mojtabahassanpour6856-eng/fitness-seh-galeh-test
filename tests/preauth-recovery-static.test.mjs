@@ -5,6 +5,8 @@ const preauth = readFileSync("supabase/functions/trainee-password-recovery-preau
 const coach = readFileSync("supabase/functions/trainee-password-recovery/index.ts", "utf8");
 const config = readFileSync("supabase/config.toml", "utf8");
 const migration = readFileSync("supabase/migrations/202611240002_pre_auth_recovery_claims.sql", "utf8");
+const authShell = readFileSync("auth-preview/connected-auth.js", "utf8");
+const rootSw = readFileSync("sw.js", "utf8");
 
 assert.match(config, /\[functions\.trainee-password-recovery-preauth\][\s\S]*?verify_jwt\s*=\s*false/);
 assert.match(config, /\[functions\.trainee-password-recovery\][\s\S]*?verify_jwt\s*=\s*true/, "coach recovery endpoint must retain gateway JWT verification");
@@ -42,5 +44,17 @@ assert.match(uiScript, /existing&&existing\.phone===phone/, "browser claim must 
 assert.match(uiScript, /crypto\.getRandomValues/);
 assert.match(uiScript, /sehRecoveryFetchCodeBtn/);
 assert.doesNotMatch(uiScript, /data\.recovery_code/, "coach UI must never display a recovery code");
+
+test("short mobile auth screens keep choice images readable and the page scrollable", () => {
+  assert.match(authShell, /@media \\(max-height:760px\\)\\{#authScreen \\.auth-card\\{min-height:100dvh!important;height:auto!important;max-height:none!important;overflow:visible!important/);
+  assert.match(authShell, /@media \\(max-height:760px\\)\\{#authScreen \\.seh-art\\{width:88px!important;height:88px!important;flex-basis:88px!important/);
+  assert.match(authShell, /@media \\(max-height:620px\\)\\{#authScreen \\.seh-art\\{width:76px!important;height:76px!important;flex-basis:76px!important/);
+  assert.doesNotThrow(() => new Function(authShell), "connected auth redesign must parse");
+});
+
+test("root service-worker shell cache is versioned past the stale v13 cache", () => {
+  assert.match(rootSw, /seh-shell-v14/);
+  assert.doesNotMatch(rootSw, /seh-shell-v13/);
+});
 
 console.log("PASS: pre-auth recovery and browser UI static security contract");
