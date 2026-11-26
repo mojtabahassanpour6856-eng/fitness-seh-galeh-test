@@ -59,3 +59,17 @@ test('movement-specific activation rules cover major gym movement families', () 
   assert.match(html, /exerciseActivationMap/);
   assert.match(html, /applyMovementRule\(exercise,curated\)/);
 });
+
+test('specific movement rules distinguish presses from fly isolation', () => {
+  assert.match(html, /فلای سیم کش از پایین.*primary:\["upper-chest"\],secondary:\["front-delts"\]/);
+  assert.match(html, /قفسه دمبل.*primary:\["mid-chest"\],secondary:\["front-delts"\]/);
+  assert.match(html, /پرس سینه\|شنا سوئدی.*triceps-long.*triceps-lateral/);
+});
+
+test('specific movement rules cover lower body, back, and forearm movements', () => {
+  assert.match(html, /اسکوات.*primary:\["quads","glute-max"\]/);
+  assert.match(html, /ددلیفت رومانیایی.*primary:\["hamstrings","glute-max"\]/);
+  assert.match(html, /لت سیم کش\|بارفیکس.*primary:\["lats"\]/);
+  assert.match(html, /مچ دمبل\.\*کف دست بالا.*primary:\["forearm-flexors"\]/);
+  assert.match(html, /مچ دمبل\.\*کف دست پایین.*primary:\["forearm-extensors"\]/);
+});
