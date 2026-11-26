@@ -1,7 +1,7 @@
 name: Pre-auth password recovery candidate checks
 on:
   push:
-    branches: ["integration/auth-recovery-mirror-selective-2026-11-25"]
+    branches: ["integration/auth-recovery-mirror-selective-2026-11-25", "feature/login-recovery-code-notice-2026-11-26"]
   pull_request:
     branches: [main]
   workflow_dispatch:
