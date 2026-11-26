@@ -27,7 +27,7 @@ begin
      or p_request_ip_hash is null
      or p_request_phone_hash is null
      or p_claim_expires_at is null
-     or p_phone_normalized !~ '^\+989[0-9]{9}
+     or p_phone_normalized !~ '^\+989[0-9]{9}$'
      or p_claim_token_hash !~ '^[A-Za-z0-9_-]{43}$'
      or p_request_ip_hash !~ '^[0-9a-f]{64}$'
      or p_request_phone_hash !~ '^[0-9a-f]{64}$'
