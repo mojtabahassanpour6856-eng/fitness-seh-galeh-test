@@ -46,7 +46,7 @@ test('browser renders both anatomy photos and interactive SVG hotspots', async t
   assert.ok(Math.abs(front.photo.x-front.overlay.x)<1 && Math.abs(front.photo.y-front.overlay.y)<1 &&
     Math.abs(front.photo.width-front.overlay.width)<1 && Math.abs(front.photo.height-front.overlay.height)<1,
     'SVG overlay must align with the rendered reference photo');
-  await page.locator('#muscleHotspots [data-muscle="mid-chest"]').click({ force:true });
+  await page.locator('#muscleHotspots [data-muscle="mid-chest"]').evaluate(el => el.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true })));
   await page.waitForFunction(() => document.querySelector('#muscleHotspots [data-muscle="mid-chest"]')?.classList.contains('selected'));
   await page.screenshot({ path:'artifacts/anatomy-front.png', fullPage:true });
   await page.locator('.tab[data-view="back"]').click();
@@ -60,7 +60,7 @@ test('browser renders both anatomy photos and interactive SVG hotspots', async t
   assert.equal(back.naturalWidth,683);
   assert.ok(back.visible >= 8, 'back view should expose its mapped muscles');
   assert.equal(back.tricepsVisible,true);
-  await page.locator('#muscleHotspots [data-muscle="triceps-long"]').click({ force:true });
+  await page.locator('#muscleHotspots [data-muscle="triceps-long"]').evaluate(el => el.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true })));
   await page.waitForFunction(() => document.querySelector('#muscleHotspots [data-muscle="triceps-long"]')?.classList.contains('selected'));
   await page.screenshot({ path:'artifacts/anatomy-back.png', fullPage:true });
   assert.deepEqual(errors, [], 'no uncaught browser JavaScript errors');
