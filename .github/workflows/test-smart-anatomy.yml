@@ -1,4 +1,4 @@
-name: Smart anatomy prototype checks # browser interaction verification · Unicode-safe image URL check
+name: Smart anatomy prototype checks # browser interaction verification · check actual front/back image dimensions and overlay alignment
 on:
   push:
     branches: ["experiment/anatomy-intensity-levels-20261127"]
