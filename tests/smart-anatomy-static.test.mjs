@@ -73,3 +73,8 @@ test('specific movement rules cover lower body, back, and forearm movements', ()
   assert.match(html, /مچ دمبل\.\*کف دست بالا.*primary:\["forearm-flexors"\]/);
   assert.match(html, /مچ دمبل\.\*کف دست پایین.*primary:\["forearm-extensors"\]/);
 });
+test('covered glute muscles are not painted onto the shorts in the reference image', () => {
+  assert.match(html, /occludedByClothing=new Set\(\["glute-max","glute-med"\]\)/);
+  assert.match(html, /photoMuscles\.has\(g\.id\)&&!occludedByClothing\.has\(g\.id\)/);
+  assert.match(html, /برای جلوگیری از نمایش نادرست، روی تصویر رنگی نشده‌اند/);
+});
