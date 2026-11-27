@@ -48,14 +48,58 @@ const exercises=[
 {id:"plank",name:"پلانک",en:"Plank",cat:"CORE",primary:["CORE"],secondary:["OBLIQUES","GLUTES"]},
 {id:"russian",name:"چرخش روسی",en:"Russian Twist",cat:"CORE",primary:["OBLIQUES"],secondary:["CORE"]},
 {id:"legraise",name:"بالا آوردن پا آویزان",en:"Hanging Leg Raise",cat:"CORE",primary:["CORE"],secondary:["OBLIQUES","FOREARMS"]}
+,{id:"inclinebar",name:"پرس بالاسینه هالتر",en:"Incline Barbell Press",cat:"CHEST",primary:["CHEST"],secondary:["SHOULDERS_FRONT","TRICEPS"]}
+,{id:"cablehighlow",name:"کراس‌اور بالا به پایین",en:"High-to-Low Cable Fly",cat:"CHEST",primary:["CHEST"],secondary:["TRICEPS"]}
+,{id:"chestpress",name:"پرس سینه دستگاه",en:"Machine Chest Press",cat:"CHEST",primary:["CHEST"],secondary:["SHOULDERS_FRONT","TRICEPS"]}
+,{id:"closebench",name:"پرس سینه دست جمع",en:"Close-Grip Bench Press",cat:"CHEST",primary:["TRICEPS"],secondary:["CHEST","SHOULDERS_FRONT"]}
+,{id:"chinup",name:"بارفیکس دست برعکس",en:"Chin-up",cat:"BACK",primary:["LATS","BICEPS"],secondary:["RHOMBOIDS","FOREARMS"]}
+,{id:"chestsupported",name:"زیربغل دستگاه تکیه‌دار",en:"Chest-Supported Row",cat:"BACK",primary:["RHOMBOIDS","LATS"],secondary:["BICEPS","TRAPEZIUS"]}
+,{id:"onerow",name:"زیربغل دمبل تک‌دست",en:"Single-Arm Dumbbell Row",cat:"BACK",primary:["LATS"],secondary:["RHOMBOIDS","BICEPS","OBLIQUES"]}
+,{id:"cablepullover",name:"پول‌اور سیم‌کش",en:"Cable Pullover",cat:"BACK",primary:["LATS"],secondary:["TRICEPS"]}
+,{id:"cable-rear",name:"نشر خم سیم‌کش",en:"Cable Rear Delt Fly",cat:"SHOULDERS",primary:["SHOULDERS_REAR"],secondary:["RHOMBOIDS","TRAPEZIUS"]}
+,{id:"yraise",name:"نشر Y روی میز شیب‌دار",en:"Incline Y Raise",cat:"SHOULDERS",primary:["TRAPEZIUS"],secondary:["SHOULDERS_REAR"]}
+,{id:"cablecurl",name:"جلو بازو سیم‌کش",en:"Cable Biceps Curl",cat:"ARMS",primary:["BICEPS"],secondary:["FOREARMS"]}
+,{id:"reversecurl",name:"جلو بازو معکوس",en:"Reverse Curl",cat:"ARMS",primary:["FOREARMS"],secondary:["BICEPS"]}
+,{id:"wristcurl",name:"مچ‌گیری",en:"Wrist Curl",cat:"ARMS",primary:["FOREARMS"],secondary:[]}
+,{id:"bulgarian",name:"اسپلیت اسکوات بلغاری",en:"Bulgarian Split Squat",cat:"LEGS",primary:["QUADS","GLUTES"],secondary:["HAMSTRINGS","CORE"]}
+,{id:"hacksquat",name:"هاک اسکوات",en:"Hack Squat",cat:"LEGS",primary:["QUADS"],secondary:["GLUTES","ADDUCTORS"]}
+,{id:"sumo",name:"اسکوات سومو",en:"Sumo Squat",cat:"LEGS",primary:["GLUTES","ADDUCTORS"],secondary:["QUADS","HAMSTRINGS"]}
+,{id:"kickback",name:"کیک‌بک باسن سیم‌کش",en:"Cable Glute Kickback",cat:"LEGS",primary:["GLUTES"],secondary:["HAMSTRINGS"]}
+,{id:"seatedcalf",name:"ساق پا نشسته",en:"Seated Calf Raise",cat:"LEGS",primary:["CALVES"],secondary:[]}
+,{id:"reversecrunch",name:"کرانچ معکوس",en:"Reverse Crunch",cat:"CORE",primary:["CORE"],secondary:["OBLIQUES"]}
+,{id:"abwheel",name:"رول‌اوت چرخ شکم",en:"Ab Wheel Rollout",cat:"CORE",primary:["CORE"],secondary:["LATS","SHOULDERS_FRONT","GLUTES"]}
+
 ];
 let diagrams={},photos={},selectedExercise=null,selectedMuscle=null,category="ALL",region="FULL_BODY",mode="EXERCISE";
+
+const muscleInfo={
+CHEST:"عضلات سینه؛ در حرکات فشار افقی و نزدیک‌کردن بازو به خط میانی فعال‌اند. مسیر فعلی چپ و راست سینه را جدا می‌کند، اما بخش بالایی و پایینی را به‌صورت مستقل ترسیم نمی‌کند.",
+TRAPEZIUS:"عضله ذوزنقه‌ای؛ در کنترل کتف، بالا بردن و جمع‌کردن کتف و تثبیت کمربند شانه‌ای نقش دارد.",
+RHOMBOIDS:"عضلات لوزی؛ در جمع‌کردن کتف‌ها و کنترل حرکت کتف نقش دارند.",
+LATS:"پشت پهن؛ در کشیدن بازو به پایین و عقب و حرکات کششی عمودی و افقی فعال است.",
+BACK_LOWER:"ناحیه راست‌کننده‌های ستون مهره‌ای در پایین کمر؛ در بازکردن تنه و تثبیت ستون مهره‌ای نقش دارد.",
+SHOULDERS_FRONT:"سر دلتوئید قدامی؛ در بالا آوردن بازو به جلو و حرکات پرس مشارکت دارد.",
+SHOULDERS_SIDE:"سر دلتوئید میانی؛ در دورکردن بازو از بدن نقش اصلی دارد.",
+SHOULDERS_REAR:"سر دلتوئید خلفی؛ در بازکردن افقی شانه و کشیدن بازو به عقب مشارکت دارد.",
+BICEPS:"گروه خم‌کننده‌های جلوی بازو؛ در خم‌کردن آرنج و چرخش کف دست به بالا نقش دارد.",
+TRICEPS:"سه‌سر بازویی؛ عضله اصلی بازکردن آرنج است.",
+FOREARMS:"گروه عضلات ساعد؛ در گرفتن، کنترل مچ و حرکات انگشتان و ساعد مشارکت دارد.",
+CORE:"عضلات دیواره شکم و تثبیت‌کننده‌های تنه؛ در کنترل و پایداری مرکزی بدن نقش دارند.",
+OBLIQUES:"عضلات مورب شکمی؛ در چرخش، خم‌شدن جانبی و تثبیت تنه نقش دارند.",
+GLUTES:"گروه عضلات سرینی؛ به‌ویژه در بازکردن مفصل ران و تثبیت لگن فعال‌اند.",
+QUADS:"چهارسر ران؛ گروه اصلی بازکننده مفصل زانو.",
+HAMSTRINGS:"همسترینگ؛ در خم‌کردن زانو و بازکردن مفصل ران مشارکت دارد.",
+CALVES:"گروه عضلات پشت ساق؛ در پایین‌بردن پنجه پا و حرکات مچ پا نقش دارند.",
+ADDUCTORS:"نزدیک‌کننده‌های ران؛ در نزدیک‌کردن ران به خط میانی و تثبیت لگن نقش دارند.",
+ABDUCTORS:"دورکننده‌های ران؛ در دورکردن ران و تثبیت لگن هنگام ایستادن تک‌پا نقش دارند."
+};
+
 const groupRegion={UPPER_BODY:new Set(["CHEST","TRAPEZIUS","RHOMBOIDS","LATS","BACK_LOWER","SHOULDERS_FRONT","SHOULDERS_SIDE","SHOULDERS_REAR","BICEPS","TRICEPS","FOREARMS","CORE","OBLIQUES"]),LOWER_BODY:new Set(["GLUTES","QUADS","HAMSTRINGS","CALVES","ADDUCTORS","ABDUCTORS"]),CORE:new Set(["CORE","OBLIQUES","BACK_LOWER"])};
 function regionGroups(){return region==="FULL_BODY"?null:groupRegion[region]}
 function classFor(g){if(!selectedExercise)return "";if(mode==="PRIMARY")return selectedExercise.primary.includes(g)?"primary":"";if(mode==="SECONDARY")return selectedExercise.secondary.includes(g)?"secondary":"";if(selectedExercise.primary.includes(g))return "primary";if(selectedExercise.secondary.includes(g))return "secondary";if(selectedExercise.tertiary&&selectedExercise.tertiary.includes(g))return "tertiary";return ""}
 function makeFigure(name,title){
  const d=diagrams[name],photo=photos[name],visible=regionGroups(),box=region==="FULL_BODY"?d.viewBox:(d.regionBox&&d.regionBox[region]||d.viewBox);
- const paths=d.muscles.map((m,index)=>{const allowed=!visible||visible.has(m.group);const cls=classFor(m.group);const sel=selectedMuscle&&selectedMuscle.diagram===name&&selectedMuscle.pathIndex===index;const side=m.id&&m.id.endsWith("_LEFT")?"چپ":m.id&&m.id.endsWith("_RIGHT")?"راست":"میانی";return '<path class="muscle-path '+(allowed?cls:"")+' '+(sel?"selected":"")+'" data-index="'+index+'" data-diagram="'+name+'" data-group="'+m.group+'" data-part="'+(m.id||"")+'" data-side="'+side+'" d="'+m.d+'" '+(allowed?"":'style="opacity:.08;pointer-events:none"')+'><title>'+(labels[m.group]||m.group)+' · '+side+'</title></path>'}).join("");
+ const paths=d.muscles.map((m,index)=>{const allowed=!visible||visible.has(m.group);const cls=classFor(m.group);const sel=selectedMuscle&&selectedMuscle.diagram===name&&selectedMuscle.pathIndex===index;const side=m.id&&m.id.endsWith("_LEFT")?"چپ":m.id&&m.id.endsWith("_RIGHT")?"راست":"میانی";const aria=(labels[m.group]||m.group)+"، "+side;return '<path role="button" tabindex="0" aria-label="'+aria+'" class="muscle-path '+(allowed?cls:"")+' '+(sel?"selected":"")+'" data-index="'+index+'" data-diagram="'+name+'" data-group="'+m.group+'" data-part="'+(m.id||"")+'" data-side="'+side+'" d="'+m.d+'" '+(allowed?"":'style="opacity:.08;pointer-events:none"')+'><title>'+(labels[m.group]||m.group)+' · '+side+'</title></path>'}).join("");
  const outline=d.outline.map(o=>'<path class="body-outline" d="'+o.d+'"/>').join("");
  const clip=d.outline.map(o=>'<path d="'+o.d+'"/>').join("");
  return '<div class="figure"><div class="figure-title">'+title+'</div><svg viewBox="'+box+'" role="img" aria-label="مدل آناتومی '+title+'"><defs><clipPath id="clip-'+name+'">'+clip+'</clipPath></defs><image href="'+photo+'" x="0" y="0" width="1024" height="1536" preserveAspectRatio="none" clip-path="url(#clip-'+name+')" style="filter:grayscale(1) brightness(1.13) contrast(.94);opacity:.96"/>'+paths+outline+'</svg></div>';
@@ -63,7 +107,8 @@ function makeFigure(name,title){
 function renderFigures(){
  const sex=$("sex").value,view=$("view").value,names=view==="BOTH"?[sex.toLowerCase()+"-front",sex.toLowerCase()+"-back"]:[sex.toLowerCase()+"-"+view.toLowerCase()];
  $("figures").innerHTML=names.map(n=>makeFigure(n,n.endsWith("front")?"نمای جلو · Front":"نمای پشت · Back")).join("");
- $("figures").querySelectorAll(".muscle-path").forEach(p=>p.addEventListener("click",()=>{selectedMuscle={group:p.dataset.group,partId:p.dataset.part,side:p.dataset.side,pathIndex:Number(p.dataset.index),diagram:p.dataset.diagram};showMuscleDetail();renderFigures()}));
+ $("figures").querySelectorAll(".muscle-path").forEach(p=>p.addEventListener("click",()=>{if(selectedMuscle&&selectedMuscle.diagram===p.dataset.diagram&&selectedMuscle.pathIndex===Number(p.dataset.index)){selectedMuscle=null}else{selectedMuscle={group:p.dataset.group,partId:p.dataset.part,side:p.dataset.side,pathIndex:Number(p.dataset.index),diagram:p.dataset.diagram}}showMuscleDetail();renderFigures()}));
+ $("figures").querySelectorAll(".muscle-path").forEach(p=>p.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();p.dispatchEvent(new MouseEvent("click",{bubbles:true}))}}));
 }
 function renderCategories(){$("categories").innerHTML=categories.map(c=>'<button class="chip '+(category===c.id?"active":"")+'" data-cat="'+c.id+'">'+c.name+'</button>').join("");$("categories").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{category=b.dataset.cat;renderCategories();renderExercises()}))}
 function renderExercises(){
@@ -79,7 +124,7 @@ function showExerciseDetail(){
 function showMuscleDetail(){
  if(!selectedMuscle){$("muscle-detail").textContent="برای دیدن مشخصات، روی یکی از عضلات بدن بزن.";return}
  const m=selectedMuscle,related=exercises.filter(e=>e.primary.includes(m.group)||e.secondary.includes(m.group)||(e.tertiary||[]).includes(m.group));
- $("muscle-detail").innerHTML='<strong>'+(labels[m.group]||m.group)+'</strong><br><span class="meta">'+m.side+' · شناسه: '+(m.partId||m.group)+'</span><div style="margin-top:7px">حرکت‌های مرتبط:</div><div class="muscle-buttons">'+(related.slice(0,12).map(e=>'<button class="muscle-btn" data-related="'+e.id+'">'+e.name+'</button>').join("")||"هنوز حرکتی متصل نشده است.")+'</div>';
+ $("muscle-detail").innerHTML='<strong>'+(labels[m.group]||m.group)+'</strong><br><span class="meta">'+m.side+' · شناسه: '+(m.partId||m.group)+'</span><p>'+(muscleInfo[m.group]||"اطلاعات عملکردی این گروه در حال تکمیل است.")+'</p><div style="margin-top:7px">حرکت‌های مرتبط:</div><div class="muscle-buttons">'+(related.slice(0,12).map(e=>'<button class="muscle-btn" data-related="'+e.id+'">'+e.name+'</button>').join("")||"هنوز حرکتی متصل نشده است.")+'</div>';
  $("muscle-detail").querySelectorAll("[data-related]").forEach(b=>b.addEventListener("click",()=>{selectedExercise=exercises.find(e=>e.id===b.dataset.related);category="ALL";renderCategories();renderExercises();showExerciseDetail();renderFigures()}));
 }
 async function init(){
@@ -88,7 +133,7 @@ async function init(){
  diagrams=loaded[0];urls.forEach((n,i)=>photos[n]="data:image/webp;base64,"+loaded[i+1].trim());
  renderCategories();renderExercises();showExerciseDetail();showMuscleDetail();renderFigures();
  $("sex").addEventListener("change",()=>{selectedMuscle=null;showMuscleDetail();renderFigures()});$("view").addEventListener("change",()=>{selectedMuscle=null;showMuscleDetail();renderFigures()});$("region").addEventListener("change",()=>{region=$("region").value;renderFigures()});$("mode").addEventListener("change",()=>{mode=$("mode").value;renderFigures()});$("search").addEventListener("input",renderExercises);
- $("map-status").textContent="مدل بارگذاری شد · چهار تصویر پایه و مسیرهای مستقل جلو/پشت برای هر دو جنس.";
+ $("map-status").textContent="مدل بارگذاری شد · "+exercises.length+" حرکت نمونه · لمس دوباره عضله انتخاب‌شده، انتخاب را پاک می‌کند.";
 }
 init().catch(err=>{$("figures").innerHTML='<div class="notice">بارگذاری مدل با خطا روبه‌رو شد. لطفاً بعداً دوباره امتحان کن.</div>';console.error(err)});
 })();
