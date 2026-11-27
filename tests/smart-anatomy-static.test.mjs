@@ -118,3 +118,22 @@ test('lower-back hotspot ends above the shorts waistband', () => {
   assert.match(group, /L360 492/);
   assert.doesNotMatch(group, /550|570/);
 });
+
+test('posterior trapezius is limited to the upper central back', () => {
+  const start = html.indexOf('<g class="hotspot" data-muscle="traps"');
+  const group = html.slice(start, html.indexOf('</g>', start));
+  assert.match(group, /M280 195/);
+  assert.match(group, /Q370 285 342 320/);
+  assert.doesNotMatch(group, /440 300/);
+});
+
+test('mid-back covers the rhomboid region while lats remain lateral', () => {
+  const get = id => {
+    const start = html.indexOf(`<g class="hotspot" data-muscle="${id}"`);
+    return html.slice(start, html.indexOf('</g>', start));
+  };
+  assert.match(get('mid-back'), /M285 270/);
+  assert.match(get('mid-back'), /L388 365/);
+  assert.match(get('lats'), /M265 315/);
+  assert.match(get('lats'), /M418 315/);
+});
