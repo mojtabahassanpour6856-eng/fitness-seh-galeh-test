@@ -7,7 +7,7 @@ This isolated experiment vendors the MIT-licensed MuscleMap anatomy assets.
 - Individually addressable muscle paths and left/right surface IDs.
 - Four bundled grayscale body photos aligned to traced paths.
 - All assets load locally; no runtime CDN dependency.
-- Persian interactive exercise-to-muscle mapping preview with 71 sample movements.
+- Persian interactive exercise-to-muscle mapping preview with 64 sample movements.
 - Touch/click selection with a gold inspection state, tap-again deselection, and keyboard Enter/Space support.
 - Functional descriptions for the mapped muscle groups and related movement lookup.
 - Primary, secondary and tertiary activation layers; region filters; click-to-inspect.
