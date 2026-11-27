@@ -52,14 +52,21 @@ test('browser renders both anatomy photos and interactive SVG hotspots', async t
   await page.locator('.tab[data-view="back"]').click();
   await page.waitForFunction(() => decodeURIComponent(document.querySelector('#anatomyPhoto')?.src || '').includes('IMG_۲۰۲۶۱۱۱۹_۲۰۳۱۲۹.jpg') &&
     document.querySelector('#anatomyPhoto')?.complete && document.querySelector('#anatomyPhoto')?.naturalWidth > 0);
-  const back = await page.evaluate(() => ({
-    naturalWidth:document.querySelector('#anatomyPhoto').naturalWidth,
-    visible:[...document.querySelectorAll('#muscleHotspots .hotspot')].filter(x=>getComputedStyle(x).display!=='none').length,
-    tricepsVisible:getComputedStyle(document.querySelector('[data-muscle="triceps-long"]')).display!=='none'
-  }));
-  assert.equal(back.naturalWidth,683);
+  const back = await page.evaluate(() => {
+    const img=document.querySelector('#anatomyPhoto'),svg=document.querySelector('#muscleHotspots');
+    const a=img.getBoundingClientRect(),b=svg.getBoundingClientRect();
+    return { naturalWidth:img.naturalWidth,naturalHeight:img.naturalHeight,
+      photo:{x:a.x,y:a.y,width:a.width,height:a.height},
+      overlay:{x:b.x,y:b.y,width:b.width,height:b.height},
+      visible:[...svg.querySelectorAll('.hotspot')].filter(x=>getComputedStyle(x).display!=='none').length,
+      tricepsVisible:getComputedStyle(document.querySelector('[data-muscle="triceps-long"]')).display!=='none' };
+  });
+  assert.ok(back.naturalWidth>0 && back.naturalHeight>0, 'back reference image must load');
   assert.ok(back.visible >= 8, 'back view should expose its mapped muscles');
   assert.equal(back.tricepsVisible,true);
+  assert.ok(Math.abs(back.photo.x-back.overlay.x)<1 && Math.abs(back.photo.y-back.overlay.y)<1 &&
+    Math.abs(back.photo.width-back.overlay.width)<1 && Math.abs(back.photo.height-back.overlay.height)<1,
+    'back SVG overlay must align with the rendered reference photo');
   await page.locator('#muscleHotspots [data-muscle="triceps-long"]').evaluate(el => el.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true })));
   await page.waitForFunction(() => document.querySelector('#muscleHotspots [data-muscle="triceps-long"]')?.classList.contains('selected'));
   await page.screenshot({ path:'artifacts/anatomy-back.png', fullPage:true });
