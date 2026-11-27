@@ -124,7 +124,7 @@ function showExerciseDetail(){
 function showMuscleDetail(){
  if(!selectedMuscle){$("muscle-detail").textContent="برای دیدن مشخصات، روی یکی از عضلات بدن بزن.";return}
  const m=selectedMuscle,related=exercises.filter(e=>e.primary.includes(m.group)||e.secondary.includes(m.group)||(e.tertiary||[]).includes(m.group));
- $("muscle-detail").innerHTML='<strong>'+(labels[m.group]||m.group)+'</strong><br><span class="meta">'+m.side+' · شناسه: '+(m.partId||m.group)+'</span><p>'+(muscleInfo[m.group]||"اطلاعات عملکردی این گروه در حال تکمیل است.")+'</p><div style="margin-top:7px">حرکت‌های مرتبط:</div><div class="muscle-buttons">'+(related.slice(0,12).map(e=>'<button class="muscle-btn" data-related="'+e.id+'">'+e.name+'</button>').join("")||"هنوز حرکتی متصل نشده است.")+'</div>';
+ $("muscle-detail").innerHTML='<strong>'+(labels[m.group]||m.group)+'</strong><br><span class="meta">'+m.side+' · '+(m.diagram.endsWith('-front')?'نمای جلو':'نمای پشت')+' · سطح '+(m.pathIndex+1)+' · شناسه: '+(m.partId||m.group)+'</span><p>'+(muscleInfo[m.group]||"اطلاعات عملکردی این گروه در حال تکمیل است.")+'</p><div style="margin-top:7px">حرکت‌های مرتبط:</div><div class="muscle-buttons">'+(related.slice(0,12).map(e=>'<button class="muscle-btn" data-related="'+e.id+'">'+e.name+'</button>').join("")||"هنوز حرکتی متصل نشده است.")+'</div>';
  $("muscle-detail").querySelectorAll("[data-related]").forEach(b=>b.addEventListener("click",()=>{selectedExercise=exercises.find(e=>e.id===b.dataset.related);category="ALL";renderCategories();renderExercises();showExerciseDetail();renderFigures()}));
 }
 async function init(){
