@@ -5,12 +5,14 @@ on:
     paths:
       - "experiments/smart-anatomy/**"
       - "tests/smart-anatomy-static.test.mjs"
+      - "tests/smart-anatomy-browser.test.mjs"
       - ".github/workflows/test-smart-anatomy.yml"
   pull_request:
     branches: ["feature/smart-anatomy-prototype-20261118"]
     paths:
       - "experiments/smart-anatomy/**"
       - "tests/smart-anatomy-static.test.mjs"
+      - "tests/smart-anatomy-browser.test.mjs"
       - ".github/workflows/test-smart-anatomy.yml"
   workflow_dispatch:
 permissions:
@@ -24,3 +26,20 @@ jobs:
         with:
           node-version: 22
       - run: node --test tests/smart-anatomy-static.test.mjs
+  anatomy-browser-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright
+      - run: npx playwright install --with-deps chromium
+      - run: mkdir -p artifacts
+      - run: node --test tests/smart-anatomy-browser.test.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smart-anatomy-browser-previews
+          path: artifacts/*.png
+          if-no-files-found: warn
