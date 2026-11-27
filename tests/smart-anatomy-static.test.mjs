@@ -19,8 +19,8 @@ test('all inline JavaScript parses', () => {
 
 test('photo anatomy supports primary, secondary, and tertiary activation levels', () => {
   assert.match(html, /\.hotspot\.level-primary path\s*\{[^}]*fill:#e53935/i);
-  assert.match(html, /\.hotspot\.level-secondary path\s*\{[^}]*fill:#ed7772/i);
-  assert.match(html, /\.hotspot\.level-tertiary path\s*\{[^}]*fill:#f4b8b4/i);
+  assert.match(html, /\.hotspot\.level-secondary path\s*\{[^}]*fill:#e85d58/i);
+  assert.match(html, /\.hotspot\.level-tertiary path\s*\{[^}]*fill:#f2a6a2/i);
   assert.match(html, /applyPhotoMuscleLevels\(\)/);
   assert.match(html, /\(parentMap\[mid\]\|\|mid\)===family/);
   assert.match(html, /classList\.toggle\("selected",active\)/);
@@ -105,7 +105,9 @@ test('shoulder hotspots stay within the visible deltoid caps on front and back v
     assert.notEqual(start, -1, `missing hotspot: ${id}`);
     return html.slice(start, html.indexOf('</g>', start));
   };
-  assert.match(group('front-delts'), /M222 205/);
+  assert.match(group('front-delts'), /M207 157/);
+  assert.match(group('front-delts'), /Q222 139 244 151/);
+  assert.doesNotMatch(group('front-delts'), /M222 205/);
   assert.match(group('side-delts'), /M198 225/);
   assert.match(group('rear-delts'), /M203 235/);
   assert.doesNotMatch(group('rear-delts'), /335/);
