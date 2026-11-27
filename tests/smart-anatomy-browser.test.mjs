@@ -88,6 +88,40 @@ test('browser renders both anatomy photos and interactive SVG hotspots', async t
     assert.ok(!roles.secondary.some(id=>sets[2].has(id)), 'secondary and tertiary roles must not overlap');
   }
 
+  // Focused posterior-chain and triceps activation audit.
+  const posteriorRoleChecks = await page.evaluate(() => {
+    const samples = {
+      overheadTriceps: ['پشت بازو بالای سر دمبل','دمبل','پشت بازو','عضلات مرکزی'],
+      cablePushdown: ['پشت بازو سیم کش','سیم کش','پشت بازو','سر داخلی سه سر'],
+      reverseFly: ['فلای معکوس دستگاه','دستگاه','سرشانه خلفی','تراپز و رومبوئید'],
+      lateralRaise: ['نشر جانب دمبل','دمبل','سرشانه','سوپرااسپیناتوس و بخش بالایی تراپز'],
+      row: ['قایقی سیم کش','سیم کش','زیربغل','جلو بازو'],
+      facePull: ['فیس پول','سیم کش','پشت شانه','میانه پشت']
+    };
+    const pack = r => ({primary:[...r.primary],secondary:[...r.secondary],tertiary:[...r.tertiary]});
+    return Object.fromEntries(Object.entries(samples).map(([key,exercise])=>[key,pack(exerciseActivationMap(exercise))]));
+  });
+  assert.ok(posteriorRoleChecks.overheadTriceps.primary.includes('triceps-long'),
+    'overhead triceps extension should prioritize the long head');
+  assert.ok(posteriorRoleChecks.overheadTriceps.secondary.includes('triceps-lateral'),
+    'overhead triceps extension should retain lateral head as assisting');
+  assert.ok(posteriorRoleChecks.cablePushdown.primary.includes('triceps-lateral'),
+    'cable pushdown should prioritize lateral triceps region in this simplified map');
+  assert.ok(posteriorRoleChecks.reverseFly.primary.includes('rear-delts'),
+    'reverse fly should prioritize posterior deltoids');
+  assert.ok(posteriorRoleChecks.lateralRaise.primary.includes('side-delts'),
+    'lateral raise should prioritize middle deltoids');
+  assert.ok(posteriorRoleChecks.row.primary.includes('mid-back') &&
+    posteriorRoleChecks.row.secondary.includes('rear-delts'),
+    'rowing should include mid-back as primary and posterior deltoids as assisting');
+  assert.ok(posteriorRoleChecks.facePull.primary.includes('mid-back') &&
+    posteriorRoleChecks.facePull.secondary.includes('rear-delts'),
+    'face pull should include scapular retractors and posterior deltoids');
+  for (const [name,roles] of Object.entries(posteriorRoleChecks)) {
+    const all=[...roles.primary,...roles.secondary,...roles.tertiary];
+    assert.equal(new Set(all).size,all.length, name+' activation levels must not overlap');
+  }
+
   await page.locator('#exerciseList [data-ex="0"]').click();
   const renderedExerciseRoles = await page.evaluate(() => ({
     name: selectedExercise?.[0] || null,
