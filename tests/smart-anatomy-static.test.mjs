@@ -78,3 +78,23 @@ test('covered glute muscles are not painted onto the shorts in the reference ima
   assert.match(html, /photoMuscles\.has\(g\.id\)&&!occludedByClothing\.has\(g\.id\)/);
   assert.match(html, /برای جلوگیری از نمایش نادرست، روی تصویر رنگی نشده‌اند/);
 });
+test('front chest and abdominal hotspots are aligned to the visible anatomy', () => {
+  const group = id => {
+    const start = html.indexOf(`<g class="hotspot" data-muscle="${id}"`);
+    assert.notEqual(start, -1, `missing hotspot: ${id}`);
+    return html.slice(start, html.indexOf('</g>', start));
+  };
+  assert.match(group('upper-chest'), /M220 255/);
+  assert.match(group('mid-chest'), /M207 245/);
+  assert.match(group('lower-chest'), /M225 285/);
+  assert.match(group('upper-abs'), /M294 310/);
+  assert.match(group('lower-abs'), /M294 388/);
+  assert.match(group('obliques'), /M245 315/);
+});
+
+test('posterior thigh and calf hotspots follow the visible leg anatomy', () => {
+  const hamstrings = html.slice(html.indexOf('data-muscle="hamstrings"'), html.indexOf('</g>', html.indexOf('data-muscle="hamstrings"')));
+  const calves = html.slice(html.indexOf('data-muscle="calves"'), html.indexOf('</g>', html.indexOf('data-muscle="calves"')));
+  assert.match(hamstrings, /M270 570/);
+  assert.match(calves, /M275 735/);
+});
