@@ -39,9 +39,12 @@ test('calibration controls transform the SVG overlay and preserve centered photo
   assert.equal(front.naturalWidth,683,'front reference photo should load at its native width');
   assert.equal(front.naturalHeight,1024,'front reference photo should load at its native height');
 
-  await page.locator('#x').fill('24');
-  await page.locator('#y').fill('-16');
-  await page.locator('#s').fill('110');
+  for (const [selector,value] of [['#x','24'],['#y','-16'],['#s','110']]) {
+    await page.locator(selector).evaluate((el,v) => {
+      el.value=v;
+      el.dispatchEvent(new Event('input',{bubbles:true}));
+    },value);
+  }
   const transformed = await page.locator('#calibrationOverlay').evaluate(el => {
     const m = new DOMMatrixReadOnly(getComputedStyle(el).transform);
     return { a:m.a, d:m.d, e:m.e, f:m.f };
@@ -51,6 +54,7 @@ test('calibration controls transform the SVG overlay and preserve centered photo
   assert.ok(Math.abs(transformed.e-24)<0.01 && Math.abs(transformed.f+16)<0.01,
     'horizontal and vertical sliders must translate the SVG overlay');
 
+  await page.locator('#reset').click();
   await page.locator('#backView').click();
   await page.waitForFunction(() => {
     const img = document.querySelector('#photo');
@@ -70,7 +74,6 @@ test('calibration controls transform the SVG overlay and preserve centered photo
     Math.abs(back.photoCenter.y-back.overlayCenter.y)<1,
     'back SVG overlay and photo should remain centered in the calibration stage');
 
-  await page.locator('#reset').click();
   const reset = await page.locator('#calibrationOverlay').evaluate(el => {
     const m = new DOMMatrixReadOnly(getComputedStyle(el).transform);
     return { a:m.a,d:m.d,e:m.e,f:m.f };
