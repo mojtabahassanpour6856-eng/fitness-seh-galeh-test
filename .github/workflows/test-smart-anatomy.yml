@@ -17,9 +17,13 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: smart-anatomy-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   anatomy-static-checks:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,6 +32,7 @@ jobs:
       - run: node --test tests/smart-anatomy-static.test.mjs
   anatomy-browser-checks:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
