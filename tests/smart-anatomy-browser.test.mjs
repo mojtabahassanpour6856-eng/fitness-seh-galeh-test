@@ -49,6 +49,28 @@ test('browser renders both anatomy photos and interactive SVG hotspots', async t
   await page.locator('#muscleHotspots [data-muscle="mid-chest"]').evaluate(el => el.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true })));
   await page.waitForFunction(() => document.querySelector('#muscleHotspots [data-muscle="mid-chest"]')?.classList.contains('selected'));
   await page.screenshot({ path:'artifacts/anatomy-front.png', fullPage:true });
+  const isolatedSelection = await page.evaluate(() => [...document.querySelectorAll('#muscleHotspots .hotspot.level-selected')].map(el=>el.dataset.muscle));
+  assert.deepEqual(isolatedSelection, ['mid-chest'], 'manual tap should highlight only the tapped muscle group');
+  const roleChecks = await page.evaluate(() => {
+    const press = exerciseActivationMap(['پرس سینه هالتر','هالتر','سینه','']);
+    const fly = exerciseActivationMap(['قفسه دمبل','دمبل','سینه','']);
+    const pack = r => ({primary:[...r.primary],secondary:[...r.secondary],tertiary:[...r.tertiary]});
+    return {press:pack(press),fly:pack(fly)};
+  });
+  assert.ok(roleChecks.press.primary.includes('mid-chest'), 'bench press should prioritize mid chest');
+  assert.ok(roleChecks.press.secondary.includes('triceps-long') && roleChecks.press.secondary.includes('triceps-lateral'),
+    'bench press should classify triceps as assisting muscles');
+  assert.ok(roleChecks.fly.primary.includes('mid-chest') && !roleChecks.fly.secondary.includes('triceps-long') &&
+    !roleChecks.fly.secondary.includes('triceps-lateral'), 'dumbbell fly should not incorrectly classify triceps as secondary');
+  for (const roles of [roleChecks.press,roleChecks.fly]) {
+    const sets = [new Set(roles.primary),new Set(roles.secondary),new Set(roles.tertiary)];
+    assert.equal(sets[0].size,roles.primary.length);
+    assert.equal(sets[1].size,roles.secondary.length);
+    assert.equal(sets[2].size,roles.tertiary.length);
+    assert.ok(!roles.primary.some(id=>sets[1].has(id)||sets[2].has(id)), 'a muscle cannot occupy multiple activation levels');
+    assert.ok(!roles.secondary.some(id=>sets[2].has(id)), 'secondary and tertiary roles must not overlap');
+  }
+
   await page.locator('.tab[data-view="back"]').click();
   await page.waitForFunction(() => decodeURIComponent(document.querySelector('#anatomyPhoto')?.src || '').includes('IMG_۲۰۲۶۱۱۱۹_۲۰۳۱۲۹.jpg') &&
     document.querySelector('#anatomyPhoto')?.complete && document.querySelector('#anatomyPhoto')?.naturalWidth > 0);
