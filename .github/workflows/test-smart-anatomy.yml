@@ -1,4 +1,4 @@
-name: Smart anatomy prototype checks # browser interaction verification · check actual front/back image dimensions and overlay alignment
+name: Smart anatomy prototype checks # browser interaction verification · dynamic SVG overlay bounds for both reference images
 on:
   push:
     branches: ["experiment/anatomy-intensity-levels-20261127"]
