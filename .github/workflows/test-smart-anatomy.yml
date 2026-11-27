@@ -1,4 +1,4 @@
-name: Smart anatomy prototype checks # browser interaction verification
+name: Smart anatomy prototype checks # browser interaction verification · Unicode-safe image URL check
 on:
   push:
     branches: ["experiment/anatomy-intensity-levels-20261127"]
