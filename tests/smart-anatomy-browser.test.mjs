@@ -52,16 +52,33 @@ test('browser renders both anatomy photos and interactive SVG hotspots', async t
   const isolatedSelection = await page.evaluate(() => [...document.querySelectorAll('#muscleHotspots .hotspot.level-selected')].map(el=>el.dataset.muscle));
   assert.deepEqual(isolatedSelection, ['mid-chest'], 'manual tap should highlight only the tapped muscle group');
   const roleChecks = await page.evaluate(() => {
-    const press = exerciseActivationMap(['پرس سینه هالتر','هالتر','سینه','']);
-    const fly = exerciseActivationMap(['قفسه دمبل','دمبل','سینه','']);
+    const samples = {
+      press: ['پرس سینه هالتر','هالتر','سینه',''],
+      fly: ['قفسه دمبل','دمبل','سینه',''],
+      squat: ['اسکوات هالتر','هالتر','پا',''],
+      romanianDeadlift: ['ددلیفت رومانیایی','هالتر','پشت پا',''],
+      pulldown: ['لت سیم کش از جلو','سیم کش','زیر بغل',''],
+      lateralRaise: ['نشر جانب دمبل','دمبل','سرشانه',''],
+      hammerCurl: ['جلو بازو چکشی دمبل','دمبل','جلو بازو','']
+    };
     const pack = r => ({primary:[...r.primary],secondary:[...r.secondary],tertiary:[...r.tertiary]});
-    return {press:pack(press),fly:pack(fly)};
+    return Object.fromEntries(Object.entries(samples).map(([key,exercise])=>[key,pack(exerciseActivationMap(exercise))]));
   });
   assert.ok(roleChecks.press.primary.includes('mid-chest'), 'bench press should prioritize mid chest');
   assert.ok(roleChecks.press.secondary.includes('triceps-long') && roleChecks.press.secondary.includes('triceps-lateral'),
     'bench press should classify triceps as assisting muscles');
   assert.ok(roleChecks.fly.primary.includes('mid-chest') && !roleChecks.fly.secondary.includes('triceps-long') &&
     !roleChecks.fly.secondary.includes('triceps-lateral'), 'dumbbell fly should not incorrectly classify triceps as secondary');
+  assert.ok(roleChecks.squat.primary.includes('quads') && roleChecks.squat.primary.includes('glute-max'),
+    'squat should prioritize quadriceps and gluteus maximus');
+  assert.ok(roleChecks.romanianDeadlift.primary.includes('hamstrings') && roleChecks.romanianDeadlift.primary.includes('glute-max'),
+    'Romanian deadlift should prioritize hamstrings and gluteus maximus');
+  assert.ok(roleChecks.pulldown.primary.includes('lats') && roleChecks.pulldown.secondary.includes('biceps-long'),
+    'lat pulldown should prioritize lats with biceps assisting');
+  assert.ok(roleChecks.lateralRaise.primary.includes('side-delts'),
+    'lateral raise should prioritize side deltoids');
+  assert.ok(roleChecks.hammerCurl.primary.includes('brachialis'),
+    'hammer curl should prioritize brachialis');
   for (const roles of [roleChecks.press,roleChecks.fly]) {
     const sets = [new Set(roles.primary),new Set(roles.secondary),new Set(roles.tertiary)];
     assert.equal(sets[0].size,roles.primary.length);
