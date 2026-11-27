@@ -98,3 +98,23 @@ test('posterior thigh and calf hotspots follow the visible leg anatomy', () => {
   assert.match(hamstrings, /M270 570/);
   assert.match(calves, /M275 735/);
 });
+
+test('shoulder hotspots stay within the visible deltoid caps on front and back views', () => {
+  const group = id => {
+    const start = html.indexOf(`<g class="hotspot" data-muscle="${id}"`);
+    assert.notEqual(start, -1, `missing hotspot: ${id}`);
+    return html.slice(start, html.indexOf('</g>', start));
+  };
+  assert.match(group('front-delts'), /M222 205/);
+  assert.match(group('side-delts'), /M198 225/);
+  assert.match(group('rear-delts'), /M203 235/);
+  assert.doesNotMatch(group('rear-delts'), /335/);
+});
+
+test('lower-back hotspot ends above the shorts waistband', () => {
+  const start = html.indexOf('<g class="hotspot" data-muscle="lower-back"');
+  const group = html.slice(start, html.indexOf('</g>', start));
+  assert.match(group, /M320 425/);
+  assert.match(group, /L360 492/);
+  assert.doesNotMatch(group, /550|570/);
+});
