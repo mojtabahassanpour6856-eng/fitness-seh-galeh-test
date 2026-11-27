@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ابزار کالیبراسیون آناتومی | فیتنس سه‌قلعه</title>
+<style>
+:root{--gold:#b38a43;--paper:#fbf8f1;--line:#e8dcc8;--ink:#39352f}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Tahoma,"Segoe UI",sans-serif}
+header{padding:16px 22px;background:#fffdf8;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}
+header b{font-size:16px}header small{display:block;color:#897e6d;margin-top:6px;font-size:11px}
+main{max-width:1400px;margin:auto;padding:18px;display:grid;grid-template-columns:minmax(280px,360px) 1fr;gap:16px}
+.panel,.stage{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+h2{font-size:15px;margin:0 0 12px}.hint{font-size:11px;line-height:1.9;color:#817767}
+.control{margin:14px 0}.control label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px}
+input[type=range]{width:100%;accent-color:var(--gold)}
+button{border:1px solid var(--line);background:#fffaf0;padding:9px 11px;border-radius:9px;cursor:pointer;font:inherit;font-size:11px}
+button.active{background:#f5e8cb;border-color:#c9a45e}
+.actions{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+#selected{padding:12px;background:#f8f2e6;border:1px solid var(--line);border-radius:10px;font-size:12px;line-height:1.9;min-height:62px}
+.stage{min-height:700px;display:flex;flex-direction:column}
+#canvas{position:relative;flex:1;min-height:630px;background:#fff;border:1px dashed #d7d0c5;border-radius:12px;overflow:hidden}
+#photo,#calibrationOverlay{position:absolute;height:96%;width:auto;max-width:96%;max-height:96%;inset:2% 0;margin:auto;object-fit:contain}
+#calibrationOverlay{pointer-events:none;overflow:visible;transform:translate(var(--dx,0px),var(--dy,0px)) scale(var(--scale,1));transform-origin:center}
+#calibrationOverlay .hotspot{pointer-events:all;cursor:pointer}
+#calibrationOverlay .hotspot path{fill:#e7a23b22;stroke:#b38a43;stroke-width:1.5;vector-effect:non-scaling-stroke}
+#calibrationOverlay .hotspot:hover path{fill:#edb34c66;stroke:#8b5d1c;stroke-width:2.5}
+#calibrationOverlay .hotspot.selected path{fill:#e5393580;stroke:#a51f1c;stroke-width:2.8}
+#viewStatus{font-size:11px;color:#8b6a35;margin:8px 0 0}
+#calibrationOverlay.hide-regions .hotspot path{fill:transparent;stroke:transparent}
+#calibrationOverlay.isolate-selected .hotspot:not(.selected){display:none!important}
+#calibrationOverlay.show-grid{background-image:linear-gradient(to right,#b38a4330 1px,transparent 1px),linear-gradient(to bottom,#b38a4330 1px,transparent 1px);background-size:34.15px 51.2px}
+#calibrationOverlay.show-ids .hotspot:after{content:attr(data-muscle)}
+.badge{font-size:10px;color:#877a67}
+.region-toggles{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:260px;overflow:auto;padding:8px;border:1px solid var(--line);border-radius:10px;background:#fffdf9}
+.region-toggle{display:flex;align-items:center;gap:6px;font-size:11px;line-height:1.5;min-width:0}
+.region-toggle input{accent-color:var(--gold)}
+@media(max-width:850px){main{grid-template-columns:1fr}.stage{min-height:560px}#canvas{min-height:500px}}
+</style></head>
+<body>
+<header><div><b>فیتنس سه‌قلعه | کالیبراسیون هندسی آناتومی</b><small>ابزار آزمایشی مستقل · بدون تغییر در نقشه اصلی یا اطلاعات شاگردان</small></div><span class="badge">فقط برای بررسی هم‌ترازی و مرزبندی</span></header>
+<main>
+<section class="panel">
+<h2>کنترل هم‌ترازی تصویر و مسیرها</h2>
+<p class="hint">این ابزار مسیرهای فعلی را عیناً از نمونه آزمایشی بارگذاری می‌کند. با تغییر جابه‌جایی و مقیاس می‌توان هم‌ترازی را بررسی کرد؛ هیچ مختصات یا مسیر عضلانی به‌صورت خودکار بازنویسی نمی‌شود.</p>
+<div class="control"><label>جابجایی افقی <b id="xv">0 px</b></label><input id="x" type="range" min="-100" max="100" value="0"></div>
+<div class="control"><label>جابجایی عمودی <b id="yv">0 px</b></label><input id="y" type="range" min="-100" max="100" value="0"></div>
+<div class="control"><label>مقیاس مسیرها <b id="sv">100%</b></label><input id="s" type="range" min="85" max="115" value="100"></div>
+<div class="control"><label>شفافیت مسیرها <b id="ov">100%</b></label><input id="o" type="range" min="10" max="100" value="100"></div>
+<div class="actions"><button id="frontView" class="active">نمای جلو</button><button id="backView">نمای پشت</button><button id="ids">نمایش شناسه نواحی</button><button id="hide">پنهان‌کردن مسیرها</button><button id="reset">بازنشانی</button><button id="grid">شبکه مختصات</button><button id="isolate">فقط ناحیه انتخابی</button><button id="export">خروجی تنظیمات JSON</button></div>
+<div id="selected">برای بررسی، روی یک ناحیه کلیک کنید. شناسه عضله و تعداد مسیرهای همان ناحیه نمایش داده می‌شود.</div>
+<div class="actions" aria-label="ثبت نتیجه بررسی"><button id="mark-confirmed">مرز تأیید شد</button><button id="mark-review">نیازمند اصلاح</button><button id="mark-unchecked" class="active">بررسی‌نشده</button></div>
+<p class="hint">وضعیت تأیید فقط یادداشت کالیبراسیون است و مسیر عضله را تغییر نمی‌دهد.</p>
+<h2 style="margin-top:16px">روشن/خاموش‌کردن نواحی</h2>
+<div id="regionToggles" class="region-toggles" aria-label="فهرست نواحی عضلانی"></div>
+<p class="hint">با برداشتن تیک هر ناحیه، همان ناحیه موقتاً از تصویر کنار می‌رود تا هم‌پوشانی و مرزهای نواحی دیگر بهتر بررسی شوند.</p>
+<p class="hint">نکته: تنظیمات این صفحه صرفاً برای کالیبراسیون بصری همین تصویر هستند. تا زمانی که تصویر و نقاط مرجع آناتومیک تأیید نشده‌اند، این تنظیمات وارد نقشه اصلی نمی‌شوند.</p>
+</section>
+<section class="stage"><h2>نمای کالیبراسیون</h2><div class="hint" id="coordinateAudit" role="status">ممیزی مختصات: در حال بررسی ابعاد تصویر مرجع…</div><div id="canvas"><img id="photo" src="./images/images/IMG_۲۰۲۶۱۱۱۹_۲۰۳۰۵۲.jpg" alt="تصویر مرجع نمای جلو"><svg id="calibrationOverlay" viewBox="0 0 683 1024" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+<g class="hotspot" data-muscle="upper-chest"><path d="M220 255 Q260 215 340 238 L337 278 Q280 285 235 270Z"/><path d="M463 255 Q423 215 343 238 L346 278 Q403 285 448 270Z"/></g>
+<g class="hotspot" data-muscle="mid-chest" aria-label="عضله سینه؛ دو نیمه چپ و راست"><path d="M207 245 C210 225 230 215 255 215 C290 215 320 230 339 245 L339 300 C320 313 290 317 260 308 C230 300 212 280 207 260Z"/><path d="M476 245 C473 225 453 215 428 215 C393 215 363 230 344 245 L344 300 C363 313 393 317 423 308 C453 300 471 280 476 260Z"/></g>
+<g class="hotspot" data-muscle="lower-chest"><path d="M225 285 Q275 315 339 300 L337 337 Q280 345 238 320Z"/><path d="M458 285 Q408 315 344 300 L346 337 Q403 345 445 320Z"/></g>
+<g class="hotspot" data-muscle="front-delts"><path d="M207 157 Q222 139 244 151 Q258 168 251 195 Q244 218 226 229 Q208 218 202 196 Q199 174 207 157Z"/><path d="M476 157 Q461 139 439 151 Q425 168 432 195 Q439 218 457 229 Q475 218 481 196 Q484 174 476 157Z"/></g>
+<g class="hotspot" data-muscle="side-delts"><path d="M198 225 C195 198 211 178 235 179 C255 180 270 196 273 219 C273 244 258 270 239 282 C218 277 202 256 198 225Z"/><path d="M485 225 C488 198 472 178 448 179 C428 180 413 196 410 219 C410 244 425 270 444 282 C465 277 481 256 485 225Z"/></g>
+<g class="hotspot" data-muscle="biceps-long"><path d="M177 292 Q195 280 213 296 Q230 325 229 365 Q227 398 210 418 Q190 421 176 400 Q163 370 165 337 Q166 309 177 292Z"/><path d="M506 292 Q488 280 470 296 Q453 325 454 365 Q456 398 473 418 Q493 421 507 400 Q520 370 518 337 Q517 309 506 292Z"/></g>
+<g class="hotspot" data-muscle="biceps-short"><path d="M207 322 Q222 338 222 365 Q221 389 210 405 L198 395 Q204 366 198 340Z"/><path d="M476 322 Q461 338 461 365 Q462 389 473 405 L485 395 Q479 366 485 340Z"/></g>
+<g class="hotspot" data-muscle="brachialis"><path d="M170 386 Q188 393 202 409 L194 441 Q178 448 166 429Z"/><path d="M513 386 Q495 393 481 409 L489 441 Q505 448 517 429Z"/></g>
+<g class="hotspot" data-muscle="forearm-flexors"><path d="M164 438 Q179 447 194 445 L190 526 Q179 542 164 535 Q151 500 157 468Z"/><path d="M519 438 Q504 447 489 445 L493 526 Q504 542 519 535 Q532 500 526 468Z"/></g>
+<g class="hotspot" data-muscle="obliques"><path d="M245 315 L292 340 L282 440 L248 420Z"/><path d="M438 315 L391 340 L401 440 L435 420Z"/></g>
+<g class="hotspot" data-muscle="upper-abs"><path d="M294 310 L340 310 L340 385 L294 385Z"/><path d="M343 310 L389 310 L389 385 L343 385Z"/></g>
+<g class="hotspot" data-muscle="lower-abs"><path d="M294 388 L340 388 L340 462 L294 462Z"/><path d="M343 388 L389 388 L389 462 L343 462Z"/></g>
+<g class="hotspot" data-muscle="abductors"><path d="M248 515 Q285 505 303 530 L286 610 Q262 620 245 580Z"/><path d="M435 515 Q398 505 380 530 L397 610 Q421 620 438 580Z"/></g>
+<g class="hotspot" data-muscle="quads"><path d="M224 551 C251 539 296 543 336 558 C341 581 336 615 331 650 C327 687 311 721 290 738 C268 737 245 714 233 683 C220 648 214 598 224 551Z"/><path d="M459 551 C432 539 387 543 347 558 C342 581 347 615 352 650 C356 687 372 721 393 738 C415 737 438 714 450 683 C463 648 469 598 459 551Z"/></g>
+<g class="hotspot" data-muscle="adductors"><path d="M305 555 L340 555 L330 680 L305 655Z"/><path d="M378 555 L343 555 L353 680 L378 655Z"/></g>
+<g class="hotspot" data-muscle="traps"><path d="M280 195 Q340 160 400 195 L388 250 Q370 285 342 320 Q314 285 292 250Z"/></g>
+<g class="hotspot" data-muscle="rear-delts"><path d="M203 235 Q224 211 252 235 Q266 255 254 286 Q238 306 216 293 Q201 273 203 235Z"/><path d="M480 235 Q459 211 431 235 Q417 255 429 286 Q445 306 467 293 Q482 273 480 235Z"/></g>
+<g class="hotspot" data-muscle="triceps-long"><path d="M185 300 Q203 286 222 310 Q232 340 226 380 Q221 410 205 429 Q188 425 178 400 Q171 355 185 300Z"/><path d="M498 300 Q480 286 461 310 Q451 340 457 380 Q462 410 478 429 Q495 425 505 400 Q512 355 498 300Z"/></g>
+<g class="hotspot" data-muscle="triceps-lateral"><path d="M218 305 Q240 315 247 344 Q250 380 234 412 L219 424 Q229 382 225 348Z"/><path d="M465 305 Q443 315 436 344 Q433 380 449 412 L464 424 Q454 382 458 348Z"/></g>
+<g class="hotspot" data-muscle="forearm-extensors"><path d="M194 442 Q209 433 222 438 Q218 482 204 525 Q196 541 181 542 L190 493Z"/><path d="M489 442 Q474 433 461 438 Q465 482 479 525 Q487 541 502 542 L493 493Z"/></g>
+<g class="hotspot" data-muscle="lats"><path d="M265 315 Q292 330 320 352 L325 478 Q300 505 278 478 Q255 430 245 382Z"/><path d="M418 315 Q391 330 363 352 L358 478 Q383 505 405 478 Q428 430 438 382Z"/></g>
+<g class="hotspot" data-muscle="mid-back"><path d="M285 270 Q310 282 340 305 Q370 282 395 270 L388 365 Q365 390 342 402 Q319 390 292 365Z"/></g>
+<g class="hotspot" data-muscle="lower-back"><path d="M320 425 Q340 440 363 425 L360 492 Q340 508 323 492Z"/></g>
+<g class="hotspot" data-muscle="glute-med"><path d="M250 540 Q290 510 337 540 L333 600 Q290 625 258 600Z"/><path d="M433 540 Q390 510 343 540 L347 600 Q390 625 425 600Z"/></g>
+<g class="hotspot" data-muscle="glute-max"><path d="M258 595 Q290 615 337 600 L330 675 Q295 710 270 675Z"/><path d="M425 595 Q390 615 343 600 L350 675 Q385 710 413 675Z"/></g>
+<g class="hotspot" data-muscle="hamstrings"><path d="M270 570 Q300 585 333 570 L320 750 Q295 780 275 745Z"/><path d="M413 570 Q380 585 350 570 L363 750 Q388 780 408 745Z"/></g>
+<g class="hotspot" data-muscle="calves"><path d="M275 735 Q300 715 320 740 L312 900 Q300 940 278 910Z"/><path d="M408 735 Q385 715 363 740 L371 900 Q383 940 405 910Z"/></g>
+</svg></div><p class="hint">اگر تصویر بارگذاری نشد، مسیر فایل مرجع را بررسی کنید. برای هر عضله، مرز چپ و راست باید جداگانه با آناتومی واقعی تطبیق داده شود.</p></section>
+</main>
+<script>
+const overlay=document.getElementById('calibrationOverlay'),canvas=document.getElementById('canvas');
+const viewGroups={front:['upper-chest','mid-chest','lower-chest','front-delts','side-delts','biceps-long','biceps-short','brachialis','forearm-flexors','obliques','upper-abs','lower-abs','abductors','quads','adductors'],back:['traps','rear-delts','triceps-long','triceps-lateral','forearm-extensors','lats','mid-back','lower-back','glute-med','glute-max','hamstrings','calves']};
+let currentView='front',selectedRegion=null;const reviewStatus={};
+function updateCoordinateAudit(){const img=document.getElementById('photo'),audit=document.getElementById('coordinateAudit');if(!img||!audit)return;const vb=(overlay.getAttribute('viewBox')||'0 0 683 1024').trim().split(/[ ,]+/).map(Number);const modelW=360,modelH=640,overlayW=vb[2],overlayH=vb[3];const sx=overlayW/modelW,sy=overlayH/modelH;const imageState=img.complete&&img.naturalWidth?img.naturalWidth+' × '+img.naturalHeight+' پیکسل':'تصویر هنوز بارگذاری نشده';audit.textContent='ممیزی مختصات · تصویر مرجع: '+imageState+' · فضای hotspot: '+overlayW+' × '+overlayH+' · مدل برداری داخلی: 360 × 640 · نسبت تبدیل افقی '+sx.toFixed(3)+' و عمودی '+sy.toFixed(3)+'. '+(Math.abs(sx-sy)>0.02?'هشدار: تبدیل غیریکنواخت است؛ مختصات مدل برداری را مستقیم به hotspot عکس منتقل نکنید.':'نسبت تبدیل تقریباً یکنواخت است؛ با این حال تطبیق بصری لازم است.');}
+function applyRegionVisibility(){overlay.querySelectorAll('.hotspot').forEach(g=>{const inView=viewGroups[currentView].includes(g.dataset.muscle);g.style.display=inView&&g.dataset.enabled!=='false'?'':'none';});renderIds(document.getElementById('ids').classList.contains('active'));}
+function renderRegionToggles(){const host=document.getElementById('regionToggles');host.innerHTML='';overlay.querySelectorAll('.hotspot').forEach(g=>{if(!viewGroups[currentView].includes(g.dataset.muscle))return;const label=document.createElement('label');label.className='region-toggle';const input=document.createElement('input');input.type='checkbox';input.checked=true;input.dataset.region=g.dataset.muscle;input.addEventListener('change',()=>{g.dataset.enabled=input.checked?'true':'false';applyRegionVisibility();});const name=document.createElement('span');name.textContent=g.dataset.muscle;label.append(input,name);host.appendChild(label);});}
+function setCalibrationView(v){currentView=v;selectedRegion=null;document.getElementById('photo').src=v==='front'?'./images/images/IMG_۲۰۲۶۱۱۱۹_۲۰۳۰۵۲.jpg':'./images/images/IMG_۲۰۲۶۱۱۱۹_۲۰۳۱۲۹.jpg';document.getElementById('photo').alt=v==='front'?'تصویر مرجع نمای جلو':'تصویر مرجع نمای پشت';updateCoordinateAudit();overlay.querySelectorAll('.hotspot').forEach(g=>g.classList.remove('selected'));renderRegionToggles();applyRegionVisibility();document.getElementById('frontView').classList.toggle('active',v==='front');document.getElementById('backView').classList.toggle('active',v==='back');document.getElementById('selected').textContent='نمای '+(v==='front'?'جلو':'پشت')+' فعال شد؛ یک ناحیه را برای بررسی انتخاب کنید.';}
+document.getElementById('frontView').onclick=()=>setCalibrationView('front');
+document.getElementById('backView').onclick=()=>setCalibrationView('back');
+const controls={x:document.getElementById('x'),y:document.getElementById('y'),s:document.getElementById('s'),o:document.getElementById('o')};
+function update(){const x=+controls.x.value,y=+controls.y.value,s=+controls.s.value,o=+controls.o.value;overlay.style.setProperty('--dx',x+'px');overlay.style.setProperty('--dy',y+'px');overlay.style.setProperty('--scale',s/100);overlay.style.opacity=o/100;document.getElementById('xv').textContent=x+' px';document.getElementById('yv').textContent=y+' px';document.getElementById('sv').textContent=s+'%';document.getElementById('ov').textContent=o+'%'}
+Object.values(controls).forEach(el=>el.addEventListener('input',update));
+function renderIds(show){overlay.querySelectorAll('.region-label').forEach(n=>n.remove());if(!show)return;overlay.querySelectorAll('.hotspot').forEach(g=>{if(g.style.display==='none')return;const b=g.getBBox(),t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('class','region-label');t.setAttribute('x',b.x+b.width/2);t.setAttribute('y',b.y+b.height/2);t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');t.setAttribute('font-size','15');t.setAttribute('font-weight','bold');t.setAttribute('fill','#5b3510');t.setAttribute('stroke','#fff');t.setAttribute('stroke-width','3');t.setAttribute('paint-order','stroke');t.setAttribute('pointer-events','none');t.textContent=g.dataset.muscle;overlay.appendChild(t)})}
+document.getElementById('grid').onclick=()=>{overlay.classList.toggle('show-grid');document.getElementById('grid').classList.toggle('active',overlay.classList.contains('show-grid'));};
+document.getElementById('isolate').onclick=()=>{overlay.classList.toggle('isolate-selected');document.getElementById('isolate').classList.toggle('active',overlay.classList.contains('isolate-selected'));};
+function setReviewStatus(value){if(!selectedRegion){document.getElementById('selected').textContent='ابتدا یک ناحیه عضلانی را انتخاب کنید.';return;}reviewStatus[selectedRegion]=value;['mark-confirmed','mark-review','mark-unchecked'].forEach(id=>document.getElementById(id).classList.remove('active'));const id=value==='confirmed'?'mark-confirmed':value==='needs-correction'?'mark-review':'mark-unchecked';document.getElementById(id).classList.add('active');}
+document.getElementById('mark-confirmed').onclick=()=>setReviewStatus('confirmed');document.getElementById('mark-review').onclick=()=>setReviewStatus('needs-correction');document.getElementById('mark-unchecked').onclick=()=>setReviewStatus('unchecked');
+document.getElementById('ids').onclick=()=>{const on=!document.getElementById('ids').classList.contains('active');document.getElementById('ids').classList.toggle('active',on);renderIds(on)};
+document.getElementById('hide').onclick=()=>{const on=!overlay.classList.contains('hide-regions');overlay.classList.toggle('hide-regions',on);document.getElementById('hide').classList.toggle('active',on)};
+document.getElementById('reset').onclick=()=>{controls.x.value=0;controls.y.value=0;controls.s.value=100;controls.o.value=100;overlay.classList.remove('hide-regions','show-ids','show-grid','isolate-selected');selectedRegion=null;overlay.querySelectorAll('.hotspot').forEach(g=>{g.dataset.enabled='true';reviewStatus[g.dataset.muscle]='unchecked';});document.querySelectorAll('#regionToggles input').forEach(i=>i.checked=true);document.querySelectorAll('#ids,#hide,#grid,#isolate,#mark-confirmed,#mark-review,#mark-unchecked').forEach(b=>b.classList.remove('active'));setCalibrationView('front');document.getElementById('selected').textContent='برای بررسی، روی یک ناحیه کلیک کنید.';update()};
+overlay.querySelectorAll('.hotspot').forEach(g=>g.addEventListener('click',e=>{e.stopPropagation();overlay.querySelectorAll('.hotspot').forEach(n=>n.classList.remove('selected'));g.classList.add('selected');const id=g.dataset.muscle;selectedRegion=id;const review=reviewStatus[id]||'unchecked';['mark-confirmed','mark-review','mark-unchecked'].forEach(n=>document.getElementById(n).classList.remove('active'));document.getElementById(review==='confirmed'?'mark-confirmed':review==='needs-correction'?'mark-review':'mark-unchecked').classList.add('active');const b=g.getBBox(),parts=[...g.querySelectorAll('path')].map((p,i)=>{const q=p.getBBox();return (i+1)+': x='+q.x.toFixed(1)+', y='+q.y.toFixed(1)+', w='+q.width.toFixed(1)+', h='+q.height.toFixed(1)});document.getElementById('selected').textContent='نما: '+(currentView==='front'?'جلو':'پشت')+' | شناسه: '+id+' | قطعات: '+parts.length+' | محدوده کلی: x='+b.x.toFixed(1)+', y='+b.y.toFixed(1)+', w='+b.width.toFixed(1)+', h='+b.height.toFixed(1)+' | محدوده قطعات: '+parts.join(' ؛ ')+' | وضعیت: نیازمند تأیید مرز با تصویر مرجع.'}));
+document.getElementById('export').onclick=()=>{const regions=[...overlay.querySelectorAll('.hotspot')].map(g=>{const previous=g.style.display;g.style.display='';const box=g.getBBox();const paths=[...g.querySelectorAll('path')].map((p,index)=>{const b=p.getBBox();return {index:index+1,x:b.x,y:b.y,width:b.width,height:b.height};});g.style.display=previous;return {id:g.dataset.muscle,view:viewGroups.front.includes(g.dataset.muscle)?'front':'back',enabled:g.dataset.enabled!=='false',reviewStatus:reviewStatus[g.dataset.muscle]||'unchecked',pathParts:paths.length,boundingBox:{x:box.x,y:box.y,width:box.width,height:box.height},paths};});const out={tool:'Fitness Seh Galeh anatomy calibration',view:currentView,image:document.getElementById('photo').getAttribute('src'),reviewLegend:{confirmed:'مرز با تصویر مرجع تأیید شده',needsCorrection:'نیازمند اصلاح',unchecked:'بررسی‌نشده'},coordinateAudit:{overlayViewBox:overlay.getAttribute('viewBox'),vectorModelViewBox:'0 0 360 640',vectorToOverlayScale:{x:683/360,y:1024/640},warning:'مختصات مدل برداری به علت تبدیل غیریکنواخت مستقیماً قابل انتقال به تصویر مرجع نیست؛ تطبیق بصری مستقل لازم است.'},viewBox:overlay.getAttribute('viewBox'),offsetX:+controls.x.value,offsetY:+controls.y.value,scale:+controls.s.value/100,opacity:+controls.o.value/100,regions};const a=document.createElement('a'),blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});a.href=URL.createObjectURL(blob);a.download='anatomy-calibration.json';a.click();URL.revokeObjectURL(a.href)};
+document.getElementById('photo').addEventListener('load',updateCoordinateAudit);document.getElementById('photo').addEventListener('error',updateCoordinateAudit);updateCoordinateAudit();update();
+</script></body></html>
