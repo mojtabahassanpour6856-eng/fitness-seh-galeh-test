@@ -7,7 +7,9 @@ This isolated experiment vendors the MIT-licensed MuscleMap anatomy assets.
 - Individually addressable muscle paths and left/right surface IDs.
 - Four bundled grayscale body photos aligned to traced paths.
 - All assets load locally; no runtime CDN dependency.
-- Persian interactive exercise-to-muscle mapping preview.
+- Persian interactive exercise-to-muscle mapping preview with 71 sample movements.
+- Touch/click selection with a gold inspection state, tap-again deselection, and keyboard Enter/Space support.
+- Functional descriptions for the mapped muscle groups and related movement lookup.
 - Primary, secondary and tertiary activation layers; region filters; click-to-inspect.
 
 ## Upstream
@@ -19,6 +21,7 @@ This isolated experiment vendors the MIT-licensed MuscleMap anatomy assets.
 ## Limitations
 - This is a standalone preview, not yet wired to the production workout planner or student records.
 - Exercise-to-muscle associations are an initial coach-reviewable mapping, not a clinical reference.
+- Current upstream geometry contains 28–30 broad surfaces per diagram. It does not independently outline every anatomical head or subdivision (for example, upper/middle/lower pectoral fibers); those must not be presented as separately measured regions. A more granular licensed dataset is being evaluated separately.
 - Some typed groups have no traced path in upstream diagrams (for example, hip flexors).
 - Upstream describes the body photos as demo assets and recommends replacing them with branded imagery for production/marketing.
 - No production app files, Supabase data, student records, or production deployment were changed by this experiment.
