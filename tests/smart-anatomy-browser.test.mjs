@@ -79,7 +79,7 @@ test('browser renders both anatomy photos and interactive SVG hotspots', async t
     tertiary: [...document.querySelectorAll('#muscleHotspots .hotspot.level-tertiary')].map(el=>el.dataset.muscle)
   }));
   assert.ok(renderedExerciseRoles.name, 'choosing a movement should set the active exercise');
-  assert.equal(renderedExerciseRoles.name, 'پرس سینه هالتر', 'the browser scenario must exercise the known bench-press mapping');
+  assert.equal(renderedExerciseRoles.name, 'پرس سینه دمبل', 'the first chest movement in the rendered bank should be the expected dumbbell press');
   assert.ok(renderedExerciseRoles.primary.includes('mid-chest'), 'bench press should paint mid chest as primary');
   assert.ok(renderedExerciseRoles.secondary.includes('front-delts'), 'bench press should paint front delts as secondary');
   assert.ok(renderedExerciseRoles.secondary.includes('triceps-long') && renderedExerciseRoles.secondary.includes('triceps-lateral'),
