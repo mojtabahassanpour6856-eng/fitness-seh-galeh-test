@@ -137,3 +137,26 @@ test('mid-back covers the rhomboid region while lats remain lateral', () => {
   assert.match(get('lats'), /M265 315/);
   assert.match(get('lats'), /M418 315/);
 });
+
+test('front arm muscle regions are separated and remain on the upper arm', () => {
+  const get = id => {
+    const start = html.indexOf(`<g class="hotspot" data-muscle="${id}"`);
+    return html.slice(start, html.indexOf('</g>', start));
+  };
+  assert.match(get('biceps-long'), /M177 292/);
+  assert.match(get('biceps-short'), /M207 322/);
+  assert.match(get('brachialis'), /M170 386/);
+  assert.doesNotMatch(get('biceps-long'), /536 350/);
+});
+
+test('posterior triceps heads are distinct and forearm flexors/extensors use different paths', () => {
+  const get = id => {
+    const start = html.indexOf(`<g class="hotspot" data-muscle="${id}"`);
+    return html.slice(start, html.indexOf('</g>', start));
+  };
+  assert.match(get('triceps-long'), /M185 300/);
+  assert.match(get('triceps-lateral'), /M218 305/);
+  assert.match(get('forearm-flexors'), /M164 438/);
+  assert.match(get('forearm-extensors'), /M194 442/);
+  assert.notEqual(get('forearm-flexors'), get('forearm-extensors'));
+});
