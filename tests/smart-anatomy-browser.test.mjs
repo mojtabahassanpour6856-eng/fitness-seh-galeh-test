@@ -71,6 +71,20 @@ test('browser renders both anatomy photos and interactive SVG hotspots', async t
     assert.ok(!roles.secondary.some(id=>sets[2].has(id)), 'secondary and tertiary roles must not overlap');
   }
 
+  await page.locator('#exerciseList [data-ex="0"]').click();
+  const renderedExerciseRoles = await page.evaluate(() => ({
+    name: selectedExercise?.[0] || null,
+    primary: [...document.querySelectorAll('#muscleHotspots .hotspot.level-primary')].map(el=>el.dataset.muscle),
+    secondary: [...document.querySelectorAll('#muscleHotspots .hotspot.level-secondary')].map(el=>el.dataset.muscle),
+    tertiary: [...document.querySelectorAll('#muscleHotspots .hotspot.level-tertiary')].map(el=>el.dataset.muscle)
+  }));
+  assert.ok(renderedExerciseRoles.name, 'choosing a movement should set the active exercise');
+  assert.ok(renderedExerciseRoles.primary.length > 0, 'choosing a movement should paint its primary muscle');
+  assert.ok(renderedExerciseRoles.secondary.length > 0, 'choosing a compound movement should paint its assisting muscles');
+  assert.ok(!renderedExerciseRoles.primary.some(id=>renderedExerciseRoles.secondary.includes(id) ||
+    renderedExerciseRoles.tertiary.includes(id)), 'rendered muscle levels must not conflict');
+  await page.screenshot({ path:'artifacts/anatomy-front-exercise.png', fullPage:true });
+
   await page.locator('.tab[data-view="back"]').click();
   await page.waitForFunction(() => decodeURIComponent(document.querySelector('#anatomyPhoto')?.src || '').includes('IMG_۲۰۲۶۱۱۱۹_۲۰۳۱۲۹.jpg') &&
     document.querySelector('#anatomyPhoto')?.complete && document.querySelector('#anatomyPhoto')?.naturalWidth > 0);
