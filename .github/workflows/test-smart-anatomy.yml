@@ -1,9 +1,11 @@
 name: Smart anatomy prototype checks # browser interaction verification · dynamic SVG overlay bounds for both reference images
 on:
   push:
-    branches: ["experiment/anatomy-intensity-levels-20261127"]
+    branches: ["experiment/anatomy-intensity-levels-20261127", "experiment/anatomy-v2-activation-map-refine-20261127"]
     paths:
       - "experiments/smart-anatomy/**"
+      - "experiments/smart-anatomy-v2-chest-deltoid/**"
+      - "tests/smart-anatomy-deltoid-browser.test.mjs"
       - "tests/smart-anatomy-static.test.mjs"
       - "tests/smart-anatomy-browser.test.mjs"
       - ".github/workflows/test-smart-anatomy.yml"
@@ -42,6 +44,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: mkdir -p artifacts
       - run: node --test tests/smart-anatomy-browser.test.mjs
+      - run: node --test tests/smart-anatomy-deltoid-browser.test.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
