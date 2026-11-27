@@ -1,4 +1,4 @@
-name: Smart anatomy prototype checks
+name: Smart anatomy prototype checks # browser interaction verification
 on:
   push:
     branches: ["experiment/anatomy-intensity-levels-20261127"]
