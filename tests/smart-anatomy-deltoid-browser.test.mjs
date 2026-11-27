@@ -39,7 +39,7 @@ test('dedicated chest-deltoid preview loads, renders all eight SVG regions and r
   assert.ok(initial.rolesReady, 'movement roles should be populated on initial render');
   assert.match(initial.title, /نمای جلو/);
 
-  await page.locator('[data-muscle="front-deltoid-left"]').click();
+  await page.locator('[data-muscle="front-deltoid-left"]').click({ position:{ x:5, y:40 } });
   assert.equal(await page.locator('[data-muscle="front-deltoid-left"]').evaluate(el => el.classList.contains('selected')), true);
   assert.equal(await page.locator('[data-muscle="front-deltoid-right"]').evaluate(el => el.classList.contains('selected')), false);
 
