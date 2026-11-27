@@ -159,7 +159,7 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 <body>
 <header><div class="brand"><div class="mark">✦</div><div><b>فیتنس سه‌قلعه | مربی من</b><small>ابزار هوشمند طراحی تمرین</small></div></div><span class="badge">پیش‌نمایش آزمایشی · بدون اتصال به اطلاعات شاگردان</span></header>
 <main>
-<div class="title"><div><h1>آناتومی هوشمند تمرین</h1><p>عضله یا حرکت را انتخاب کنید؛ عضلات اصلی، کمکی و با درگیری کمتر با سه شدت رنگ نمایش داده می‌شوند. شدت رنگ، رتبه‌بندی آموزشی است و داده EMG نیست.</p><div style="display:flex;gap:8px;margin-top:10px;align-items:center"><b style="font-size:12px">مدل آناتومی:</b><button class="tab active" type="button">آقایان · نسخه فعال</button><button class="tab" type="button" disabled title="در مرحله بعد پیاده‌سازی می‌شود">خانم‌ها · مرحله بعد</button></div></div><span class="sub">نسخه مفهومی تعاملی</span></div>
+<div class="title"><div><h1>آناتومی هوشمند تمرین</h1><p>عضله یا حرکت را انتخاب کنید؛ عضلات اصلی، کمکی و با درگیری کمتر با سه شدت رنگ نمایش داده می‌شوند. این رتبه‌بندی آموزشی است، نه داده EMG؛ سر داخلی سه‌سر تا زمان تطبیق هندسی مستقل، جداگانه رنگ نمی‌شود.</p><div style="display:flex;gap:8px;margin-top:10px;align-items:center"><b style="font-size:12px">مدل آناتومی:</b><button class="tab active" type="button">آقایان · نسخه فعال</button><button class="tab" type="button" disabled title="در مرحله بعد پیاده‌سازی می‌شود">خانم‌ها · مرحله بعد</button></div></div><span class="sub">نسخه مفهومی تعاملی</span></div>
 <div class="layout">
 <section class="card">
 <h2>گروه‌های عضلانی</h2><div class="sub">انتخاب سریع ناحیه هدف</div>
@@ -452,15 +452,17 @@ const movementActivationRules=[
  {match:/قفسه دمبل/,primary:["mid-chest"],secondary:["front-delts"],tertiary:["side-delts"]},
  {match:/پرس سینه|شنا سوئدی/,primary:["mid-chest"],secondary:["front-delts","triceps-long","triceps-lateral"],tertiary:["side-delts"]},
  {match:/دیپ با (?:تاکید|تأکید) بر سینه|کراس اور از بالا به پایین|پرس سینه منفی|سینه پایینی/,primary:["lower-chest"],secondary:["triceps-long","triceps-lateral","front-delts"],tertiary:["mid-chest"]},
- {match:/پرس سرشانه|پرس آرنولد|پرس ارنولد|پرس شانه/,primary:["front-delts","side-delts"],secondary:["triceps-long","triceps-lateral"],tertiary:["traps"]},
+ {match:/پرس سرشانه|پرس آرنولد|پرس ارنولد|پرس شانه/,primary:["front-delts"],secondary:["side-delts","triceps-long","triceps-lateral"],tertiary:["traps"]},
  {match:/فرانت ر.?یز/,primary:["front-delts"],secondary:["side-delts"],tertiary:["upper-chest"]},
- {match:/نشر جانب/,primary:["side-delts"],secondary:["front-delts","rear-delts"],tertiary:["traps"]},
+ {match:/نشر جانب خم|نشر جانب روی میز شیب دار|نشر جانب خوابیده/,primary:["side-delts"],secondary:["rear-delts"],tertiary:["front-delts","traps"]},
+ {match:/نشر جانب/,primary:["side-delts"],secondary:["front-delts"],tertiary:["rear-delts","traps"]},
  {match:/نشر خم|فلای معکوس/,primary:["rear-delts"],secondary:["mid-back","traps"],tertiary:["lats"]},
  {match:/جلو بازو چکشی|چکشی طناب|جلو بازو معکوس/,primary:["brachialis"],secondary:["biceps-long","biceps-short","forearm-flexors"],tertiary:["forearm-extensors"]},
  {match:/جلو بازو لاری|جلو بازو اسپایدر|جلو بازو دست جمع|جلو بازو هالتر دست باز/,primary:["biceps-short"],secondary:["biceps-long","brachialis"],tertiary:["forearm-flexors"]},
  {match:/جلو بازو دمبل روی میز شیب دار/,primary:["biceps-long"],secondary:["biceps-short","brachialis"],tertiary:["forearm-flexors"]},
  {match:/جلو بازو/,primary:["biceps-long","biceps-short"],secondary:["brachialis","forearm-flexors"],tertiary:["forearm-extensors"]},
- {match:/پشت بازو بالای سر/,primary:["triceps-long"],secondary:["triceps-lateral"],tertiary:["front-delts"]},
+ {match:/پشت بازو بالای سر|پشت بازو خوابیده پشت سر|اکستنشن پشت بازو بالای سر/,primary:["triceps-long"],secondary:["triceps-lateral"],tertiary:["front-delts"]},
+ {match:/پشت بازو سیم کش دست برعکس|پشت بازو معکوس/,primary:["triceps-lateral"],secondary:["triceps-long"],tertiary:["forearm-flexors"]},
  {match:/پشت بازو|کیک بک/,primary:["triceps-lateral"],secondary:["triceps-long"],tertiary:["front-delts"]},
  {match:/اسکوات سومو/,primary:["adductors","glute-max"],secondary:["quads","hamstrings"],tertiary:["calves"]},
  {match:/اسکوات|پرس پا/,primary:["quads","glute-max"],secondary:["adductors","hamstrings"],tertiary:["calves","lower-back"]},
