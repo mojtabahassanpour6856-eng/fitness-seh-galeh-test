@@ -5,12 +5,12 @@ on:
     paths:
       - "experiments/smart-anatomy/**"
       - "experiments/smart-anatomy-v2-chest-deltoid/**"
-      - "tests/smart-anatomy-deltoid-browser.test.mjs"
+      - "tests/smart-anatomy-deltoid-browser.test.mjs"\n      - "tests/smart-anatomy-calibration-browser.test.mjs"
       - "tests/smart-anatomy-static.test.mjs"
       - "tests/smart-anatomy-browser.test.mjs"
       - ".github/workflows/test-smart-anatomy.yml"
   pull_request:
-    branches: ["feature/smart-anatomy-prototype-20261118"]
+    branches: ["feature/smart-anatomy-prototype-20261118", "experiment/anatomy-v2-chest-deltoid-preview-20261127"]
     paths:
       - "experiments/smart-anatomy/**"
       - "tests/smart-anatomy-static.test.mjs"
@@ -43,7 +43,7 @@ jobs:
       - run: npm install --no-save playwright
       - run: npx playwright install --with-deps chromium
       - run: mkdir -p artifacts
-      - run: node --test tests/smart-anatomy-deltoid-browser.test.mjs
+      - run: node --test tests/smart-anatomy-deltoid-browser.test.mjs\n      - run: node --test tests/smart-anatomy-calibration-browser.test.mjs
       - run: node --test tests/smart-anatomy-browser.test.mjs
       - uses: actions/upload-artifact@v4
         if: always()
