@@ -43,8 +43,8 @@ jobs:
       - run: npm install --no-save playwright
       - run: npx playwright install --with-deps chromium
       - run: mkdir -p artifacts
-      - run: node --test tests/smart-anatomy-browser.test.mjs
       - run: node --test tests/smart-anatomy-deltoid-browser.test.mjs
+      - run: node --test tests/smart-anatomy-browser.test.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
