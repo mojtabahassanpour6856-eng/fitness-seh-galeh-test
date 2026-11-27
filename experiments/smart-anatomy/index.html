@@ -133,23 +133,24 @@ body,.anatomy-card,.anatomy-wrap{background:#fff!important}
 #muscleHotspots .hotspot.selected path{fill:#e43d3d88;stroke:#b52424;stroke-width:2.3}
 #muscleHotspots .hotspot:hover path{stroke:#e45b5b66;fill:#e43d3d22}
 
-/* Three-level exercise activation overlay; inactive anatomy remains white. */
+/* Three-level activation overlay: inactive regions stay translucent so the original anatomy remains visible. */
 #muscleHotspots .hotspot path{
-  fill:#fff;
-  fill-opacity:1;
-  stroke:#171717;
-  stroke-width:2.1;
+  fill:#f4f4f4;
+  fill-opacity:.12;
+  stroke:#777;
+  stroke-opacity:.34;
+  stroke-width:1.15;
   opacity:1;
-  transition:fill .16s,fill-opacity .16s,stroke .16s;
+  transition:fill .16s,fill-opacity .16s,stroke .16s,stroke-opacity .16s;
 }
 #muscleHotspots .hotspot.level-primary path{
-  fill:#e53935;fill-opacity:.78;stroke:#a51f1c;stroke-width:2.6;
+  fill:#e53935;fill-opacity:.72;stroke:#a51f1c;stroke-opacity:.9;stroke-width:2.25;
 }
 #muscleHotspots .hotspot.level-secondary path{
-  fill:#ed7772;fill-opacity:.62;stroke:#b94a46;stroke-width:2.2;
+  fill:#ed7772;fill-opacity:.56;stroke:#b94a46;stroke-opacity:.78;stroke-width:1.9;
 }
 #muscleHotspots .hotspot.level-tertiary path{
-  fill:#f4b8b4;fill-opacity:.56;stroke:#cc8884;stroke-width:2;
+  fill:#f4b8b4;fill-opacity:.48;stroke:#cc8884;stroke-opacity:.72;stroke-width:1.7;
 }
 #muscleHotspots .hotspot.level-selected path{stroke:#7e1715;stroke-width:3}
 #muscleHotspots .hotspot:focus path{stroke:#b38a43;stroke-width:3;outline:none}
