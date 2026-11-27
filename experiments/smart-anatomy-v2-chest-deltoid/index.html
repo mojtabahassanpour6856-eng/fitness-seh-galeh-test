@@ -47,7 +47,7 @@ footer{text-align:center;padding:4px 15px 24px;color:var(--muted);font-size:11px
   <path class="body-outline" d="M213 54 Q215 85 194 99 L151 116 Q125 126 111 157 L83 222 Q75 244 91 257 Q104 268 116 247 L148 184 L155 282 Q158 335 166 383 L176 503 Q180 529 198 530 L302 530 Q320 529 324 503 L334 383 Q342 335 345 282 L352 184 L384 247 Q396 268 409 257 Q425 244 417 222 L389 157 Q375 126 349 116 L306 99 Q285 85 287 54 L213 54Z"/>
   <path class="body-outline" d="M213 54 Q250 72 287 54 L292 99 Q250 121 208 99Z"/>
   <path class="guide" d="M250 115 L250 524 M154 174 Q250 135 346 174 M161 285 Q250 310 339 285"/>
-  <!-- anterior deltoid caps: separate from pectoral mass -->
+  <!-- Deltoid regions are drawn as separate selectable territories. -->\n  <path class="muscle idle" data-muscle="side-deltoid-left" d="M145 133 Q159 112 181 116 Q168 132 166 157 Q164 181 178 198 Q155 195 143 174 Q135 154 145 133Z"/>\n  <path class="muscle idle" data-muscle="side-deltoid-right" d="M355 133 Q341 112 319 116 Q332 132 334 157 Q336 181 322 198 Q345 195 357 174 Q365 154 355 133Z"/>\n  <!-- anterior deltoid caps: separate from pectoral mass -->
   <path class="muscle idle" data-muscle="front-deltoid-left" d="M151 128 Q171 111 204 117 Q222 127 225 153 Q222 179 205 198 Q183 204 163 186 Q149 168 151 128Z"/>
   <path class="muscle idle" data-muscle="front-deltoid-right" d="M349 128 Q329 111 296 117 Q278 127 275 153 Q278 179 295 198 Q317 204 337 186 Q351 168 349 128Z"/>
   <!-- clavicular / upper pectoralis -->
@@ -84,7 +84,7 @@ footer{text-align:center;padding:4px 15px 24px;color:var(--muted);font-size:11px
 <footer>FITNESS SEH GALEH · SMART ANATOMY LAB</footer>
 <script>
 const muscles={
- 'front-deltoid-left':['سرشانه جلویی چپ','Anterior deltoid · Left'], 'front-deltoid-right':['سرشانه جلویی راست','Anterior deltoid · Right'],
+ 'front-deltoid-left':['سرشانه جلویی چپ','Anterior deltoid · Left'], 'front-deltoid-right':['سرشانه جلویی راست','Anterior deltoid · Right'],\n 'side-deltoid-left':['سرشانه میانی چپ','Lateral deltoid · Left'], 'side-deltoid-right':['سرشانه میانی راست','Lateral deltoid · Right'],
  'upper-pec-left':['سینه فوقانی چپ','Pectoralis major · Clavicular head · Left'], 'upper-pec-right':['سینه فوقانی راست','Pectoralis major · Clavicular head · Right'],
  'mid-pec-left':['سینه میانی چپ','Pectoralis major · Sternocostal region · Left'], 'mid-pec-right':['سینه میانی راست','Pectoralis major · Sternocostal region · Right']
 };
@@ -92,7 +92,7 @@ const movement={
  press:{name:'پرس سینه',primary:['mid-pec-left','mid-pec-right'],secondary:['front-deltoid-left','front-deltoid-right'],tertiary:[]},
  incline:{name:'پرس بالاسینه',primary:['upper-pec-left','upper-pec-right'],secondary:['front-deltoid-left','front-deltoid-right'],tertiary:['mid-pec-left','mid-pec-right']},
  fly:{name:'قفسه سینه',primary:['mid-pec-left','mid-pec-right'],secondary:[],tertiary:['front-deltoid-left','front-deltoid-right']},
- lateral:{name:'نشر جانب',primary:[],secondary:[],tertiary:[]}
+ lateral:{name:'نشر جانب',primary:['side-deltoid-left','side-deltoid-right'],secondary:[],tertiary:['front-deltoid-left','front-deltoid-right']}
 };
 let current='press',selected='mid-pec-left';
 const $=s=>document.querySelector(s);
