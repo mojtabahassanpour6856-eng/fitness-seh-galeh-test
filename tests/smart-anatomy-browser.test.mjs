@@ -50,7 +50,7 @@ test('browser renders both anatomy photos and interactive SVG hotspots', async t
   await page.waitForFunction(() => document.querySelector('#muscleHotspots [data-muscle="mid-chest"]')?.classList.contains('selected'));
   await page.screenshot({ path:'artifacts/anatomy-front.png', fullPage:true });
   await page.locator('.tab[data-view="back"]').click();
-  await page.waitForFunction(() => document.querySelector('#anatomyPhoto')?.src.includes('IMG_۲۰۲۶۱۱۱۹_۲۰۳۱۲۹.jpg') &&
+  await page.waitForFunction(() => decodeURIComponent(document.querySelector('#anatomyPhoto')?.src || '').includes('IMG_۲۰۲۶۱۱۱۹_۲۰۳۱۲۹.jpg') &&
     document.querySelector('#anatomyPhoto')?.complete && document.querySelector('#anatomyPhoto')?.naturalWidth > 0);
   const back = await page.evaluate(() => ({
     naturalWidth:document.querySelector('#anatomyPhoto').naturalWidth,
