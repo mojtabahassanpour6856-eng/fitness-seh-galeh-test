@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>پیش‌نمایش آناتومی هوشمند | فیتنس سه‌قلعه</title>
+<style>
+:root{--bg:#f6f1e7;--card:#fffdf8;--ink:#302c25;--muted:#817968;--gold:#b18a45;--line:#e7ddca;--red:#d84d47;--rose:#e98c80;--soft:#f4d0c8;--shadow:0 12px 35px #49371912}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif}
+header{padding:18px 20px 14px;background:#fffdf8;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:800;font-size:17px}.brand small{display:block;color:var(--gold);font-size:11px;margin-top:5px;font-weight:600}
+.badge{font-size:11px;color:#7a602f;background:#f5ead2;border:1px solid #e8d7b4;border-radius:20px;padding:7px 10px;white-space:nowrap}
+main{max-width:1060px;margin:22px auto;padding:0 15px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(270px,.85fr);gap:17px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.panel-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+h1{font-size:18px;margin:0}h2{font-size:14px;margin:0}.sub{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.8}
+.tabs{display:flex;gap:7px}.tab,.exercise{border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 11px;font:inherit;font-size:12px;cursor:pointer;color:var(--ink)}
+.tab.active,.exercise.active{background:#f5ead2;border-color:#d6bd8b;color:#75551f;font-weight:700}
+.diagram-wrap{padding:12px 12px 2px;display:flex;justify-content:center;align-items:center;min-height:500px;background:radial-gradient(ellipse at 50% 44%,#fff 0%,#fbf8f0 67%,#f6f0e4 100%)}
+svg{width:min(100%,510px);height:auto;max-height:590px;overflow:visible}
+.body-outline{fill:#eadfce;stroke:#9b8b73;stroke-width:2.4;stroke-linejoin:round}
+.guide{fill:none;stroke:#b8a78c;stroke-width:1.4;stroke-dasharray:4 5;opacity:.65}
+.muscle{cursor:pointer;stroke:#9c554d;stroke-width:1.7;stroke-linejoin:round;transition:fill .16s,opacity .16s}
+.muscle:hover{stroke:#704039;stroke-width:2.8}
+.muscle.primary{fill:var(--red)}.muscle.secondary{fill:var(--rose)}.muscle.idle{fill:#d7a29a;opacity:.32}
+.muscle.selected{stroke:#4a3027;stroke-width:4;filter:drop-shadow(0 2px 2px #5b332955)}
+.label{font-size:11px;fill:#756954;font-weight:700;pointer-events:none}
+.legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;padding:9px 12px 17px;color:var(--muted);font-size:11px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-left:5px;vertical-align:-1px}.p{background:var(--red)}.s{background:var(--rose)}.i{background:#d7a29a}
+.side{padding:17px}.side section+section{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.exercise-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.detail{background:#faf5eb;border:1px solid var(--line);border-radius:14px;padding:13px;margin-top:12px;line-height:1.9;font-size:12px}
+.detail strong{font-size:14px}.meta{color:var(--muted);font-size:11px}
+.role-list{display:grid;gap:9px;margin-top:10px;font-size:12px}.role{display:flex;gap:8px;align-items:flex-start}.role b{min-width:76px}
+.notice{margin:0 16px 16px;padding:11px 13px;border-radius:12px;background:#fff6e6;border:1px solid #ead8b5;color:#745c32;font-size:11px;line-height:1.9}
+footer{text-align:center;padding:4px 15px 24px;color:var(--muted);font-size:11px}
+@media(max-width:760px){main{grid-template-columns:1fr;margin:12px auto;gap:12px}.diagram-wrap{min-height:390px}svg{max-height:470px}header{padding:14px}.brand{font-size:15px}h1{font-size:16px}}
+</style>
+</head>
+<body>
+<header><div class="brand">باشگاه فیتنس سه‌قلعه<small>مربی من | آزمایش موتور آناتومی هوشمند</small></div><span class="badge">نسخه آزمایشی · فقط سینه و سرشانه</span></header>
+<main>
+<div class="panel">
+ <div class="panel-head"><div><h1>نقشه عضلات — نمای جلو</h1><div class="sub">برای مشاهده جزئیات، روی هر ناحیه عضلانی بزن.</div></div><div class="tabs"><button class="tab active">جلو</button><button class="tab" disabled title="در این نمونه فعال نیست">پشت</button></div></div>
+ <div class="diagram-wrap">
+ <svg viewBox="0 0 500 620" role="img" aria-label="نقشه شماتیک عضلات سینه و سرشانه از نمای جلو">
+  <!-- Neck and torso silhouette -->
+  <path class="body-outline" d="M213 54 Q215 85 194 99 L151 116 Q125 126 111 157 L83 222 Q75 244 91 257 Q104 268 116 247 L148 184 L155 282 Q158 335 166 383 L176 503 Q180 529 198 530 L302 530 Q320 529 324 503 L334 383 Q342 335 345 282 L352 184 L384 247 Q396 268 409 257 Q425 244 417 222 L389 157 Q375 126 349 116 L306 99 Q285 85 287 54 L213 54Z"/>
+  <path class="body-outline" d="M213 54 Q250 72 287 54 L292 99 Q250 121 208 99Z"/>
+  <path class="guide" d="M250 115 L250 524 M154 174 Q250 135 346 174 M161 285 Q250 310 339 285"/>
+  <!-- Deltoid regions are drawn as separate selectable territories. -->\n  <path class="muscle idle" data-muscle="side-deltoid-left" d="M145 133 Q159 112 181 116 Q168 132 166 157 Q164 181 178 198 Q155 195 143 174 Q135 154 145 133Z"/>\n  <path class="muscle idle" data-muscle="side-deltoid-right" d="M355 133 Q341 112 319 116 Q332 132 334 157 Q336 181 322 198 Q345 195 357 174 Q365 154 355 133Z"/>\n  <!-- anterior deltoid caps: separate from pectoral mass -->
+  <path class="muscle idle" data-muscle="front-deltoid-left" d="M151 128 Q171 111 204 117 Q222 127 225 153 Q222 179 205 198 Q183 204 163 186 Q149 168 151 128Z"/>
+  <path class="muscle idle" data-muscle="front-deltoid-right" d="M349 128 Q329 111 296 117 Q278 127 275 153 Q278 179 295 198 Q317 204 337 186 Q351 168 349 128Z"/>
+  <!-- clavicular / upper pectoralis -->
+  <path class="muscle idle" data-muscle="upper-pec-left" d="M205 119 Q225 111 248 119 L248 205 Q225 206 205 194 Q183 183 179 160 Q179 137 205 119Z"/>
+  <path class="muscle idle" data-muscle="upper-pec-right" d="M295 119 Q275 111 252 119 L252 205 Q275 206 295 194 Q317 183 321 160 Q321 137 295 119Z"/>
+  <!-- sternocostal / mid-lower pectoralis -->
+  <path class="muscle idle" data-muscle="mid-pec-left" d="M179 164 Q199 190 248 207 L248 269 Q221 271 194 255 Q169 239 164 207 Q160 184 179 164Z"/>
+  <path class="muscle idle" data-muscle="mid-pec-right" d="M321 164 Q301 190 252 207 L252 269 Q279 271 306 255 Q331 239 336 207 Q340 184 321 164Z"/>
+  <!-- lower border of pec major -->
+  <path class="guide" d="M164 207 Q205 278 250 270 Q295 278 336 207"/>
+  <!-- torso lower landmarks -->
+  <path class="guide" d="M194 280 Q250 297 306 280 M203 320 Q250 337 297 320 M215 375 Q250 385 285 375"/>
+  <text class="label" x="250" y="584" text-anchor="middle">نمای شماتیکِ مستقل از عکس بدن</text>
+ </svg>
+ </div>
+ <div class="legend"><span><i class="dot p"></i>عضله اصلی حرکت</span><span><i class="dot s"></i>عضله کمکی</span><span><i class="dot i"></i>بدون فعالیت برجسته</span></div>
+ <p class="notice">این نمونه برای ارزیابی تجربه کاربری و تفکیک نواحی است؛ مرزهای هندسی هنوز تأیید نهایی آناتومیکی نشده‌اند و تا اعتبارسنجی مرجع، وارد نسخه اصلی نمی‌شوند.</p>
+</div>
+<aside class="panel">
+ <div class="panel-head"><div><h2>انتخاب حرکت</h2><div class="sub">رنگ عضلات با انتخاب حرکت تغییر می‌کند.</div></div></div>
+ <div class="side">
+  <section><h2>حرکات نمونه</h2><div class="exercise-list">
+   <button class="exercise active" data-ex="press">پرس سینه</button>
+   <button class="exercise" data-ex="incline">پرس بالاسینه</button>
+   <button class="exercise" data-ex="fly">قفسه سینه</button>
+   <button class="exercise" data-ex="lateral">نشر جانب</button>
+  </div></section>
+  <section><h2>عضله انتخاب‌شده</h2><div class="detail" id="detail"><strong>سینه — بخش میانی</strong><div class="meta">Pectoralis major · Sternocostal region</div><div>با انتخاب یک ناحیه روی نقشه، نام و توضیح آن نمایش داده می‌شود.</div></div></section>
+  <section><h2>نقش عضلات در حرکت</h2><div class="role-list" id="roles"></div></section>
+  <section><h2>معیارهای این نمونه</h2><div class="meta" style="line-height:2;margin-top:9px">• تفکیک سرشانه جلویی از سینه<br>• تفکیک بخش ترقوه‌ای و جناغی سینه<br>• انتخاب مستقل هر ناحیه<br>• نمایش عضلات اصلی و کمکی به‌صورت جداگانه</div></section>
+ </div>
+</aside>
+</main>
+<footer>FITNESS SEH GALEH · SMART ANATOMY LAB</footer>
+<script>
+const muscles={
+ 'front-deltoid-left':['سرشانه جلویی چپ','Anterior deltoid · Left'], 'front-deltoid-right':['سرشانه جلویی راست','Anterior deltoid · Right'],\n 'side-deltoid-left':['سرشانه میانی چپ','Lateral deltoid · Left'], 'side-deltoid-right':['سرشانه میانی راست','Lateral deltoid · Right'],
+ 'upper-pec-left':['سینه فوقانی چپ','Pectoralis major · Clavicular head · Left'], 'upper-pec-right':['سینه فوقانی راست','Pectoralis major · Clavicular head · Right'],
+ 'mid-pec-left':['سینه میانی چپ','Pectoralis major · Sternocostal region · Left'], 'mid-pec-right':['سینه میانی راست','Pectoralis major · Sternocostal region · Right']
+};
+const movement={
+ press:{name:'پرس سینه',primary:['mid-pec-left','mid-pec-right'],secondary:['front-deltoid-left','front-deltoid-right'],tertiary:[]},
+ incline:{name:'پرس بالاسینه',primary:['upper-pec-left','upper-pec-right'],secondary:['front-deltoid-left','front-deltoid-right'],tertiary:['mid-pec-left','mid-pec-right']},
+ fly:{name:'قفسه سینه',primary:['mid-pec-left','mid-pec-right'],secondary:[],tertiary:['front-deltoid-left','front-deltoid-right']},
+ lateral:{name:'نشر جانب',primary:['side-deltoid-left','side-deltoid-right'],secondary:[],tertiary:['front-deltoid-left','front-deltoid-right']}
+};
+let current='press',selected='mid-pec-left';
+const $=s=>document.querySelector(s);
+function draw(){
+ document.querySelectorAll('.muscle').forEach(el=>{
+  const id=el.dataset.muscle, m=movement[current];
+  el.classList.remove('primary','secondary','idle','selected');
+  el.classList.add(m.primary.includes(id)?'primary':m.secondary.includes(id)?'secondary':m.tertiary.includes(id)?'idle':'idle');
+  if(id===selected)el.classList.add('selected');
+ });
+ const m=movement[current];
+ $('#roles').innerHTML=[
+  ['اصلی',m.primary],['کمکی',m.secondary],['فرعی',m.tertiary]
+ ].map(([label,ids])=>'<div class="role"><b>'+label+'</b><span>'+(ids.length?ids.map(id=>muscles[id][0]).join('، '):'—')+'</span></div>').join('');
+ showDetail();
+}
+function showDetail(){
+ const item=muscles[selected];
+ $('#detail').innerHTML='<strong>'+item[0]+'</strong><div class="meta">'+item[1]+'</div><div>ناحیه به‌صورت مستقل انتخاب شده است. نقش آن در حرکت فعلی در فهرست کناری مشخص می‌شود.</div>';
+}
+document.querySelectorAll('.exercise').forEach(btn=>btn.addEventListener('click',()=>{
+ current=btn.dataset.ex;document.querySelectorAll('.exercise').forEach(x=>x.classList.toggle('active',x===btn));draw();
+}));
+document.querySelectorAll('.muscle').forEach(el=>el.addEventListener('click',()=>{selected=el.dataset.muscle;draw();}));
+draw();
+</script>
+</body></html>
