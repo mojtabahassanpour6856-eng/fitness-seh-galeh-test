@@ -52,10 +52,10 @@ const exercises=[
 let diagrams={},photos={},selectedExercise=null,selectedMuscle=null,category="ALL",region="FULL_BODY",mode="EXERCISE";
 const groupRegion={UPPER_BODY:new Set(["CHEST","TRAPEZIUS","RHOMBOIDS","LATS","BACK_LOWER","SHOULDERS_FRONT","SHOULDERS_SIDE","SHOULDERS_REAR","BICEPS","TRICEPS","FOREARMS","CORE","OBLIQUES"]),LOWER_BODY:new Set(["GLUTES","QUADS","HAMSTRINGS","CALVES","ADDUCTORS","ABDUCTORS"]),CORE:new Set(["CORE","OBLIQUES","BACK_LOWER"])};
 function regionGroups(){return region==="FULL_BODY"?null:groupRegion[region]}
-function classFor(g){if(!selectedExercise)return selectedMuscle&&selectedMuscle.group===g?"selected":"";if(mode==="PRIMARY")return selectedExercise.primary.includes(g)?"primary":"";if(mode==="SECONDARY")return selectedExercise.secondary.includes(g)?"secondary":"";if(selectedExercise.primary.includes(g))return "primary";if(selectedExercise.secondary.includes(g))return "secondary";if(selectedExercise.tertiary&&selectedExercise.tertiary.includes(g))return "tertiary";return ""}
+function classFor(g){if(!selectedExercise)return "";if(mode==="PRIMARY")return selectedExercise.primary.includes(g)?"primary":"";if(mode==="SECONDARY")return selectedExercise.secondary.includes(g)?"secondary":"";if(selectedExercise.primary.includes(g))return "primary";if(selectedExercise.secondary.includes(g))return "secondary";if(selectedExercise.tertiary&&selectedExercise.tertiary.includes(g))return "tertiary";return ""}
 function makeFigure(name,title){
  const d=diagrams[name],photo=photos[name],visible=regionGroups(),box=region==="FULL_BODY"?d.viewBox:(d.regionBox&&d.regionBox[region]||d.viewBox);
- const paths=d.muscles.map(m=>{const allowed=!visible||visible.has(m.group);const cls=classFor(m.group);const sel=selectedMuscle&&selectedMuscle.group===m.group&&selectedMuscle.partId===m.id;return '<path class="muscle-path '+(allowed?cls:"")+' '+(sel?"selected":"")+'" data-group="'+m.group+'" data-part="'+(m.id||"")+'" data-side="'+(m.id&&m.id.endsWith("_LEFT")?"چپ":m.id&&m.id.endsWith("_RIGHT")?"راست":"میانی")+'" d="'+m.d+'" '+(allowed?"":'style="opacity:.08;pointer-events:none"')+'><title>'+(labels[m.group]||m.group)+'</title></path>'}).join("");
+ const paths=d.muscles.map((m,index)=>{const allowed=!visible||visible.has(m.group);const cls=classFor(m.group);const sel=selectedMuscle&&selectedMuscle.pathIndex===index;const side=m.id&&m.id.endsWith("_LEFT")?"چپ":m.id&&m.id.endsWith("_RIGHT")?"راست":"میانی";return '<path class="muscle-path '+(allowed?cls:"")+' '+(sel?"selected":"")+'" data-index="'+index+'" data-group="'+m.group+'" data-part="'+(m.id||"")+'" data-side="'+side+'" d="'+m.d+'" '+(allowed?"":'style="opacity:.08;pointer-events:none"')+'><title>'+(labels[m.group]||m.group)+' · '+side+'</title></path>'}).join("");
  const outline=d.outline.map(o=>'<path class="body-outline" d="'+o.d+'"/>').join("");
  const clip=d.outline.map(o=>'<path d="'+o.d+'"/>').join("");
  return '<div class="figure"><div class="figure-title">'+title+'</div><svg viewBox="'+box+'" role="img" aria-label="مدل آناتومی '+title+'"><defs><clipPath id="clip-'+name+'">'+clip+'</clipPath></defs><image href="'+photo+'" x="0" y="0" width="1024" height="1536" preserveAspectRatio="none" clip-path="url(#clip-'+name+')" style="filter:grayscale(1) brightness(1.13) contrast(.94);opacity:.96"/>'+paths+outline+'</svg></div>';
@@ -63,7 +63,7 @@ function makeFigure(name,title){
 function renderFigures(){
  const sex=$("sex").value,view=$("view").value,names=view==="BOTH"?[sex.toLowerCase()+"-front",sex.toLowerCase()+"-back"]:[sex.toLowerCase()+"-"+view.toLowerCase()];
  $("figures").innerHTML=names.map(n=>makeFigure(n,n.endsWith("front")?"نمای جلو · Front":"نمای پشت · Back")).join("");
- $("figures").querySelectorAll(".muscle-path").forEach(p=>p.addEventListener("click",()=>{selectedMuscle={group:p.dataset.group,partId:p.dataset.part,side:p.dataset.side};showMuscleDetail();renderFigures()}));
+ $("figures").querySelectorAll(".muscle-path").forEach(p=>p.addEventListener("click",()=>{selectedMuscle={group:p.dataset.group,partId:p.dataset.part,side:p.dataset.side,pathIndex:Number(p.dataset.index)};showMuscleDetail();renderFigures()}));
 }
 function renderCategories(){$("categories").innerHTML=categories.map(c=>'<button class="chip '+(category===c.id?"active":"")+'" data-cat="'+c.id+'">'+c.name+'</button>').join("");$("categories").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{category=b.dataset.cat;renderCategories();renderExercises()}))}
 function renderExercises(){
@@ -78,7 +78,7 @@ function showExerciseDetail(){
 }
 function showMuscleDetail(){
  if(!selectedMuscle){$("muscle-detail").textContent="برای دیدن مشخصات، روی یکی از عضلات بدن بزن.";return}
- const m=selectedMuscle,related=exercises.filter(e=>e.primary.includes(m.group)||e.secondary.includes(m.group));
+ const m=selectedMuscle,related=exercises.filter(e=>e.primary.includes(m.group)||e.secondary.includes(m.group)||(e.tertiary||[]).includes(m.group));
  $("muscle-detail").innerHTML='<strong>'+(labels[m.group]||m.group)+'</strong><br><span class="meta">'+m.side+' · شناسه: '+(m.partId||m.group)+'</span><div style="margin-top:7px">حرکت‌های مرتبط:</div><div class="muscle-buttons">'+(related.slice(0,12).map(e=>'<button class="muscle-btn" data-related="'+e.id+'">'+e.name+'</button>').join("")||"هنوز حرکتی متصل نشده است.")+'</div>';
  $("muscle-detail").querySelectorAll("[data-related]").forEach(b=>b.addEventListener("click",()=>{selectedExercise=exercises.find(e=>e.id===b.dataset.related);category="ALL";renderCategories();renderExercises();showExerciseDetail();renderFigures()}));
 }
@@ -87,7 +87,7 @@ async function init(){
  const loaded=await Promise.all([fetch("./assets/diagrams.json").then(r=>{if(!r.ok)throw Error("diagrams");return r.json()}),...urls.map(n=>fetch("./assets/"+n+".webp.b64").then(r=>{if(!r.ok)throw Error(n);return r.text()}))]);
  diagrams=loaded[0];urls.forEach((n,i)=>photos[n]="data:image/webp;base64,"+loaded[i+1].trim());
  renderCategories();renderExercises();showExerciseDetail();showMuscleDetail();renderFigures();
- $("sex").addEventListener("change",renderFigures);$("view").addEventListener("change",renderFigures);$("region").addEventListener("change",()=>{region=$("region").value;renderFigures()});$("mode").addEventListener("change",()=>{mode=$("mode").value;renderFigures()});$("search").addEventListener("input",renderExercises);
+ $("sex").addEventListener("change",()=>{selectedMuscle=null;showMuscleDetail();renderFigures()});$("view").addEventListener("change",()=>{selectedMuscle=null;showMuscleDetail();renderFigures()});$("region").addEventListener("change",()=>{region=$("region").value;renderFigures()});$("mode").addEventListener("change",()=>{mode=$("mode").value;renderFigures()});$("search").addEventListener("input",renderExercises);
  $("map-status").textContent="مدل بارگذاری شد · چهار تصویر پایه و مسیرهای مستقل جلو/پشت برای هر دو جنس.";
 }
 init().catch(err=>{$("figures").innerHTML='<div class="notice">بارگذاری مدل با خطا روبه‌رو شد. لطفاً بعداً دوباره امتحان کن.</div>';console.error(err)});
